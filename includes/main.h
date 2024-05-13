@@ -7,6 +7,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+#include "../libft/libft.h"
+
 typedef struct s_command
 {
     char *cmd;
@@ -29,5 +31,6 @@ void    error(char *msg, t_root *root);
 
 /*memo*/
 void    free_memo(t_root *root);
+void    *ft_realloc(void *ptr, size_t size);
 
 #endif
