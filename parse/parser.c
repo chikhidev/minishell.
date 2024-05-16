@@ -24,21 +24,6 @@ void    parse(char *line, t_root *root)
     generate_cmds(cmds, root);
 }
 
-// void    print_root(t_root *root)
-// {
-//     int i;
-//     int j;
-
-//     i = -1;
-//     while (++i < root->num_commands)
-//     {
-//         j = -1;
-//         printf("cmd: %s\n", root->commands[i]->cmd);
-//         while (root->commands[i]->args[++j])
-//             printf("args[%d]: %s\n", j, root->commands[i]->args[j]);
-//     }
-// }
-
 int is_white_space(char c)
 {
     return (c == ' ' || (c >= 9 && c <= 13));
@@ -48,38 +33,49 @@ void    validate_cmd(char *cmd, t_root *root)
 {
     int     i;
     char    *buffer;
+    char    *tmp;
+    char    *current;
 
     buffer = NULL;
-    i = -1;
-    while (cmd[++i])
+    i = 0;
+    while (cmd[i])
     {
-        if (!is_white_space(cmd[i]) && cmd[i] != '|'
-            && cmd[i] != '>' && cmd[i] != '\"' && cmd[i] != '\'')
+        while (is_white_space(cmd[i]) && cmd[i])
+            i++;
+        if (!cmd[i])
+            break ;
+        if (cmd[i] != '\"' && cmd[i] != '\'')
         {
-            buffer = ft_realloc(buffer, ft_strlen(buffer) + 1);
-            if (!buffer)
+            current = malloc(sizeof(char) * 2);
+            if (!current)
                 error("malloc failed", root);
-            buffer[ft_strlen(buffer) -1] = cmd[i];
-            buffer[ft_strlen(buffer)] = '\0';
+            current[0] = cmd[i];
+            current[1] = '\0';
+            tmp = ft_strjoin(buffer, current);
+            if (!tmp)
+                error("malloc failed", root);
+            free(buffer);
+            free(current);
+            buffer = tmp;
         }
+        i++;
     }
     root->commands[root->num_commands]->cmd = buffer;
-    printf("cmd: %s\n", root->commands[root->num_commands]->cmd);
+    printf("(off) cmd: %s\n", root->commands[root->num_commands]->cmd);
 }
 
 void    generate_cmds(char **cmds, t_root *root)
 {
     int     i;
 
+    root->num_commands = 0;
     i = -1;
     while (cmds[++i])
     {
         root->commands[i] = malloc(sizeof(t_command));
         if (!root->commands[i])
             error("malloc failed", root);
-
         validate_cmd(cmds[i], root);
-
-        exit(0);/*remove this line later*/
+        root->num_commands ++; 
     }
 }
