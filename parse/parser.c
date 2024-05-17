@@ -47,61 +47,81 @@ char *concat_str(t_root *root, char *buffer, char _char_)
     return tmp;
 }
 
-void    extract_cmd(char *cmd, t_root *root)
+void    extract_cmd(char *cmd, t_root *root, t_quote *quotes, int quotes_count)
 {
     int     i;
-    int     j;
-    char    *buffer;
-    int     quoted;
-    char    quote;
-    char    *tmp;
+    int     putted;
 
-    buffer = NULL;
     i = 0;
-    quoted = 0;
     while (is_white_space(cmd[i]))
         i++;
     while (cmd[i])
     {
+        // printf("cmd[%d]: %c\n", i, cmd[i]);
+        if (is_white_space(cmd[i]) && !quotes)
+            break ;
         if (cmd[i] == '\'' || cmd[i] == '\"')
         {
-            quoted = !quoted;
-            quote = cmd[i];
+            putted = 0;
+            for (int k = 0; k < quotes_count; k++)
+            {
+                printf("k->%d\n", k);
+                if (quotes[k].ascii == cmd[i] && quotes[k].end == -1)
+                {
+                    quotes[k].end = i;
+                    putted = 1;
+                }
+            }
+            if (!putted)
+            {
+                quotes = ft_realloc(quotes, sizeof(t_quote) * (quotes_count + 1));
+                if (!quotes)
+                    error("malloc failed", root);
+                quotes[quotes_count].ascii = cmd[i];
+                quotes[quotes_count].start = i;
+                quotes[quotes_count].end = -1;
+                quotes_count++;
+            }
         }
-        if (is_white_space(cmd[i]) && !quoted)
-            break ;
-        buffer = concat_str(root, buffer, cmd[i]);
+        else
+            root->buffer = concat_str(root, root->buffer, cmd[i]);
         i++;
     }
-    while (quoted)
+    for (int k = 0; k < quotes_count; k++)
     {
-        printf("\n");
-        j = 0;
-        tmp = readline("dqoute> ");
-        while (tmp[j])
+        if (quotes[k].end == -1)
         {
-            if ((tmp[j] == '\"' || tmp[j] == '\'') && tmp[j] == quote)
-                quoted = 0;
-            buffer = concat_str(root, buffer, tmp[j]);
-            j++;
+            while (quotes[k].end == -1)
+            {
+                root->tmp = readline("quote> ");
+                root->buffer = concat_str(root, root->buffer, '\n');
+                extract_cmd(root->tmp, root, quotes, quotes_count);
+            }
         }
     }
-    root->commands[root->num_commands]->cmd = buffer;
-    printf("(off) cmd: %s\n", root->commands[root->num_commands]->cmd);
 }
 
 void    generate_cmds(char **cmds, t_root *root)
 {
     int     i;
+    t_quote *quotes;
+    int     quotes_count;
 
+    root->buffer = NULL;
+    root->tmp = NULL;
     root->num_commands = 0;
+    quotes = NULL;
+    quotes_count = 0;
     i = -1;
     while (cmds[++i])
     {
         root->commands[i] = malloc(sizeof(t_command));
         if (!root->commands[i])
             error("malloc failed", root);
-        extract_cmd(cmds[i], root);
+        extract_cmd(cmds[i], root, quotes, quotes_count);
+        root->commands[root->num_commands]->cmd = root->buffer;
+        printf("(off) cmd: $%s$\n", root->commands[root->num_commands]->cmd);
+        free(quotes);
         root->num_commands ++; 
     }
 }

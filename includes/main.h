@@ -15,8 +15,17 @@ typedef struct s_command
     char **args;
 }   t_command;
 
+typedef struct s_quote
+{
+    int     ascii;
+    int     start;
+    int     end;
+}   t_quote;
+
 typedef struct s_root
 {
+    char        *buffer;
+    char        *tmp;
     int         num_commands;
     t_command   **commands;
 }   t_root;
