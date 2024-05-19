@@ -50,7 +50,6 @@ char *concat_str(t_root *root, char *buffer, char _char_)
 void    extract_cmd(char *cmd, t_root *root, t_quote *quotes, int quotes_count)
 {
     int     i;
-    int     putted;
 
     i = 0;
     while (is_white_space(cmd[i]))
@@ -62,17 +61,16 @@ void    extract_cmd(char *cmd, t_root *root, t_quote *quotes, int quotes_count)
             break ;
         if (cmd[i] == '\'' || cmd[i] == '\"')
         {
-            putted = 0;
+            root->putted = 0;
             for (int k = 0; k < quotes_count; k++)
             {
-                printf("k->%d\n", k);
                 if (quotes[k].ascii == cmd[i] && quotes[k].end == -1)
                 {
                     quotes[k].end = i;
-                    putted = 1;
+                    root->putted = 1;
                 }
             }
-            if (!putted)
+            if (!root->putted)
             {
                 quotes = ft_realloc(quotes, sizeof(t_quote) * (quotes_count + 1));
                 if (!quotes)
@@ -83,20 +81,21 @@ void    extract_cmd(char *cmd, t_root *root, t_quote *quotes, int quotes_count)
                 quotes_count++;
             }
         }
-        else
-            root->buffer = concat_str(root, root->buffer, cmd[i]);
+        root->buffer = concat_str(root, root->buffer, cmd[i]);
         i++;
     }
+
     for (int k = 0; k < quotes_count; k++)
     {
-        if (quotes[k].end == -1)
+        for (int x = 0; x < quotes_count; x++)
+            printf("/n------------------/nquotes[%d]: %c %d %d\n", x, quotes[x].ascii, quotes[x].start, quotes[x].end);
+        if (quotes[k].end == -1 && k == quotes_count - 1)
         {
-            while (quotes[k].end == -1)
-            {
-                root->tmp = readline("quote> ");
-                root->buffer = concat_str(root, root->buffer, '\n');
-                extract_cmd(root->tmp, root, quotes, quotes_count);
-            }
+            root->tmp = readline("quote> ");
+            if (!root->tmp)
+                error("readline failed", root);
+            root->buffer = concat_str(root, root->buffer, '\n');
+            extract_cmd(root->tmp, root, quotes, quotes_count);
         }
     }
 }

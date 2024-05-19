@@ -26,6 +26,7 @@ typedef struct s_root
 {
     char        *buffer;
     char        *tmp;
+    int         putted;
     int         num_commands;
     t_command   **commands;
 }   t_root;
