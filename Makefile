@@ -4,8 +4,13 @@ LIBFT = libft/libft.a
 
 SRC = 	main.c	\
 		memo.c	\
-		error.c	\
-		parse/parser.c
+		error.c
+
+PARSING_SRC =	parse/parser.c	\
+				parse/quotes.c	\
+				parse/string.c
+
+SRC += $(PARSING_SRC)
 
 OBJ = $(SRC:.c=.o)
 

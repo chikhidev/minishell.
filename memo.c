@@ -4,7 +4,7 @@ void    free_memo(t_root *root)
 {
     if (!root)
         return ;
-    for (int i = 0; i < root->num_commands; i++)
+    for (int i = 0; i < root->num_commands && root->commands; i++)
     {
         free(root->commands[i]->cmd);
         for (int j = 0; root->commands[i]->args[j]; j++)
@@ -13,7 +13,17 @@ void    free_memo(t_root *root)
         free(root->commands[i]);
     }
     free(root->commands);
-    free(root);
+    root->commands = NULL;
+    for (int i = 0; root->cmds[i] && root->cmds; i++)
+        free(root->cmds[i]);
+    free(root->cmds);
+    root->cmds = NULL;
+    free(root->buffer);
+    root->buffer = NULL;
+    free(root->tmp);
+    root->tmp = NULL;
+    free(root->quotes);
+    root->quotes = NULL;
 }
 
 void    *ft_realloc(void *ptr, size_t size)

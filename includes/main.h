@@ -9,6 +9,14 @@
 
 #include "../libft/libft.h"
 
+#define RED     "\033[0;31m"
+#define GREEN   "\033[0;32m"
+#define YELLOW  "\033[0;33m"
+#define BLUE    "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN    "\033[0;36m"
+#define RESET   "\033[0m"
+
 typedef struct s_command
 {
     char *cmd;
@@ -24,10 +32,13 @@ typedef struct s_quote
 
 typedef struct s_root
 {
+    int         error;
     char        *buffer;
     char        *tmp;
+    t_quote     *quotes;
     int         putted;
     int         num_commands;
+    char        **cmds;
     t_command   **commands;
 }   t_root;
 
@@ -42,5 +53,13 @@ void    error(char *msg, t_root *root);
 /*memo*/
 void    free_memo(t_root *root);
 void    *ft_realloc(void *ptr, size_t size);
+
+/*quotes*/
+void    quotes_tracking(t_root *root, char _character_, int i, int *quotes_count);
+void    quotes_checker(t_root *root, int quotes_count, void (f)(char *, t_root *, int));
+
+/*string*/
+char    *concat_str(t_root *root, char *buffer, char _char_);
+int     is_white_space(char c);
 
 #endif
