@@ -18,19 +18,24 @@ all: $(NAME)
 build: all clean
 
 $(NAME): $(LIBFT) $(OBJ)
+	@echo "Compiling $(NAME)"
 	@cc $(CFLAGS) $(OBJ) $(LIBFT)  -o $(NAME)
 
 $(LIBFT):
+	@echo "Compiling libft"
 	@make -C libft
 
 %.o: %.c
+	@echo "Compiling $<"
 	@cc $(CFLAGS) -c $< -o $@
 
 clean:
+	@echo "Cleaning"
 	@rm -f $(OBJ)
 	@make -C libft clean
 
 fclean: clean
+	@echo "Full cleaning"
 	@rm -f $(NAME)
 	@make -C libft fclean
 

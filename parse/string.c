@@ -12,7 +12,10 @@ char *concat_str(t_root *root, char *buffer, char _char_)
 
     current = malloc(sizeof(char) * 2);
     if (!current)
+    {
         error("malloc failed", root);
+        return (NULL);
+    }
     current[0] = _char_;
     current[1] = '\0';
     tmp = ft_strjoin(buffer, current);
@@ -23,6 +26,5 @@ char *concat_str(t_root *root, char *buffer, char _char_)
         return (NULL);
     }
     free(current);
-    free(buffer);
     return tmp;
 }
