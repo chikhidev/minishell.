@@ -6,7 +6,7 @@ void    ascii_print()
     printf(ORANGE"█░░ █▀█ █░█░█ ▄▀█ █▀ █░█ █▀▀ █░░ █░░"RESET"\n");
     printf(MAGENTA"█░▄ █▀▄ ▀▄▀▄▀ █▀█ ▄█ █▀█ █▄▄ █▄▄ █▄▄"RESET"\n");
     printf("\n");
-    printf("All the rights are reserved to Lowashell 🚀:)\n");
+    printf("Welcome to shell of abdoo and salah 🚀:)\n");
     printf("--------------------------------------------\n\n");
 }
 
@@ -34,7 +34,7 @@ int main(void)
     tmp = ft_strjoin(MAGENTA"lowa@"GREEN, userHost);
     if (!tmp)
         return 1;
-    userHost = ft_strjoin(tmp, ": "RESET);
+    userHost = ft_strjoin(tmp, RESET": ");
     if (!userHost)
         return 1;
     free(tmp);
@@ -61,3 +61,4 @@ int main(void)
     free(line);
     return 0;
 }
+
