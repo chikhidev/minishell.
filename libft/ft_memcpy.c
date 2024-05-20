@@ -18,7 +18,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	unsigned char		*d;
 	unsigned char		*s;
 
-	if (!dst && !src)
+	if (!dst || !src)
 		return (NULL);
 	if (dst == src)
 		return (dst);
@@ -32,11 +32,3 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	}
 	return (dst);
 }
-
-// #include <stdio.h>
-// #include <string.h>
-// int main(){
-// 	printf("%s\n", ft_memcpy(0, 0, 0));
-// 	// printf("%s\n", memcpy(0, NULL, 9));
-// 	return (0); 
-// }

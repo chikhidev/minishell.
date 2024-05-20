@@ -2,12 +2,11 @@
 
 void    ascii_print()
 {
-    // print Lowashell
-    printf("--------------------------------------------\n");
+    printf("\n\n");
     printf(ORANGE"█░░ █▀█ █░█░█ ▄▀█ █▀ █░█ █▀▀ █░░ █░░"RESET"\n");
     printf(MAGENTA"█░▄ █▀▄ ▀▄▀▄▀ █▀█ ▄█ █▀█ █▄▄ █▄▄ █▄▄"RESET"\n");
     printf("\n");
-    printf("All the rights are reserved to Lowashell :)\n");
+    printf("All the rights are reserved to Lowashell 🚀:)\n");
     printf("--------------------------------------------\n\n");
 }
 
@@ -27,10 +26,22 @@ int main(void)
 {
     char    *line;
     t_root  root;
-
+    char    *userHost;
+    char    *tmp;
+    
     ascii_print();
-    line = readline(MAGENTA"@lowa> "RESET);
-    while (line)
+    userHost = getenv("USER");
+    tmp = ft_strjoin(MAGENTA"lowa@"GREEN, userHost);
+    if (!tmp)
+        return 1;
+    userHost = ft_strjoin(tmp, ": "RESET);
+    if (!userHost)
+        return 1;
+    free(tmp);
+    line = readline(userHost);
+    if (!line)
+        line = ft_strdup("");
+    while (ft_strncmp(line, "exit", 4) != 0)
     {
         init_root(&root);
         if (root.error)
@@ -41,9 +52,12 @@ int main(void)
         free(line);
         free_memo(&root);
         // printf("after parse\n");
-        line = readline(MAGENTA"@lowa> "RESET);
+        line = readline(userHost);
+        if (!line)
+            line = ft_strdup("");
     }
-    printf("exit\n");
+    free(userHost);
+    printf("_____Goodbye! 👋_____\n"RESET);
     free(line);
     return 0;
 }
