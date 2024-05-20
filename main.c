@@ -7,7 +7,6 @@ void    ascii_print()
     printf(ORANGE"█░░ █▀█ █░█░█ ▄▀█ █▀ █░█ █▀▀ █░░ █░░"RESET"\n");
     printf(MAGENTA"█░▄ █▀▄ ▀▄▀▄▀ █▀█ ▄█ █▀█ █▄▄ █▄▄ █▄▄"RESET"\n");
     printf("\n");
-    printf("Welcome to Lowashell!\n");
     printf("All the rights are reserved to Lowashell :)\n");
     printf("--------------------------------------------\n\n");
 }
@@ -30,7 +29,7 @@ int main(void)
     t_root  root;
 
     ascii_print();
-    line = readline(ORANGE"> "RESET);
+    line = readline(MAGENTA"@lowa> "RESET);
     while (line)
     {
         init_root(&root);
@@ -38,11 +37,11 @@ int main(void)
             root.error = 0;
         add_history(line);
         parse(line, &root);
-        printf("before generate\n");
+        // printf("before generate\n");
         free(line);
         free_memo(&root);
-        printf("after parse\n");
-        line = readline(ORANGE"> "RESET);
+        // printf("after parse\n");
+        line = readline(MAGENTA"@lowa> "RESET);
     }
     printf("exit\n");
     free(line);

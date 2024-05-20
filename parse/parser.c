@@ -16,9 +16,10 @@ void    extract_cmd(char *cmd, t_root *root, int quotes_count)
         quotes_tracking(root, cmd[i], i, &quotes_count);
         root->tmp = concat_str(root, root->buffer, cmd[i]);
         if (!root->tmp || root->error)
-            return ;
+            return error("malloc failed", root);
         free(root->buffer);
         root->buffer = root->tmp;
+        root->tmp = NULL;
         i++;
     }
     quotes_checker(root, quotes_count, extract_cmd);
@@ -43,10 +44,9 @@ void    generate_cmds(t_root *root)
         root->commands[i]->args = NULL;
         extract_cmd(root->cmds[i], root, quotes_count);
         if (root->error)
-            return ;
+            return error("malloc failed", root);
         root->commands[root->num_commands]->cmd = root->buffer;
         root->buffer = NULL;
-        root->tmp = NULL;
         printf("(off) cmd: [%s]\n", root->commands[root->num_commands]->cmd);
         free(root->quotes);
         root->quotes = NULL;

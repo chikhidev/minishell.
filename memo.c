@@ -2,7 +2,7 @@
 
 void    free_memo(t_root *root)
 {
-    printf("entered free_memo\n");
+    // printf("entered free_memo\n");
     for (int i = 0; i < root->num_commands; i++)
     {
         free(root->commands[i]->cmd);
@@ -15,9 +15,9 @@ void    free_memo(t_root *root)
         free(root->commands[i]);
     }
     free(root->commands);
-    printf("after\n");
+    // printf("after\n");
     root->commands = NULL;
-    for (int i = 0; root->cmds[i] && root->cmds; i++)
+    for (int i = 0; root->cmds && root->cmds[i]; i++)
         free(root->cmds[i]);
     free(root->cmds);
     root->cmds = NULL;

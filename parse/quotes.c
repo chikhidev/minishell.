@@ -6,7 +6,7 @@ void    quotes_checker(t_root *root, int quotes_count, void (f)(char *, t_root *
     {
         if (root->quotes[k].end == -1 && k == quotes_count - 1)
         {
-            root->tmp = readline(ORANGE"quote> "RESET);
+            root->tmp = readline(GREEN"quote> "RESET);
             if (!root->tmp)
                 return error("readline failed", root);
             root->buffer = concat_str(root, root->buffer, '\n');
