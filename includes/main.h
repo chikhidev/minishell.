@@ -10,9 +10,9 @@
 #include "../libft/libft.h"
 
 #define RED     "\033[0;31m"
-#define GREEN   "\033[0;32m"
 #define MAGENTA "\033[0;35m"
 #define ORANGE  "\033[0;33m"
+#define GREEN "\033[0;92m"
 #define RESET   "\033[0m"
 
 typedef struct s_command
