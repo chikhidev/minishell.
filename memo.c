@@ -27,7 +27,31 @@ void    *gc_malloc(t_db *db, size_t size)
     return (ptr);
 }
 
-void    gc_free(t_db *db)
+void    gc_free(t_db *db, void *ptr)
+{
+    t_gc    *tmp;
+    t_gc    *prev;
+
+    tmp = db->gc;
+    prev = NULL;
+    while (tmp)
+    {
+        if (tmp->ptr == ptr)
+        {
+            if (prev)
+                prev->next = tmp->next;
+            else
+                db->gc = tmp->next;
+            free(tmp->ptr);
+            free(tmp);
+            return ;
+        }
+        prev = tmp;
+        tmp = tmp->next;
+    }
+}
+
+void    gc_void(t_db *db)
 {
     t_gc    *tmp;
 
@@ -38,4 +62,25 @@ void    gc_free(t_db *db)
         free(tmp->ptr);
         free(tmp);
     }
+}
+
+void    *gc_realloc(t_db *db, void *ptr, size_t size)
+{
+    t_gc    *tmp;
+
+    tmp = db->gc;
+    while (tmp)
+    {
+        if (tmp->ptr == ptr)
+        {
+            void    *new_ptr;
+
+            new_ptr = realloc(ptr, size);
+            if (!new_ptr) return (NULL);
+            tmp->ptr = new_ptr;
+            return (new_ptr);
+        }
+        tmp = tmp->next;
+    }
+    return (NULL);
 }

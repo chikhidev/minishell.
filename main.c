@@ -47,6 +47,12 @@ int handle_prompt(char **line)
 void    init_db(t_db *db)
 {
     db->gc = NULL;
+    db->and_count = 0;
+    db->or_count = 0;
+    db->pipe_count = 0;
+    db->redir_count = 0;
+    db->append_count = 0;
+    db->input_count = 0;
 }
 
 int     main()
@@ -56,10 +62,10 @@ int     main()
     int     ret;
 
     line = NULL;
-    init_db(&db);
     ascii_print();
     while (TRUE)
     {
+        init_db(&db);
         ret = handle_prompt(&line);
         if (ret == -1) break ;
         else if (ret == 0) continue ;
@@ -67,7 +73,7 @@ int     main()
         if (parser(&db, line) == FAILURE)
         {
             free(line);
-            gc_free(&db);
+            gc_void(&db);
             continue ;
         }
         /* execute the cmds --------------------------------*/
@@ -75,6 +81,6 @@ int     main()
         free(line);
     }
     free(line);
-    gc_free(&db);
+    gc_void(&db);
     return (SUCCESS);
 }

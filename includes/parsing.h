@@ -16,4 +16,7 @@
 /*parsing/parser.c*/
 int parser(t_db *db, char *line);
 
+/*string.c*/
+void    skip_spaces(char *line, int *i);
+
 #endif

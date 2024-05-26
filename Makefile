@@ -7,8 +7,9 @@ PARSING_SRC = parsing/parser.c
 
 # EXEC_SRC = exec/
 
-SRC =	main.c	\
-		memo.c	\
+SRC =	main.c		\
+		memo.c		\
+		string.c	\
 		error.c
 
 SRC += $(PARSING_SRC)

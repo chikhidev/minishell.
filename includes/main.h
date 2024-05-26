@@ -11,6 +11,7 @@
 #define FALSE 0
 #define SUCCESS 1
 #define FAILURE 0
+#define NOT_FOUND -1
 
 /**
  * @details This is the color codes for the shell
@@ -86,6 +87,12 @@ typedef struct s_db
 {
     void    *root_node;
     t_gc    *gc;
+    int     and_count;
+    int     or_count;
+    int     pipe_count;
+    int     redir_count;
+    int     append_count;
+    int     input_count;
 }   t_db;
 
 /*prototypes: error.c*/
@@ -93,6 +100,11 @@ int error(t_db *db, char *msg);
 
 /*prototypes: memo.c*/
 void    *gc_malloc(t_db *db, size_t size);
-void    gc_free(t_db *db);
+void    gc_void(t_db *db);
+void    gc_free(t_db *db, void *ptr);
+void    *gc_realloc(t_db *db, void *ptr, size_t size);
+
+/*prototypes: string.c*/
+char    *concat(t_db *db, char *s, char single_char);
 
 #endif

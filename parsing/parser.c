@@ -8,9 +8,40 @@
 */
 int smart_split(t_db *db, char *line)
 {
+    (void)db;
     (void)line;
-    return error(db, "smart_split not implemented");
+
+    printf("operators counted: (&&: %d, ||: %d, |: %d, >: %d, <: %d)\n", db->and_count, db->or_count, db->pipe_count, db->redir_count, db->input_count);
+    // int i;
+
+    // i = 0;
+    // skip_spaces(line, &i);
+    // while (line[i])
+    // {
+    //     printf("salam\n");
+    // }
     return (SUCCESS);
+}
+
+void    count_operators(t_db *db, char *line)
+{
+    int i;
+
+    i = 0;
+    while (line[i])
+    {
+        if (line[i] == '&' && line[i + 1] && line[i + 1] == '&')
+            db->and_count++;
+        if (line[i] == '|' && line[i + 1] && line[i + 1] == '|')
+            db->or_count++;
+        if (line[i] == '|')
+            db->pipe_count++;
+        if (line[i] == '>')
+            db->redir_count++;
+        if (line[i] == '<')
+            db->input_count++;
+        i++;
+    }
 }
 
 /**
@@ -19,6 +50,7 @@ int smart_split(t_db *db, char *line)
 */
 int parser(t_db *db, char *line)
 {
+    count_operators(db, line);
     if (smart_split(db, line) == FAILURE) return (FAILURE);
     return (SUCCESS);
 }
