@@ -2,27 +2,9 @@
 #include "../includes/parsing.h"
 
 /**
- * @details This function will split the line into commands and operators
- * depending on the priority of the operators
- * @return 1 on success, 0 on failure
+ * @details This function will count the number of operators in the line
+ * so we can split the line into commands and operators later
 */
-int smart_split(t_db *db, char *line)
-{
-    (void)db;
-    (void)line;
-
-    printf("operators counted: (&&: %d, ||: %d, |: %d, >: %d, <: %d)\n", db->and_count, db->or_count, db->pipe_count, db->redir_count, db->input_count);
-    // int i;
-
-    // i = 0;
-    // skip_spaces(line, &i);
-    // while (line[i])
-    // {
-    //     printf("salam\n");
-    // }
-    return (SUCCESS);
-}
-
 void    count_operators(t_db *db, char *line)
 {
     int i;
@@ -42,6 +24,26 @@ void    count_operators(t_db *db, char *line)
             db->input_count++;
         i++;
     }
+}
+
+/**
+ * @details This function will split the line into commands and operators
+ * depending on the priority of the operators
+ * @return 1 on success, 0 on failure
+*/
+int smart_split(t_db *db, char *line)
+{
+    int i;
+
+    (void)db;
+    i = 0;
+    skip_spaces(line, &i);
+    while (line[i])
+    {
+        printf("line[%d] = %c\n", i, line[i]);
+        i++;
+    }
+    return (SUCCESS);
 }
 
 /**
