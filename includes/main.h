@@ -81,18 +81,36 @@ typedef struct s_op_node
 }   t_op_node;
 
 /**
+ * @details The quote structure is used to store the quotes
+*/
+typedef struct s_quote
+{
+    int     ascii;
+    int     start;
+    int     end;
+    struct s_quote *next;
+}   t_quote;
+
+/**
+ * @details The parnth structure is used to store the paranthesis
+*/
+typedef struct s_parnth
+{
+    int     start;
+    int     end;
+    struct s_parnth *next;
+}   t_parnth;
+
+/**
  * @details The db structure is used to store all data needed
 */
 typedef struct s_db
 {
     void    *root_node;
     t_gc    *gc;
-    int     and_count;
-    int     or_count;
-    int     pipe_count;
-    int     redir_count;
-    int     append_count;
-    int     input_count;
+    int     op_counter[6];
+    t_quote *quotes;
+    t_parnth *paranthesis;
 }   t_db;
 
 /*prototypes: error.c*/

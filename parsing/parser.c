@@ -2,31 +2,6 @@
 #include "../includes/parsing.h"
 
 /**
- * @details This function will count the number of operators in the line
- * so we can split the line into commands and operators later
-*/
-void    count_operators(t_db *db, char *line)
-{
-    int i;
-
-    i = 0;
-    while (line[i])
-    {
-        if (line[i] == '&' && line[i + 1] && line[i + 1] == '&')
-            db->and_count++;
-        if (line[i] == '|' && line[i + 1] && line[i + 1] == '|')
-            db->or_count++;
-        if (line[i] == '|')
-            db->pipe_count++;
-        if (line[i] == '>')
-            db->redir_count++;
-        if (line[i] == '<')
-            db->input_count++;
-        i++;
-    }
-}
-
-/**
  * @details This function will split the line into commands and operators
  * depending on the priority of the operators
  * @return 1 on success, 0 on failure
@@ -38,10 +13,24 @@ int smart_split(t_db *db, char *line)
     (void)db;
     i = 0;
     skip_spaces(line, &i);
-    while (line[i])
+    return (SUCCESS);
+}
+
+// int track_paranthesis(t_db *db, char *line)
+// {
+    
+//     return (SUCCESS);
+// }
+
+int track_quotes(t_db *db, char *line)
+{
+    int i;
+
+    if (!db->quotes)
     {
-        printf("line[%d] = %c\n", i, line[i]);
-        i++;
+        db->quotes = gc_malloc(db, sizeof(t_quote*));
+        if (!db->quotes) return (FAILURE);
+        db->quotes
     }
     return (SUCCESS);
 }
@@ -52,7 +41,8 @@ int smart_split(t_db *db, char *line)
 */
 int parser(t_db *db, char *line)
 {
-    count_operators(db, line);
+    if (track_quotes(db, line) == FAILURE) return (FAILURE);
+    // if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
     if (smart_split(db, line) == FAILURE) return (FAILURE);
     return (SUCCESS);
 }

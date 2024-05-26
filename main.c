@@ -5,7 +5,7 @@ void    ascii_print()
 {
     printf("\n\n");
     printf(ORANGE"█░░ █▀█ █░█░█ ▄▀█ █▀ █░█ █▀▀ █░░ █░░"RESET"\n");
-    printf(MAGENTA"█░▄ █▀▄ ▀▄▀▄▀ █▀█ ▄█ █▀█ █▄▄ █▄▄ █▄▄"RESET"\n");
+    printf(GREEN"█░▄ █▀▄ ▀▄▀▄▀ █▀█ ▄█ █▀█ █▄▄ █▄▄ █▄▄"RESET"\n");
     printf("\n");
     printf("Welcome to shell of abdoo and salah 🚀\n");
     printf("--------------------------------------------\n\n");
@@ -19,14 +19,14 @@ char    *line_promte()
     user = ft_strdup(getenv("USERNAME"));
     if (!user)
         user = ft_strdup("shell");
-    tmp = ft_strjoin(MAGENTA"Lowa@"RESET, user);
+    tmp = ft_strjoin(GREEN"Lowa@"RESET, user);
     free(user);
     if (!tmp)
-        return (ft_strdup(MAGENTA"Lowa@shell~"RESET));
+        return (ft_strdup(GREEN"Lowa@shell~"RESET));
     user = ft_strjoin(tmp, ORANGE"~ "RESET);
     free(tmp);
     if (!user)
-        return (ft_strdup(MAGENTA"Lowa@shell~"RESET));
+        return (ft_strdup(GREEN"Lowa@shell~"RESET));
     return (user);
 }
 
@@ -46,13 +46,18 @@ int handle_prompt(char **line)
 
 void    init_db(t_db *db)
 {
+    int i;
+
     db->gc = NULL;
-    db->and_count = 0;
-    db->or_count = 0;
-    db->pipe_count = 0;
-    db->redir_count = 0;
-    db->append_count = 0;
-    db->input_count = 0;
+    db->root_node = NULL;
+    db->quotes = NULL;
+    db->paranthesis = NULL;
+    i = 0;
+    while (i < 6)
+    {
+        db->op_counter[i] = 0;
+        i++;
+    }
 }
 
 int     main()
