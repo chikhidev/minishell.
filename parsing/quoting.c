@@ -46,7 +46,11 @@ int track_quotes(t_db *db, char *line)
     i = 0;
     while (line[i])
     {
-        if ((line[i] == 34 || line[i] == 39)
+        if ((line[i] == 34 || line[i] == 39) && !db->quotes)
+        {
+            if (add_quote(db, line[i], i) == FAILURE) return (FAILURE);
+        }
+        else if ((line[i] == 34 || line[i] == 39)
             && last_quote(db)->ascii == line[i]
             && last_quote(db)->end == -1)
             last_quote(db)->end = i;
@@ -57,6 +61,6 @@ int track_quotes(t_db *db, char *line)
         }
         i++;
     }
-    if (last_quote(db)->end == -1) return (error(db, "Quotes are not closed"));
+    if (db->quotes && last_quote(db)->end == -1) return (error(db, "Quotes are not closed"));
     return (SUCCESS);
 }

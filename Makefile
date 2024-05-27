@@ -3,7 +3,8 @@ CARGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 
 LIBFT = libft/libft.a
 
-PARSING_SRC = parsing/parser.c
+PARSING_SRC = 	parsing/parser.c	\
+				parsing/quoting.c
 
 # EXEC_SRC = exec/
 

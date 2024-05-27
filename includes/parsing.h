@@ -29,4 +29,7 @@ int parser(t_db *db, char *line);
 /*string.c*/
 void    skip_spaces(char *line, int *i);
 
+/*parsing/quoting.c*/
+int track_quotes(t_db *db, char *line);
+
 #endif
