@@ -5,6 +5,12 @@
 #include <readline/history.h>
 #include <signal.h>
 
+typedef struct s_expand_tokens
+{
+    char    *token;
+    void    *next;
+}   t_tokens;
+
 
 /**
  * @details Defining the priority of the operators
@@ -40,5 +46,11 @@ int parser(t_db *db, char *line);
 
 /*parsing/split.c*/
 char    **whitespaces_split(t_db *db, char *str, int start);
+/*parsing/expanding.c*/
+int expand(t_db *db, char   *line);
+char *get_env_name(t_db *db, char  *line, int idx);
+char *get_env(t_db *db, char *name);
+/*parsing/paranths.c*/
+int track_paranthesis(t_db *db, char *line);
 
 #endif
