@@ -96,8 +96,8 @@ typedef struct s_quote
 */
 typedef struct s_parnth
 {
-    int     start;
-    int     end;
+    int     open_;
+    int     close_;
     struct s_parnth *next;
 }   t_parnth;
 

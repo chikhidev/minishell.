@@ -28,8 +28,9 @@ int smart_split(t_db *db, char *line)
 */
 int parser(t_db *db, char *line)
 {
+    
     if (track_quotes(db, line) == FAILURE) return (FAILURE);
-    // if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
+    if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
     // if (smart_split(db, line) == FAILURE) return (FAILURE);
     return (SUCCESS);
 }

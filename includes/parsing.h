@@ -32,4 +32,7 @@ void    skip_spaces(char *line, int *i);
 /*parsing/quoting.c*/
 int track_quotes(t_db *db, char *line);
 
+/*parsing/paranths.c*/
+int track_paranthesis(t_db *db, char *line);
+
 #endif
