@@ -37,37 +37,32 @@ int create_paranth(t_db *db, int open_)
     return (SUCCESS);
 }
 
-t_parnth *last_paranth(t_db *db)
+t_parnth *last_unclosed_paranth(t_db *db)
 {
     t_parnth *tmp;
+    t_parnth *last;
 
-    tmp = db->paranthesis;
-    while (tmp->next)
-        tmp = tmp->next;
-    return (tmp);
-}
-
-int some_paranth_open(t_db *db)
-{
-    t_parnth *tmp;
-
+    last = NULL;
     tmp = db->paranthesis;
     while (tmp)
     {
         if (tmp->close_ == -1)
-            return (1);
+            last = tmp;
         tmp = tmp->next;
     }
-    return (0);
+    return (last);
 }
+
 
 int track_paranthesis(t_db *db, char *line)
 {
-    int i;
+    t_parnth    *last_opened;
+    int         i;
 
     i = 0;
     while (line[i])
     {
+        last_opened = last_unclosed_paranth(db);
         if (line[i] == '(' && !is_inside_quotes(db, i))
         {
             if (create_paranth(db, i) == FAILURE)
@@ -75,17 +70,22 @@ int track_paranthesis(t_db *db, char *line)
         }
         else if (line[i] == ')'
             && !is_inside_quotes(db, i)
-            && some_paranth_open(db))
+            && last_opened
+            && last_opened->open_ == i - 1)
+            return error(db, "syntax error: empty paranthesis");
+        else if (line[i] == ')'
+            && !is_inside_quotes(db, i)
+            && last_opened)
         {
             if (!db->paranthesis)
                 return error(db, "syntax error: no paranthesis to close");
-            last_paranth(db)->close_ = i;
+            last_opened->close_ = i;
         }
         else if (line[i] == ')' && !is_inside_quotes(db, i))
             return error(db, "syntax error: no paranthesis to close");
         i++;
     }
-    if (some_paranth_open(db))
+    if (last_unclosed_paranth(db))
         return error(db, "syntax error: some paranthesis are not closed");
     return (SUCCESS);
 }

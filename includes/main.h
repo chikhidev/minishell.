@@ -20,6 +20,8 @@
 #define ORANGE  "\033[0;33m"
 #define MAGENTA "\033[0;35m"
 #define GREEN   "\033[0;32m"
+#define BLUE    "\033[0;34m"
+#define CYAN    "\033[0;36m"
 #define RESET   "\033[0m"
 
 /**

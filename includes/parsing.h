@@ -32,7 +32,8 @@ void    skip_spaces(char *line, int *i);
 /*parsing/quoting.c*/
 int track_quotes(t_db *db, char *line);
 
-/*parsing/paranths.c*/
-int track_paranthesis(t_db *db, char *line);
+/*parsing/paranths.c && paranths2.c*/
+int         track_paranthesis(t_db *db, char *line);
+t_parnth    *last_unclosed_paranth(t_db *db);
 
 #endif
