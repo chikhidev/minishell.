@@ -42,9 +42,9 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 1342.050110554214,
-			"y": 352.143505044805,
-			"lastActivityTimestamp": 1716893599417,
+			"x": 309.6079442665969,
+			"y": -34.122368365085194,
+			"lastActivityTimestamp": 1716901403505,
 			"meta": {}
 		},
 		{
@@ -71,12 +71,12 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 1008.0000610351562,
-				"h": 729.6000366210938
+				"w": 816,
+				"h": 540
 			},
 			"insets": [
 				false,
-				true,
+				false,
 				true,
 				false
 			],
@@ -88,9 +88,9 @@
 			"highlightedUserIds": [],
 			"canMoveCamera": true,
 			"isFocused": true,
-			"devicePixelRatio": 0.8333333134651184,
+			"devicePixelRatio": 1,
 			"isCoarsePointer": false,
-			"isHoveringCanvas": true,
+			"isHoveringCanvas": false,
 			"openMenus": [],
 			"isChangingStyle": false,
 			"isReadonly": false,
@@ -114,8 +114,8 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": -516.2438361401514,
-			"y": 82.87526326574188,
+			"x": -205.60794426659692,
+			"y": 91.1223683650852,
 			"z": 1,
 			"meta": {},
 			"id": "camera:page:page",
@@ -3108,6 +3108,40 @@
 			},
 			"parentId": "page:page",
 			"index": "aV",
+			"typeName": "shape"
+		},
+		{
+			"x": 451.6079442665969,
+			"y": 78.8776316349148,
+			"rotation": 0,
+			"isLocked": false,
+			"opacity": 1,
+			"meta": {},
+			"id": "shape:Z9fGIuRV7bZa_Oz6f8gyG",
+			"type": "draw",
+			"props": {
+				"segments": [
+					{
+						"type": "free",
+						"points": [
+							{
+								"x": 0,
+								"y": 0,
+								"z": 0.5
+							}
+						]
+					}
+				],
+				"color": "black",
+				"fill": "none",
+				"dash": "draw",
+				"size": "m",
+				"isComplete": true,
+				"isClosed": false,
+				"isPen": false
+			},
+			"parentId": "page:page",
+			"index": "aW",
 			"typeName": "shape"
 		}
 	]

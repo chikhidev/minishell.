@@ -77,6 +77,7 @@ typedef struct s_op_node
 {
     int     type; // the common thing between the two nodes
     void    *origin; // the original node
+    int     priority;
     int     op_presentation;
     void    **childs;
     int     n_childs;

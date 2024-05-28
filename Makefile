@@ -5,7 +5,9 @@ LIBFT = libft/libft.a
 
 PARSING_SRC = 	parsing/parser.c	\
 				parsing/quoting.c	\
-				parsing/paranths.c
+				parsing/paranths.c	\
+				parsing/paranths2.c \
+				parsing/split.c
 
 # EXEC_SRC = exec/
 
@@ -28,20 +30,20 @@ all: $(NAME)
 build: all clean
 
 $(NAME): $(SRC) $(LIBFT)
-	@echo "$(YELLOW)Compiling minishell 🛠️"
+	@echo "$(YELLOW)Compiling minishell 🛠️$(RESET)"
 	cc $(CARGS) $(SRC) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)Minishell compiled successfully 🚀"
 
 $(LIBFT):
-	@echo "$(MAGENT)Compiling libft 🪡"
+	@echo "$(MAGENT)Compiling libft 🪡$(RESET)"
 	make -C libft
 
 clean:
-	@echo "$(BLUE)Cleaning libft 🧹"
+	@echo "$(BLUE)Cleaning libft 🧹$(RESET)"
 	make -C libft clean
 
 fclean: clean
-	@echo "$(RED)Cleaning minishell 🧹"
+	@echo "$(RED)Cleaning minishell 🧹$(RESET)"
 	rm -f $(NAME)
 	make -C libft fclean
 

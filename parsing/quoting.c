@@ -58,6 +58,7 @@ int track_quotes(t_db *db, char *line)
         }
         i++;
     }
+    last = last_quote(db);
     if (db->quotes && last->end == -1) return (error(db, "Quotes are not closed"));
     return (SUCCESS);
 }

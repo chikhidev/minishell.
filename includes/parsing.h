@@ -23,17 +23,22 @@
 #define APPEND 5
 #define INPUT 6
 
-/*parsing/parser.c*/
-int parser(t_db *db, char *line);
-
 /*string.c*/
 void    skip_spaces(char *line, int *i);
 
 /*parsing/quoting.c*/
 int track_quotes(t_db *db, char *line);
+int is_inside_quotes(t_db *db, int i);
 
 /*parsing/paranths.c && paranths2.c*/
 int         track_paranthesis(t_db *db, char *line);
 t_parnth    *last_unclosed_paranth(t_db *db);
+int         is_inside_paranthesis(t_db *db, int i);
+
+/*parsing/parser.c*/
+int parser(t_db *db, char *line);
+
+/*parsing/split.c*/
+char    **whitespaces_split(t_db *db, char *str, int start);
 
 #endif
