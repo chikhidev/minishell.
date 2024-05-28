@@ -29,7 +29,6 @@ int create_paranth(t_db *db, int open_)
         db->paranthesis = new;
         return (SUCCESS);
     }
-
     tmp = db->paranthesis;
     while (tmp->next)
         tmp = tmp->next;

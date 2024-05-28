@@ -78,11 +78,11 @@ int     main()
         if (parser(&db, line) == FAILURE)
         {
             free(line);
-            gc_void(&db);
             continue ;
         }
         /* execute the cmds --------------------------------*/
 
+        gc_void(&db);
         free(line);
     }
     free(line);

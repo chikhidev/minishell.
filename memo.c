@@ -62,6 +62,7 @@ void    gc_void(t_db *db)
         free(tmp->ptr);
         free(tmp);
     }
+    db->gc = NULL;
 }
 
 void    *gc_realloc(t_db *db, void *ptr, size_t size)
