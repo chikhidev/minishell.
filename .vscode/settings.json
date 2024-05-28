@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "main.h": "c"
-    }
+        "main.h": "c",
+        "unistd.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c"
+    },
+    "workbench.iconTheme": "vs-seti"
 }

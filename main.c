@@ -16,7 +16,9 @@ char    *line_promte()
     char    *user;
     char    *tmp;
 
-    user = ft_strdup(getenv("USERNAME"));
+    user = getenv("USERNAME");
+    if (user)
+        user = ft_strdup(user);
     if (!user)
         user = ft_strdup("shell");
     tmp = ft_strjoin(GREEN"Lowa@"RESET, user);
@@ -44,7 +46,7 @@ int handle_prompt(char **line)
     return 1 ; // nothing
 }
 
-void    init_db(t_db *db)
+void    init_db(t_db *db, int   ac, char    *av[], char *env[])
 {
     int i;
 
@@ -52,6 +54,9 @@ void    init_db(t_db *db)
     db->root_node = NULL;
     db->quotes = NULL;
     db->paranthesis = NULL;
+    db->env = env;
+    (void) ac;
+    (void) av;
     i = 0;
     while (i < 6)
     {
@@ -60,7 +65,7 @@ void    init_db(t_db *db)
     }
 }
 
-int     main()
+int     main(int    ac, char    *av[],  char    *env[])
 {
     t_db    db;
     char    *line;
@@ -70,7 +75,7 @@ int     main()
     ascii_print();
     while (TRUE)
     {
-        init_db(&db);
+        init_db(&db, ac, av, env);
         ret = handle_prompt(&line);
         if (ret == -1) break ;
         else if (ret == 0) continue ;

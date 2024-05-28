@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "../libft/libft.h"
 
@@ -12,6 +13,10 @@
 #define SUCCESS 1
 #define FAILURE 0
 #define NOT_FOUND -1
+
+
+#define DOBLQUOTE 0
+#define SNGLQUOTE 1
 
 /**
  * @details This is the color codes for the shell
@@ -85,10 +90,12 @@ typedef struct s_op_node
 
 /**
  * @details The quote structure is used to store the quotes
+ * type: DOUBLE => "
+ * type: SINLGE => '
 */
 typedef struct s_quote
 {
-    int     ascii;
+    bool    type;
     int     start;
     int     end;
     struct s_quote *next;
@@ -111,6 +118,7 @@ typedef struct s_db
 {
     void    *root_node;
     t_gc    *gc;
+    char    **env;
     int     op_counter[6];
     t_quote *quotes;
     t_parnth *paranthesis;
@@ -127,5 +135,4 @@ void    *gc_realloc(t_db *db, void *ptr, size_t size);
 
 /*prototypes: string.c*/
 char    *concat(t_db *db, char *s, char single_char);
-
 #endif

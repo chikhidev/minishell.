@@ -112,6 +112,20 @@ char *get_env(t_db *db, char *name)
 	return (NULL);
 }
 
+int inside_single_quote(t_db *db, int   i)
+{
+    t_quote *q;
+
+    q = db->quotes;
+    while (q)
+    {
+        if (q->start <= i && i >= q->end && q->type == SNGLQUOTE)
+            return (1);
+        q = q->next;
+    }
+    return (0);
+}
+
 int expand(t_db *db, char   *line)
 {
     int i;
@@ -125,7 +139,7 @@ int expand(t_db *db, char   *line)
     {
         if (line[i] == '$' && !is_whitespace(line[i + 1]))
         {
-            if (not_inside_single_quote(db, i))
+            if (!inside_single_quote(db, i))
             {
                 env_var_name = get_env_name(db, line, i);
                 if (env_var_name)

@@ -1,13 +1,13 @@
 #include "../includes/main.h"
 
-int add_quote(t_db *db, int ascii, int start)
+int add_quote(t_db *db, bool type, int start)
 {
     t_quote *new;
     t_quote *tmp;
 
     new = gc_malloc(db, sizeof(t_quote));
     if (!new) return (FAILURE);
-    new->ascii = ascii;
+    new->type = type;
     new->start = start;
     new->end = -1;
     new->next = NULL;
@@ -48,7 +48,7 @@ int track_quotes(t_db *db, char *line)
             if (add_quote(db, line[i], i) == FAILURE) return (FAILURE);
         }
         else if ((line[i] == 34 || line[i] == 39)
-            && last->ascii == line[i]
+            && last->type == line[i]
             && last->end == -1)
             last->end = i;
         else if ((line[i] == 34 || line[i] == 39)

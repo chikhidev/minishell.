@@ -117,42 +117,42 @@ int smart_split(t_db *db, char *line, void *origin)
 */
 int parser(t_db *db, char *line)
 {
-    if (track_quotes(db, line) == FAILURE) return (FAILURE);
-    if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
+    expand(db, line);
+    // if (track_quotes(db, line) == FAILURE) return (FAILURE);
+    // if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
 
-    // DEBUG --------------------------------------------------------
-    printf(CYAN"\n[DEBUG] available scopes:\n"RESET);
-    for (t_parnth *tmp = db->paranthesis; tmp; tmp = tmp->next)
-    {
-        for (int j = tmp->open_; j <= tmp->close_; j++)
-            printf("%c", line[j]);
-        printf("\n");
-    }
-    printf(BLUE"\n[DEBUG] quotes:\n"RESET);
-    for (t_quote *tmp = db->quotes; tmp; tmp = tmp->next)
-    {
-        for (int j = tmp->start; j <= tmp->end; j++)
-            printf("%c", line[j]);
-        printf("\n");
-    }
-    printf("\n");
-    // DEBUG --------------------------------------------------------
+    // // DEBUG --------------------------------------------------------
+    // printf(CYAN"\n[DEBUG] available scopes:\n"RESET);
+    // for (t_parnth *tmp = db->paranthesis; tmp; tmp = tmp->next)
+    // {
+    //     for (int j = tmp->open_; j <= tmp->close_; j++)
+    //         printf("%c", line[j]);
+    //     printf("\n");
+    // }
+    // printf(BLUE"\n[DEBUG] quotes:\n"RESET);
+    // for (t_quote *tmp = db->quotes; tmp; tmp = tmp->next)
+    // {
+    //     for (int j = tmp->start; j <= tmp->end; j++)
+    //         printf("%c", line[j]);
+    //     printf("\n");
+    // }
+    // printf("\n");
+    // // DEBUG --------------------------------------------------------
 
-    if (smart_split(db, line, db->root_node) == FAILURE) return (FAILURE);
+    // if (smart_split(db, line, db->root_node) == FAILURE) return (FAILURE);
 
-    for (void *node = db->root_node; node; node = ((t_cmd_node *)node)->origin)
-    {
-        if (((t_cmd_node *)node)->type == CMD_NODE)
-        {
-            printf(GREEN"[DEBUG] command: %s\n"RESET, ((t_cmd_node *)node)->args[0]);
-            for (int i = 1; ((t_cmd_node *)node)->args[i]; i++)
-                printf(GREEN"[DEBUG] arg: %s\n"RESET, ((t_cmd_node *)node)->args[i]);
-        }
-        else if (((t_cmd_node *)node)->type == OP_NODE)
-        {
-            printf(ORANGE"[DEBUG] operator: %d\n"RESET, ((t_op_node *)node)->op_presentation);
-        }
-    }
-
+    // for (void *node = db->root_node; node; node = ((t_cmd_node *)node)->origin)
+    // {
+    //     if (((t_cmd_node *)node)->type == CMD_NODE)
+    //     {
+    //         printf(GREEN"[DEBUG] command: %s\n"RESET, ((t_cmd_node *)node)->args[0]);
+    //         for (int i = 1; ((t_cmd_node *)node)->args[i]; i++)
+    //             printf(GREEN"[DEBUG] arg: %s\n"RESET, ((t_cmd_node *)node)->args[i]);
+    //     }
+    //     else if (((t_cmd_node *)node)->type == OP_NODE)
+    //     {
+    //         printf(ORANGE"[DEBUG] operator: %d\n"RESET, ((t_op_node *)node)->op_presentation);
+    //     }
+    // }
     return (SUCCESS);
 }
