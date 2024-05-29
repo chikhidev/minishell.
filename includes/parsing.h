@@ -32,10 +32,12 @@ typedef struct s_expand_tokens
 /*string.c*/
 void    skip_spaces(char *line, int *i);
 
-/*parsing/quoting.c*/
-int track_quotes(t_db *db, char *line);
-int is_inside_quotes(t_db *db, int i);
+/*parsing/quoting.c and parsing/quoting_utils.c*/
+int     track_quotes(t_db *db, char *line);
+int     is_inside_quotes(t_db *db, int i);
 void    reset_quotes(t_db *db);
+int     inside_single_quote(t_db *db, int   i);
+int     is_inside_quotes(t_db *db, int i);
 
 /*parsing/paranths.c && paranths2.c*/
 int         track_paranthesis(t_db *db, char *line);

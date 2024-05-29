@@ -1,18 +1,5 @@
 #include "../includes/main.h"
-
-int is_inside_quotes(t_db *db, int i)
-{
-    t_quote *tmp;
-
-    tmp = db->quotes;
-    while (tmp)
-    {
-        if (i >= tmp->start && i <= tmp->end)
-            return (1);
-        tmp = tmp->next;
-    }
-    return (0);
-}
+#include "../includes/parsing.h"
 
 int create_paranth(t_db *db, int open_)
 {
@@ -52,7 +39,6 @@ t_parnth *last_unclosed_paranth(t_db *db)
     }
     return (last);
 }
-
 
 int track_paranthesis(t_db *db, char *line)
 {

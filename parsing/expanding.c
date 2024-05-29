@@ -12,38 +12,23 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable)
     int     c;
 
     if (!env_variable) return (SUCCESS);
-
-    // printf("original_line: %s\n", *original_line);
-    // printf("env_variable: %s\n", env_variable);
-
     a = 0;
     b = 0;
     c = 0;
     while ((*original_line)[a + b + c] && (*original_line)[a + b + c] != '$')
         a++;
     b += ((*original_line)[a + b + c] == '$');
-    while ((*original_line)[a + b + c] && !is_whitespace((*original_line)[a + b + c])
-        && (*original_line)[a + b + c] != '\"' && (*original_line)[a + b + c] != '\''
-        && (*original_line)[a + b + c] != '$' && (*original_line)[a + b + c] != ')'
-        && (*original_line)[a + b + c] != '(')
+    while ((*original_line)[a + b + c] && ft_isalpha((*original_line)[a + b + c]))
         b++;
     while ((*original_line)[a + b + c])
         c++;
-
-    // printf("a: %d\n", a);
-    // printf("b: %d\n", b);
-    // printf("c: %d\n", c);
-
     new_line = gc_malloc(db, sizeof(char) * (a + ft_strlen(env_variable) + c + 1));
     if (!new_line) return error(db, "Failed to malloc new_line");
-
     ft_strlcpy(new_line, *original_line, a + 1);
     ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1);
     ft_strlcpy(new_line + a + ft_strlen(env_variable), *original_line + a + b, c + 1);
-
     gc_free(db, *original_line);
     *original_line = new_line;
-
     return (SUCCESS);
 }
 
@@ -61,24 +46,24 @@ char *get_env(t_db *db, char *name)
 	return (NULL);
 }
 
-int inside_single_quote(t_db *db, int   i)
+int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
 {
-    t_quote *q;
+    char    *tmp;
 
-    q = db->quotes;
-    while (q)
+    while ((*line)[(*i)] && ft_isalpha((*line)[(*i)]))
     {
-        if (q->start <= i && i >= q->end && q->ascii == SNGLQUOTE)
-            return (1);
-        q = q->next;
+        tmp = concat(db, *env_var_name, (*line)[(*i)]);
+        if (!tmp) return error(db, "Concat failed");
+        gc_free(db, *env_var_name);
+        *env_var_name = tmp;
+        (*i)++;
     }
-    return (0);
+    return (SUCCESS);
 }
 
 int expand(t_db *db, char **line)
 {
     char    *env_var_name;
-    char    *tmp;
     int     i;
 
     env_var_name = NULL;
@@ -88,25 +73,14 @@ int expand(t_db *db, char **line)
         if ((*line)[i] == '$' && !inside_single_quote(db, i))
         {
             if (!(*line)[++i]) return (SUCCESS);
-            while ((*line)[i] && !is_whitespace((*line)[i]) 
-                && (*line)[i] != '\"' && (*line)[i] != '\''
-                && (*line)[i] != '$' && (*line)[i] != ')' && (*line)[i] != '(')
-            {
-                tmp = concat(db, env_var_name, (*line)[i]);
-                if (!tmp) return error(db, "Concat failed");
-                gc_free(db, env_var_name);
-                env_var_name = tmp;
-                i++;
-            }
+            if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
+                return (FAILURE);
             if (update_env_in_line(db, line, get_env(db, env_var_name)) == FAILURE)
                 return (FAILURE);
             gc_free(db, env_var_name);
             env_var_name = NULL;
-
-            reset_quotes(db);
-
+            reset_quotes(db); // reset the quotes to stay updated
             if (!track_quotes(db, (*line))) return (FAILURE);
-            if (!(*line)[i]) return (SUCCESS);
         }
         i++;
     }

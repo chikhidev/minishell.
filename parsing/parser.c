@@ -126,7 +126,7 @@ int parser(t_db *db, char *line)
 
 
     printf("Updated line: %s\n", line);
-    // if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
+    if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------
     // printf(CYAN"\n[DEBUG] available scopes:\n"RESET);
