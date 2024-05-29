@@ -130,6 +130,7 @@ int parser(t_db *db, char *line)
     if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------
+    printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
     // // DEBUG --------------------------------------------------------
 
     // if (unused_ops(line)) return error(db, "syntax error near unexpected token operator");
