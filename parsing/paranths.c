@@ -40,6 +40,8 @@ t_parnth *last_unclosed_paranth(t_db *db)
     return (last);
 }
 
+
+
 int track_paranthesis(t_db *db, char *line)
 {
     t_parnth    *last_opened;

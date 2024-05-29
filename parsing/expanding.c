@@ -18,16 +18,16 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable)
     while ((*original_line)[a + b + c] && (*original_line)[a + b + c] != '$')
         a++;
     b += ((*original_line)[a + b + c] == '$');
-    while ((*original_line)[a + b + c] && ft_isalpha((*original_line)[a + b + c]))
+    while ((*original_line)[a + b + c] && valid_char((*original_line)[a + b + c], a + b + c))
         b++;
     while ((*original_line)[a + b + c])
         c++;
     new_line = gc_malloc(db, sizeof(char) * (a + ft_strlen(env_variable) + c + 1));
     // printf("new linelen -> %zu\n", (a + ft_strlen(env_variable) + c + 1));
     if (!new_line) return error(db, "Failed to malloc new_line");
-    ft_strlcpy(new_line, *original_line, a + 1);
-    ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1);
-    ft_strlcpy(new_line + a + ft_strlen(env_variable), *original_line + a + b, c + 1);
+    ft_strlcpy(new_line, *original_line, a + 1); // from 0 to a0
+    ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1); //from a + len dyal env
+    ft_strlcpy(new_line + a + ft_strlen(env_variable), *original_line + a + b, c + 1); // from a + len +
     gc_free(db, *original_line);
     *original_line = new_line;
     return (SUCCESS);

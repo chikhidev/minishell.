@@ -88,11 +88,20 @@ typedef struct s_op_node
     int     n_childs;
 }   t_op_node;
 
+typedef struct  s_operators
+{
+    int i;
+    char    *name;
+    int     size;
+    struct s_operators  *next; 
+}   t_operators;
+
 /**
  * @details The quote structure is used to store the quotes
  * type: DOUBLE => "
  * type: SINLGE => '
 */
+
 typedef struct s_quote
 {
     int     ascii;
@@ -122,6 +131,7 @@ typedef struct s_db
     int     op_counter[6];
     t_quote *quotes;
     t_parnth *paranthesis;
+    t_operators *ops;
 }   t_db;
 
 /*prototypes: error.c*/
