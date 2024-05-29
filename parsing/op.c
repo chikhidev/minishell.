@@ -1,11 +1,32 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
+/*
+    good = 1 means in good place
+*/
+int good_place_for_op(t_db   *db,   int i)
+{
+    t_parnth    *parnth;
+    int good;
+
+    good = -1;
+    parnth = db->paranthesis;
+    while (parnth)
+    {
+        if (parnth->open_ < i && i < parnth->close_)
+            i++;
+        if (parnth->open_ > i && i > parnth->close_)
+            i++;
+        parnth = parnth->next;
+    }
+    
+}
+
 int create_operator(t_db *db, int i, char *name)
 {
     t_operators *op;
     t_operators *tmp;
-    printf("creating -> %s\n", name);
+
     op = malloc(sizeof(t_operators));
     if (!op)
         return (FAILURE);
@@ -33,7 +54,6 @@ int track_operators(t_db *db, char  *line)
     i = 0;
     while (line[i])
     {
-        printf("checking -> %c\n", line[i]);
         if (line[i] == '&' && line[i + 1] == '&')
             create_operator(db, i, "&&");
         else if (line[i] == '|' && line[i + 1] == '|')
