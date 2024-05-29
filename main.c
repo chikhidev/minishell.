@@ -69,6 +69,7 @@ int     main(int    ac, char    *av[],  char    *env[])
 {
     t_db    db;
     char    *line;
+    char    *tmp;
     int     ret;
 
     line = NULL;
@@ -79,18 +80,19 @@ int     main(int    ac, char    *av[],  char    *env[])
         ret = handle_prompt(&line);
         if (ret == -1) break ;
         else if (ret == 0) continue ;
+
+        tmp = gc_malloc(&db, ft_strlen(line) + 1);
+        if (!tmp) return !error(&db, "malloc failed");
+        ft_strlcpy(tmp, line, ft_strlen(line) + 1);
+        free(line);
+        line = tmp;
+
         /* parse the line ----------------------------------*/
         if (parser(&db, line) == FAILURE)
-        {
-            free(line);
             continue ;
-        }
         /* execute the cmds --------------------------------*/
-
         gc_void(&db);
-        free(line);
     }
-    free(line);
     gc_void(&db);
     return (SUCCESS);
 }

@@ -1,100 +1,49 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-int is_whitespace(char c)
+/**
+ * @details This function's job is to update the line with the env variables
+*/
+int    update_env_in_line(t_db *db, char **original_line, char *env_variable)
 {
-    return (c == ' ' || c == '\t' || c == '\n');
-}
+    char    *new_line;
+    int     a;
+    int     b;
+    int     c;
 
-char *ft_strncpy(char *dst, char *src, int n)
-{
-    int i;
+    if (!env_variable) return (SUCCESS);
 
-    i = 0;
-    while (src[i] && i < n)
-    {
-        dst[i] = src[i];
-        i++;
-    }
-    dst[i] = '\0';
-    return (dst);
-}
+    // printf("original_line: %s\n", *original_line);
+    // printf("env_variable: %s\n", env_variable);
 
-char *get_env_name(t_db *db, char  *line, int idx)
-{
-    int var_len;
-    char    *env_var_name;
-    char    *expanded_line;
-    int initial_idx;
-    var_len = 0;
-    initial_idx = idx;
-    idx++;
-    while (line[idx])
-    {
-        if (!line[idx] || is_whitespace(line[idx]))
-            break;
-        idx++;
-        var_len++;
-    }
-    if (var_len == 0)
-    {
-        expanded_line = ft_strdup(line);
-        if (!expanded_line)
-            return (NULL);
-    }
-    env_var_name = gc_malloc(db, (var_len + 1) * sizeof(char));
-    env_var_name = ft_strncpy(env_var_name, &line[initial_idx + 1], var_len);
-    return env_var_name;
+    a = 0;
+    b = 0;
+    c = 0;
+    while ((*original_line)[a + b + c] && (*original_line)[a + b + c] != '$')
+        a++;
+    b += ((*original_line)[a + b + c] == '$');
+    while ((*original_line)[a + b + c] && !is_whitespace((*original_line)[a + b + c])
+        && (*original_line)[a + b + c] != '\"' && (*original_line)[a + b + c] != '\''
+        && (*original_line)[a + b + c] != '$' && (*original_line)[a + b + c] != ')'
+        && (*original_line)[a + b + c] != '(')
+        b++;
+    while ((*original_line)[a + b + c])
+        c++;
 
-}
+    // printf("a: %d\n", a);
+    // printf("b: %d\n", b);
+    // printf("c: %d\n", c);
 
-int skip_non_whitespaces(char  *line,   int *init_i)
-{
-    int i;
+    new_line = gc_malloc(db, sizeof(char) * (a + ft_strlen(env_variable) + c + 1));
+    if (!new_line) return error(db, "Failed to malloc new_line");
 
-    i = *init_i;
-    while (line[i] && !is_whitespace(line[i]))
-        i++;
-    *init_i = i;
-    return (SUCCESS);
-}
+    ft_strlcpy(new_line, *original_line, a + 1);
+    ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1);
+    ft_strlcpy(new_line + a + ft_strlen(env_variable), *original_line + a + b, c + 1);
 
-int add_token(t_tokens **tokens, char *token)
-{
-    t_tokens *new;
-    t_tokens *tmp;
+    gc_free(db, *original_line);
+    *original_line = new_line;
 
-    new = malloc(sizeof(t_tokens));
-    if (!new)
-        return (FAILURE);
-    new->token = token;
-    new->next = NULL;
-    if (!*tokens)
-    {
-        *tokens = new;
-        return (SUCCESS);
-    }
-    tmp = *tokens;
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new;
-    return (SUCCESS);
-}
-
-int del_tokens(t_tokens **tokens)
-{
-    t_tokens *tmp;
-    t_tokens *next;
-
-    tmp = *tokens;
-    while (tmp)
-    {
-        next = tmp->next;
-        // free(tmp->token);
-        free(tmp);
-        tmp = next;
-    }
-    *tokens = NULL;
     return (SUCCESS);
 }
 
@@ -119,48 +68,47 @@ int inside_single_quote(t_db *db, int   i)
     q = db->quotes;
     while (q)
     {
-        if (q->start <= i && i >= q->end && q->type == SNGLQUOTE)
+        if (q->start <= i && i >= q->end && q->ascii == SNGLQUOTE)
             return (1);
         q = q->next;
     }
     return (0);
 }
 
-int expand(t_db *db, char   *line)
+int expand(t_db *db, char **line)
 {
-    int i;
-    char *env_var_name;
-    char *env_var_value;
-    t_tokens *tokens;
+    char    *env_var_name;
+    char    *tmp;
+    int     i;
 
-    tokens = NULL;
+    env_var_name = NULL;
     i = 0;
-    while (line[i])
+    while ((*line)[i])
     {
-        if (line[i] == '$' && !is_whitespace(line[i + 1]))
+        if ((*line)[i] == '$' && !inside_single_quote(db, i))
         {
-            if (!inside_single_quote(db, i))
+            if (!(*line)[++i]) return (SUCCESS);
+            while ((*line)[i] && !is_whitespace((*line)[i]) 
+                && (*line)[i] != '\"' && (*line)[i] != '\''
+                && (*line)[i] != '$' && (*line)[i] != ')' && (*line)[i] != '(')
             {
-                env_var_name = get_env_name(db, line, i);
-                if (env_var_name)
-                {
-                    env_var_value = get_env(db, env_var_name);
-                    if (env_var_value)
-                        add_token(&tokens, env_var_value);
-                    else
-                        add_token(&tokens, "$");
-                }
+                tmp = concat(db, env_var_name, (*line)[i]);
+                if (!tmp) return error(db, "Concat failed");
+                gc_free(db, env_var_name);
+                env_var_name = tmp;
+                i++;
             }
-            else
-                printf("no expand\n");
+            if (update_env_in_line(db, line, get_env(db, env_var_name)) == FAILURE)
+                return (FAILURE);
+            gc_free(db, env_var_name);
+            env_var_name = NULL;
+
+            reset_quotes(db);
+
+            if (!track_quotes(db, (*line))) return (FAILURE);
+            if (!(*line)[i]) return (SUCCESS);
         }
         i++;
     }
-    while (tokens)
-    {
-        printf("token: %s\n", tokens->token);
-        tokens = tokens->next;
-    }
     return (SUCCESS);
-    
 }

@@ -3,7 +3,9 @@
         "main.h": "c",
         "unistd.h": "c",
         "stdbool.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "compare": "c",
+        "type_traits": "c"
     },
     "workbench.iconTheme": "vs-seti"
 }

@@ -35,6 +35,7 @@ void    skip_spaces(char *line, int *i);
 /*parsing/quoting.c*/
 int track_quotes(t_db *db, char *line);
 int is_inside_quotes(t_db *db, int i);
+void    reset_quotes(t_db *db);
 
 /*parsing/paranths.c && paranths2.c*/
 int         track_paranthesis(t_db *db, char *line);
@@ -46,11 +47,14 @@ int parser(t_db *db, char *line);
 
 /*parsing/split.c*/
 char    **whitespaces_split(t_db *db, char *str, int start);
+int     is_whitespace(char c);
+
 /*parsing/expanding.c*/
-int expand(t_db *db, char   *line);
-char *get_env_name(t_db *db, char  *line, int idx);
+int expand(t_db *db, char **line);
 char *get_env(t_db *db, char *name);
+
 /*parsing/paranths.c*/
 int track_paranthesis(t_db *db, char *line);
+
 
 #endif

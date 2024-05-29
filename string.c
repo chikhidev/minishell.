@@ -9,7 +9,7 @@ char    *concat(t_db *db, char *s, char single_char)
     new = gc_malloc(db, ft_strlen(s) + 2);
     if (!new) return (NULL);
     i = 0;
-    while (s[i])
+    while (s && s[i])
     {
         new[i] = s[i];
         i++;
@@ -40,4 +40,20 @@ void skip_spaces(char *line, int *i)
 {
     while (line[*i] && (line[*i] == 32 || (line[*i] >= 9 && line[*i] <= 13)))
         (*i)++;
+}
+
+int count(char *line, char c)
+{
+    int i;
+    int count;
+
+    i = 0;
+    count = 0;
+    while (line[i])
+    {
+        if (line[i] == c)
+            count++;
+        i++;
+    }
+    return (count);
 }

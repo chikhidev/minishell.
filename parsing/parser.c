@@ -117,8 +117,15 @@ int smart_split(t_db *db, char *line, void *origin)
 */
 int parser(t_db *db, char *line)
 {
-    expand(db, line);
-    // if (track_quotes(db, line) == FAILURE) return (FAILURE);
+    // int envv_counter;
+
+
+    if (track_quotes(db, line) == FAILURE) return (FAILURE);
+
+    if (expand(db, &line) == FAILURE) return (FAILURE);
+
+
+    printf("Updated line: %s\n", line);
     // if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------

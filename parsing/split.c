@@ -1,9 +1,9 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-int is_space(char c)
+int is_whitespace(char c)
 {
-    return (c == ' ' || c == '\t' || c == '\n');
+    return (c == ' ' || (c >= 9 && c <= 13));
 }
 
 int count_words(char *str)
@@ -15,10 +15,10 @@ int count_words(char *str)
     count = 0;
     while (str[i])
     {
-        if (!is_space(str[i]))
+        if (!is_whitespace(str[i]))
         {
             count++;
-            while (str[i] && !is_space(str[i]))
+            while (str[i] && !is_whitespace(str[i]))
                 i++;
         }
         else
@@ -56,7 +56,7 @@ char    **whitespaces_split(t_db *db, char *str, int start)
     j = 0;
     while (str[i])
     {
-        if (is_space(str[i]) && !is_inside_quotes(db, start + i))
+        if (is_whitespace(str[i]) && !is_inside_quotes(db, start + i))
         {
             tmp = gc_malloc(db, i + 1);
             if (!tmp)
@@ -64,7 +64,7 @@ char    **whitespaces_split(t_db *db, char *str, int start)
             ft_strlcpy(tmp, str, i + 1);
             res[j++] = tmp;
             res[j] = NULL;
-            while (str[i] && is_space(str[i]))
+            while (str[i] && is_whitespace(str[i]))
                 i++;
             if (!str[i])
                 break;
@@ -73,7 +73,7 @@ char    **whitespaces_split(t_db *db, char *str, int start)
         }
         i++;
     }
-    if (str[i - 1] && !is_space(str[i - 1]))
+    if (str[i - 1] && !is_whitespace(str[i - 1]))
     {
         tmp = gc_malloc(db, i + 1);
         if (!tmp)
