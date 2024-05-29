@@ -29,15 +29,15 @@ int unused_ops(char *line)
         return (TRUE);
 
     i = 0;
-    while (line[i])
-    {
-        if (is_valid_op(line[i], line[i + 1], &i))
-        {
-            skip_spaces(line, &i);
-            if (!line[i])
-                return (TRUE);
-        }
-        i++;
-    }
+    // while (line[i])
+    // {
+    //     if (is_valid_op(line[i], line[i + 1], &i))
+    //     {
+    //         skip_spaces(line, &i);
+    //         if (!line[i])
+    //             return (TRUE);
+    //     }
+    //     i++;
+    // }
     return (FALSE);
 }

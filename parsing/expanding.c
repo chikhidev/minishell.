@@ -46,11 +46,22 @@ char *get_env(t_db *db, char *name)
 	return (NULL);
 }
 
+int valid_char(char c, int  index)
+{
+    if (isdigit(c) && index == 0)
+        return (0);
+    if (c == '_' || ft_isalnum(c))
+        return (1);
+    return (0);
+}
+
 int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
 {
     char    *tmp;
+    bool    is_first_char;
 
-    while ((*line)[(*i)] && ft_isalpha((*line)[(*i)]))
+    is_first_char = 1;
+    while ((*line)[(*i)] && valid_char((*line)[*i], *i))
     {
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
         if (!tmp) return error(db, "Concat failed");
@@ -58,6 +69,7 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
         *env_var_name = tmp;
         (*i)++;
     }
+    printf("i -> %d\n", *i);
     return (SUCCESS);
 }
 

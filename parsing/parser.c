@@ -133,8 +133,8 @@ int parser(t_db *db, char *line)
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
     // // DEBUG --------------------------------------------------------
 
-    // if (unused_ops(line)) return error(db, "syntax error near unexpected token operator");
-    // if (!all_scopes_has_op_between(db, line)) return (FAILURE);
+    if (unused_ops(line)) return error(db, "syntax error near unexpected token operator");
+    if (!all_scopes_has_op_between(db, line)) return (FAILURE);
     // if (smart_split(db, line, db->root_node) == FAILURE) return (FAILURE);
 
     return (SUCCESS);

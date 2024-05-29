@@ -16,10 +16,10 @@ char    *line_promte()
     char    *user;
     char    *tmp;
 
-    user = getenv("USERNAME");
+    user = getenv("USER");
     if (user)
         user = ft_strdup(user);
-    if (!user)
+    else
         user = ft_strdup("shell");
     tmp = ft_strjoin(GREEN"Lowa@"RESET, user);
     free(user);
