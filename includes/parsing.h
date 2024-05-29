@@ -55,8 +55,13 @@ int     is_whitespace(char c);
 int expand(t_db *db, char **line);
 char *get_env(t_db *db, char *name);
 
-/*parsing/paranths.c*/
+/*parsing/paranths.c and paranths2.c*/
 int track_paranthesis(t_db *db, char *line);
+int paranths_scopes_count(t_db *db);
+int all_scopes_has_op_between(t_db *db, char *line);
 
+/*op.c*/
+int is_valid_op(char c, char next_c, int *i);
+int unused_ops(char *line);
 
 #endif

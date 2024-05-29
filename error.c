@@ -2,7 +2,7 @@
 
 int error(t_db *db, char *msg)
 {
-    printf(RED"Error: %s\n\n"RESET, msg);
+    printf("Error: %s\n\n", msg);
     gc_void(db);
     return (FAILURE);
 }
