@@ -23,6 +23,7 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable)
     while ((*original_line)[a + b + c])
         c++;
     new_line = gc_malloc(db, sizeof(char) * (a + ft_strlen(env_variable) + c + 1));
+    // printf("new linelen -> %zu\n", (a + ft_strlen(env_variable) + c + 1));
     if (!new_line) return error(db, "Failed to malloc new_line");
     ft_strlcpy(new_line, *original_line, a + 1);
     ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1);
@@ -58,9 +59,7 @@ int valid_char(char c, int  index)
 int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
 {
     char    *tmp;
-    bool    is_first_char;
 
-    is_first_char = 1;
     while ((*line)[(*i)] && valid_char((*line)[*i], *i))
     {
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
@@ -68,8 +67,8 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
         gc_free(db, *env_var_name);
         *env_var_name = tmp;
         (*i)++;
+
     }
-    printf("i -> %d\n", *i);
     return (SUCCESS);
 }
 
@@ -77,11 +76,13 @@ int expand(t_db *db, char **line)
 {
     char    *env_var_name;
     int     i;
-
+    int     len;
     env_var_name = NULL;
     i = 0;
-    while ((*line)[i])
+    len = ft_strlen(*line);
+    while (i < len && (*line)[i])
     {
+        len = ft_strlen(*line);
         if ((*line)[i] == '$' && !inside_single_quote(db, i))
         {
             if (!(*line)[++i]) return (SUCCESS);
