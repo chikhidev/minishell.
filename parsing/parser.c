@@ -128,7 +128,7 @@ int parser(t_db *db, char *line)
     if (track_quotes(db, line) == FAILURE) return (FAILURE);
     if (expand(db, &line) == FAILURE) return (FAILURE);
     if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
-    if (track_operators(db, line) == FAILURE) return (FAILURE);
+    // if (track_operators(db, line) == FAILURE) return (FAILURE);
 
 
     // // DEBUG --------------------------------------------------------
@@ -141,10 +141,6 @@ int parser(t_db *db, char *line)
     }
 
     // // DEBUG --------------------------------------------------------
-
-    // !test
-    // *test
-    // ?test
 
     // if (unused_ops(line)) return error(db, "syntax error near unexpected token operator");
     // if (!all_scopes_has_op_between(db, line)) return (FAILURE);

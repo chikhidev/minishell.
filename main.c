@@ -46,7 +46,7 @@ int handle_prompt(char **line)
     return 1 ; // nothing
 }
 
-void    init_db(t_db *db, int   ac, char    *av[], char *env[])
+void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
     int i;
 
@@ -55,6 +55,7 @@ void    init_db(t_db *db, int   ac, char    *av[], char *env[])
     db->quotes = NULL;
     db->paranthesis = NULL;
     db->env = env;
+    db->last_signal = 0;
     (void) ac;
     (void) av;
     i = 0;

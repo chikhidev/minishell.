@@ -129,6 +129,7 @@ typedef struct s_db
     t_gc    *gc;
     char    **env;
     int     op_counter[6];
+    int     last_signal;
     t_quote *quotes;
     t_parnth *paranthesis;
     t_operators *ops;
