@@ -54,6 +54,7 @@ void    init_db(t_db *db, int   ac, char    *av[], char *env[])
     db->root_node = NULL;
     db->quotes = NULL;
     db->paranthesis = NULL;
+    db->ops = NULL;
     db->env = env;
     (void) ac;
     (void) av;
