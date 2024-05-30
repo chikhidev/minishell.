@@ -126,12 +126,17 @@ int track_operators(t_db *db, char  *line)
             (create_operator(db, i, "&&"), i++);
         else if (line[i] == '|' && line[i + 1] == '|')
             (create_operator(db, i, "||"), i++);
+        else if (line[i] == '<' && line[i + 1] == '<')
+            (create_operator(db, i, "<<"), i++);
+        else if (line[i] == '>' && line[i + 1] == '>')
+            (create_operator(db, i, ">>"), i++);
         else if (line[i] == '<')
             create_operator(db, i, "<");
         else if (line[i] == '>')
             create_operator(db, i, ">");
         else if (line[i] == '|')
             create_operator(db, i, "|");
+
         i++;
     }
     i = 0;
@@ -155,29 +160,5 @@ int is_valid_op(char c, char next_c)
         return (TRUE);
     else if (c == '|' || c == '>' || c == '<')
         return (TRUE);
-    return (FALSE);
-}
-
-int unused_ops(char *line)
-{
-    int i;
-
-    i = 0;
-    while (line[i] && is_whitespace(line[i]))
-        i++;
-    if (is_valid_op(line[i], line[i + 1]))
-        return (TRUE);
-
-    i = 0;
-    // while (line[i])
-    // {
-    //     if (is_valid_op(line[i], line[i + 1], &i))
-    //     {
-    //         skip_spaces(line, &i);
-    //         if (!line[i])
-    //             return (TRUE);
-    //     }
-    //     i++;
-    // }
     return (FALSE);
 }
