@@ -4,10 +4,12 @@
 /*
     good = 1 means in good place (before and after)
 */
+ 
+/* flag is -3 if needs something before op                 '<'    '|'                    */
+/* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
+/* flag is -1 if needs something before & after op like    '&&'   '||'                   */
 
-/* flag is -3 if needs something before op                 '<', '|'                */
-/* flag is -2 if needs something after  op                 '>' '<<' , '>>'         */
-/* flag is -1 if needs something before & after op like    '&&' , '||'             */
+ 
 void set_up_flag(int    *flag, char *op)
 {
     if (strcmp(op, "&&") == 0)
@@ -15,15 +17,16 @@ void set_up_flag(int    *flag, char *op)
     else if (strcmp(op, "||") == 0)
         *flag = -1;
     else if (strcmp(op, "|") == 0)
-        *flag = -2;
+        *flag = -3;
+    else if (strcmp(op, "<") == 0)
+        *flag = -3;
     else if (strcmp(op, ">") == 0)
         *flag = -2;
     else if (strcmp(op, ">>") == 0)
         *flag = -2;
     else if (strcmp(op, "<<") == 0)
         *flag = -2;
-    else if (strcmp(op, "<") == 0)
-        *flag = -3;
+
     else
         error(NULL,"wrong op\n");
 }
@@ -49,36 +52,39 @@ int surrounded_by_parenths(t_db   *db,   int i)
         return (FAILURE);
 }
 
-/* flag is -3 if needs something before op                 '<'                      */
-/* flag is -2 if needs something after  op                 '>' '<<' , '>>' '|'      */
-/* flag is -1 if needs something before & after op like    '&&' , '||'              */
+/* flag is -3 if needs something before op                 '<'    '|'                    */
+/* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
+/* flag is -1 if needs something before & after op like    '&&'   '||'                   */
 
 int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int flag)
 {
     int i;
-    bool seen_before;
-    bool seen_after;
+    bool char_before_op;
+    bool char_after_op;
 
-    seen_before = false;
-    seen_after = false;
+    char_before_op = false;
+    char_after_op = false;
     i = 0;
+    (void) op_name;
     while (line[i])
     {
-        if (isalnum(line[i]) && op_idx < i)
+        // op_idx < i  means operator is before our caracter  ex: (< cat)
+        if (isalnum(line[i]) && i < op_idx)
         {
             if (flag == -3)
                 return (SUCCESS);
-            seen_before = true;
+            char_before_op = true;
         }
-        if (isalnum(line[i]) && (op_idx + (int)ft_strlen(op_name)) > i)
+        // i >op_idx  means operator is after our caracter    ex: (ls |)
+        if (isalnum(line[i]) && i > op_idx)
         {
             if (flag == -2)
                 return (SUCCESS);
-            seen_after = true;
+            char_after_op = true;
         }
         i++;
     }
-    if (seen_before && seen_after)
+    if (char_before_op && char_after_op)
         return (SUCCESS);
     else
         return (FAILURE);
@@ -151,6 +157,22 @@ int track_operators(t_db *db, char  *line)
     }
     return (SUCCESS);
 }
+
+
+/* sould check if the op in within scopes */
+// int is_op_trackable(t_db    *db, char   *op_name, int   op_idx)
+// {
+//     int trackable;
+//     t_parnth    *scope;
+
+//     trackable = -1;
+//     scope = db->paranthesis;
+//     while (scope)
+//     {
+//         if (scope->open_ < op_idx && scope->close_ < op_idx)
+//             trackable++;
+//     }
+// }
 
 int is_valid_op(char c, char next_c)
 {
