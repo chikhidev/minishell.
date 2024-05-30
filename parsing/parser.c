@@ -128,7 +128,7 @@ int parser(t_db *db, char *line)
     if (track_quotes(db, line) == FAILURE) return (FAILURE);
     if (expand(db, &line) == FAILURE) return (FAILURE);
     if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
-    // if (track_operators(db, line) == FAILURE) return (FAILURE);
+    if (track_operators(db, line) == FAILURE) return (FAILURE);
 
 
     // // DEBUG --------------------------------------------------------
