@@ -130,15 +130,14 @@ int parser(t_db *db, char *line)
     if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
 
-
     // // DEBUG --------------------------------------------------------
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
 
-    for (t_parnth *p = db->paranthesis; p; p = p->next)
-    {
-        printf("close -> [%d]    open -> [%d]\n", p->close_, p->open_);
-        printf("\n");
-    }
+    // for (t_parnth *p = db->paranthesis; p; p = p->next)
+    // {
+    //     printf("close -> [%d]    open -> [%d]\n", p->close_, p->open_);
+    //     printf("\n");
+    // }
 
     // // DEBUG --------------------------------------------------------
 

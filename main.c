@@ -21,6 +21,8 @@ char    *line_promte()
         user = ft_strdup(user);
     else
         user = ft_strdup("shell");
+    if (!user)
+        return (NULL);
     tmp = ft_strjoin(GREEN"Lowa@"RESET, user);
     free(user);
     if (!tmp)
@@ -54,6 +56,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->root_node = NULL;
     db->quotes = NULL;
     db->paranthesis = NULL;
+    db->ops = NULL;
     db->env = env;
     db->last_signal = 0;
     (void) ac;

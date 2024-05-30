@@ -24,6 +24,7 @@
 
 /*string.c*/
 void    skip_spaces(char *line, int *i);
+int     are_all(char *str, int (*f)(int));
 
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int     track_quotes(t_db *db, char *line);

@@ -57,3 +57,17 @@ int count(char *line, char c)
     }
     return (count);
 }
+
+int are_all(char *str, int (*f)(int))
+{
+    int i;
+
+    i = 0;
+    while (str[i])
+    {
+        if (!f(str[i]))
+            return (0);
+        i++;
+    }
+    return (1);
+}
