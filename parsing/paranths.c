@@ -70,16 +70,19 @@ int verify_create_parenth(t_db  *db, char   *line, int    idx)
     // no prev scopes mean this is first parenthesy so its good
     if (!scope)
         return (SUCCESS);
+
     // we go back in reverse to check what is before parenth
     idx--;
     while (idx >= 0)
     {
         while (is_whitespace(line[idx]))
             idx--;
-        if (line[idx] == ')')
-            return (FAILURE);
         if (is_operator(line, idx))
             return (SUCCESS);
+        if (line[idx] == '(')
+            return (SUCCESS);
+        if (line[idx] == ')')
+            return (FAILURE);
         return (FAILURE);
     }
     return (FAILURE);
@@ -98,7 +101,7 @@ int track_paranthesis(t_db *db, char *line)
         if (line[i] == '(' && !is_inside_quotes(db, i))
         {
             if (verify_create_parenth(db, line, i) == FAILURE)
-                return (error(db, "syntax error"));
+                return (error(db, "syntax error '('"));
             if (create_paranth(db, i) == FAILURE)
                 return (FAILURE);
         }
