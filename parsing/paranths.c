@@ -61,6 +61,46 @@ int is_operator(char    *s, int  i)
     return false;
 }
 
+t_parnth *get_parenth(t_db    *db, int    open_i)
+{
+    t_parnth    *scope;
+    scope = db->paranthesis;
+
+    while (scope)
+    {
+        if (scope->open_ == open_i)
+            return scope;
+        scope = scope->next;
+    }
+    return (NULL);
+}
+
+int verify_double_scope(t_db *db, char    *line)
+{
+    int         i;
+    t_parnth    *open_parenth1;
+    t_parnth    *open_parenth2;
+
+    i = 0;
+    while (line[i])
+    {
+        if (line[i] == '(' && line[i + 1] == '(')
+        {
+            open_parenth1 = get_parenth(db, i);
+            if (!open_parenth1)
+                return (FAILURE);
+            open_parenth2 = get_parenth(db, i + 1);
+            if (!open_parenth2)
+                return (FAILURE);
+            if (open_parenth2->close_ + 1 == open_parenth1->close_)
+                return (FAILURE);
+        }
+        i++;
+    }
+    return (SUCCESS);
+}
+
+
 int verify_create_parenth(t_db  *db, char   *line, int    idx)
 {
     t_parnth    *scope;
@@ -124,5 +164,10 @@ int track_paranthesis(t_db *db, char *line)
     }
     if (last_unclosed_paranth(db))
         return error(db, "syntax error: some paranthesis are not closed");
+    if (verify_double_scope(db, line) == FAILURE)
+        return error(db, "syntax error");
     return (SUCCESS);
 }
+
+
+
