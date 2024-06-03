@@ -58,4 +58,5 @@ int is_valid_op(char c, char next_c);
 int unused_ops(char *line);
 int track_operators(t_db *db, char  *line);
 int is_operator(char    *s, int  i);
+int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 #endif

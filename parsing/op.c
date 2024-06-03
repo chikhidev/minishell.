@@ -56,6 +56,28 @@ int surrounded_by_parenths(t_db   *db,   int i)
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
 /* flag is -1 if needs something before & after op like    '&&'   '||'                   */
 
+
+// ! TODO : op op is bad
+
+int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
+{
+    int i;
+
+    i = op_idx;
+    i += ft_strlen(op_name);
+    if (flag == 3)
+        return (SUCCESS);
+    while(line[i])
+    {
+        if (is_whitespace(line[i]))
+            i++;
+        if (!isalnum(line[i]))
+            return FAILURE;
+        return SUCCESS;
+    }
+    return SUCCESS;
+}
+
 int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int flag)
 {
     int i;
@@ -69,14 +91,14 @@ int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int fla
     while (line[i])
     {
         // op_idx < i  means operator is before our caracter  ex: (< cat)
-        if (isalnum(line[i]) && i < op_idx)
+        if (ft_isalnum(line[i]) && i < op_idx)
         {
             if (flag == -3)
                 return (SUCCESS);
             char_before_op = true;
         }
         // i >op_idx  means operator is after our caracter    ex: (ls |)
-        if (isalnum(line[i]) && i > op_idx)
+        if (ft_isalnum(line[i]) && i > op_idx)
         {
             if (flag == -2)
                 return (SUCCESS);
@@ -117,8 +139,6 @@ int create_operator(t_db *db, int i, char *name)
     return (SUCCESS);
 }
 
-
-
 int track_operators(t_db *db, char  *line)
 {
     t_operators *ops;
@@ -152,6 +172,10 @@ int track_operators(t_db *db, char  *line)
         set_up_flag(&flag, ops->name);
         if (!good_place_for_op(line, ops->name, ops->i, flag))
             return error(db, "bad place for operator");
+        if (!check_after_op(line, ops->name, ops->i, flag))
+            return error(db, "bad place for op");
+        // printf("op %s  i %d\n", ops->name, ops->i);
+
         // printf("operator -> %s   index -> %i\n", ops->name, ops->i);
         ops = ops->next;
     }

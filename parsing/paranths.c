@@ -100,6 +100,53 @@ int verify_double_scope(t_db *db, char    *line)
     return (SUCCESS);
 }
 
+t_parnth    *get_last_parenth(t_db  *db)
+{
+    t_parnth    *scope;
+
+    scope = db->paranthesis;
+    while (scope && scope->next)
+        scope = scope->next;
+    return scope;
+}
+
+int verify_scope_surrounding(t_db  *db, char   *line)
+{
+    t_parnth *first;
+    t_parnth *last;
+    t_parnth *curr;
+    int i;
+    int good;
+
+    first = db->paranthesis;
+    last = get_last_parenth(db);
+    if (!first || !last)
+        return (SUCCESS);
+    curr = first->next;
+    while (curr != last)
+    {
+        printf("o [%d]   c[%d]\n", curr->open_, curr->close_);
+        good = 0;
+        i = curr->open_ - 1;
+        while (i > 0)
+        {
+            if (!is_whitespace(line[i]))
+                good |= 1;
+            i--;
+        }
+        i = curr->close_ + 1;
+        while (line[i])
+        {
+            if (!is_whitespace(line[i]))
+                good |= 16;
+            i++;
+        }
+        if (good != 17)
+            return (FAILURE);
+        curr = curr->next;
+    }
+    return (SUCCESS);
+}
 
 int verify_create_parenth(t_db  *db, char   *line, int    idx)
 {
@@ -166,6 +213,8 @@ int track_paranthesis(t_db *db, char *line)
         return error(db, "syntax error: some paranthesis are not closed");
     if (verify_double_scope(db, line) == FAILURE)
         return error(db, "syntax error");
+    // if (verify_scope_surrounding(db, line) == FAILURE)
+    //     return error(db, "last syntax error");
     return (SUCCESS);
 }
 
