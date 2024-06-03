@@ -71,7 +71,7 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
     {
         if (is_whitespace(line[i]))
             i++;
-        if (!isalnum(line[i]))
+        if (!isalnum(line[i]) && line[i] == '(' && line[i] == ')')
             return FAILURE;
         return SUCCESS;
     }
@@ -181,7 +181,6 @@ int track_operators(t_db *db, char  *line)
     }
     return (SUCCESS);
 }
-
 
 /* sould check if the op in within scopes */
 // int is_op_trackable(t_db    *db, char   *op_name, int   op_idx)
