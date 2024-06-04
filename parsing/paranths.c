@@ -110,6 +110,46 @@ t_parnth    *get_last_parenth(t_db  *db)
     return scope;
 }
 
+int verify_scope_before(char   *line,  int scope_open_i)
+{
+    int i;
+    bool found_smtg;
+
+    found_smtg = false;
+    i = scope_open_i - 1;
+    while (i >= 0)
+    {
+        if (!is_whitespace(line[i]))
+            found_smtg = true;
+        if (is_operator(line, i))
+            return (SUCCESS);
+        i--;
+    }
+    if (found_smtg)
+        return (FAILURE);
+    return (SUCCESS);
+}
+
+int verify_scope_after(char   *line,  int scope_close_i)
+{
+    int i;
+    bool found_smtg;
+
+    found_smtg = false;
+    i = scope_close_i + 1;
+    while (line[i])
+    {
+        if (!is_whitespace(line[i]))
+            found_smtg = true;
+        if (is_operator(line, i))
+            return (SUCCESS);
+        i++;
+    }
+    if (found_smtg)
+        return (FAILURE);
+    return (SUCCESS);
+}
+
 int verify_scope_surrounding(t_db  *db, char   *line)
 {
     t_parnth *first;
@@ -122,10 +162,13 @@ int verify_scope_surrounding(t_db  *db, char   *line)
     last = get_last_parenth(db);
     if (!first || !last)
         return (SUCCESS);
+    if (verify_scope_before(line, first->open_) == FAILURE)
+        return (FAILURE);
+    if (verify_scope_after(line, last->close_) == FAILURE)
+        return (FAILURE);
     curr = first->next;
-    while (curr != last)
+    while (curr && curr != last)
     {
-        printf("o [%d]   c[%d]\n", curr->open_, curr->close_);
         good = 0;
         i = curr->open_ - 1;
         while (i > 0)
@@ -213,8 +256,8 @@ int track_paranthesis(t_db *db, char *line)
         return error(db, "syntax error: some paranthesis are not closed");
     if (verify_double_scope(db, line) == FAILURE)
         return error(db, "syntax error");
-    // if (verify_scope_surrounding(db, line) == FAILURE)
-    //     return error(db, "last syntax error");
+    if (verify_scope_surrounding(db, line) == FAILURE)
+        return error(db, "last syntax error");
     return (SUCCESS);
 }
 
