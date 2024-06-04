@@ -119,10 +119,12 @@ int verify_scope_before(char   *line,  int scope_open_i)
     i = scope_open_i - 1;
     while (i >= 0)
     {
-        if (!is_whitespace(line[i]))
-            found_smtg = true;
+        while (is_whitespace(line[i]))
+            i--;
         if (is_operator(line, i))
             return (SUCCESS);
+        else
+            return FAILURE;
         i--;
     }
     if (found_smtg)

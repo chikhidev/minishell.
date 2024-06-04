@@ -117,7 +117,7 @@ int create_operator(t_db *db, int i, char *name)
     t_operators *op;
     t_operators *tmp;
 
-    op = malloc(sizeof(t_operators));
+    op = gc_malloc(db, sizeof(t_operators));
     if (!op)
         return (FAILURE);
     op->i = i;
