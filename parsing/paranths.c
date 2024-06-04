@@ -141,10 +141,12 @@ int verify_scope_after(char   *line,  int scope_close_i)
     i = scope_close_i + 1;
     while (line[i])
     {
-        if (!is_whitespace(line[i]))
-            found_smtg = true;
+        while (is_whitespace(line[i]))
+            i++;
         if (is_operator(line, i))
             return (SUCCESS);
+        else
+            return FAILURE;
         i++;
     }
     if (found_smtg)
@@ -157,8 +159,6 @@ int verify_scope_surrounding(t_db  *db, char   *line)
     t_parnth *first;
     t_parnth *last;
     t_parnth *curr;
-    int i;
-    int good;
 
     first = db->paranthesis;
     last = get_last_parenth(db);
@@ -166,27 +166,14 @@ int verify_scope_surrounding(t_db  *db, char   *line)
         return (SUCCESS);
     if (verify_scope_before(line, first->open_) == FAILURE)
         return (FAILURE);
-    if (verify_scope_after(line, last->close_) == FAILURE)
+    if (verify_scope_after(line, first->close_) == FAILURE)
         return (FAILURE);
     curr = first->next;
-    while (curr && curr != last)
+    while (curr)
     {
-        good = 0;
-        i = curr->open_ - 1;
-        while (i > 0)
-        {
-            if (!is_whitespace(line[i]))
-                good |= 1;
-            i--;
-        }
-        i = curr->close_ + 1;
-        while (line[i])
-        {
-            if (!is_whitespace(line[i]))
-                good |= 16;
-            i++;
-        }
-        if (good != 17)
+        if (verify_scope_before(line, curr->open_) == FAILURE)
+            return (FAILURE);
+        if (verify_scope_after(line, curr->close_) == FAILURE)
             return (FAILURE);
         curr = curr->next;
     }
