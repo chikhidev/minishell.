@@ -1,6 +1,16 @@
 #include "includes/main.h"
 #include "includes/parsing.h"
 
+// Lowa@abderrahim~ ($USER) (ls)
+// name -> USER
+// Error: syntax error '('
+
+// Lowa@abderrahim~ ($USER) ls
+// name -> USER
+
+// [DEBUG] line: (abderrahim) ls
+// Lowa@abderrahim~ 
+
 void    ascii_print()
 {
     printf("\n\n");

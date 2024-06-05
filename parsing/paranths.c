@@ -61,6 +61,26 @@ int is_operator(char    *s, int  i)
     return false;
 }
 
+int is_operator2(char    *s, int  i)
+{
+    printf("received %c  %d\n", s[i], i);
+    if (s[i] == '>' && s[i + 1] == '>')
+        return (true);
+    if (s[i] == '<' && s[i + 1] == '<')
+        return (true);
+    if (s[i] == '&' && s[i + 1] == '&')
+        return (true);
+    if (s[i] == '|' && s[i + 1] == '|')
+        return (true);
+    if (s[i] == '<')
+        return (true);
+    if (s[i] == '>')
+        return (true);
+    if (s[i] == '|')
+        return (true);
+    return false;
+}
+
 t_parnth *get_parenth(t_db    *db, int    open_i)
 {
     t_parnth    *scope;
@@ -110,7 +130,7 @@ t_parnth    *get_last_parenth(t_db  *db)
     return scope;
 }
 
-int verify_scope_before(char   *line,  int scope_open_i)
+int verify_scope_before(char   *line,  int scope_open_i, bool   is_first)
 {
     int i;
     bool found_smtg;
@@ -119,9 +139,11 @@ int verify_scope_before(char   *line,  int scope_open_i)
     i = scope_open_i - 1;
     while (i >= 0)
     {
-        while (is_whitespace(line[i]))
+        while (i >= 0 && is_whitespace(line[i]))
             i--;
-        if (is_operator(line, i))
+        if (i == -1 && is_first)
+            return (SUCCESS);
+        if (i >= 0 && is_operator(line, i))
             return (SUCCESS);
         else
             return FAILURE;
@@ -132,7 +154,7 @@ int verify_scope_before(char   *line,  int scope_open_i)
     return (SUCCESS);
 }
 
-int verify_scope_after(char   *line,  int scope_close_i)
+int verify_scope_after(char   *line,  int scope_close_i, bool is_last)
 {
     int i;
     bool found_smtg;
@@ -141,9 +163,11 @@ int verify_scope_after(char   *line,  int scope_close_i)
     i = scope_close_i + 1;
     while (line[i])
     {
-        while (is_whitespace(line[i]))
+        while (line[i] && is_whitespace(line[i]))
             i++;
-        if (is_operator(line, i))
+        if (line[i] == '\0' && is_last)
+            return (SUCCESS);
+        if (is_operator2(line, i))
             return (SUCCESS);
         else
             return FAILURE;
@@ -159,21 +183,24 @@ int verify_scope_surrounding(t_db  *db, char   *line)
     t_parnth *first;
     t_parnth *last;
     t_parnth *curr;
+    bool is_last;
 
     first = db->paranthesis;
     last = get_last_parenth(db);
     if (!first || !last)
         return (SUCCESS);
-    if (verify_scope_before(line, first->open_) == FAILURE)
+    if (verify_scope_before(line, first->open_, true) == FAILURE)
         return (FAILURE);
-    if (verify_scope_after(line, first->close_) == FAILURE)
+    is_last = (first->next == NULL);
+    if (verify_scope_after(line, first->close_, is_last) == FAILURE)
         return (FAILURE);
     curr = first->next;
     while (curr)
     {
-        if (verify_scope_before(line, curr->open_) == FAILURE)
+        if (verify_scope_before(line, curr->open_, false) == FAILURE)
             return (FAILURE);
-        if (verify_scope_after(line, curr->close_) == FAILURE)
+        is_last = (curr->next == NULL);
+        if (verify_scope_after(line, curr->close_, is_last) == FAILURE)
             return (FAILURE);
         curr = curr->next;
     }

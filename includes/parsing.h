@@ -36,6 +36,7 @@ int     is_inside_quotes(t_db *db, int i);
 /*parsing/paranths.c && paranths2.c*/
 int         track_paranthesis(t_db *db, char *line);
 t_parnth    *last_unclosed_paranth(t_db *db);
+int is_operator2(char    *s, int  i);
 
 
 /*parsing/parser.c*/
