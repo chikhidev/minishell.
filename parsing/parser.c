@@ -126,9 +126,9 @@ int parser(t_db *db, char *line)
     skip_spaces(line, &i);
     if (line[i] == '\0') return (SUCCESS);
     if (track_quotes(db, line) == FAILURE) return (FAILURE);
-    if (expand(db, &line) == FAILURE) return (FAILURE);
     if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
+    if (expand(db, &line) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
