@@ -179,32 +179,13 @@ int verify_scope_after(char   *line,  int scope_close_i, bool is_last)
     return (SUCCESS);
 }
 
+/* shouldnt have something other than op after and before scopes,
+    or nothing for first scope before and last after
+*/
+
 int verify_scope_surrounding(t_db  *db, char   *line)
 {
-    t_parnth *first;
-    t_parnth *last;
-    t_parnth *curr;
-    bool is_last;
-
-    first = db->paranthesis;
-    last = get_last_parenth(db);
-    if (!first || !last)
-        return (SUCCESS);
-    if (verify_scope_before(line, first->open_, true) == FAILURE)
-        return (FAILURE);
-    is_last = (first->next == NULL);
-    if (verify_scope_after(line, first->close_, is_last) == FAILURE)
-        return (FAILURE);
-    curr = first->next;
-    while (curr)
-    {
-        if (verify_scope_before(line, curr->open_, false) == FAILURE)
-            return (FAILURE);
-        is_last = (curr->next == NULL);
-        if (verify_scope_after(line, curr->close_, is_last) == FAILURE)
-            return (FAILURE);
-        curr = curr->next;
-    }
+    
     return (SUCCESS);
 }
 
