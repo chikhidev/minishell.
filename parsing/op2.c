@@ -3,14 +3,16 @@
 
 int is_op(char *line, int *i)
 {
+    printf("i -> %d\n", *i);
+
     if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')
         return AND;
-    else if (line[*i] == '|' && line[*i + 1] && line[++(*i)] == '|')
-        return OR;
-    else if (line[*i] == '>' && line[*i + 1] && line[++(*i) == '>'])
-        return APPEND;
-    else if (line[*i] == '<' && line[*i + 1] && line[++(*i) == '<'])
-        return HEREDOC;
+    else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
+        return (++(*i), OR);
+    else if (line[*i] == '>' && line[*i + 1] && line[(*i) + 1] == '>')
+        return (++(*i), APPEND);
+    else if (line[*i] == '<' && line[*i + 1] && line[(*i) + 1] == '<')
+        return (++(*i), HEREDOC);
     else if (line[*i] == '|')
         return PIPE;
     else if (line[*i] == '>')

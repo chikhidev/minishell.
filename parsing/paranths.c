@@ -117,6 +117,7 @@ int verify_double_scope(t_db *db, char    *line)
         }
         i++;
     }
+    printf("not here\n");
     return (SUCCESS);
 }
 
