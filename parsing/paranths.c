@@ -98,26 +98,19 @@ t_parnth *get_parenth(t_db    *db, int    open_i)
 int verify_double_scope(t_db *db, char    *line)
 {
     int         i;
-    t_parnth    *open_parenth1;
-    t_parnth    *open_parenth2;
+    t_parnth    *scope;
 
-    i = 0;
-    while (line[i])
+    scope = db->paranthesis;
+    while (scope)
     {
-        if (line[i] == '(' && line[i + 1] == '(')
+        i = scope->open_;
+        while (line[i] && ++i < scope->close_)
         {
-            open_parenth1 = get_parenth(db, i);
-            if (!open_parenth1)
-                return (FAILURE);
-            open_parenth2 = get_parenth(db, i + 1);
-            if (!open_parenth2)
-                return (FAILURE);
-            if (open_parenth2->close_ + 1 == open_parenth1->close_)
+            if (line[i] == '(')
                 return (FAILURE);
         }
-        i++;
+        scope = scope->next;
     }
-    printf("not here\n");
     return (SUCCESS);
 }
 
@@ -183,9 +176,44 @@ int verify_scope_after(char   *line,  int scope_close_i, bool is_last)
     or nothing for first scope before and last after
 */
 
+int get_scopes_count(t_db *db)
+{
+    t_parnth    *scope;
+    int         count;
+
+    count = 0;
+    scope = db->paranthesis;
+    while (scope)
+    {
+        count++;
+        scope = scope->next;
+    }
+    return count;
+}
+
+
 int verify_scope_surrounding(t_db  *db, char   *line)
 {
-    
+    int scopes_count;
+    int res;
+    t_parnth    *scope;
+
+    scopes_count = get_scopes_count(db);
+    if (scopes_count == 0)
+        return (SUCCESS);
+    scope = db->paranthesis;
+    // handle first (should have nothing before)
+    res = verify_scope_before(line, scope->open_, true);
+    if (!res)
+        return (FAILURE);
+    // handle other scopes
+    while (scope)
+    {
+        res = verify_scope_after(line, scope->close_, (scope->next == NULL));
+        if (!res)
+            return (FAILURE);
+        scope = scope->next;
+    }
     return (SUCCESS);
 }
 
@@ -253,9 +281,10 @@ int track_paranthesis(t_db *db, char *line)
     if (last_unclosed_paranth(db))
         return error(db, "syntax error: some paranthesis are not closed");
     if (verify_double_scope(db, line) == FAILURE)
-        return error(db, "syntax error");
+        return error(db, "syntax error near '('");
     if (verify_scope_surrounding(db, line) == FAILURE)
         return error(db, "last syntax error");
+    printf("1\n");
     return (SUCCESS);
 }
 

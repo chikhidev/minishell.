@@ -81,6 +81,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
 int     main(int    ac, char    *av[],  char    *env[])
 {
+    printf("0\n");
     t_db    db;
     char    *line;
     char    *tmp;
