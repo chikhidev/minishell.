@@ -13,6 +13,8 @@
 #define SUCCESS 1
 #define FAILURE 0
 #define NOT_FOUND -1
+#define INVALID -1
+#define VALIDE 1
 
 
 #define DOBLQUOTE 34
@@ -47,13 +49,6 @@ typedef struct s_gc
 
 #define CMD_NODE 1
 #define OP_NODE  2
-
-#define AND_OP   "&&"
-#define OR_OP    "||"
-#define PIPE_OP  "|"
-#define REDIR_OP ">"
-#define APPEND_OP ">>"
-#define INPUT_OP "<"
 
 /**
  * @details The command node will have the following structure:
@@ -98,6 +93,7 @@ typedef struct  s_operators
 
 /**
  * @details The quote structure is used to store the quotes
+ 
  * type: DOUBLE => "
  * type: SINLGE => '
 */

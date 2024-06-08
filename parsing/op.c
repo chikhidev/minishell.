@@ -26,7 +26,6 @@ void set_up_flag(int    *flag, char *op)
         *flag = -2;
     else if (strcmp(op, "<<") == 0)
         *flag = -2;
-
     else
         error(NULL,"wrong op\n");
 }

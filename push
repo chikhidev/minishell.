@@ -1,13 +1,13 @@
 #/!/bash
 
+make fclean
 git add .
 if [ -z "$1" ]
 then
     echo "No argument supplied"
-    git commit -m "update"
+    exit 1
 else
     git commit -m "$1"
 fi
-commit -m arg
 git push origin parsing # while parsing is the current branch =------------------------
 

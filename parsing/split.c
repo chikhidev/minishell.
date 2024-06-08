@@ -3,85 +3,48 @@
 
 int is_whitespace(char c)
 {
-    return (c == ' ' || (c >= 9 && c <= 13));
+    return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int count_words(char *str)
+int strongest_operator(t_db *db, char *line)
 {
-    int i;
-    int count;
-
-    i = 0;
-    count = 0;
-    while (str[i])
-    {
-        if (!is_whitespace(str[i]))
-        {
-            count++;
-            while (str[i] && !is_whitespace(str[i]))
-                i++;
-        }
-        else
-            i++;
-    }
-    return (count);
-}
-
-void    *free_failed_split(char **res)
-{
-    int i;
-
-    i = 0;
-    while (res[i])
-    {
-        free(res[i]);
-        i++;
-    }
-    free(res);
-    return (NULL);
-}
-
-char    **whitespaces_split(t_db *db, char *str, int start)
-{
-    char    **res;
-    char    *tmp;
     int     i;
-    int     j;
+    t_op_node   tmp;
+    t_op_node   strongest;
 
-    res = gc_malloc(db, sizeof(char *) * (count_words(str) + 1));
-    if (!res)
-        return (NULL);
-    res[0] = NULL;
+    (void)db;
     i = 0;
-    j = 0;
-    while (str[i])
+    strongest.priority = -1;
+    strongest.childs = NULL;
+    strongest.op_presentation = NOT_FOUND;
+    strongest.type = NOT_FOUND;
+    strongest.origin = NULL;
+    while (line[i])
     {
-        if (is_whitespace(str[i]) && !is_inside_quotes(db, start + i))
+        tmp.op_presentation = is_op(line, &i);
+        if (tmp.op_presentation != INVALID)
         {
-            tmp = gc_malloc(db, i + 1);
-            if (!tmp)
-                return (free_failed_split(res));
-            ft_strlcpy(tmp, str, i + 1);
-            res[j++] = tmp;
-            res[j] = NULL;
-            while (str[i] && is_whitespace(str[i]))
-                i++;
-            if (!str[i])
-                break;
-            str += i;
-            i = 0;
+            tmp.priority = priority_of_op(tmp.op_presentation);
+            if (!is_inside_quotes(db, i) && !is_inside_paranthesis(db, i)
+                && ((tmp.priority <= strongest.priority && tmp.priority != -1)
+                || strongest.priority == -1))
+                strongest = tmp;
         }
         i++;
     }
-    if (str[i - 1] && !is_whitespace(str[i - 1]))
-    {
-        tmp = gc_malloc(db, i + 1);
-        if (!tmp)
-            return (free_failed_split(res));
-        ft_strlcpy(tmp, str, i + 1);
-        res[j++] = tmp;
-        res[j] = NULL;
-    }
+    return strongest.op_presentation;
+}
 
-    return (res);
+int smart_split(t_db *db, char *line)
+{
+    int i;
+
+    (void)i;
+    printf("the strongest operator: %d\n", strongest_operator(db, line));
+    //whlie (line[i])
+    //{
+        //here find the strongest op and splitt using it
+        
+    //}
+    return SUCCESS;
 }

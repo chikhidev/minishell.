@@ -10,7 +10,8 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/paranths2.c \
 				parsing/split.c		\
 				parsing/expanding.c	\
-				parsing/op.c
+				parsing/op.c		\
+				parsing/op2.c
 
 # EXEC_SRC = exec/
 
