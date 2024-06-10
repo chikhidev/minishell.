@@ -19,23 +19,6 @@ char    *concat(t_db *db, char *s, char single_char)
     return (new);
 }
 
-int operator_priority(char *op)
-{
-    if (ft_strncmp(op, "&&", 2) == 0
-        || ft_strncmp(op, "||", 2) == 0)
-        return (AND_OR_PRIORITY);
-    if (ft_strncmp(op, ">", 1) == 0
-        || ft_strncmp(op, ">>", 2) == 0
-        || ft_strncmp(op, "<", 1) == 0)
-        return (REDIR_PRIORITY);
-    if (ft_strncmp(op, "|", 1) == 0)
-        return (PIPE_PRIORITY);
-    return (-1);
-}
-
-/**
- * this function just skip the white-spaces
-*/
 void skip_spaces(char *line, int *i)
 {
     while (line[*i] && (line[*i] == 32 || (line[*i] >= 9 && line[*i] <= 13)))
@@ -70,4 +53,27 @@ int are_all(char *str, int (*f)(int))
         i++;
     }
     return (1);
+}
+
+char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
+{
+    char *new;
+    int i;
+    int j;
+
+    new = gc_malloc(db, ft_strlen(line) - 1);
+    i = 0;
+    j = 0;
+    while (line[i])
+    {
+        if (!(i == local_paranths->open_ || i == local_paranths->close_))
+        {
+            new[j] = line[i];
+            j++;
+        }
+        i++;
+    }
+    new[j] = '\0';
+    gc_free(db, line);
+    return new;
 }

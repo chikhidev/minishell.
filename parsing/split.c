@@ -80,12 +80,16 @@ int smart_split(t_db *db, char *line)
     t_parnth    *current_line_paranthesis;
     int         op;
 
+    printf(GREEN"[DEBUG] smart split working on: %s\n"RESET, line);
+
     /* here just to update the paranthesis on the current line */
+    current_line_paranthesis = NULL;
     if (track_paranthesis(db, &current_line_paranthesis, line) == FAILURE) return FAILURE;
     op = strongest_operator(db, line);
-    if (db->paranthesis && op == NOT_FOUND)
+    if (current_line_paranthesis && op == NOT_FOUND)
     {
         printf("[DEBUG] should remove paranthesis and later split it\n");
+        smart_split(db, remove_paranthesis(db, line, current_line_paranthesis));
     }
     else if (op != NOT_FOUND)
     {

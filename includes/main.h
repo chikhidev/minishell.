@@ -141,6 +141,8 @@ void    gc_free(t_db *db, void *ptr);
 void    *gc_realloc(t_db *db, void *ptr, size_t size);
 
 /*prototypes: string.c*/
-char    *concat(t_db *db, char *s, char single_char);
 int     count(char *line, char c);
+char    *concat(t_db *db, char *s, char single_char);
+char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
+
 #endif
