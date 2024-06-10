@@ -66,10 +66,10 @@ int     main(int    ac, char    *av[],  char    *env[])
     char    *tmp;
     int     ret;
 
+    printf(RED"[DEBUG] !warning => any debuggin message should start with [DEBUG]!\n"RESET);
     line = NULL;
     while (TRUE)
     {
-        printf(RED"[DEBUG] !warning => any debuggin message should start with [DEBUG]!\n"RESET);
         init_db(&db, ac, av, env);
         ret = handle_prompt(&line);
         if (ret == -1) break ;
