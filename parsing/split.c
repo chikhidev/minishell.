@@ -37,14 +37,22 @@ int strongest_operator(t_db *db, char *line)
 
 int smart_split(t_db *db, char *line)
 {
-    int i;
+    // t_parnth    *current_line_paranthesis;
+    int         op;
 
-    (void)i;
-    printf("the strongest operator: %d\n", strongest_operator(db, line));
-    //whlie (line[i])
-    //{
-        //here find the strongest op and splitt using it
-        
-    //}
+
+    op = strongest_operator(db, line);
+    if (db->paranthesis && op == NOT_FOUND)
+    {
+        printf("should remove paranthesis and later split it\n");
+    }
+    else if (op != NOT_FOUND)
+    {
+        printf("should split using the operator\n");
+    }
+    else
+    {
+        printf("no operator found\n");
+    }
     return SUCCESS;
 }

@@ -3,8 +3,6 @@
 
 int is_op(char *line, int *i)
 {
-    printf("i -> %d\n", *i);
-
     if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')
         return AND;
     else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
@@ -17,6 +15,8 @@ int is_op(char *line, int *i)
         return PIPE;
     else if (line[*i] == '>')
         return REDIR;
+    else if (line[*i] == '<')
+        return INPUT;
     return INVALID;
 }
 

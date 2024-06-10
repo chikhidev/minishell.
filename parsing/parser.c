@@ -11,16 +11,15 @@ int parser(t_db *db, char *line)
 {
     int i;
 
-    if (ft_strlen(line) == 0) return (SUCCESS);
     i = 0;
+    if (ft_strlen(line) == 0) return (SUCCESS);
     skip_spaces(line, &i);
     if (line[i] == '\0') return (SUCCESS);
     if (track_quotes(db, line) == FAILURE) return (FAILURE);
-    if (track_paranthesis(db, line) == FAILURE) return (FAILURE);
+    if (track_paranthesis(db, &db->paranthesis, line) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
     if (expand(db, &line) == FAILURE) return (FAILURE);
     if (smart_split(db, line) == FAILURE) return (FAILURE);
-    // now time to start splitting the line using the strongest operator:
 
     // // DEBUG --------------------------------------------------------
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);

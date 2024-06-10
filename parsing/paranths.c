@@ -1,7 +1,8 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-int create_paranth(t_db *db, int open_)
+// the head of the paranthesis linked list is 
+int create_paranth(t_db *db, t_parnth **head, int open_)
 {
     t_parnth *new;
     t_parnth *tmp;
@@ -11,18 +12,40 @@ int create_paranth(t_db *db, int open_)
     new->open_ = open_;
     new->close_ = -1;
     new->next = NULL;
-    if (!db->paranthesis)
+    if (!*head)
     {
-        db->paranthesis = new;
+        *head = new;
         return (SUCCESS);
     }
-    tmp = db->paranthesis;
+    tmp = *head;
     while (tmp->next)
         tmp = tmp->next;
 
     tmp->next = new;
     return (SUCCESS);
 }
+
+// {
+//     t_parnth *new;
+//     t_parnth *tmp;
+
+//     new = gc_malloc(db, sizeof(t_parnth));
+//     if (!new) return (FAILURE);
+//     new->open_ = open_;
+//     new->close_ = -1;
+//     new->next = NULL;
+//     if (!db->paranthesis)
+//     {
+//         db->paranthesis = new;
+//         return (SUCCESS);
+//     }
+//     tmp = db->paranthesis;
+//     while (tmp->next)
+//         tmp = tmp->next;
+
+//     tmp->next = new;
+//     return (SUCCESS);
+// }
 
 t_parnth *last_unclosed_paranth(t_db *db)
 {
@@ -245,7 +268,7 @@ int verify_create_parenth(t_db  *db, char   *line, int    idx)
         
 }
 
-int track_paranthesis(t_db *db, char *line)
+int track_paranthesis(t_db *db, t_parnth **head, char *line)
 {
     t_parnth    *last_opened;
     int         i;
@@ -258,7 +281,7 @@ int track_paranthesis(t_db *db, char *line)
         {
             if (verify_create_parenth(db, line, i) == FAILURE)
                 return (error(db, "syntax error '('"));
-            if (create_paranth(db, i) == FAILURE)
+            if (create_paranth(db, head, i) == FAILURE)
                 return (FAILURE);
         }
         else if (line[i] == ')'

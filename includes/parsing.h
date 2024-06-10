@@ -34,7 +34,6 @@ void    reset_quotes(t_db *db);
 int     inside_single_quote(t_db *db, int   i);
 
 /*parsing/paranths.c && paranths2.c*/
-int         track_paranthesis(t_db *db, char *line);
 t_parnth    *last_unclosed_paranth(t_db *db);
 int is_operator2(char    *s, int  i);
 
@@ -51,7 +50,7 @@ char *get_env(t_db *db, char *name);
 int valid_char(char c, int  index);
 
 /*parsing/paranths.c and paranths2.c*/
-int track_paranthesis(t_db *db, char *line);
+int track_paranthesis(t_db *db, t_parnth **head, char *line);
 int is_inside_paranthesis(t_db *db, int i);
 
 /*op.c*/
