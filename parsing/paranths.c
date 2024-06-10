@@ -310,5 +310,3 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line)
     return (SUCCESS);
 }
 
-
-
