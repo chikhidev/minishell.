@@ -63,7 +63,6 @@ int is_operator(char    *s, int  i)
 
 int is_operator2(char    *s, int  i)
 {
-    printf("received %c  %d\n", s[i], i);
     if (s[i] == '>' && s[i + 1] == '>')
         return (true);
     if (s[i] == '<' && s[i + 1] == '<')
@@ -117,7 +116,6 @@ int verify_double_scope(t_db *db, char    *line)
         }
         i++;
     }
-    printf("not here\n");
     return (SUCCESS);
 }
 
