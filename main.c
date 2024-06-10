@@ -1,26 +1,6 @@
 #include "includes/main.h"
 #include "includes/parsing.h"
 
-// Lowa@abderrahim~ ($USER) (ls)
-// name -> USER
-// Error: syntax error '('
-
-// Lowa@abderrahim~ ($USER) ls
-// name -> USER
-
-// [DEBUG] line: (abderrahim) ls
-// Lowa@abderrahim~ 
-
-void    ascii_print()
-{
-    printf("\n\n");
-    printf(ORANGE"█░░ █▀█ █░█░█ ▄▀█ █▀ █░█ █▀▀ █░░ █░░"RESET"\n");
-    printf(GREEN"█░▄ █▀▄ ▀▄▀▄▀ █▀█ ▄█ █▀█ █▄▄ █▄▄ █▄▄"RESET"\n");
-    printf("\n");
-    printf("Welcome to shell of abdoo and salah 🚀\n");
-    printf("--------------------------------------------\n\n");
-}
-
 char    *line_promte()
 {
     char    *user;
@@ -81,16 +61,15 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
 int     main(int    ac, char    *av[],  char    *env[])
 {
-    printf("0\n");
     t_db    db;
     char    *line;
     char    *tmp;
     int     ret;
 
     line = NULL;
-    ascii_print();
     while (TRUE)
     {
+        printf(RED"[DEBUG] !warning => any debuggin message should start with [DEBUG]!\n"RESET);
         init_db(&db, ac, av, env);
         ret = handle_prompt(&line);
         if (ret == -1) break ;
