@@ -165,6 +165,8 @@ int verify_scope_before(char   *line,  int scope_open_i, bool   is_first)
             i--;
         if (i == -1 && is_first)
             return (SUCCESS);
+        if (i >= 0 && line[i] == '(')
+            return (SUCCESS);
         if (i >= 0 && is_operator(line, i))
             return (SUCCESS);
         else
