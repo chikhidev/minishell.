@@ -176,7 +176,7 @@ int verify_scope_before(char   *line,  int scope_open_i, bool   is_first)
     return (SUCCESS);
 }
 
-int verify_scope_after(char   *line,  int scope_close_i, bool is_last)
+int verify_scope_after(char   *line,  int scope_close_i)
 {
     int i;
     bool found_smtg;
@@ -187,7 +187,9 @@ int verify_scope_after(char   *line,  int scope_close_i, bool is_last)
     {
         while (line[i] && is_whitespace(line[i]))
             i++;
-        if (line[i] == '\0' && is_last)
+        if (line[i] == '\0')
+            return (SUCCESS);
+        if (line[i] == ')')
             return (SUCCESS);
         if (is_operator2(line, i))
             return (SUCCESS);
@@ -205,25 +207,34 @@ int verify_scope_surrounding(t_db  *db, char   *line)
     t_parnth *first;
     t_parnth *last;
     t_parnth *curr;
-    bool is_last;
 
     first = db->paranthesis;
     last = get_last_parenth(db);
     if (!first || !last)
         return (SUCCESS);
     if (verify_scope_before(line, first->open_, true) == FAILURE)
+    {
+        printf("1\n");
         return (FAILURE);
-    is_last = (first->next == NULL);
-    if (verify_scope_after(line, first->close_, is_last) == FAILURE)
+    }
+    if (verify_scope_after(line, first->close_) == FAILURE)
+    {
+        printf("2\n");
         return (FAILURE);
+    }
     curr = first->next;
     while (curr)
     {
         if (verify_scope_before(line, curr->open_, false) == FAILURE)
+        {
+            printf("3\n");
             return (FAILURE);
-        is_last = (curr->next == NULL);
-        if (verify_scope_after(line, curr->close_, is_last) == FAILURE)
+        }
+        if (verify_scope_after(line, curr->close_) == FAILURE)
+        {
+            printf("4\n");
             return (FAILURE);
+        }
         curr = curr->next;
     }
     return (SUCCESS);
