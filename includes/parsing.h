@@ -34,7 +34,7 @@ void    reset_quotes(t_db *db);
 int     inside_single_quote(t_db *db, int   i);
 
 /*parsing/paranths.c && paranths2.c*/
-t_parnth    *last_unclosed_paranth(t_db *db);
+t_parnth    *last_unclosed_paranth(t_parnth *head);
 int is_operator2(char    *s, int  i);
 
 /*parsing/parser.c*/

@@ -47,13 +47,13 @@ int create_paranth(t_db *db, t_parnth **head, int open_)
 //     return (SUCCESS);
 // }
 
-t_parnth *last_unclosed_paranth(t_db *db)
+t_parnth *last_unclosed_paranth(t_parnth *head)
 {
     t_parnth *tmp;
     t_parnth *last;
 
     last = NULL;
-    tmp = db->paranthesis;
+    tmp = head;
     while (tmp)
     {
         if (tmp->close_ == -1)
@@ -230,14 +230,10 @@ int verify_scope_surrounding(t_db  *db, char   *line)
     return (SUCCESS);
 }
 
-int verify_create_parenth(t_db  *db, char   *line, int    idx)
+int verify_create_parenth(t_parnth *head, char *line, int idx)
 {
-    t_parnth    *scope;
-
-    scope = db->paranthesis;
-
     // no prev scopes mean this is first parenthesy so its good
-    if (!scope)
+    if (!head)
         return (SUCCESS);
 
     // we go back in reverse to check what is before parenth
@@ -266,10 +262,10 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line)
     i = 0;
     while (line[i])
     {
-        last_opened = last_unclosed_paranth(db);
+        last_opened = last_unclosed_paranth(*head);
         if (line[i] == '(' && !is_inside_quotes(db, i))
         {
-            if (verify_create_parenth(db, line, i) == FAILURE)
+            if (verify_create_parenth(*head, line, i) == FAILURE)
                 return (error(db, "syntax error '('"));
             if (create_paranth(db, head, i) == FAILURE)
                 return (FAILURE);
@@ -278,25 +274,25 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line)
             && !is_inside_quotes(db, i)
             && last_opened
             && last_opened->open_ == i - 1)
-            return error(db, "syntax error: empty paranthesis");
+            return error(db, "syntax error: near ')'");
         else if (line[i] == ')'
             && !is_inside_quotes(db, i)
             && last_opened)
         {
             if (!db->paranthesis)
-                return error(db, "syntax error: no paranthesis to close");
+                return error(db, "syntax error: near ')'");
             last_opened->close_ = i;
         }
         else if (line[i] == ')' && !is_inside_quotes(db, i))
-            return error(db, "syntax error: no paranthesis to close");
+            return error(db, "syntax error: near ')'");
         i++;
     }
-    if (last_unclosed_paranth(db))
-        return error(db, "syntax error: some paranthesis are not closed");
+    if (last_unclosed_paranth(*head))
+        return error(db, "syntax error: near '('");
     if (verify_double_scope(db, line) == FAILURE)
-        return error(db, "syntax error");
+        return FAILURE;
     if (verify_scope_surrounding(db, line) == FAILURE)
-        return error(db, "last syntax error");
+        return error(db, "syntax error: near '(' or ')'");
     return (SUCCESS);
 }
 
