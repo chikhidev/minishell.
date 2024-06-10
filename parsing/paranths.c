@@ -213,28 +213,16 @@ int verify_scope_surrounding(t_db  *db, char   *line)
     if (!first || !last)
         return (SUCCESS);
     if (verify_scope_before(line, first->open_, true) == FAILURE)
-    {
-        printf("1\n");
         return (FAILURE);
-    }
     if (verify_scope_after(line, first->close_) == FAILURE)
-    {
-        printf("2\n");
         return (FAILURE);
-    }
     curr = first->next;
     while (curr)
     {
         if (verify_scope_before(line, curr->open_, false) == FAILURE)
-        {
-            printf("3\n");
             return (FAILURE);
-        }
         if (verify_scope_after(line, curr->close_) == FAILURE)
-        {
-            printf("4\n");
             return (FAILURE);
-        }
         curr = curr->next;
     }
     return (SUCCESS);
