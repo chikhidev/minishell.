@@ -6,13 +6,12 @@ int is_whitespace(char c)
     return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int strongest_operator(t_db *db, char *line)
+int strongest_operator(t_db *db, t_parnth *head, char *line)
 {
     int     i;
     t_op_node   tmp;
     t_op_node   strongest;
 
-    (void)db;
     i = 0;
     strongest.priority = -1;
     strongest.childs = NULL;
@@ -25,7 +24,7 @@ int strongest_operator(t_db *db, char *line)
         if (tmp.op_presentation != INVALID)
         {
             tmp.priority = priority_of_op(tmp.op_presentation);
-            if (!is_inside_quotes(db, i) && !is_inside_paranthesis(db, i)
+            if (!is_inside_quotes(db, i) && !is_inside_paranthesis(head, i)
                 && ((tmp.priority <= strongest.priority && tmp.priority != -1)
                 || strongest.priority == -1))
                 strongest = tmp;
@@ -48,7 +47,7 @@ int is_all_whitespace(char *line)
     return 1;
 }
 
-int count_between_op(t_db *db, char *line, int op)
+int count_between_op(t_db *db, t_parnth *head, char *line, int op)
 {
     int i;
     int counter;
@@ -64,7 +63,7 @@ int count_between_op(t_db *db, char *line, int op)
             counter++;
             reminder = i;
         }
-        else if (is_op(line, &i) == op && !is_inside_quotes(db, i) && !is_inside_paranthesis(db, i))
+        else if (is_op(line, &i) == op && !is_inside_quotes(db, i) && !is_inside_paranthesis(head, i))
         {
             counter++;
             reminder = i;
@@ -85,7 +84,7 @@ int smart_split(t_db *db, char *line)
     /* here just to update the paranthesis on the current line */
     current_line_paranthesis = NULL;
     if (track_paranthesis(db, &current_line_paranthesis, line) == FAILURE) return FAILURE;
-    op = strongest_operator(db, line);
+    op = strongest_operator(db, current_line_paranthesis, line);
     if (current_line_paranthesis && op == NOT_FOUND)
     {
         printf("[DEBUG] should remove paranthesis and later split it\n");
@@ -94,7 +93,7 @@ int smart_split(t_db *db, char *line)
     else if (op != NOT_FOUND)
     {
         printf("[DEBUG] should split using the operator\n");
-        printf("[DEBUG] count between op: %d\n", count_between_op(db, line, op));
+        printf("[DEBUG] count between op: %d\n", count_between_op(db, current_line_paranthesis, line, op));
     }
     else
     {
