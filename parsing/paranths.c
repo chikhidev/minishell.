@@ -103,10 +103,10 @@ int is_operator2(char    *s, int  i)
     return false;
 }
 
-t_parnth *get_parenth(t_db    *db, int    open_i)
+t_parnth *get_parenth(t_parnth  *parenth, int    open_i)
 {
     t_parnth    *scope;
-    scope = db->paranthesis;
+    scope = parenth;
 
     while (scope)
     {
@@ -117,7 +117,7 @@ t_parnth *get_parenth(t_db    *db, int    open_i)
     return (NULL);
 }
 
-int verify_double_scope(t_db *db, char    *line)
+int verify_double_scope(t_parnth    *parenth, char    *line)
 {
     int         i;
     t_parnth    *open_parenth1;
@@ -128,10 +128,10 @@ int verify_double_scope(t_db *db, char    *line)
     {
         if (line[i] == '(' && line[i + 1] == '(')
         {
-            open_parenth1 = get_parenth(db, i);
+            open_parenth1 = get_parenth(parenth, i);
             if (!open_parenth1)
                 return (FAILURE);
-            open_parenth2 = get_parenth(db, i + 1);
+            open_parenth2 = get_parenth(parenth, i + 1);
             if (!open_parenth2)
                 return (FAILURE);
             if (open_parenth2->close_ + 1 == open_parenth1->close_)
@@ -142,11 +142,11 @@ int verify_double_scope(t_db *db, char    *line)
     return (SUCCESS);
 }
 
-t_parnth    *get_last_parenth(t_db  *db)
+t_parnth    *get_last_parenth(t_parnth *parenth)
 {
     t_parnth    *scope;
 
-    scope = db->paranthesis;
+    scope = parenth;
     while (scope && scope->next)
         scope = scope->next;
     return scope;
@@ -204,14 +204,14 @@ int verify_scope_after(char   *line,  int scope_close_i)
     return (SUCCESS);
 }
 
-int verify_scope_surrounding(t_db  *db, char   *line)
+int verify_scope_surrounding(t_parnth  *parenth, char   *line)
 {
     t_parnth *first;
     t_parnth *last;
     t_parnth *curr;
 
-    first = db->paranthesis;
-    last = get_last_parenth(db);
+    first = parenth;
+    last = get_last_parenth(parenth);
     if (!first || !last)
         return (SUCCESS);
     if (verify_scope_before(line, first->open_, true) == FAILURE)
@@ -289,9 +289,9 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line)
     }
     if (last_unclosed_paranth(*head))
         return error(db, "syntax error: near '('");
-    if (verify_double_scope(db, line) == FAILURE)
+    if (verify_double_scope(*head, line) == FAILURE)
         return FAILURE;
-    if (verify_scope_surrounding(db, line) == FAILURE)
+    if (verify_scope_surrounding(*head, line) == FAILURE)
         return error(db, "syntax error: near '(' or ')'");
     return (SUCCESS);
 }

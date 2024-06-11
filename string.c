@@ -74,6 +74,6 @@ char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
         i++;
     }
     new[j] = '\0';
-    gc_free(db, line);
+    // gc_free(db, line);
     return new;
 }
