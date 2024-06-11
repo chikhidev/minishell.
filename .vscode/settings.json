@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "unistd.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c",
+        "compare": "c",
+        "type_traits": "c",
+        "parsing.h": "c"
+    },
+    "workbench.iconTheme": "vs-seti"
+}
