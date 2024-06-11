@@ -51,7 +51,7 @@ int valid_char(char c, int  index);
 
 /*parsing/paranths.c and paranths2.c*/
 int track_paranthesis(t_db *db, t_parnth **head, char *line);
-int is_inside_paranthesis(t_db *db, int i);
+int is_inside_paranthesis(t_parnth *head, int i);
 
 /*op.c*/
 int is_valid_op(char c, char next_c);
@@ -62,4 +62,5 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 /*op2.c*/
 int is_op(char *line, int *i);
 int priority_of_op(int op);
+
 #endif

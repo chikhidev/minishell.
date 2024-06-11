@@ -253,7 +253,7 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
     return (FAILURE);
         
 }
-
+// db->paranthesis
 int track_paranthesis(t_db *db, t_parnth **head, char *line)
 {
     t_parnth    *last_opened;
