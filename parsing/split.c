@@ -58,23 +58,50 @@ int count_between_op(t_db *db, t_parnth *head, char *line, int op)
     counter = 0;
     while (line[i])
     {
-        if (counter == 0 && !is_op(line, &i) && !is_whitespace(line[i]))
-        {
-            counter++;
-            reminder = i;
-        }
-        else if (is_op(line, &i) == op && !is_inside_quotes(db, i) && !is_inside_paranthesis(head, i))
+        if (is_op(line, &i) == op && !is_inside_quotes(db, i) && !is_inside_paranthesis(head, i))
         {
             counter++;
             reminder = i;
         }
         i++;
     }
-    if (!is_all_whitespace(line + reminder + 1)) counter++;
+    if (reminder < i) counter++;
     return counter;
 }
 
-int smart_split(t_db *db, char *line)
+char **split_line(t_db * db, char *line, t_op_node *op)
+{
+    int i;
+    int len;
+    int k;
+    char **splitted;
+
+    i = 0;
+    len = 0;
+    k = 0;
+    splitted = gc_malloc(db, sizeof(char *) * op->n_childs);
+    while (line[i])
+    {
+        if (is_op(line, &i) == op->op_presentation && !is_inside_quotes(db, i))
+        {
+            splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
+            ft_strlcpy(splitted[k], line + i - len - 1, len + 1);
+
+            k++;
+            len = 0;
+        }
+        len++;
+        i++;
+    }
+    if (len > 0)
+    {
+        splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
+        ft_strlcpy(splitted[k], line + i - len, len + 1);
+    }
+    return splitted;
+}
+
+int smart_split(t_db *db, char *line, void **parent)
 {
     t_parnth    *current_line_paranthesis;
     int         op;
@@ -88,12 +115,39 @@ int smart_split(t_db *db, char *line)
     if (current_line_paranthesis && op == NOT_FOUND)
     {
         printf("[DEBUG] should remove paranthesis and later split it\n");
-        smart_split(db, remove_paranthesis(db, line, current_line_paranthesis));
+        smart_split(db, remove_paranthesis(db, line, current_line_paranthesis), parent);
     }
     else if (op != NOT_FOUND)
     {
-        printf("[DEBUG] should split using the operator\n");
+        printf("[DEBUG] should split using the operator %d\n", op);
         printf("[DEBUG] count between op: %d\n", count_between_op(db, current_line_paranthesis, line, op));
+
+        t_op_node *new_node = gc_malloc(db, sizeof(t_op_node));
+        if (!new_node) {
+            printf("Error: malloc failed\n");
+            return FAILURE;
+        }
+        new_node->origin = NULL;
+        new_node->type = OP_NODE;
+        new_node->priority = priority_of_op(op);
+        new_node->op_presentation = op;
+        new_node->childs = gc_malloc(db, sizeof(void *) * count_between_op(db, current_line_paranthesis, line, op));
+        new_node->n_childs = count_between_op(db, current_line_paranthesis, line, op);
+        for (int i = 0; i < new_node->n_childs; i++)
+        {
+            new_node->childs[i] = NULL;
+        }
+        char **splitted = split_line(db, line, new_node);
+        
+
+        if (*parent == NULL)
+        {
+            *parent = new_node;
+            for (int i = 0; i < new_node->n_childs; i++)
+            {
+                smart_split(db, splitted[i], &new_node->childs[i]);
+            }
+        }
     }
     else
     {

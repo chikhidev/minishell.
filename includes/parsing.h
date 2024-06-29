@@ -41,7 +41,7 @@ int is_operator2(char    *s, int  i);
 int parser(t_db *db, char *line);
 
 /*parsing/split.c*/
-int smart_split(t_db *db, char *line);
+int smart_split(t_db *db, char *line, void **parent);
 int is_whitespace(char c);
 
 /*parsing/expanding.c*/

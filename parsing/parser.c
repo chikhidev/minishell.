@@ -1,7 +1,17 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-
+void print_nodes(t_op_node *head_node)
+{
+    t_op_node *tmp = head_node;
+    
+    if (tmp == NULL) return;
+    printf("type-> %d, presentation-> %d, n_childs-> %d\n", tmp->type, tmp->op_presentation, tmp->n_childs);
+    for (int i = 0; i < tmp->n_childs; i++)
+    {
+        print_nodes(tmp->childs[i]);
+    }
+}
 
 /**
  * @details This function will parse the line and split it into commands and operators
@@ -19,15 +29,13 @@ int parser(t_db *db, char *line)
     if (track_paranthesis(db, &db->paranthesis, line) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
     if (expand(db, &line) == FAILURE) return (FAILURE);
-    if (smart_split(db, line) == FAILURE) return (FAILURE);
+    if (smart_split(db, line, &db->root_node) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
 
-    // for (t_parnth *p = db->paranthesis; p; p = p->next)
-    // {
-    //     printf("close -> [%d]    open -> [%d]\n", p->close_, p->open_);
-    //     printf("\n");
-    // }
+    t_op_node *head_node = db->root_node;
+    print_nodes(head_node);
+    
     return (SUCCESS);
 }
