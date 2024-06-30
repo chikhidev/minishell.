@@ -181,8 +181,8 @@ int smart_split(t_db *db, char *line, void **parent)
         {
             new_node->childs[i] = NULL;
         }
+        
         char **splitted = split_line(db, line, new_node, current_line_paranthesis);
-
         if (*parent == NULL)
         {
             *parent = new_node;
