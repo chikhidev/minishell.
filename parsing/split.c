@@ -65,11 +65,51 @@ int count_between_op(t_db *db, t_parnth *head, char *line, int op)
         }
         i++;
     }
-    if (reminder < i) counter++;
+    if (reminder < i)
+        counter++;
     return counter;
 }
 
-char **split_line(t_db * db, char *line, t_op_node *op)
+
+int is_op2(char *line, int *i)
+{
+    if (line[*i] == '&' && line[*i + 1] && line[(*i) + 1] == '&')
+        return AND;
+    else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
+        return (OR);
+    else if (line[*i] == '>' && line[*i + 1] && line[(*i) + 1] == '>')
+        return (APPEND);
+    else if (line[*i] == '<' && line[*i + 1] && line[(*i) + 1] == '<')
+        return (HEREDOC);
+    else if (line[*i] == '|')
+        return PIPE;
+    else if (line[*i] == '>')
+        return REDIR;
+    else if (line[*i] == '<')
+        return INPUT;
+    return INVALID;
+}
+
+void skip_op(int *i, char *line)
+{
+    if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')
+        ((*i) += 2);
+    else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
+        ((*i) += 2);
+    else if (line[*i] == '>' && line[*i + 1] && line[(*i) + 1] == '>')
+        ((*i) += 2);
+    else if (line[*i] == '<' && line[*i + 1] && line[(*i) + 1] == '<')
+        ((*i) += 2);
+    else if (line[*i] == '|')
+        (*i)++;
+    else if (line[*i] == '>')
+        (*i)++;
+    else if (line[*i] == '<')
+        (*i)++;
+    return;
+}
+
+char **split_line(t_db * db, char *line, t_op_node *op, t_parnth *head)
 {
     int i;
     int len;
@@ -79,24 +119,27 @@ char **split_line(t_db * db, char *line, t_op_node *op)
     i = 0;
     len = 0;
     k = 0;
+
     splitted = gc_malloc(db, sizeof(char *) * op->n_childs);
     while (line[i])
     {
-        if (is_op(line, &i) == op->op_presentation && !is_inside_quotes(db, i))
+        if (is_op2(line, &i) == op->op_presentation && !is_inside_quotes(db, i) && !is_inside_paranthesis(head, i))
         {
             splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
-            ft_strlcpy(splitted[k], line + i - len - 1, len + 1);
-
+            ft_strlcpy(splitted[k], line + i - len, len + 1);
+            skip_op(&i, line);
             k++;
             len = 0;
         }
         len++;
         i++;
     }
+
     if (len > 0)
     {
         splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
         ft_strlcpy(splitted[k], line + i - len, len + 1);
+
     }
     return splitted;
 }
@@ -123,7 +166,8 @@ int smart_split(t_db *db, char *line, void **parent)
         printf("[DEBUG] count between op: %d\n", count_between_op(db, current_line_paranthesis, line, op));
 
         t_op_node *new_node = gc_malloc(db, sizeof(t_op_node));
-        if (!new_node) {
+        if (!new_node)
+        {
             printf("Error: malloc failed\n");
             return FAILURE;
         }
@@ -137,14 +181,14 @@ int smart_split(t_db *db, char *line, void **parent)
         {
             new_node->childs[i] = NULL;
         }
-        char **splitted = split_line(db, line, new_node);
-        
+        char **splitted = split_line(db, line, new_node, current_line_paranthesis);
 
         if (*parent == NULL)
         {
             *parent = new_node;
             for (int i = 0; i < new_node->n_childs; i++)
             {
+                printf("spliited  -> %s\n", splitted[i]);
                 smart_split(db, splitted[i], &new_node->childs[i]);
             }
         }
