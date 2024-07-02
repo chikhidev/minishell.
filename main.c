@@ -42,6 +42,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
     int i;
 
+    db->debug = FALSE;
     db->gc = NULL;
     db->root_node = NULL;
     db->quotes = NULL;
@@ -66,7 +67,6 @@ int     main(int    ac, char    *av[],  char    *env[])
     char    *tmp;
     int     ret;
 
-    printf(RED"[DEBUG] !warning => any debuggin message should start with [DEBUG]!\n"RESET);
     line = NULL;
     while (TRUE)
     {

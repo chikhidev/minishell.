@@ -57,7 +57,7 @@ int parser(t_db *db, char *line)
     if (track_paranthesis(db, &db->paranthesis, line) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
     if (expand(db, &line) == FAILURE) return (FAILURE);
-    if (smart_split(db, line, &db->root_node) == FAILURE) return (FAILURE);
+    if (smart_split(db, line, &db->root_node, NULL) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);

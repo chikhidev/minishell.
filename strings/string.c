@@ -1,5 +1,5 @@
-#include "includes/main.h"
-#include "includes/parsing.h"
+#include "../includes/main.h"
+#include "../includes/parsing.h"
 
 char    *concat(t_db *db, char *s, char single_char)
 {
@@ -53,27 +53,4 @@ int are_all(char *str, int (*f)(int))
         i++;
     }
     return (1);
-}
-
-char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
-{
-    char *new;
-    int i;
-    int j;
-
-    new = gc_malloc(db, ft_strlen(line) - 1);
-    i = 0;
-    j = 0;
-    while (line[i])
-    {
-        if (!(i == local_paranths->open_ || i == local_paranths->close_))
-        {
-            new[j] = line[i];
-            j++;
-        }
-        i++;
-    }
-    new[j] = '\0';
-    // gc_free(db, line);
-    return new;
 }

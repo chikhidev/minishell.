@@ -27,6 +27,12 @@
 void    skip_spaces(char *line, int *i);
 int     are_all(char *str, int (*f)(int));
 
+/*string2.c*/
+int     is_whitespace(char c);
+int     strongest_operator(t_db *db, t_parnth *head, char *line);
+int     count_between_op(t_db *db, t_parnth *head, char *line, int op);
+char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
+
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int     track_quotes(t_db *db, char *line);
 int     is_inside_quotes(t_db *db, int i);
@@ -41,8 +47,7 @@ int is_operator2(char    *s, int  i);
 int parser(t_db *db, char *line);
 
 /*parsing/split.c*/
-int smart_split(t_db *db, char *line, void **parent);
-int is_whitespace(char c);
+int smart_split(t_db *db, char *line, void **current_node, void *parent);
 
 /*parsing/expanding.c*/
 int expand(t_db *db, char **line);
@@ -62,5 +67,6 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 /*op2.c*/
 int is_op(char *line, int *i);
 int priority_of_op(int op);
+int create_op_node(t_db *db, int op, void **current_node, void *parent);
 
 #endif

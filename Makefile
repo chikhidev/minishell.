@@ -13,14 +13,17 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/op.c		\
 				parsing/op2.c
 
+STRING = 	strings/string.c \
+			strings/string2.c
+
 # EXEC_SRC = exec/
 
 SRC =	main.c		\
 		memo.c		\
-		string.c	\
 		error.c
 
 SRC += $(PARSING_SRC)
+SRC += $(STRING)
 
 #colors
 YELLOW = \033[0;33m

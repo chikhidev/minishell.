@@ -15,6 +15,7 @@
 #define NOT_FOUND -1
 #define INVALID -1
 #define VALIDE 1
+#define PASS
 
 
 #define DOBLQUOTE 34
@@ -121,6 +122,7 @@ typedef struct s_parnth
 */
 typedef struct s_db
 {
+    int     debug;
     void    *root_node;
     t_gc    *gc;
     char    **env;

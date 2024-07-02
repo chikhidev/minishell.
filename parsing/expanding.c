@@ -45,7 +45,7 @@ char *get_env(t_db *db, char *name)
     char *res;
 
 	if (!name) return (NULL);
-    printf("name -> %s\n", name);
+    if (db->debug) printf("name -> %s\n", name);
     if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
     {
         return (ft_itoa(db->last_signal));
