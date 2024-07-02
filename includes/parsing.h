@@ -29,15 +29,20 @@ int     are_all(char *str, int (*f)(int));
 
 /*string2.c*/
 int     is_whitespace(char c);
-int     strongest_operator(t_db *db, t_parnth *head, char *line);
-int     count_between_op(t_db *db, t_parnth *head, char *line, int op);
+int     strongest_operator(t_db *db, char *line, t_tracker *tracker);
+int     count_between_op(t_db *db,  char *line, int op, t_tracker *tracker);
 char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
 
+/*string3*/
+int     count_args(char *line, t_quote *quotes, int len);
+int     append_split(char **splitted, char *string);
+char    *sub(t_db *db, char *line, int i, int j);
+
 /*parsing/quoting.c and parsing/quoting_utils.c*/
-int     track_quotes(t_db *db, char *line);
-int     is_inside_quotes(t_db *db, int i);
-void    reset_quotes(t_db *db);
-int     inside_single_quote(t_db *db, int   i);
+int     track_quotes(t_db *db, t_quote **head, char *line);
+int     is_inside_quotes(t_quote *head, int i);
+void    reset_quotes(t_db *db, t_quote **head);
+int     inside_single_quote(t_quote *head, int i);
 
 /*parsing/paranths.c && paranths2.c*/
 t_parnth    *last_unclosed_paranth(t_parnth *head);
@@ -50,12 +55,12 @@ int parser(t_db *db, char *line);
 int smart_split(t_db *db, char *line, void **current_node, void *parent);
 
 /*parsing/expanding.c*/
-int expand(t_db *db, char **line);
+int expand(t_db *db, char **line, t_quote *quotes);
 char *get_env(t_db *db, char *name);
 int valid_char(char c, int  index);
 
 /*parsing/paranths.c and paranths2.c*/
-int track_paranthesis(t_db *db, t_parnth **head, char *line);
+int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes);
 int is_inside_paranthesis(t_parnth *head, int i);
 
 /*op.c*/
@@ -67,6 +72,7 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 /*op2.c*/
 int is_op(char *line, int *i);
 int priority_of_op(int op);
-int create_op_node(t_db *db, int op, void **current_node, void *parent);
+void create_op_node(t_db *db, int op, void **current_node, void *parent);
+
 
 #endif

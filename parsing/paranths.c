@@ -254,7 +254,7 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
         
 }
 // db->paranthesis
-int track_paranthesis(t_db *db, t_parnth **head, char *line)
+int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
 {
     t_parnth    *last_opened;
     int         i;
@@ -263,7 +263,7 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line)
     while (line[i])
     {
         last_opened = last_unclosed_paranth(*head);
-        if (line[i] == '(' && !is_inside_quotes(db, i))
+        if (line[i] == '(' && !is_inside_quotes(quotes, i))
         {
             if (verify_create_parenth(*head, line, i) == FAILURE)
                 return (error(db, "syntax error '('"));
@@ -271,19 +271,19 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line)
                 return (FAILURE);
         }
         else if (line[i] == ')'
-            && !is_inside_quotes(db, i)
+            && !is_inside_quotes(quotes, i)
             && last_opened
             && last_opened->open_ == i - 1)
             return error(db, "syntax error: near ')'");
         else if (line[i] == ')'
-            && !is_inside_quotes(db, i)
+            && !is_inside_quotes(quotes, i)
             && last_opened)
         {
-            if (!db->paranthesis)
+            if (!*head)
                 return error(db, "syntax error: near ')'");
             last_opened->close_ = i;
         }
-        else if (line[i] == ')' && !is_inside_quotes(db, i))
+        else if (line[i] == ')' && !is_inside_quotes(quotes, i))
             return error(db, "syntax error: near ')'");
         i++;
     }

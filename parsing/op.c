@@ -30,27 +30,6 @@ void set_up_flag(int    *flag, char *op)
         error(NULL,"wrong op\n");
 }
 
-int surrounded_by_parenths(t_db   *db,   int i)
-{
-    t_parnth    *parnth;
-    int good;
-
-    good = -1;
-    parnth = db->paranthesis;
-    while (parnth)
-    {
-        if (parnth->open_ < i && parnth->close_ < i)
-            good++;
-        if (parnth->open_ > i && parnth->close_ > i)
-            good++;
-        parnth = parnth->next;
-    }
-    if (good == 1)
-        return (SUCCESS);
-    else
-        return (FAILURE);
-}
-
 /* flag is -3 if needs something before op                 '<'    '|'                    */
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
 /* flag is -1 if needs something before & after op like    '&&'   '||'                   */

@@ -39,7 +39,7 @@ void skip_op(int *i, char *line)
     return;
 }
 
-char **split_line(t_db * db, char *line, t_op_node *op, t_parnth *head)
+char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
 {
     int i;
     int len;
@@ -53,7 +53,9 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_parnth *head)
     splitted = gc_malloc(db, sizeof(char *) * op->n_childs);
     while (line[i])
     {
-        if (is_op2(line, &i) == op->op_presentation && !is_inside_quotes(db, i) && !is_inside_paranthesis(head, i))
+        if (is_op2(line, &i) == op->op_presentation
+            && !is_inside_quotes(tracker->quotes, i)
+            && !is_inside_paranthesis(tracker->paranthesis, i))
         {
             splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
             ft_strlcpy(splitted[k], line + i - len, len + 1);
@@ -76,22 +78,27 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_parnth *head)
 
 int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
-    t_parnth    *current_line_paranthesis;
+    t_tracker   tracker;
     char        **splitted;
     int         op;
     int         i;
 
-    current_line_paranthesis = NULL;
-    if (track_paranthesis(db, &current_line_paranthesis, line) == FAILURE) return FAILURE;
-    op = strongest_operator(db, current_line_paranthesis, line);
-    if (current_line_paranthesis && op == NOT_FOUND)
-        smart_split(db, remove_paranthesis(db, line, current_line_paranthesis), current_node, parent);
+    tracker.paranthesis = NULL;
+    tracker.quotes = NULL;
+    if (track_paranthesis(db, &tracker.paranthesis, line, tracker.quotes) == FAILURE) return FAILURE;
+    if (track_quotes(db, &tracker.quotes, line) == FAILURE) return FAILURE;
+    op = strongest_operator(db, line, &tracker);
+    if (tracker.paranthesis && op == NOT_FOUND)
+    {
+        smart_split(db, remove_paranthesis(db, line, tracker.paranthesis), current_node, parent);
+    }
     else if (op != NOT_FOUND)
     {
         create_op_node(db, op, current_node, parent);
-        ((t_op_node *)*current_node)->childs = gc_malloc(db, sizeof(void *) * count_between_op(db, current_line_paranthesis, line, op));
-        ((t_op_node *)*current_node)->n_childs = count_between_op(db, current_line_paranthesis, line, op);
-        splitted = split_line(db, line, ((t_op_node *)*current_node), current_line_paranthesis);
+        ((t_op_node *)*current_node)->childs = gc_malloc(db, sizeof(void *) * 
+            count_between_op(db, line, op, &tracker));
+        ((t_op_node *)*current_node)->n_childs = count_between_op(db, line, op, &tracker);
+        splitted = split_line(db, line, ((t_op_node *)*current_node), &tracker);
         i = 0;
         while (i < ((t_op_node *)*current_node)->n_childs)
         {
@@ -104,6 +111,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     {
         PASS;
     }
-    gc_free(db, current_line_paranthesis);
+    gc_free(db, tracker.paranthesis);
     return SUCCESS;
 }

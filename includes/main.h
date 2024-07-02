@@ -117,6 +117,12 @@ typedef struct s_parnth
     struct s_parnth *next;
 }   t_parnth;
 
+typedef struct s_tracker
+{
+    t_parnth    *paranthesis;
+    t_quote     *quotes;
+}   t_tracker;
+
 /**
  * @details The db structure is used to store all data needed
 */
@@ -128,8 +134,6 @@ typedef struct s_db
     char    **env;
     int     op_counter[6];
     int     last_signal;
-    t_quote *quotes;
-    t_parnth *paranthesis;
     t_operators *ops;
 }   t_db;
 

@@ -11,10 +11,12 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/split.c		\
 				parsing/expanding.c	\
 				parsing/op.c		\
-				parsing/op2.c
+				parsing/op2.c	\
+				parsing/cmd.c
 
 STRING = 	strings/string.c \
-			strings/string2.c
+			strings/string2.c \
+			strings/string3.c \
 
 # EXEC_SRC = exec/
 

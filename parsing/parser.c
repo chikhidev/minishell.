@@ -47,16 +47,20 @@ void print_nodes(t_op_node *head_node, int level)
 */
 int parser(t_db *db, char *line)
 {
+    t_parnth *paranthesis;
+    t_quote *quotes;
     int i;
 
+    paranthesis = NULL;
+    quotes = NULL;
     i = 0;
     if (ft_strlen(line) == 0) return (SUCCESS);
     skip_spaces(line, &i);
     if (line[i] == '\0') return (SUCCESS);
-    if (track_quotes(db, line) == FAILURE) return (FAILURE);
-    if (track_paranthesis(db, &db->paranthesis, line) == FAILURE) return (FAILURE);
+    if (track_quotes(db, &quotes, line) == FAILURE) return (FAILURE);
+    if (track_paranthesis(db, &paranthesis, line, quotes) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
-    if (expand(db, &line) == FAILURE) return (FAILURE);
+    if (expand(db, &line, quotes) == FAILURE) return (FAILURE);
     if (smart_split(db, line, &db->root_node, NULL) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------

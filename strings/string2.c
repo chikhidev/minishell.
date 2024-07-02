@@ -28,12 +28,13 @@ int is_whitespace(char c)
     return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int strongest_operator(t_db *db, t_parnth *head, char *line)
+int strongest_operator(t_db *db, char *line, t_tracker *tracker)
 {
     int     i;
     t_op_node   tmp;
     t_op_node   strongest;
 
+    (void)db;
     i = 0;
     strongest.priority = -1;
     strongest.childs = NULL;
@@ -46,7 +47,8 @@ int strongest_operator(t_db *db, t_parnth *head, char *line)
         if (tmp.op_presentation != INVALID)
         {
             tmp.priority = priority_of_op(tmp.op_presentation);
-            if (!is_inside_quotes(db, i) && !is_inside_paranthesis(head, i)
+            if (!is_inside_quotes(tracker->quotes, i)
+                && !is_inside_paranthesis(tracker->paranthesis, i)
                 && ((tmp.priority <= strongest.priority && tmp.priority != -1)
                 || strongest.priority == -1))
                 strongest = tmp;
@@ -56,18 +58,21 @@ int strongest_operator(t_db *db, t_parnth *head, char *line)
     return strongest.op_presentation;
 }
 
-int count_between_op(t_db *db, t_parnth *head, char *line, int op)
+int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
 {
     int i;
     int counter;
     int reminder;
 
+    (void)db;
     i = 0;
     reminder = 0;
     counter = 0;
     while (line[i])
     {
-        if (is_op(line, &i) == op && !is_inside_quotes(db, i) && !is_inside_paranthesis(head, i))
+        if (is_op(line, &i) == op
+            && !is_inside_quotes(tracker->quotes, i)
+            && !is_inside_paranthesis(tracker->paranthesis, i))
         {
             counter++;
             reminder = i;

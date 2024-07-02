@@ -1,11 +1,11 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-int inside_single_quote(t_db *db, int   i)
+int inside_single_quote(t_quote *head, int   i)
 {
     t_quote *q;
 
-    q = db->quotes;
+    q = head;
     while (q)
     {
         if (q->ascii == SNGLQUOTE && i >= q->start && i <= q->end)
@@ -15,11 +15,11 @@ int inside_single_quote(t_db *db, int   i)
     return (0);
 }
 
-int is_inside_quotes(t_db *db, int i)
+int is_inside_quotes(t_quote *head, int i)
 {
     t_quote *tmp;
 
-    tmp = db->quotes;
+    tmp = head;
     while (tmp)
     {
         if (i >= tmp->start && i <= tmp->end)
