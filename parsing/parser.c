@@ -1,43 +1,46 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-void print_nodes(t_op_node *head_node, int level)
+void print_nodes(void *head_node, int level)
 {
-    t_op_node *tmp = head_node;
-    //print node as a tree
-
-    if (!tmp) return;
+    if (!head_node) return ;
 
     for (int i = 0; i < level; i++)
     {
         printf("  ");
     }
-    if (tmp->type == CMD_NODE)
+    if (((t_cmd_node *)head_node)->type == CMD_NODE)
     {
-        printf("CMD_NODE: %s\n", ((t_cmd_node *)tmp)->cmd_path);
+        printf("CMD_NODE: ");
+        for (int i = 0; (((t_cmd_node *)head_node)->args[i]); i++)
+        {
+            printf("%s ", ((t_cmd_node *)head_node)->args[i]);
+        }
+        printf("\n");
+        return ;
     }
-    else if (tmp->type == OP_NODE)
+    else if (((t_op_node *)head_node)->type == OP_NODE)
     {
         printf("OP_NODE: ");
-        if (tmp->op_presentation == OR)
+        if (((t_op_node *)head_node)->op_presentation == OR)
             printf("OR\n");
-        else if (tmp->op_presentation == AND)
+        else if (((t_op_node *)head_node)->op_presentation == AND)
             printf("AND\n");
-        else if (tmp->op_presentation == PIPE)
+        else if (((t_op_node *)head_node)->op_presentation == PIPE)
             printf("PIPE\n");
-        else if (tmp->op_presentation == REDIR)
+        else if (((t_op_node *)head_node)->op_presentation == REDIR)
             printf("REDIR\n");
-        else if (tmp->op_presentation == APPEND)
+        else if (((t_op_node *)head_node)->op_presentation == APPEND)
             printf("APPEND\n");
-        else if (tmp->op_presentation == INPUT)
+        else if (((t_op_node *)head_node)->op_presentation == INPUT)
             printf("INPUT\n");
-        else if (tmp->op_presentation == HEREDOC)
+        else if (((t_op_node *)head_node)->op_presentation == HEREDOC)
             printf("HEREDOC\n");
     }
         
-    for (int i = 0; i < tmp->n_childs; i++)
+    for (int i = 0; i < ((t_op_node *)head_node)->n_childs; i++)
     {
-        print_nodes(tmp->childs[i], level + 1);
+        print_nodes(((t_op_node *)head_node)->childs[i], level + 1);
     }
 }
 

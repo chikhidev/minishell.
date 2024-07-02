@@ -75,4 +75,8 @@ int priority_of_op(int op);
 void create_op_node(t_db *db, int op, void **current_node, void *parent);
 
 
+/*cmd.c*/
+int     create_cmd_node(t_db *db, void **current_node, void *parent);
+char    **cmd_split(t_db *db, char *line, t_quote *quotes);
+
 #endif
