@@ -32,6 +32,12 @@
 #define CYAN    "\033[0;36m"
 #define RESET   "\033[0m"
 
+typedef struct s_here_doc /*here doc saver*/
+{
+    void    *ptr;
+    struct s_here_doc *next;
+}   t_here_doc;
+
 /**
  * @details This structure is used to store the pointer to free
 */
@@ -135,6 +141,7 @@ typedef struct s_db
     int     op_counter[6];
     int     last_signal;
     t_operators *ops;
+    t_here_doc  *here_docs;
 }   t_db;
 
 /*prototypes: error.c*/

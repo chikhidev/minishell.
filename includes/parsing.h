@@ -37,6 +37,7 @@ char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
 int     count_args(char *line, t_quote *quotes, int len);
 int     append_split(char **splitted, char *string);
 char    *sub(t_db *db, char *line, int i, int j);
+void     fill_nullptr(char **splitted, int size);
 
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int     track_quotes(t_db *db, t_quote **head, char *line);

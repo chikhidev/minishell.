@@ -1,37 +1,41 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
+typedef struct s_iterators
+{
+    int i;
+    int j;
+} t_iterators;
+
 // "command " " arg 1 " " arg 2 "
 char **cmd_split(t_db *db, char *line, t_quote *quotes)
 {
-    char **splitted;
-    int len;
-    int j;
-    int i;
+    char        **splitted;
+    int         size;
+    int         len;
+    t_iterators it;
 
-    len = ft_strlen(line);
-    splitted = gc_malloc(db, sizeof(char *) * (count_args(line, quotes, len) + 1));
-    splitted[0] = NULL;
-    printf("size of splitted: %d\n", (count_args(line, quotes, len) + 1));
+    len = (int)ft_strlen(line);
+    size = count_args(line, quotes, len);
+    splitted = gc_malloc(db, sizeof(char *) * (size) + 1);
+    fill_nullptr(splitted, size + 1);
     if (!splitted)
         return NULL;
-    i = 0;
-    j = 0;
-    skip_spaces(line, &i);
-    while (i < len)
+    ft_bzero(&it, sizeof(t_iterators));
+    skip_spaces(line, &it.i);
+    while (it.i < len)
     {
-        if (is_whitespace(line[i]) && is_inside_quotes(quotes, i))
+        if (is_whitespace(line[it.i]) && is_inside_quotes(quotes, it.i))
         {
-            if (append_split(splitted, sub(db, line, i, j)) == FAILURE)
+            if (append_split(splitted, sub(db, line, it.i, it.j)) == FAILURE)
                 return NULL;
-            skip_spaces(line, &i);
-            j = i;
+            skip_spaces(line, &it.i);
+            it.j = it.i;
         }
-        i++;
+        it.i++;
     }
-    if (append_split(splitted, sub(db, line, i, j)) == FAILURE)
+    if (append_split(splitted, sub(db, line, it.i, it.j)) == FAILURE)
         return NULL;
-
     return splitted;
 }
 

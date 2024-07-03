@@ -7,7 +7,7 @@ void print_nodes(void *head_node, int level)
 
     for (int i = 0; i < level; i++)
     {
-        printf("  ");
+        printf("   ");
     }
     if (((t_cmd_node *)head_node)->type == CMD_NODE)
     {
@@ -50,9 +50,9 @@ void print_nodes(void *head_node, int level)
 */
 int parser(t_db *db, char *line)
 {
-    t_parnth *paranthesis;
-    t_quote *quotes;
-    int i;
+    t_parnth    *paranthesis;
+    t_quote     *quotes;
+    int         i;
 
     paranthesis = NULL;
     quotes = NULL;

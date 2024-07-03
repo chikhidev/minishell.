@@ -22,6 +22,18 @@ int count_args(char *line, t_quote *quotes, int len)
     return count;
 }
 
+void fill_nullptr(char **splitted, int size) /*for safety*/
+{
+    int i;
+
+    i = 0;
+    while (i < size)
+    {
+        splitted[i] = NULL;
+        i++;
+    }
+}
+
 int append_split(char **splitted, char *string)
 {
     int i;
@@ -32,7 +44,6 @@ int append_split(char **splitted, char *string)
     while (splitted[i])
         i++;
     splitted[i] = string;
-    splitted[i + 1] = NULL;
     return SUCCESS;
 }
 
