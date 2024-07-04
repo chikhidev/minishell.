@@ -17,10 +17,10 @@ char **cmd_split(t_db *db, char *line, t_quote *quotes)
 
     len = (int)ft_strlen(line);
     size = count_args(line, quotes, len);
-    splitted = gc_malloc(db, sizeof(char *) * (size) + 1);
-    fill_nullptr(splitted, size + 1);
+    splitted = gc_malloc(db, sizeof(char *) * (size + 1));
     if (!splitted)
         return NULL;
+    ft_bzero(splitted, sizeof(char *) * (size + 1));
     ft_bzero(&it, sizeof(t_iterators));
     skip_spaces(line, &it.i);
     while (it.i < len)
