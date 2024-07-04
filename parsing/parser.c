@@ -14,7 +14,7 @@ void print_nodes(void *head_node, int level)
         printf("CMD_NODE: ");
         for (int i = 0; (((t_cmd_node *)head_node)->args[i]); i++)
         {
-            printf("%s ", ((t_cmd_node *)head_node)->args[i]);
+            printf("[%s] ", ((t_cmd_node *)head_node)->args[i]);
         }
         printf("\n");
         return ;
@@ -63,7 +63,7 @@ int parser(t_db *db, char *line)
     if (track_quotes(db, &quotes, line) == FAILURE) return (FAILURE);
     if (track_paranthesis(db, &paranthesis, line, quotes) == FAILURE) return (FAILURE);
     if (track_operators(db, line) == FAILURE) return (FAILURE);
-    if (expand(db, &line, quotes) == FAILURE) return (FAILURE);
+    // if (expand(db, &line, quotes) == FAILURE) return (FAILURE); let it be while splitting the commands
     if (smart_split(db, line, &db->root_node, NULL) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------

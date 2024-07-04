@@ -6,7 +6,7 @@ int add_quote(t_db *db, t_quote **head, int ascii, int start)
     t_quote *tmp;
 
     new = gc_malloc(db, sizeof(t_quote));
-    if (!new) return (FAILURE);
+    if (!new) return (error(db, "Malloc failed"));
     new->ascii = ascii;
     new->start = start;
     new->end = -1;

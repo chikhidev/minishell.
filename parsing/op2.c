@@ -29,6 +29,10 @@ int priority_of_op(int op)
     return NOT_FOUND;
 }
 
+void push_heredoc() {
+
+}
+
 void    create_op_node(t_db *db, int op, void **current_node, void *parent)
 {
     *current_node = gc_malloc(db, sizeof(t_op_node));
@@ -36,4 +40,8 @@ void    create_op_node(t_db *db, int op, void **current_node, void *parent)
     ((t_op_node *)*current_node)->type = OP_NODE;
     ((t_op_node *)*current_node)->priority = priority_of_op(op);
     ((t_op_node *)*current_node)->op_presentation = op;
+    if (op == HEREDOC) {
+        // db->here_docs
+        PASS;
+    }
 }

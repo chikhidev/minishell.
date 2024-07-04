@@ -8,7 +8,7 @@ int create_paranth(t_db *db, t_parnth **head, int open_)
     t_parnth *tmp;
 
     new = gc_malloc(db, sizeof(t_parnth));
-    if (!new) return (FAILURE);
+    if (!new) return (error(db, "Malloc failed"));
     new->open_ = open_;
     new->close_ = -1;
     new->next = NULL;

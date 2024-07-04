@@ -1,12 +1,6 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-typedef struct s_iterators
-{
-    int i;
-    int j;
-} t_iterators;
-
 // "command " " arg 1 " " arg 2 "
 char **cmd_split(t_db *db, char *line, t_quote *quotes)
 {

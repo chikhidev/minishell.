@@ -32,6 +32,12 @@
 #define CYAN    "\033[0;36m"
 #define RESET   "\033[0m"
 
+typedef struct s_iterators
+{
+    int i;
+    int j;
+} t_iterators;
+
 typedef struct s_here_doc /*here doc saver*/
 {
     void    *ptr;
