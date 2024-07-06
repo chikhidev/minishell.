@@ -256,13 +256,16 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
 
 int only_spaces(char *line, int start, int close)
 {
-    while (start < close)
+    int i;
+
+    i = start + 1;
+    while (i < close)
     {
-        if (is_whitespace(line[start]))
-            return (TRUE);
-        start++;
+        if (is_whitespace(line[i]))
+            return (FALSE);
+        i++;
     }
-    return (FALSE);
+    return (TRUE);
 }
 
 // db->paranthesis
