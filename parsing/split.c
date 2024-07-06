@@ -114,7 +114,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         if (!create_cmd_node(db, current_node, parent))
             return FAILURE;
         ((t_cmd_node *)*current_node)->args = cmd_split(db, line, tracker->quotes);
-        // PASS;
     }
     gc_free(db, tracker);
     return SUCCESS;
