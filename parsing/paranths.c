@@ -261,13 +261,12 @@ int only_spaces(char *line, int start, int close)
     i = start + 1;
     while (i < close)
     {
-        if (is_whitespace(line[i]))
+        if (!is_whitespace(line[i]))
             return (FALSE);
         i++;
     }
     return (TRUE);
 }
-
 // db->paranthesis
 int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
 {
@@ -288,7 +287,7 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
             && last_opened
-            && only_spaces(line, last_opened->open_, last_opened->close_))
+            && last_opened->open_ == i - 1)
             return error(db, "syntax error: near ')'");
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
@@ -297,6 +296,8 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
             if (!*head)
                 return error(db, "syntax error: near ')'");
             last_opened->close_ = i;
+            if (only_spaces(line, last_opened->open_, last_opened->close_))
+                return error(db, "syntax error: near ')'");
         }
         else if (line[i] == ')' && !is_inside_quotes(quotes, i))
             return error(db, "syntax error: near ')'");

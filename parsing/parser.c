@@ -48,6 +48,20 @@ void print_nodes(void *head_node, int level)
  * @details This function will parse the line and split it into commands and operators
  * @return 1 on success, 0 on failure
 */
+
+int print_here_docs(t_here_doc *here_docs)
+{
+    t_here_doc *here_doc;
+
+    here_doc = here_docs;
+    while (here_doc)
+    {
+        printf("-> %d\n", here_doc->ptr->op_presentation);
+        here_doc = here_doc->next;
+    }
+    return (SUCCESS);
+}
+
 int parser(t_db *db, char *line)
 {
     t_parnth    *paranthesis;
@@ -71,6 +85,7 @@ int parser(t_db *db, char *line)
 
     t_op_node *head_node = db->root_node;
     print_nodes(head_node, 0);
+    print_here_docs(db->here_docs);
     
     return (SUCCESS);
 }

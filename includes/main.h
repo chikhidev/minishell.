@@ -38,9 +38,19 @@ typedef struct s_iterators
     int j;
 } t_iterators;
 
+typedef struct s_op_node
+{
+    int     type; // the common thing between the two nodes
+    void    *origin; // the original node
+    int     priority;
+    int     op_presentation;
+    void    **childs;
+    int     n_childs;
+}   t_op_node;
+
 typedef struct s_here_doc /*here doc saver*/
 {
-    void    *ptr;
+    t_op_node    *ptr;
     struct s_here_doc *next;
 }   t_here_doc;
 
@@ -86,15 +96,6 @@ typedef struct s_cmd_node
  * 4 - childs: the children nodes of the operator
  * 5 - n_childs: the number of children to use for etierating
 */
-typedef struct s_op_node
-{
-    int     type; // the common thing between the two nodes
-    void    *origin; // the original node
-    int     priority;
-    int     op_presentation;
-    void    **childs;
-    int     n_childs;
-}   t_op_node;
 
 typedef struct  s_operators
 {

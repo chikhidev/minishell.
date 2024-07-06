@@ -29,8 +29,30 @@ int priority_of_op(int op)
     return NOT_FOUND;
 }
 
-void push_heredoc() {
+int push_heredoc(t_db *db, t_op_node *here_doc)
+{
+    t_here_doc    *tmp;
 
+    if (!db->here_docs)
+    {
+        db->here_docs = gc_malloc(db, sizeof(t_here_doc));
+        if (!db->here_docs)
+            return (FAILURE);
+        db->here_docs->ptr = here_doc;
+        db->here_docs->next = NULL;
+    }
+    else
+    {
+        tmp = db->here_docs;
+        while (tmp->next)
+            tmp = tmp->next;
+        tmp->next = gc_malloc(db, sizeof(t_here_doc));
+        if (!tmp->next)
+            return (FAILURE);
+        tmp->next->ptr = here_doc;
+        tmp->next->next = NULL;
+    }
+    return (SUCCESS);
 }
 
 void    create_op_node(t_db *db, int op, void **current_node, void *parent)
@@ -41,7 +63,7 @@ void    create_op_node(t_db *db, int op, void **current_node, void *parent)
     ((t_op_node *)*current_node)->priority = priority_of_op(op);
     ((t_op_node *)*current_node)->op_presentation = op;
     if (op == HEREDOC) {
-        // db->here_docs
-        PASS;
+        if (push_heredoc(db, (t_op_node *)current_node) == FAILURE)
+            (gc_void(db), perror("malloc"), exit(1));
     }
 }
