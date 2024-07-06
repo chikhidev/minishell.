@@ -253,6 +253,18 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
     return (FAILURE);
         
 }
+
+int only_spaces(char *line, int start, int close)
+{
+    while (start < close)
+    {
+        if (is_whitespace(line[start]))
+            return (TRUE);
+        start++;
+    }
+    return (FALSE);
+}
+
 // db->paranthesis
 int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
 {
@@ -273,7 +285,7 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
             && last_opened
-            && last_opened->open_ == i - 1)
+            && only_spaces(line, last_opened->open_, last_opened->close_))
             return error(db, "syntax error: near ')'");
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
