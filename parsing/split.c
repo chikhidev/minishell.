@@ -83,6 +83,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     int         op;
     int         i;
 
+    if (ft_strlen(line) == 0) return SUCCESS;
     tracker = gc_malloc(db, sizeof(t_tracker));
     if (!tracker) return error(db, "Failed to allocate memory");
     tracker->paranthesis = NULL;
@@ -96,10 +97,14 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     }
     else if (op != NOT_FOUND)
     {
-        create_op_node(db, op, current_node, parent);
+        if (create_op_node(db, op, current_node, parent) == FAILURE)
+        {
+            return FAILURE;
+        }
         ((t_op_node *)*current_node)->childs = gc_malloc(db, sizeof(void *) * 
             count_between_op(db, line, op, tracker));
         ((t_op_node *)*current_node)->n_childs = count_between_op(db, line, op, tracker);
+        
         splitted = split_line(db, line, ((t_op_node *)*current_node), tracker);
         i = 0;
         while (i < ((t_op_node *)*current_node)->n_childs)
@@ -113,8 +118,10 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     {
         if (!create_cmd_node(db, current_node, parent))
             return FAILURE;
-        ((t_cmd_node *)*current_node)->args = cmd_split(db, line, tracker->quotes);
+        ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
+        if (((t_cmd_node *)*current_node)->args == NULL)
+            return error(db, "Malloc failed");
     }
     gc_free(db, tracker);
-    return SUCCESS;
+    return SUCCESS; 
 }

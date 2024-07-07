@@ -14,11 +14,13 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/op2.c	\
 				parsing/cmd.c
 
+PARSING_CUSTOMED = parsing/customized/split.new.c
+
+PARSING_SRC += $(PARSING_CUSTOMED)
+
 STRING = 	strings/string.c \
 			strings/string2.c \
 			strings/string3.c \
-
-# EXEC_SRC = exec/
 
 SRC =	main.c		\
 		memo.c		\

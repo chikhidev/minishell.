@@ -9,7 +9,7 @@ void print_nodes(void *head_node, int level)
     {
         printf("   ");
     }
-    if (((t_cmd_node *)head_node)->type == CMD_NODE)
+    if (((t_cmd_node *)head_node)->type == CMD_NODE && ((t_cmd_node *)head_node)->args)
     {
         printf("CMD_NODE: ");
         for (int i = 0; (((t_cmd_node *)head_node)->args[i]); i++)
@@ -56,7 +56,6 @@ int print_here_docs(t_here_doc *here_docs)
     here_doc = here_docs;
     while (here_doc)
     {
-        printf("-> %d\n", here_doc->ptr->op_presentation);
         here_doc = here_doc->next;
     }
     return (SUCCESS);

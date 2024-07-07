@@ -49,8 +49,22 @@ int are_all(char *str, int (*f)(int))
     while (str[i])
     {
         if (!f(str[i]))
-            return (0);
+            return (FALSE);
         i++;
     }
-    return (1);
+    return (TRUE);
+}
+
+int all_whitespaces(char *line, int start, int end)
+{
+    int i;
+
+    i = start;
+    while (i < end)
+    {
+        if (line[i] != ' ' && line[i] != '\t')
+            return (FALSE);
+        i++;
+    }
+    return (TRUE);
 }

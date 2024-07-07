@@ -79,7 +79,8 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
         }
         i++;
     }
-    if (reminder < i)
+
+    if (reminder < i && !all_whitespaces(line, reminder, i) && !is_inside_quotes(tracker->quotes, i))
         counter++;
     return counter;
 }

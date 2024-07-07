@@ -8,6 +8,7 @@
 
 #include "../libft/libft.h"
 
+#define BOOL unsigned char
 #define TRUE 1
 #define FALSE 0
 #define SUCCESS 1
@@ -16,7 +17,6 @@
 #define INVALID -1
 #define VALIDE 1
 #define PASS
-
 
 #define DOBLQUOTE 34
 #define SNGLQUOTE 39
