@@ -1,3 +1,4 @@
 + collect heredocs inside linked-list collector {cm:2024-07-06}
 + split commands (they are not splitted yet, they are just beeing assined as string for the moment) {cm:2024-07-07}
 - done ready for execution part (i hope)
+- create a dispatcher for execution layers managing

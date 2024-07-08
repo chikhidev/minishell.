@@ -59,7 +59,7 @@ int track_quotes(t_db *db, t_quote **head, char *line)
         i++;
     }
     last = last_quote(*head);
-    CATCH_ONFALSE(!(*head) || last->end != -1, error(db, "Quotes are not closed"));
+    CATCH_ONFALSE((!(*head) || last->end != -1), error(db, "Quotes are not closed"));
     return (SUCCESS);
 }
 

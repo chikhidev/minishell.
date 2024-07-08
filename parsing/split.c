@@ -69,7 +69,7 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     if (len > 0)
     {
         splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
-        CATCH_NULL(splitted[k]);
+        CATCH_ONNULL(splitted[k], NULL);
         ft_strlcpy(splitted[k], line + i - len, len + 1);
     }
     return splitted;
@@ -87,8 +87,9 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     if (!tracker) return error(db, "Failed to allocate memory");
     tracker->paranthesis = NULL;
     tracker->quotes = NULL;
-    CATCH_FAILURE(track_quotes(db, &tracker->quotes, line));
-    CATCH_FAILURE(track_paranthesis(db, &tracker->paranthesis, line, tracker->quotes));
+    CATCH_ONFAILURE(track_quotes(db, &tracker->quotes, line), FAILURE);
+    CATCH_ONFAILURE(track_paranthesis(db, &tracker->paranthesis,
+        line, tracker->quotes), FAILURE);
     op = strongest_operator(line, tracker);
     if (tracker->paranthesis && op == NOT_FOUND)
     {
