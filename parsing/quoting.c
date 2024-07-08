@@ -6,7 +6,7 @@ int add_quote(t_db *db, t_quote **head, int ascii, int start)
     t_quote *tmp;
 
     new = gc_malloc(db, sizeof(t_quote));
-    if (!new) return (error(db, "Malloc failed"));
+    CATCH_ONNULL(new, error(db, "Malloc failed"));
     new->ascii = ascii;
     new->start = start;
     new->end = -1;
@@ -45,23 +45,21 @@ int track_quotes(t_db *db, t_quote **head, char *line)
         last = last_quote(*head);
         if ((line[i] == 34 || line[i] == 39) && (!*head || !last))
         {
-            if (add_quote(db, head, line[i], i) == FAILURE) return (FAILURE);
+            CATCH_ONFAILURE(add_quote(db, head, line[i], i), FAILURE);
         }
         else if ((line[i] == 34 || line[i] == 39)
             && last->ascii == line[i]
             && last->end == -1)
-        {
             last->end = i;
-        }
         else if ((line[i] == 34 || line[i] == 39)
             && last->end != -1)
         {
-            if (add_quote(db, head, line[i], i) == FAILURE) return (FAILURE);
+            CATCH_ONFAILURE(add_quote(db, head, line[i], i), FAILURE);
         }
         i++;
     }
     last = last_quote(*head);
-    if (*head && last->end == -1) return (error(db, "Quotes are not closed"));
+    CATCH_ONFALSE(!(*head) || last->end != -1, error(db, "Quotes are not closed"));
     return (SUCCESS);
 }
 
@@ -76,17 +74,3 @@ void reset_quotes(t_db *db, t_quote **head)
         gc_free(db, tmp);
     }
 }
-
-// void    reset_quotes(t_db *db)
-// {
-//     t_quote *tmp;
-
-//     while (db->quotes)
-//     {
-//         tmp = db->quotes;
-//         db->quotes = db->quotes->next;
-//         gc_free(db, tmp);
-//     }
-//     gc_free(db, db->quotes);
-//     db->quotes = NULL;
-// }

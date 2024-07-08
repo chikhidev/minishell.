@@ -29,7 +29,7 @@ int     are_all(char *str, int (*f)(int));
 
 /*string2.c*/
 int     is_whitespace(char c);
-int     strongest_operator(t_db *db, char *line, t_tracker *tracker);
+int     strongest_operator(char *line, t_tracker *tracker);
 int     count_between_op(t_db *db,  char *line, int op, t_tracker *tracker);
 char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
 

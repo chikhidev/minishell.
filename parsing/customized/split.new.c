@@ -62,7 +62,6 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
 	if (s == NULL)
 		return (NULL);
 	word_count = count_words(quotes, s);
-    printf("word_count: %d\n", word_count);
 	result = (char **)gc_malloc(db, (word_count + 1) * sizeof(char *));
 	if (result == NULL)
 		return (NULL);
@@ -70,12 +69,9 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
     while (it.i < word_count)
     {
         skip_open_spaces(quotes, s, &it.j);
-        printf("starting from %d, %c\n", it.j, s[it.j]);
         result[it.i] = extract_word(db, quotes, s, &it.j);
         if (result[it.i] == NULL)
             return (NULL);
-        printf("ended at %d, %c\n", it.j, s[it.j]);
-        printf("word: %s\n", result[it.i]);
         it.i++;
     }
     result[it.i] = NULL;

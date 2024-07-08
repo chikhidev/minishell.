@@ -18,6 +18,17 @@
 #define VALIDE 1
 #define PASS
 
+
+//triggers
+#define CATCH_MALLOC(x) if (!x) return error(db, "Malloc failed");
+#define CATCH(x, message) if (x == FAILURE) return error(db, message);
+#define CATCH_ONFAILURE(x, return_) if (x == FAILURE) return return_;
+#define CATCH_ONNULL(x, return_) if (x == NULL) return return_;
+#define CATCH_ONFALSE(x, return_) if (x == FALSE) return return_;
+#define CATCH_ONINVALID(x, return_) if (x == INVALID) return return_;
+#define CATCH_ONNOTFOUND(x, return_) if (x == NOT_FOUND) return return_;
+
+
 #define DOBLQUOTE 34
 #define SNGLQUOTE 39
 

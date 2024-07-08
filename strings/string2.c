@@ -28,19 +28,17 @@ int is_whitespace(char c)
     return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int strongest_operator(t_db *db, char *line, t_tracker *tracker)
+int strongest_operator(char *line, t_tracker *tracker)
 {
     int     i;
     t_op_node   tmp;
     t_op_node   strongest;
 
-    (void)db;
     i = 0;
+    ft_bzero(&strongest, sizeof(t_op_node));
     strongest.priority = -1;
-    strongest.childs = NULL;
     strongest.op_presentation = NOT_FOUND;
     strongest.type = NOT_FOUND;
-    strongest.origin = NULL;
     while (line[i])
     {
         tmp.op_presentation = is_op(line, &i);
@@ -79,7 +77,6 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
         }
         i++;
     }
-
     if (reminder < i && !all_whitespaces(line, reminder, i) && !is_inside_quotes(tracker->quotes, i))
         counter++;
     return counter;

@@ -66,12 +66,11 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
         len++;
         i++;
     }
-
     if (len > 0)
     {
         splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
+        CATCH_NULL(splitted[k]);
         ft_strlcpy(splitted[k], line + i - len, len + 1);
-
     }
     return splitted;
 }
@@ -88,24 +87,21 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     if (!tracker) return error(db, "Failed to allocate memory");
     tracker->paranthesis = NULL;
     tracker->quotes = NULL;
-    if (track_paranthesis(db, &tracker->paranthesis, line, tracker->quotes) == FAILURE) return FAILURE;
-    if (track_quotes(db, &tracker->quotes, line) == FAILURE) return FAILURE;
-    op = strongest_operator(db, line, tracker);
+    CATCH_FAILURE(track_quotes(db, &tracker->quotes, line));
+    CATCH_FAILURE(track_paranthesis(db, &tracker->paranthesis, line, tracker->quotes));
+    op = strongest_operator(line, tracker);
     if (tracker->paranthesis && op == NOT_FOUND)
     {
         smart_split(db, remove_paranthesis(db, line, tracker->paranthesis), current_node, parent);
     }
     else if (op != NOT_FOUND)
     {
-        if (create_op_node(db, op, current_node, parent) == FAILURE)
-        {
-            return FAILURE;
-        }
+        CATCH_ONFAILURE(create_op_node(db, op, current_node, parent), FAILURE);
         ((t_op_node *)*current_node)->childs = gc_malloc(db, sizeof(void *) * 
             count_between_op(db, line, op, tracker));
         ((t_op_node *)*current_node)->n_childs = count_between_op(db, line, op, tracker);
-        
         splitted = split_line(db, line, ((t_op_node *)*current_node), tracker);
+        CATCH_MALLOC(splitted);
         i = 0;
         while (i < ((t_op_node *)*current_node)->n_childs)
         {
@@ -116,11 +112,9 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     }
     else
     {
-        if (!create_cmd_node(db, current_node, parent))
-            return FAILURE;
+        CATCH_ONFAILURE(create_cmd_node(db, current_node, parent), FAILURE);
         ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
-        if (((t_cmd_node *)*current_node)->args == NULL)
-            return error(db, "Malloc failed");
+        CATCH_MALLOC(((t_cmd_node *)*current_node)->args);
     }
     gc_free(db, tracker);
     return SUCCESS; 

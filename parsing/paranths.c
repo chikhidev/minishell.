@@ -279,10 +279,8 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
         last_opened = last_unclosed_paranth(*head);
         if (line[i] == '(' && !is_inside_quotes(quotes, i))
         {
-            if (verify_create_parenth(*head, line, i) == FAILURE)
-                return (error(db, "syntax error '('"));
-            if (create_paranth(db, head, i) == FAILURE)
-                return (FAILURE);
+            CATCH_ONFAILURE(create_paranth(db, head, i), FAILURE);
+            CATCH_ONFAILURE(verify_create_parenth(*head, line, i), FAILURE);
         }
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
@@ -293,22 +291,18 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
             && !is_inside_quotes(quotes, i)
             && last_opened)
         {
-            if (!*head)
-                return error(db, "syntax error: near ')'");
+            CATCH_ONNULL(last_opened, error(db, "syntax error: near ')'"));
             last_opened->close_ = i;
-            if (only_spaces(line, last_opened->open_, last_opened->close_))
-                return error(db, "syntax error: near ')'");
+            CATCH_ONFALSE(!only_spaces(line, last_opened->open_, last_opened->close_),
+                error(db, "syntax error: near ')'"));
         }
         else if (line[i] == ')' && !is_inside_quotes(quotes, i))
             return error(db, "syntax error: near ')'");
         i++;
     }
-    if (last_unclosed_paranth(*head))
-        return error(db, "syntax error: near '('");
-    if (verify_double_scope(*head, line) == FAILURE)
-        return FAILURE;
-    if (verify_scope_surrounding(*head, line) == FAILURE)
-        return error(db, "syntax error: near '(' or ')'");
+    CATCH_ONFALSE(!last_unclosed_paranth(*head), error(db, "syntax error: near '('"));
+    CATCH_ONFAILURE(verify_double_scope(*head, line), FAILURE);
+    CATCH_ONFAILURE(verify_scope_surrounding(*head, line), FAILURE);
     return (SUCCESS);
 }
 
