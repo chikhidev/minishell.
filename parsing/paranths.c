@@ -240,8 +240,14 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
     idx--;
     while (idx >= 0)
     {
-        while (is_whitespace(line[idx]))
+        while (is_whitespace(line[idx])) // --?? there is no \0 in the front?! salab lbatal
             idx--;
+
+        /* ^^^^^^^^^^^^^^^^^^^^^
+            check tests akhir test
+        */
+
+
         if (is_operator(line, idx))
             return (SUCCESS);
         if (line[idx] == '(')
@@ -280,7 +286,9 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
         if (line[i] == '(' && !is_inside_quotes(quotes, i))
         {
             CATCH_ONFAILURE(create_paranth(db, head, i), FAILURE);
-            CATCH_ONFAILURE(verify_create_parenth(*head, line, i), FAILURE);
+            CATCH_ONFAILURE(verify_create_parenth(*head, line, i), 
+                error(db, "syntax error: near '('")
+            );
         }
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
@@ -294,7 +302,8 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
             CATCH_ONNULL(last_opened, error(db, "syntax error: near ')'"));
             last_opened->close_ = i;
             CATCH_ONFALSE(!only_spaces(line, last_opened->open_, last_opened->close_),
-                error(db, "syntax error: near ')'"));
+                // FAILURE); // instead of failure khasna error !
+                error(db, "syntax error: near ')'")); // salah lbatal forgot this <<<<<<
         }
         else if (line[i] == ')' && !is_inside_quotes(quotes, i))
             return error(db, "syntax error: near ')'");

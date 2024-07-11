@@ -60,11 +60,13 @@ int    create_op_node(t_db *db, int op, void **current_node, void *parent)
     ((t_op_node *)*current_node)->type = OP_NODE;
     ((t_op_node *)*current_node)->priority = priority_of_op(op);
     ((t_op_node *)*current_node)->op_presentation = op;
+    ((t_op_node *)*current_node)->n_childs = 0;
+    ((t_op_node *)*current_node)->neighbour = NULL; // case of heredoc will be used
+
     if (op == HEREDOC) {
-        if (push_heredoc(db, (t_op_node *)current_node) == (FAILURE))
-        {
-            return (FAILURE);
-        }
+        CATCH_ONFAILURE(
+            push_heredoc(db, (t_op_node *)*current_node)
+        , FAILURE);
     }
     return (SUCCESS);
 }

@@ -77,6 +77,7 @@ int create_op_node(t_db *db, int op, void **current_node, void *parent);
 
 /*cmd.c*/
 int     create_cmd_node(t_db *db, void **current_node, void *parent);
+int     count_op(char *line, int op);
 
 /*customized*/
 char	**ft_new_split(t_db *db, t_quote *quotes, char *line);

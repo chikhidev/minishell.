@@ -1,46 +1,58 @@
 #include "../includes/main.h"
 #include "../includes/parsing.h"
 
-void print_nodes(void *head_node, int level)
+void print_nodes(void *node, int level)
 {
-    if (!head_node) return ;
+    if (!node) return ;
 
     for (int i = 0; i < level; i++)
     {
         printf("   ");
     }
-    if (((t_cmd_node *)head_node)->type == CMD_NODE && ((t_cmd_node *)head_node)->args)
+    if (CMD->type == CMD_NODE && CMD->args)
     {
         printf("CMD_NODE: ");
-        for (int i = 0; (((t_cmd_node *)head_node)->args[i]); i++)
+        for (int i = 0; (CMD->args[i]); i++)
         {
-            printf("[%s] ", ((t_cmd_node *)head_node)->args[i]);
+            printf("[%s] ", CMD->args[i]);
         }
         printf("\n");
         return ;
     }
-    else if (((t_op_node *)head_node)->type == OP_NODE)
+    else if (OP->type == OP_NODE)
     {
         printf("OP_NODE: ");
-        if (((t_op_node *)head_node)->op_presentation == OR)
+        if (OP->op_presentation == OR)
             printf("OR\n");
-        else if (((t_op_node *)head_node)->op_presentation == AND)
+        else if (OP->op_presentation == AND)
             printf("AND\n");
-        else if (((t_op_node *)head_node)->op_presentation == PIPE)
+        else if (OP->op_presentation == PIPE)
             printf("PIPE\n");
-        else if (((t_op_node *)head_node)->op_presentation == REDIR)
+        else if (OP->op_presentation == REDIR)
             printf("REDIR\n");
-        else if (((t_op_node *)head_node)->op_presentation == APPEND)
+        else if (OP->op_presentation == APPEND)
             printf("APPEND\n");
-        else if (((t_op_node *)head_node)->op_presentation == INPUT)
+        else if (OP->op_presentation == INPUT)
             printf("INPUT\n");
-        else if (((t_op_node *)head_node)->op_presentation == HEREDOC)
-            printf("HEREDOC\n");
+        else if (OP->op_presentation == HEREDOC)
+        {
+            printf("HEREDOC");
+            printf("----> ");
+            if (OP->neighbour != NULL)
+            {
+                t_cmd_node *cmd = OP->neighbour;
+                for (int i = 0; (cmd->args[i]); i++)
+                {
+                    printf("[%s] ", cmd->args[i]);
+                }
+            }
+            printf("\n");
+        }
     }
         
-    for (int i = 0; i < ((t_op_node *)head_node)->n_childs; i++)
+    for (int i = 0; i < OP->n_childs; i++)
     {
-        print_nodes(((t_op_node *)head_node)->childs[i], level + 1);
+        print_nodes(OP->childs[i], level + 1);
     }
 }
 
@@ -82,8 +94,8 @@ int parser(t_db *db, char *line)
     // // DEBUG --------------------------------------------------------
     printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
 
-    t_op_node *head_node = db->root_node;
-    print_nodes(head_node, 0);
+    t_op_node *node = db->root_node;
+    print_nodes(node, 0);
     print_here_docs(db->here_docs);
     
     return (SUCCESS);

@@ -175,3 +175,69 @@ $
 
 
 cmd1 && (cmd2 || (cmd3 | testfile)) > (cmd2 || (cmd3 | testfile)) > (cmd2 || (cmd3 | testfile)) 
+
+
+
+ls && cat << DLIMITER cm0 cmd1 cmd2 << DELIMITER2 cm0 cm1 || wc -l
+
+
+
+
+
+
+
+
+
+
+Lowa@abderrahim~ ls || (cmd -arg -hhhh " sfjghfjk " << DL << DL2 << DL3 )
+=================================================================
+==19514==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60600000097f at pc 0x5a720012fc47 bp 0x7ffd87afc780 sp 0x7ffd87afc770
+READ of size 1 at 0x60600000097f thread T0
+    #0 0x5a720012fc46 in verify_create_parenth parsing/paranths.c:243
+    #1 0x5a720012fece in track_paranthesis parsing/paranths.c:283
+    #2 0x5a7200131891 in smart_split parsing/split.c:91
+    #3 0x5a7200131e32 in smart_split parsing/split.c:132
+    #4 0x5a720012dd01 in parser parsing/parser.c:92
+    #5 0x5a720012cb6e in main /home/abderrahim/prj/minishell/main.c:84
+    #6 0x7658db82814f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #7 0x7658db828208 in __libc_start_main_impl ../csu/libc-start.c:360
+    #8 0x5a720012c3c4 in _start (/home/abderrahim/prj/minishell/minishell+0x23c4) (BuildId: 50134499e83fee7c45570716ab048caad7162012)
+
+0x60600000097f is located 1 bytes before 52-byte region [0x606000000980,0x6060000009b4)
+allocated by thread T0 here:
+    #0 0x7658dbcdefdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x5a720012cc89 in gc_malloc /home/abderrahim/prj/minishell/memo.c:7
+    #2 0x5a72001315e8 in split_line parsing/split.c:71
+    #3 0x5a7200131a9f in smart_split parsing/split.c:111
+    #4 0x5a720012dd01 in parser parsing/parser.c:92
+    #5 0x5a720012cb6e in main /home/abderrahim/prj/minishell/main.c:84
+    #6 0x7658db82814f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow parsing/paranths.c:243 in verify_create_parenth
+Shadow bytes around the buggy address:
+  0x606000000680: fd fd fd fd fd fd fd fd fa fa fa fa fd fd fd fd
+  0x606000000700: fd fd fd fd fa fa fa fa fd fd fd fd fd fd fd fa
+  0x606000000780: fa fa fa fa fd fd fd fd fd fd fd fd fa fa fa fa
+  0x606000000800: 00 00 00 00 00 00 00 01 fa fa fa fa fd fd fd fd
+  0x606000000880: fd fd fd fd fa fa fa fa 00 00 00 00 00 00 00 01
+=>0x606000000900: fa fa fa fa 00 00 00 00 00 00 00 01 fa fa fa[fa]
+  0x606000000980: 00 00 00 00 00 00 04 fa fa fa fa fa fa fa fa fa
+  0x606000000a00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x606000000a80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x606000000b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x606000000b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac

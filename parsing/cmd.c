@@ -11,3 +11,19 @@ int    create_cmd_node(t_db *db, void **current_node, void *parent)
     ((t_cmd_node *)*current_node)->cmd_path = NULL;
     return SUCCESS;
 }
+
+int count_op(char *line, int op)
+{
+    int i;
+    int count;
+
+    i = 0;
+    count = 0;
+    while (line[i])
+    {
+        if (is_op(line, &i) == op)
+            count++;
+        i++;
+    }
+    return count;
+}

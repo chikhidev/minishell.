@@ -32,6 +32,11 @@
 #define DOBLQUOTE 34
 #define SNGLQUOTE 39
 
+#define CURR_OP ((t_op_node *)*current_node)
+#define CURR_CMD ((t_cmd_node *)*current_node)
+#define OP ((t_op_node *)node)
+#define CMD ((t_cmd_node *)node)
+
 /**
  * @details This is the color codes for the shell
 */
@@ -57,6 +62,11 @@ typedef struct s_op_node
     int     op_presentation;
     void    **childs;
     int     n_childs;
+
+    // special cases
+    void *neighbour; // for the heredocs
+
+    // execution part ------ <<<<<<
 }   t_op_node;
 
 typedef struct s_here_doc /*here doc saver*/
