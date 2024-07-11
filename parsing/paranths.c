@@ -240,8 +240,11 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
     idx--;
     while (idx >= 0)
     {
-        while (is_whitespace(line[idx])) // --?? there is no \0 in the front?! salab lbatal
+        while (idx > 0 && is_whitespace(line[idx])) // --?? there is no \0 in the front?! salab lbatal
+        {
             idx--;
+            printf("idx: %d\n", idx);
+        }
 
         /* ^^^^^^^^^^^^^^^^^^^^^
             check tests akhir test
