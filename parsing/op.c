@@ -68,14 +68,14 @@ int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int fla
     (void) op_name;
     while (line[i])
     {
-        // op_idx < i  means operator is before our caracter  ex: (< cat)
+        // i < op_idx  means operator is before our caracter  ex: (< cat)
         if (ft_isalnum(line[i]) && i < op_idx)
         {
             if (flag == -3)
                 return (SUCCESS);
             char_before_op = true;
         }
-        // i >op_idx  means operator is after our caracter    ex: (ls |)
+        // i > op_idx  means operator is after our caracter    ex: (ls |)
         if (ft_isalnum(line[i]) && i > op_idx)
         {
             if (flag == -2)
