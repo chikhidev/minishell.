@@ -65,7 +65,7 @@ t_parnth *last_unclosed_paranth(t_parnth *head)
 
 // a good parenthesy is one created first time or afte some operator
 
-int is_operator(char    *s, int  i)
+int is_operator_backward(char    *s, int  i)
 {
     if (s[i] == '>' && i > 0 && s[i - 1] == '>')
         return (true);
@@ -84,7 +84,7 @@ int is_operator(char    *s, int  i)
     return false;
 }
 
-int is_operator2(char    *s, int  i)
+int is_operator_forward(char    *s, int  i)
 {
     if (s[i] == '>' && s[i + 1] == '>')
         return (true);
@@ -167,7 +167,7 @@ int verify_scope_before(char   *line,  int scope_open_i, bool   is_first)
             return (SUCCESS);
         if (i >= 0 && line[i] == '(')
             return (SUCCESS);
-        if (i >= 0 && is_operator(line, i))
+        if (i >= 0 && is_operator_backward(line, i))
             return (SUCCESS);
         else
             return FAILURE;
@@ -193,7 +193,7 @@ int verify_scope_after(char   *line,  int scope_close_i)
             return (SUCCESS);
         if (line[i] == ')')
             return (SUCCESS);
-        if (is_operator2(line, i))
+        if (is_operator_forward(line, i))
             return (SUCCESS);
         else
             return FAILURE;
@@ -245,7 +245,7 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
             idx--;
         if (idx == -1)
             return (SUCCESS);
-        if (is_operator(line, idx))
+        if (is_operator_backward(line, idx))
             return (SUCCESS);
         if (line[idx] == '(')
             return (SUCCESS);

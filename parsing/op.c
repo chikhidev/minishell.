@@ -17,7 +17,7 @@ void set_up_flag(int    *flag, char *op)
     else if (strcmp(op, "||") == 0)
         *flag = -1;
     else if (strcmp(op, "|") == 0)
-        *flag = -3;
+        *flag = -1;
     else if (strcmp(op, "<") == 0)
         *flag = -3;
     else if (strcmp(op, ">") == 0)
@@ -56,38 +56,56 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
     return SUCCESS;
 }
 
+// && before after 
+// < 
 int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int flag)
 {
     int i;
+    int len;
     bool char_before_op;
     bool char_after_op;
 
     char_before_op = false;
     char_after_op = false;
     i = 0;
-    (void) op_name;
-    while (line[i])
+    i = op_idx;
+    i--;
+    // check if there is something before it but not other operator
+    while (i >= 0)
     {
-        // i < op_idx  means operator is before our caracter  ex: (< cat)
-        if (ft_isalnum(line[i]) && i < op_idx)
-        {
-            if (flag == -3)
-                return (SUCCESS);
+        if (i >= 0 && is_whitespace(line[i]) && --i >= 0)
+            continue;
+        if (i < 0 && flag == -3)
+            return (FAILURE);
+        if (is_operator_backward(line, i))
+            return (FAILURE);
+        if (ft_isalnum(line[i]))
             char_before_op = true;
-        }
-        // i > op_idx  means operator is after our caracter    ex: (ls |)
-        if (ft_isalnum(line[i]) && i > op_idx)
-        {
-            if (flag == -2)
-                return (SUCCESS);
+        break;
+        if (flag == -3)
+            return (SUCCESS);
+        // printf("line[i] %c %d\n", line[i], line[i]);
+        i--;
+    }
+    i = op_idx + strlen(op_name);
+    len = strlen(line);
+    while (i < len)
+    {
+        if (is_whitespace(line[i] && ++i >= 0))
+            continue;
+        if (i >= len && flag == -2)
+            return (FAILURE);
+        if (is_operator_forward(line, i))
+            return (FAILURE);
+        if (ft_isalnum(line[i]))
             char_after_op = true;
-        }
+        if (flag == -2)
+            return (SUCCESS);
         i++;
     }
     if (char_before_op && char_after_op)
         return (SUCCESS);
-    else
-        return (FAILURE);
+    return (FAILURE);
 }
 
 int create_operator(t_db *db, int i, char *name)

@@ -47,7 +47,7 @@ int     inside_single_quote(t_quote *head, int i);
 
 /*parsing/paranths.c && paranths2.c*/
 t_parnth    *last_unclosed_paranth(t_parnth *head);
-int is_operator2(char    *s, int  i);
+int is_operator_forward(char    *s, int  i);
 
 /*parsing/parser.c*/
 int parser(t_db *db, char *line);
@@ -67,7 +67,7 @@ int is_inside_paranthesis(t_parnth *head, int i);
 /*op.c*/
 int is_valid_op(char c, char next_c);
 int track_operators(t_db *db, char  *line);
-int is_operator(char    *s, int  i);
+int is_operator_backward(char    *s, int  i);
 int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 
 /*op2.c*/
