@@ -235,22 +235,16 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
     // no prev scopes mean this is first parenthesy so its good
     if (!head)
         return (SUCCESS);
-
     // we go back in reverse to check what is before parenth
     idx--;
+    if (idx < 0)
+        return (SUCCESS);
     while (idx >= 0)
     {
-        while (idx > 0 && is_whitespace(line[idx])) // --?? there is no \0 in the front?! salab lbatal
-        {
+        while (idx >= 0 && is_whitespace(line[idx]))
             idx--;
-            printf("idx: %d\n", idx);
-        }
-
-        /* ^^^^^^^^^^^^^^^^^^^^^
-            check tests akhir test
-        */
-
-
+        if (idx == -1)
+            return (SUCCESS);
         if (is_operator(line, idx))
             return (SUCCESS);
         if (line[idx] == '(')
