@@ -71,7 +71,9 @@ int     main(int    ac, char    *av[],  char    *env[])
     while (TRUE)
     {
         init_db(&db, ac, av, env);
+        printf(MAGENTA);
         ret = handle_prompt(&line);
+        printf(RESET);
         if (ret == -1) break ;
         else if (ret == 0) continue ;
 

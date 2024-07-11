@@ -140,8 +140,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             i++;
         }
 
-
-
     }
     else
     {
