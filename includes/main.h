@@ -28,6 +28,7 @@
 #define CATCH_ONINVALID(x, return_) if (x == INVALID) return return_;
 #define CATCH_ONNOTFOUND(x, return_) if (x == NOT_FOUND) return return_;
 
+#define CATCH_ERROR if (db->error) return FAILURE;
 
 #define DOBLQUOTE 34
 #define SNGLQUOTE 39
@@ -170,6 +171,7 @@ typedef struct s_db
     int     last_signal;
     t_operators *ops;
     t_here_doc  *here_docs;
+    char        error;
 }   t_db;
 
 /*prototypes: error.c*/

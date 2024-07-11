@@ -82,7 +82,11 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     int         op;
     int         i;
 
+    CATCH_ERROR; // <<<<< catch golbal error
     if (ft_strlen(line) == 0) return SUCCESS;
+    if (all_whitespaces(line, 0, ft_strlen(line))) return SUCCESS;
+
+
     tracker = gc_malloc(db, sizeof(t_tracker));
     if (!tracker) return error(db, "Failed to allocate memory");
     tracker->paranthesis = NULL;
@@ -92,10 +96,9 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         line, tracker->quotes), FAILURE);
     op = strongest_operator(line, tracker);
 
-    
     if (tracker->paranthesis && op == NOT_FOUND)
     {
-        smart_split(db, remove_paranthesis(db, line, tracker->paranthesis), current_node, parent);
+        return smart_split(db, remove_paranthesis(db, line, tracker->paranthesis), current_node, parent);
     }
     else if (op != NOT_FOUND)
     {
@@ -109,25 +112,31 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         splitted = split_line(db, line, CURR_OP, tracker);
         CATCH_MALLOC(splitted);
 
-        if (op == HEREDOC
-            && CURR_OP->n_childs 
-            > count_op(line, HEREDOC))
+        //>>>>> if there is strings more than the operators means that there is a neighbour cmd
+        if (op == HEREDOC && CURR_OP->n_childs > count_op(line, HEREDOC))
         {
             CURR_OP->neighbour = gc_malloc(db, sizeof(t_op_node));
+            ((t_cmd_node *)CURR_OP->neighbour)->type = CMD_NODE;
+            ((t_cmd_node *)CURR_OP->neighbour)->origin = parent;
             CATCH_MALLOC(CURR_OP->neighbour);
             CURR_OP->neighbour = splitted[0];
-            smart_split(db, splitted[0], &CURR_OP->neighbour, *current_node);
+            CATCH_ONFAILURE(
+                smart_split(db, splitted[0], &CURR_OP->neighbour, *current_node),
+                FAILURE
+            )
             CURR_OP->n_childs--;
             splitted++;
         }
-
 
         // create the childs of the operator node <<<<<<<<
         i = 0;
         while (i < CURR_OP->n_childs)
         {
             CURR_OP->childs[i] = NULL;
-            smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node);
+            CATCH_ONFAILURE(
+                smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node),
+                FAILURE
+            )
             i++;
         }
 

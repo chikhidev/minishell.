@@ -241,3 +241,68 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
   Poisoned by user:        f7
   Container overflow:      fc
   Array cookie:            ac
+
+
+
+
+
+
+[DEBUG] line: ls || (cmd -arg -hhhh " sfjghfjk " < < DL << DL2 << DL3 )
+OP_NODE: OR
+   CMD_NODE: [ls] 
+=================================================================
+==25230==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603000002938 at pc 0x57d3eb2e297f bp 0x7fff1593f380 sp 0x7fff1593f370
+READ of size 8 at 0x603000002938 thread T0
+    #0 0x57d3eb2e297e in print_nodes parsing/parser.c:44
+    #1 0x57d3eb2e2a0b in print_nodes parsing/parser.c:55
+    #2 0x57d3eb2e2de6 in parser parsing/parser.c:98
+    #3 0x57d3eb2e1ba9 in main /home/abderrahim/prj/minishell/main.c:85
+    #4 0x732e25c2814f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #5 0x732e25c28208 in __libc_start_main_impl ../csu/libc-start.c:360
+    #6 0x57d3eb2e13c4 in _start (/home/abderrahim/prj/minishell/minishell+0x23c4) (BuildId: 54706bd6d8e3a6eb61a0c02e4ad6f7ccbc8b95d0)
+
+0x603000002938 is located 0 bytes after 24-byte region [0x603000002920,0x603000002938)
+allocated by thread T0 here:
+    #0 0x732e260defdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x57d3eb2e1cb9 in gc_malloc /home/abderrahim/prj/minishell/memo.c:7
+    #2 0x57d3eb2e6b2f in smart_split parsing/split.c:106
+    #3 0x57d3eb2e6e58 in smart_split parsing/split.c:122
+    #4 0x57d3eb2e6a0a in smart_split parsing/split.c:98
+    #5 0x57d3eb2e7037 in smart_split parsing/split.c:138
+    #6 0x57d3eb2e2d6c in parser parsing/parser.c:92
+    #7 0x57d3eb2e1ba9 in main /home/abderrahim/prj/minishell/main.c:85
+    #8 0x732e25c2814f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow parsing/parser.c:44 in print_nodes
+Shadow bytes around the buggy address:
+  0x603000002680: 00 00 00 fa fa fa 00 00 00 fa fa fa 00 00 00 00
+  0x603000002700: fa fa 00 00 00 00 fa fa 00 00 00 00 fa fa 00 00
+  0x603000002780: 00 00 fa fa 00 00 00 00 fa fa 00 00 00 fa fa fa
+  0x603000002800: 00 00 00 00 fa fa 00 00 00 fa fa fa 00 00 00 fa
+  0x603000002880: fa fa 00 00 00 fa fa fa 00 00 00 fa fa fa 00 00
+=>0x603000002900: 00 fa fa fa 00 00 00[fa]fa fa 00 00 00 fa fa fa
+  0x603000002980: 00 00 00 06 fa fa 00 00 00 fa fa fa 00 00 00 00
+  0x603000002a00: fa fa 00 00 00 00 fa fa 00 00 00 00 fa fa 00 00
+  0x603000002a80: 00 00 fa fa 00 00 00 00 fa fa fa fa fa fa fa fa
+  0x603000002b00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x603000002b80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==25230==ABORTING

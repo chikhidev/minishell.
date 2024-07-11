@@ -4,5 +4,6 @@ int error(t_db *db, char *msg)
 {
     printf("Error: %s\n\n", msg);
     gc_void(db);
+    db->error = TRUE;
     return (FAILURE);
 }

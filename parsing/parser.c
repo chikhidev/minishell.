@@ -41,7 +41,7 @@ void print_nodes(void *node, int level)
             if (OP->neighbour != NULL)
             {
                 t_cmd_node *cmd = OP->neighbour;
-                for (int i = 0; (cmd->args[i]); i++)
+                for (int i = 0; cmd->args && (cmd->args[i]); i++)
                 {
                     printf("[%s] ", cmd->args[i]);
                 }
