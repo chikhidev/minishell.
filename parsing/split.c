@@ -136,6 +136,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
 
         // if the splitted is NULL
         CATCH_ONNULL(splitted, FAILURE);
+        
         CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
             CURR_OP->n_childs);
         ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
