@@ -56,6 +56,43 @@ int strongest_operator(char *line, t_tracker *tracker)
     return strongest.op_presentation;
 }
 
+// int count_between_op(t_db *db, char *line, int op, t_tracker *tracker)
+// {
+//     BOOL    in_word;
+//     int     i;
+//     int     counter;
+
+
+//     (void)db;
+//     i = 0;
+//     in_word = FALSE;
+//     counter = 0;
+//     while (line[i])
+//     {
+//         if (is_op(line, &i) == op
+//             && !is_inside_quotes(tracker->quotes, i)
+//             && !is_inside_paranthesis(tracker->paranthesis, i))
+//         {
+//             in_word = FALSE;
+//         }
+//         else if (!is_whitespace(line[i]))
+//         {
+//             in_word = TRUE;
+//             counter++;
+//             while (line[i] && !is_whitespace(line[i]))
+//                 i++;
+//             i--;
+//         }
+//         i++;
+//     }
+
+//     (void)in_word;
+//     printf("count_between_op: %d\n", counter);
+
+//     return counter;
+// }
+
+// this one is not secure
 int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
 {
     int i;
@@ -66,6 +103,8 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
     i = 0;
     reminder = 0;
     counter = 0;
+
+    skip_spaces(line, &i);
     while (line[i])
     {
         if (is_op(line, &i) == op

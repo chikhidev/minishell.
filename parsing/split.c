@@ -66,7 +66,7 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
         len++;
         i++;
     }
-    if (len > 0)
+    if (len > 0 && k < op->n_childs)
     {
         splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
         CATCH_ONNULL(splitted[k], NULL);
@@ -103,17 +103,22 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     else if (op != NOT_FOUND)
     {
         CATCH_ONFAILURE(create_op_node(db, op, current_node, parent), FAILURE);
-
+        CURR_OP->neighbour = NULL;
         // create the childs of the operator node <<<<<<<<
         CURR_OP->n_childs = count_between_op(db, line, op, tracker);
-        CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
-            CURR_OP->n_childs);
 
         splitted = split_line(db, line, CURR_OP, tracker);
         CATCH_MALLOC(splitted);
 
-        //>>>>> if there is strings more than the operators means that there is a neighbour cmd
-        if (op == HEREDOC && CURR_OP->n_childs > count_op(line, HEREDOC))
+        // //>>>>> if there is strings more than the operators means that there is a neighbour cmd
+        // if (op == HEREDOC && CURR_OP->n_childs > count_op(line, HEREDOC))
+        // {
+        // }
+
+        // << change logic
+        // here i need just to check wither the heredoc is the at the first of the line
+        // if the hewredoc is the start of the line then we need to take that spicific node in as a neighbour
+        if (op == HEREDOC && !is_the_first(line, tracker, HEREDOC))
         {
             CURR_OP->neighbour = gc_malloc(db, sizeof(t_op_node));
             ((t_cmd_node *)CURR_OP->neighbour)->type = CMD_NODE;
@@ -127,12 +132,18 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             CURR_OP->n_childs--;
             splitted++;
         }
+        // ^^^^^^^^^^^^^^^^^ changes
+
+        // if the splitted is NULL
+        CATCH_ONNULL(splitted, FAILURE);
+        CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
+            CURR_OP->n_childs);
+        ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
 
         // create the childs of the operator node <<<<<<<<
         i = 0;
         while (i < CURR_OP->n_childs)
         {
-            CURR_OP->childs[i] = NULL;
             CATCH_ONFAILURE(
                 smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node),
                 FAILURE
@@ -144,6 +155,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     else
     {
         // command scope <<<<<<<<
+        printf("command: %s\n", line);
         CATCH_ONFAILURE(
             create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<<<<<<<<
         , FAILURE);
