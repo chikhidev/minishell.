@@ -5,9 +5,8 @@
     good = 1 means in good place (befor and after)
 */
  
-/* flag is -3 if needs something befor op                 '<'    '|'                    */
-/* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
-/* flag is -1 if needs something befor & after op like    '&&'   '||'                   */
+/* flag is -2 if needs something after  op                 '>'    '<<'    '>>'     '<'    '|'          */
+/* flag is -1 if needs something befor & after op like    '&&'   '||'                                  */
 
  
 void set_up_flag(int    *flag, char *op)
@@ -19,7 +18,7 @@ void set_up_flag(int    *flag, char *op)
     else if (strcmp(op, "|") == 0)
         *flag = -1;
     else if (strcmp(op, "<") == 0)
-        *flag = -3;
+        *flag = -1;
     else if (strcmp(op, ">") == 0)
         *flag = -2;
     else if (strcmp(op, ">>") == 0)
@@ -64,10 +63,8 @@ bool check_befor( char    *line,   char    *op_name,   int op_idx)
     i = op_idx - 1;
     while (i >= 0)
     {
-        if (!is_whitespace(line[i]) && !is_op3(line, &i))
-        {
+        if (!is_whitespace(line[i]) && is_op3(line, &i) == INVALID)
             return 1;
-        }
         i--;
     }
     return (0);
@@ -82,7 +79,7 @@ bool check_after( char    *line,   char    *op_name,   int op_idx)
     i = op_idx + ft_strlen(op_name);
     while (i < len)
     {
-        if (!is_whitespace(line[i]) && !is_op(line, &i))
+        if (!is_whitespace(line[i]) && is_op(line, &i) == INVALID)
             return 1;
         i++;
     }
@@ -93,17 +90,13 @@ int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int fla
 {
     bool char_after;
     bool char_befor;
+
+    char_befor = FALSE;
+    char_after = FALSE;
     if (check_befor(line, op_name, op_idx))
-    {
-        printf("before is good \n");
-        if (flag == -3)
-            return 1;
         char_befor = true;
-    }
     if (check_after(line, op_name, op_idx))
     {
-        printf("afer is good \n");
-
         if (flag == -2)
             return 1;
         char_after = true;
@@ -173,8 +166,8 @@ int track_operators(t_db *db, char  *line)
         set_up_flag(&flag, ops->name);
         if (!good_place_for_op(line, ops->name, ops->i, flag))
             return error(db, "bad place for operator");
-        if (!check_after_op(line, ops->name, ops->i, flag))
-            return error(db, "bad place for op");
+        // if (!check_after_op(line, ops->name, ops->i, flag))
+        //     return error(db, "bad place for op");
         // printf("op %s  i %d\n", ops->name, ops->i);
 
         // printf("operator -> %s   index -> %i\n", ops->name, ops->i);
