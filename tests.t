@@ -186,105 +186,25 @@ ls && cat << DLIMITER cm0 cmd1 cmd2 << DELIMITER2 cm0 cm1 || wc -l
 
 
 
-
-
-
-salah@salah-VirtualBox:~/minishell$ ./minishell 
-Lowa@salah~ ls
-
-[DEBUG] line: ls
-CMD_NODE: [ls] 
-Lowa@salah~ << ls
-
-[DEBUG] line: << ls
+[DEBUG] line: (pwd && wd) << ls
 =================================================================
-==22263==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x502000002e48 at pc 0x630632453972 bp 0x7ffc3e171e00 sp 0x7ffc3e171df0
-READ of size 8 at 0x502000002e48 thread T0
-    #0 0x630632453971 in print_nodes parsing/parser.c:44
-    #1 0x630632453e1b in parser parsing/parser.c:98
-    #2 0x630632452bd1 in main /home/salah/minishell/main.c:87
-    #3 0x75262d22a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x75262d22a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #5 0x6306324523c4 in _start (/home/salah/minishell/minishell+0x23c4) (BuildId: 2190aa2c11d7bec856acd8220ea903b1f2f17c30)
+==40775==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000003840 at pc 0x56668473b9ca bp 0x7fff80ede990 sp 0x7fff80ede980
+READ of size 8 at 0x602000003840 thread T0
+    #0 0x56668473b9c9 in print_nodes parsing/parser.c:44
+    #1 0x56668473be30 in parser parsing/parser.c:98
+    #2 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
+    #3 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x710ff0629e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #5 0x56668473a3c4 in _start (/home/gouzi/Desktop/code 💻/1337/minishell/minishell+0x23c4)
 
-0x502000002e48 is located 8 bytes befor 16-byte region [0x502000002e50,0x502000002e60)
+0x602000003840 is located 0 bytes to the right of 16-byte region [0x602000003830,0x602000003840)
 allocated by thread T0 here:
-    #0 0x75262d6fbb37 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x630632452e82 in gc_malloc /home/salah/minishell/memo.c:22
-    #2 0x6306324574d9 in split_line parsing/split.c:60
-    #3 0x630632457bf2 in smart_split parsing/split.c:112
-    #4 0x630632453da1 in parser parsing/parser.c:92
-    #5 0x630632452bd1 in main /home/salah/minishell/main.c:87
-    #6 0x75262d22a1c9 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #7 0x75262d22a28a in __libc_start_main_impl ../csu/libc-start.c:360
-    #8 0x6306324523c4 in _start (/home/salah/minishell/minishell+0x23c4) (BuildId: 2190aa2c11d7bec856acd8220ea903b1f2f17c30)
+    #0 0x710ff0ab4887 in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:145
+    #1 0x56668473acfb in gc_malloc /home/gouzi/Desktop/code 💻/1337/minishell/memo.c:7
+    #2 0x56668474051c in smart_split parsing/split.c:159
+    #3 0x566684740090 in smart_split parsing/split.c:120
+    #4 0x566684740418 in smart_split parsing/split.c:147
+    #5 0x56668473bdb6 in parser parsing/parser.c:92
+    #6 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
+    #7 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
 
-SUMMARY: AddressSanitizer: heap-buffer-overflow parsing/parser.c:44 in print_nodes
-Shadow bytes around the buggy address:
-  0x502000002b80: fa fa fd fd fa fa fd fa fa fa fd fd fa fa fd fa
-  0x502000002c00: fa fa 00 fa fa fa 00 04 fa fa fd fa fa fa 00 04
-  0x502000002c80: fa fa 06 fa fa fa 06 fa fa fa 00 00 fa fa 00 00
-  0x502000002d00: fa fa fd fd fa fa fd fd fa fa 00 00 fa fa 00 00
-  0x502000002d80: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
-=>0x502000002e00: fa fa 00 00 fa fa 01 fa fa[fa]00 00 fa fa 04 fa
-  0x502000002e80: fa fa 00 00 fa fa 00 00 fa fa fd fd fa fa fd fd
-  0x502000002f00: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 03 fa
-  0x502000002f80: fa fa 00 00 fa fa fa fa fa fa fa fa fa fa fa fa
-  0x502000003000: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x502000003080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-==22263==ABORTING
-salah@salah-VirtualBox:~/minishell$ 
-
-
-
-
-
-
-
-Lowa@abdoo~     << ps
-=================================================================
-==11019==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000002b8f at pc 0x5a6f12daad47 bp 0x7ffed92cddf0 sp 0x7ffed92cdde0
-READ of size 1 at 0x602000002b8f thread T0
-    #0 0x5a6f12daad46 in is_operator_backward parsing/paranths.c:70
-    #1 0x5a6f12dafd28 in good_place_for_op parsing/op.c:80
-    #2 0x5a6f12db07fd in track_operators parsing/op.c:169
-    #3 0x5a6f12da9d8d in parser parsing/parser.c:90
-    #4 0x5a6f12da8bf1 in main /home/abdoo/prj/minishell/main.c:87
-    #5 0x7ef3cba2814f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #6 0x7ef3cba28208 in __libc_start_main_impl ../csu/libc-start.c:360
-    #7 0x5a6f12da83e4 in _start (/home/abdoo/prj/minishell/minishell+0x23e4) (BuildId: 2d8db960efd590d0f1aa0dbf9267efeae4589c06)
-
-0x602000002b8f is located 1 bytes befor 10-byte region [0x602000002b90,0x602000002b9a)
-allocated by thread T0 here:
-    #0 0x7ef3cbedefdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x5a6f12da8d01 in gc_malloc /home/abdoo/prj/minishell/memo.c:7
-    #2 0x5a6f12da8ac8 in main /home/abdoo/prj/minishell/main.c:80
-    #3 0x7ef3cba2814f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow parsing/paranths.c:70 in is_operator_backward
-Shadow bytes around the buggy address:
-  0x602000002900: fa fa fd fd fa fa fd fd fa fa fd fd fa fa fd fd
-  0x602000002980: fa fa fd fd fa fa fd fd fa fa fd fd fa fa fd fd
-  0x602000002a00: fa fa fd fd fa fa fd fd fa fa 00 00 fa fa fd fa
-  0x602000002a80: fa fa fd fa fa fa fd fd fa fa fd fa fa fa 00 fa
-  0x602000002b00: fa fa 00 04 fa fa fd fd fa fa 00 04 fa fa 00 02
-=>0x602000002b80: fa[fa]00 02 fa fa 00 00 fa fa 00 00 fa fa fa fa
