@@ -188,4 +188,6 @@ int     count(char *line, char c);
 char    *concat(t_db *db, char *s, char single_char);
 char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
 
+int is_op3(char *line, int *i);
+
 #endif

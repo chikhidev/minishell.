@@ -152,7 +152,7 @@ t_parnth    *get_last_parenth(t_parnth *parenth)
     return scope;
 }
 
-int verify_scope_before(char   *line,  int scope_open_i, bool   is_first)
+int verify_scope_befor(char   *line,  int scope_open_i, bool   is_first)
 {
     int i;
     bool found_smtg;
@@ -214,14 +214,14 @@ int verify_scope_surrounding(t_parnth  *parenth, char   *line)
     last = get_last_parenth(parenth);
     if (!first || !last)
         return (SUCCESS);
-    if (verify_scope_before(line, first->open_, true) == FAILURE)
+    if (verify_scope_befor(line, first->open_, true) == FAILURE)
         return (FAILURE);
     if (verify_scope_after(line, first->close_) == FAILURE)
         return (FAILURE);
     curr = first->next;
     while (curr)
     {
-        if (verify_scope_before(line, curr->open_, false) == FAILURE)
+        if (verify_scope_befor(line, curr->open_, false) == FAILURE)
             return (FAILURE);
         if (verify_scope_after(line, curr->close_) == FAILURE)
             return (FAILURE);
@@ -235,7 +235,7 @@ int verify_create_parenth(t_parnth *head, char *line, int idx)
     // no prev scopes mean this is first parenthesy so its good
     if (!head)
         return (SUCCESS);
-    // we go back in reverse to check what is before parenth
+    // we go back in reverse to check what is befor parenth
     idx--;
     if (idx < 0)
         return (SUCCESS);

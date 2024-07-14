@@ -45,7 +45,7 @@ drwxrwxr-x  2 salah salah   4096 Jun  5 23:16 .vscode
 $ 
 
 
-$             ls    # whitespaces before
+$             ls    # whitespaces befor
 error.c   libft   Makefile  minishell  string.c
 includes  main.c  memo.c    parsing    tests.txt
 $ ls                # whitespaces after
@@ -207,7 +207,7 @@ READ of size 8 at 0x502000002e48 thread T0
     #4 0x75262d22a28a in __libc_start_main_impl ../csu/libc-start.c:360
     #5 0x6306324523c4 in _start (/home/salah/minishell/minishell+0x23c4) (BuildId: 2190aa2c11d7bec856acd8220ea903b1f2f17c30)
 
-0x502000002e48 is located 8 bytes before 16-byte region [0x502000002e50,0x502000002e60)
+0x502000002e48 is located 8 bytes befor 16-byte region [0x502000002e50,0x502000002e60)
 allocated by thread T0 here:
     #0 0x75262d6fbb37 in malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
     #1 0x630632452e82 in gc_malloc /home/salah/minishell/memo.c:22
@@ -273,7 +273,7 @@ READ of size 1 at 0x602000002b8f thread T0
     #6 0x7ef3cba28208 in __libc_start_main_impl ../csu/libc-start.c:360
     #7 0x5a6f12da83e4 in _start (/home/abdoo/prj/minishell/minishell+0x23e4) (BuildId: 2d8db960efd590d0f1aa0dbf9267efeae4589c06)
 
-0x602000002b8f is located 1 bytes before 10-byte region [0x602000002b90,0x602000002b9a)
+0x602000002b8f is located 1 bytes befor 10-byte region [0x602000002b90,0x602000002b9a)
 allocated by thread T0 here:
     #0 0x7ef3cbedefdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
     #1 0x5a6f12da8d01 in gc_malloc /home/abdoo/prj/minishell/memo.c:7

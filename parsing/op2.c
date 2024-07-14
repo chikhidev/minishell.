@@ -20,6 +20,25 @@ int is_op(char *line, int *i)
     return INVALID;
 }
 
+// int is_op(char *line, int *i)
+// {
+//     if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')
+//         return AND;
+//     else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
+//         return ((*i)+=2, OR);
+//     else if (line[*i] == '>' && line[*i + 1] && line[(*i) + 1] == '>')
+//         return ((*i)+=2, APPEND);
+//     else if (line[*i] == '<' && line[*i + 1] && line[(*i) + 1] == '<')
+//         return ((*i)+=2, HEREDOC);
+//     else if (line[*i] == '|')
+//         return ((*i)++, PIPE);
+//     else if (line[*i] == '>')
+//         return ((*i)++, REDIR);
+//     else if (line[*i] == '<')
+//         return ((*i)++, INPUT);
+//     return INVALID;
+// }
+
 int priority_of_op(int op)
 {
     if (op == AND || op == OR) return AND_OR_PRIORITY;

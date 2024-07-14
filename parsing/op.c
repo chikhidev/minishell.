@@ -2,12 +2,12 @@
 #include "../includes/parsing.h"
 
 /*
-    good = 1 means in good place (before and after)
+    good = 1 means in good place (befor and after)
 */
  
-/* flag is -3 if needs something before op                 '<'    '|'                    */
+/* flag is -3 if needs something befor op                 '<'    '|'                    */
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
-/* flag is -1 if needs something before & after op like    '&&'   '||'                   */
+/* flag is -1 if needs something befor & after op like    '&&'   '||'                   */
 
  
 void set_up_flag(int    *flag, char *op)
@@ -30,9 +30,9 @@ void set_up_flag(int    *flag, char *op)
         error(NULL,"wrong op\n");
 }
 
-/* flag is -3 if needs something before op                 '<'    '|'                    */
+/* flag is -3 if needs something befor op                 '<'    '|'                    */
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'           */
-/* flag is -1 if needs something before & after op like    '&&'   '||'                   */
+/* flag is -1 if needs something befor & after op like    '&&'   '||'                   */
 
 
 // ! TODO : op op is bad
@@ -56,56 +56,57 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
     return SUCCESS;
 }
 
-// && before after 
+// && befor after 
 // < 
-int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int flag)
+bool check_befor( char    *line,   char    *op_name,   int op_idx)
 {
     int i;
-    int len;
-    bool char_before_op;
-    bool char_after_op;
-
-    char_before_op = false;
-    char_after_op = false;
-    i = 0;
-    i = op_idx;
-    i--;
-    // check if there is something before it but not other operator
+    (void)op_name;
+    i = op_idx - 1;
     while (i >= 0)
     {
-        if (i >= 0 && is_whitespace(line[i]) && --i >= 0)
-            continue;
-        if (i < 0 && flag == -3)
-            return (FAILURE);
-        if (is_operator_backward(line, i))
-            return (FAILURE);
-        if (ft_isalnum(line[i]))
-            char_before_op = true;
-        break;
-        if (flag == -3)
-            return (SUCCESS);
-        // printf("line[i] %c %d\n", line[i], line[i]);
+        if (!is_whitespace(line[i]) && is_op3(line, &i))
+            return 1;
         i--;
     }
-    i = op_idx + strlen(op_name);
-    len = strlen(line);
+    return (0);
+}
+
+bool check_after( char    *line,   char    *op_name,   int op_idx)
+{
+    int len;
+    int i;
+
+    len = ft_strlen(line);
+    i = op_idx + ft_strlen(op_name);
     while (i < len)
     {
-        if (is_whitespace(line[i] && ++i >= 0))
-            continue;
-        if (i >= len && flag == -2)
-            return (FAILURE);
-        if (is_operator_forward(line, i))
-            return (FAILURE);
-        if (ft_isalnum(line[i]))
-            char_after_op = true;
-        if (flag == -2)
-            return (SUCCESS);
+        if (!is_whitespace(line[i]) && is_op(line, &i))
+            return 1;
         i++;
     }
-    if (char_before_op && char_after_op)
-        return (SUCCESS);
-    return (FAILURE);
+    return (0);
+}
+
+int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int flag)
+{
+    bool char_after;
+    bool char_befor;
+    if (check_befor(line, op_name, op_idx))
+    {
+        if (flag == -3)
+            return 1;
+        char_befor = true;
+    }
+    if (check_after(line, op_name, op_idx))
+    {
+        if (flag == -2)
+            return 1;
+        char_after = true;
+    }
+    if (flag == -1 && char_befor && char_after)
+        return 1;
+    return 0;
 }
 
 int create_operator(t_db *db, int i, char *name)

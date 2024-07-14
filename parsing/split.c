@@ -20,6 +20,25 @@ int is_op2(char *line, int *i)
     return INVALID;
 }
 
+int is_op3(char *line, int *i)
+{
+    if (line[*i] == '&' && *i > 0 && line[(*i) - 1] == '&' && (*i)--)
+        return AND;
+    else if (line[*i] == '|' && *i > 0 && line[(*i) - 1] == '|' && (*i)--)
+        return (OR);
+    else if (line[*i] == '>' && *i > 0 && line[(*i) - 1] == '>' && (*i)--)
+        return (APPEND);
+    else if (line[*i] == '<' && *i > 0 && line[(*i) - 1] == '<' && (*i)--)
+        return (HEREDOC);
+    else if (line[*i] == '|')
+        return PIPE;
+    else if (line[*i] == '>')
+        return REDIR;
+    else if (line[*i] == '<')
+        return INPUT;
+    return INVALID;
+}
+
 void skip_op(int *i, char *line)
 {
     if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')

@@ -12,6 +12,8 @@ static int	count_words(t_quote *quotes, char *str)
     BOOL        in_word;
     t_iterators it;
 
+    it.i = 0;
+    it.j = 0;
     in_word = 0;
     while (str[it.j])
     {
