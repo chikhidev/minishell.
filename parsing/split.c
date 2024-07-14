@@ -160,14 +160,26 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     }
     else
     {
-        // command scope <<<<<<<<
-        printf("command: %s\n", line);
         CATCH_ONFAILURE(
             create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<<<<<<<<
         , FAILURE);
         ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
         CATCH_MALLOC(((t_cmd_node *)*current_node)->args);
         // command scope <<<<<<<<
+
+        // expand each argument
+        // except in case of heredoc first argument
+        for (int i = 0; ((t_cmd_node *)*current_node)->args[i]; i++)
+        {
+            if (i == 0 && ((t_op_node *)parent)->op_presentation == HEREDOC)
+            {
+                continue;
+            }
+            CATCH_ONFAILURE(
+                expand(db, &((t_cmd_node *)*current_node)->args[i], tracker->quotes)
+            , FAILURE);
+        }
+
     }
     gc_free(db, tracker);
     return SUCCESS; 
