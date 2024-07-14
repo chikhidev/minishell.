@@ -37,13 +37,42 @@ void print_nodes(void *node, int level)
         else if (OP->op_presentation == HEREDOC)
         {
             printf("HEREDOC");
-            printf("----> ");
             if (OP->neighbour != NULL)
             {
-                t_cmd_node *cmd = OP->neighbour;
-                for (int i = 0; cmd->args && (cmd->args[i]); i++)
+                if (((t_op_node *)OP->neighbour)->type == CMD_NODE)
                 {
-                    printf("[%s] ", cmd->args[i]);
+                    for (int i = 0; ((t_cmd_node *)OP->neighbour)->args[i]; i++)
+                    {
+                        printf("[%s] ", ((t_cmd_node *)OP->neighbour)->args[i]);
+                    }
+                }
+                else
+                {
+                    printf(MAGENTA"\n");
+                    for (int i = 0; i < level; i++)
+                    {
+                        printf("   ");
+                    }
+                    if (((t_op_node *)OP->neighbour)->op_presentation == HEREDOC)
+                        printf("HEREDOC\n");
+                    else if (((t_op_node *)OP->neighbour)->op_presentation == REDIR)
+                        printf("REDIR\n");
+                    else if (((t_op_node *)OP->neighbour)->op_presentation == APPEND)
+                        printf("APPEND\n");
+                    else if (((t_op_node *)OP->neighbour)->op_presentation == INPUT)
+                        printf("INPUT\n");
+                    else if (((t_op_node *)OP->neighbour)->op_presentation == PIPE)
+                        printf("PIPE\n");
+                    else if (((t_op_node *)OP->neighbour)->op_presentation == AND)
+                        printf("AND\n");
+                    else if (((t_op_node *)OP->neighbour)->op_presentation == OR)
+                        printf("OR\n");
+                    
+                    for (int i = 0; i < ((t_op_node *)OP->neighbour)->n_childs; i++)
+                    {
+                        print_nodes(((t_op_node *)OP->neighbour)->childs[i], level + 1);
+                    }
+                    printf(RESET);
                 }
             }
             printf("\n");
@@ -92,7 +121,6 @@ int parser(t_db *db, char *line)
     if (smart_split(db, line, &db->root_node, NULL) == FAILURE) return (FAILURE);
 
     // // DEBUG --------------------------------------------------------
-    printf(MAGENTA"\n[DEBUG] line: %s\n"RESET, line);
 
     t_op_node *node = db->root_node;
     print_nodes(node, 0);
