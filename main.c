@@ -1,5 +1,6 @@
-#include "includes/main.h"
-#include "includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
+#include "exec.h"
 
 char    *line_promte()
 {
@@ -85,6 +86,8 @@ int     main(int    ac, char    *av[],  char    *env[])
 
         /* parse the line ----------------------------------*/
         if (parser(&db, line) == FAILURE)
+            continue ;
+        if (exec(&db, db.root_node) == FAILURE)
             continue ;
         /* execute the cmds --------------------------------*/
         gc_void(&db);

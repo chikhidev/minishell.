@@ -39,25 +39,32 @@ int apply(t_db *db, void **current_node)
  */
 int exec(t_db *db, void **current_node)
 {
-    SIGNAL path_signal;
 
-    if (!current_node)
-        return FAILURE;
+    (void)db;
+    (void)current_node;
+    // >>>>> rebuild the logic <<<<<<
+    // SIGNAL path_signal;
 
-    if (CURR_OP->type == CMD_NODE)
-    {
-        return apply(db, current_node);
-    }
-    else if (CURR_OP->type == OP_NODE)
-    {
-        for (int i = 0; i < CURR_OP->n_childs; i++)
-        {
-            path_signal = exec(db, &CURR_OP->childs[i]);
-            if (path_signal == FAILURE && CURR_OP->op_presentation == AND)
-            {
-                return FAILURE;
-            }
-        }
-    }
+    // if (!current_node)
+    //     return FAILURE;
+
+    // printf("%p\n", current_node);
+    // printf("%d\n", CURR_CMD->type);
+
+    // if (CURR_CMD->type == CMD_NODE)
+    // {
+    //     return apply(db, current_node);
+    // }
+    // else if (CURR_OP->type == OP_NODE)
+    // {
+    //     for (int i = 0; i < CURR_OP->n_childs; i++)
+    //     {
+    //         path_signal = exec(db, &CURR_OP->childs[i]);
+    //         if (path_signal == FAILURE && CURR_OP->op_presentation == AND)
+    //         {
+    //             return FAILURE;
+    //         }
+    //     }
+    // }
     return SUCCESS;
 }
