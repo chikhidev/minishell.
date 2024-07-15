@@ -1,5 +1,5 @@
-#include "../includes/main.h"
-#include "../includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
 
 void print_nodes(void *node, int level)
 {

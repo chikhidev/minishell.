@@ -1,5 +1,5 @@
-#include "../includes/main.h"
-#include "../includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
 
 // the head of the paranthesis linked list is 
 int create_paranth(t_db *db, t_parnth **head, int open_)

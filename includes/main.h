@@ -8,6 +8,7 @@
 
 #include "../libft/libft.h"
 
+#define SIGNAL unsigned char
 #define BOOL unsigned char
 #define TRUE 1
 #define FALSE 0

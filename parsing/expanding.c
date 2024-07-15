@@ -1,5 +1,5 @@
-#include "../includes/main.h"
-#include "../includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
 
 void    calc_line(char *original_line, int *a, int *b, int *c)
 {

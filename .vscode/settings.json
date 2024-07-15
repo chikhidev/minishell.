@@ -6,7 +6,8 @@
         "stdio.h": "c",
         "compare": "c",
         "type_traits": "c",
-        "parsing.h": "c"
+        "parsing.h": "c",
+        "exec.h": "c"
     },
     "workbench.iconTheme": "vs-seti"
 }

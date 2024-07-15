@@ -1,5 +1,5 @@
-# include "../../includes/main.h"
-# include "../../includes/parsing.h"
+# include "main.h"
+# include "parsing.h"
 
 void  skip_open_spaces(t_quote *quotes, char *line, int *i)
 {

@@ -1,5 +1,5 @@
-#include "../includes/main.h"
-#include "../includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
 
 char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
 {

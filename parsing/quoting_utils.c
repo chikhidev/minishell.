@@ -1,5 +1,5 @@
-#include "../includes/main.h"
-#include "../includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
 
 int inside_single_quote(t_quote *head, int   i)
 {

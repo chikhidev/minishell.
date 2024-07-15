@@ -1,5 +1,5 @@
 NAME = minishell
-CARGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CARGS = -Wall -Wextra -Werror -g3 -fsanitize=address -I includes
 
 LIBFT = libft/libft.a
 
@@ -18,6 +18,10 @@ PARSING_CUSTOMED = parsing/customized/split.new.c
 
 PARSING_SRC += $(PARSING_CUSTOMED)
 
+EXECUTION_SRC = 	execution/exec.c \
+					execution/path-checker.c \
+					execution/path.c 
+
 STRING = 	strings/string.c \
 			strings/string2.c \
 			strings/string3.c \
@@ -28,6 +32,7 @@ SRC =	main.c		\
 
 SRC += $(PARSING_SRC)
 SRC += $(STRING)
+SRC += $(EXECUTION_SRC)
 
 #colors
 YELLOW = \033[0;33m

@@ -1,5 +1,5 @@
-#include "../includes/main.h"
-#include "../includes/parsing.h"
+#include "main.h"
+#include "parsing.h"
 
 int    create_cmd_node(t_db *db, void **current_node, void *parent)
 {

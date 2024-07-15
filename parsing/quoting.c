@@ -1,4 +1,4 @@
-#include "../includes/main.h"
+#include "main.h"
 
 int add_quote(t_db *db, t_quote **head, int ascii, int start)
 {
