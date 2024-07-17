@@ -208,3 +208,9 @@ allocated by thread T0 here:
     #6 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
     #7 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
 
+
+
+wc << delim > file < main.c
+
+
+here : wc takes input from main.c and outputs to file
