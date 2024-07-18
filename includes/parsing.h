@@ -84,6 +84,7 @@ int     count_op(char *line, int op);
 char	**ft_new_split(t_db *db, t_quote *quotes, char *line);
 
 /*nodes.c*/
-int     io_system(t_db *db, char *line, t_redirection **res);
+int     io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker);
+char    *whithout_quotes(t_db *db, char *line);
 
 #endif

@@ -185,6 +185,7 @@ typedef struct s_db
     t_operators *ops;
     t_here_doc  *here_docs;
     char        error;
+    t_redirection   *redirections;
 }   t_db;
 
 /*prototypes: error.c*/

@@ -31,7 +31,7 @@ int create_redirection(t_db *db, t_redirection **redirections, int type, int fd)
     return (SUCCESS);
 }
 
-int io_system(t_db *db, char *line, t_redirection **res)
+int io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker)
 {
     t_iterators it;
     char flag; // 0 => input, 1 => output, 2 => append
@@ -66,13 +66,13 @@ int io_system(t_db *db, char *line, t_redirection **res)
             }
             
             it.j = it.i;
-            while (line[it.j] && !is_whitespace(line[it.j]))
+            while (line[it.j] && !(is_whitespace(line[it.j]) && !is_inside_quotes(tracker->quotes, it.j)))
                 it.j++;
             
-            printf("i: %d, j: %d\n", it.i, it.j);
             filename = sub(db, line, it.i, it.j);
             CATCH_ONNULL(filename, error(db, NULL, "Malloc failed"));
-            printf("filename: %s\n", filename);
+            filename = whithout_quotes(db, filename);
+            CATCH_ONNULL(filename, error(db, NULL, "Malloc failed"));
 
             if (flag == INPUTFILE && ft_strncmp(filename, "/dev/stdin", ft_strlen(filename)) == 0)
             {
@@ -92,7 +92,6 @@ int io_system(t_db *db, char *line, t_redirection **res)
                 else if (flag == APPENDFILE)
                     fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
             }
-
 
             it.i = it.j;
             

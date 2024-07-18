@@ -151,7 +151,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         , FAILURE);
 
         CATCH_ONFAILURE(
-            io_system(db, line, &(CURR_CMD->redirections)),
+            io_system(db, line, &(CURR_CMD->redirections), tracker),
             FAILURE
         )
         

@@ -46,9 +46,8 @@ static char	*extract_word(t_db *db, t_quote *quotes, char *s, int *start)
         len++;
         i++;
     }
-    word = (char *)gc_malloc(db, (len + 1) * sizeof(char));
-    if (word == NULL)
-        return (NULL);
+    word = gc_malloc(db, (len + 1) * sizeof(char));
+    CATCH_ONNULL(word, NULL);
     ft_strlcpy(word, s + *start, len + 1);
     word[len] = '\0';
     *start = i;
@@ -72,8 +71,9 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
     {
         skip_open_spaces(quotes, s, &it.j);
         result[it.i] = extract_word(db, quotes, s, &it.j);
-        if (result[it.i] == NULL)
-            return (NULL);
+        CATCH_ONNULL(result[it.i], NULL);
+        result[it.i] = whithout_quotes(db, result[it.i]);
+        CATCH_ONNULL(result[it.i], NULL);
         it.i++;
     }
     result[it.i] = NULL;
