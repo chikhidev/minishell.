@@ -39,21 +39,9 @@ char *sub(t_db *db, char *line, int i, int j)
 {
     char *res;
 
-    res = gc_malloc(db, sizeof(char) * (i - j + 1));
+    res = gc_malloc(db, sizeof(char) * (j - i + 1));
     if (!res)
         return NULL;
-    ft_strlcpy(res, line + j, i - j + 1);
+    ft_strlcpy(res, line + i, j - i + 1);
     return res;
-}
-
-
-BOOL is_the_first(char *line, t_tracker *tracker, int op)
-{
-    int i;
-
-    i = 0;
-    skip_spaces(line, &i);
-    if (is_op(line, &i) == op && !is_inside_quotes(tracker->quotes, i) && !is_inside_paranthesis(tracker->paranthesis, i))
-        return TRUE;
-    return FALSE;
 }

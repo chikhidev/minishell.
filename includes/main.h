@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <fcntl.h>
 
 #include "../libft/libft.h"
 
@@ -21,8 +22,8 @@
 
 
 //triggers
-#define CATCH_MALLOC(x) if (!x) return error(db, "Malloc failed");
-#define CATCH(x, message) if (x == FAILURE) return error(db, message);
+#define CATCH_MALLOC(x) if (!x) return error(db, NULL, "Malloc failed");
+#define CATCH(x, message) if (x == FAILURE) return error(db, NULL, message);
 #define CATCH_ONFAILURE(x, return_) if (x == FAILURE) return return_;
 #define CATCH_ONNULL(x, return_) if (x == NULL) return return_;
 #define CATCH_ONFALSE(x, return_) if (x == FALSE) return return_;
@@ -56,6 +57,18 @@ typedef struct s_iterators
     int j;
 } t_iterators;
 
+/*file types*/
+#define INPUTFILE 0
+#define OUTPUTFILE 1
+#define APPENDFILE 2
+
+typedef struct s_redirection
+{
+    int     type;
+    int     fd;
+    struct s_redirection *next;
+}   t_redirection;
+
 typedef struct s_op_node
 {
     int     type; // the common thing between the two nodes
@@ -64,9 +77,7 @@ typedef struct s_op_node
     int     op_presentation;
     void    **childs;
     int     n_childs;
-
-    // special cases
-    void *neighbour; // for the heredocs
+    t_redirection   *redirections;
 
     // execution part ------ <<<<<<
 }   t_op_node;
@@ -109,6 +120,7 @@ typedef struct s_cmd_node
     void    *origin; // the original node
     char    *cmd_path;
     char    **args;
+    t_redirection   *redirections;
 }   t_cmd_node;
 
 /**
@@ -176,7 +188,7 @@ typedef struct s_db
 }   t_db;
 
 /*prototypes: error.c*/
-int error(t_db *db, char *msg);
+int error(t_db *db, char *specifier, char *message);
 
 /*prototypes: memo.c*/
 void    *gc_malloc(t_db *db, size_t size);

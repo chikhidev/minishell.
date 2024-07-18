@@ -29,7 +29,8 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable, in
     c = 0;
     calc_line(*original_line, &a, &b, &c);
     new_line = gc_malloc(db, sizeof(char) * (a + ft_strlen(env_variable) + c + 1));
-    if (!new_line) return error(db, "Failed to malloc new_line");
+    CATCH_MALLOC(new_line);
+    // if (!new_line) return error(db, NULL, "Failed to malloc new_line");
     ft_strlcpy(new_line, *original_line, a + 1); // from 0 to a0
     ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1); //from a + len dyal env
     ft_strlcpy(new_line + a + ft_strlen(env_variable), *original_line + a + b, c + 1); // from a + len +
@@ -82,7 +83,7 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
     while ((*line)[(*i)] && valid_char((*line)[*i], *i))
     {
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
-        if (!tmp) return error(db, "Concat failed");
+        CATCH_MALLOC(tmp);
         gc_free(db, *env_var_name);
         *env_var_name = tmp;
         (*i)++;

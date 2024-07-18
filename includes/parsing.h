@@ -83,4 +83,7 @@ int     count_op(char *line, int op);
 /*customized*/
 char	**ft_new_split(t_db *db, t_quote *quotes, char *line);
 
+/*nodes.c*/
+int     io_system(t_db *db, char *line, t_redirection **res);
+
 #endif

@@ -1,8 +1,14 @@
 #include "includes/main.h"
 
-int error(t_db *db, char *msg)
+int error(t_db *db, char *specifier, char *msg)
 {
-    printf("Error: %s\n\n", msg);
+    if (msg)
+    {
+        if (!specifier)
+           printf(RED"-->:"RESET" %s\n", msg);
+        else
+            printf(RED"-->: %s:"RESET" %s\n", specifier, msg);
+    }
     gc_void(db);
     db->error = TRUE;
     return (FAILURE);

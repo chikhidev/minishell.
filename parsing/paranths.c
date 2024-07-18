@@ -8,7 +8,7 @@ int create_paranth(t_db *db, t_parnth **head, int open_)
     t_parnth *tmp;
 
     new = gc_malloc(db, sizeof(t_parnth));
-    if (!new) return (error(db, "Malloc failed"));
+    if (!new) return (error(db, NULL, "Malloc failed"));
     new->open_ = open_;
     new->close_ = -1;
     new->next = NULL;
@@ -284,29 +284,29 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
         {
             CATCH_ONFAILURE(create_paranth(db, head, i), FAILURE);
             CATCH_ONFAILURE(verify_create_parenth(*head, line, i), 
-                error(db, "syntax error: near '('")
+                error(db, NULL, "syntax error: near '('")
             );
         }
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
             && last_opened
             && last_opened->open_ == i - 1)
-            return error(db, "syntax error: near ')'");
+            return error(db, NULL, "syntax error: near ')'");
         else if (line[i] == ')'
             && !is_inside_quotes(quotes, i)
             && last_opened)
         {
-            CATCH_ONNULL(last_opened, error(db, "syntax error: near ')'"));
+            CATCH_ONNULL(last_opened, error(db, NULL, "syntax error: near ')'"));
             last_opened->close_ = i;
             CATCH_ONFALSE(!only_spaces(line, last_opened->open_, last_opened->close_),
                 // FAILURE); // instead of failure khasna error !
-                error(db, "syntax error: near ')'")); // salah lbatal forgot this <<<<<<
+                error(db, NULL, "syntax error: near ')'")); // salah lbatal forgot this <<<<<<
         }
         else if (line[i] == ')' && !is_inside_quotes(quotes, i))
-            return error(db, "syntax error: near ')'");
+            return error(db, NULL, "syntax error: near ')'");
         i++;
     }
-    CATCH_ONFALSE(!last_unclosed_paranth(*head), error(db, "syntax error: near '('"));
+    CATCH_ONFALSE(!last_unclosed_paranth(*head), error(db, NULL, "syntax error: near '('"));
     CATCH_ONFAILURE(verify_double_scope(*head, line), FAILURE);
     CATCH_ONFAILURE(verify_scope_surrounding(*head, line), FAILURE);
     return (SUCCESS);

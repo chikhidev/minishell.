@@ -12,7 +12,8 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/expanding.c	\
 				parsing/op.c		\
 				parsing/op2.c	\
-				parsing/cmd.c
+				parsing/cmd.c \
+				parsing/io.c
 
 PARSING_CUSTOMED = parsing/customized/split.new.c
 

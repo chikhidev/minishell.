@@ -9,7 +9,7 @@ void print_nodes(void *node, int level)
     {
         printf("   ");
     }
-    if (CMD->type == CMD_NODE && CMD->args)
+    if (CMD->type == CMD_NODE)
     {
         printf("CMD_NODE: ");
         for (int i = 0; (CMD->args[i]); i++)
@@ -17,6 +17,22 @@ void print_nodes(void *node, int level)
             printf("[%s] ", CMD->args[i]);
         }
         printf("\n");
+        for (int i = 0; i < level; i++)
+        {
+            printf("   ");
+        }
+        printf(MAGENTA"Redirections: ");
+        for (t_redirection *red = CMD->redirections; red; red = red->next)
+        {
+            if (red->type == INPUTFILE)
+                printf("INPUTFILE ");
+            else if (red->type == OUTPUTFILE)
+                printf("OUTPUTFILE ");
+            else if (red->type == APPENDFILE)
+                printf("APPENDFILE ");
+            printf("fd: %d ", red->fd);
+        }
+        printf("\n"RESET);
         return ;
     }
     else if (OP->type == OP_NODE)
@@ -28,78 +44,12 @@ void print_nodes(void *node, int level)
             printf("AND\n");
         else if (OP->op_presentation == PIPE)
             printf("PIPE\n");
-        else if (OP->op_presentation == REDIR)
-            printf("REDIR\n");
-        else if (OP->op_presentation == APPEND)
-            printf("APPEND\n");
-        else if (OP->op_presentation == INPUT)
-            printf("INPUT\n");
-        else if (OP->op_presentation == HEREDOC)
-        {
-            printf("HEREDOC");
-            if (OP->neighbour != NULL)
-            {
-                if (((t_op_node *)OP->neighbour)->type == CMD_NODE)
-                {
-                    for (int i = 0; ((t_cmd_node *)OP->neighbour)->args[i]; i++)
-                    {
-                        printf("[%s] ", ((t_cmd_node *)OP->neighbour)->args[i]);
-                    }
-                }
-                else
-                {
-                    printf(MAGENTA"\n");
-                    for (int i = 0; i < level; i++)
-                    {
-                        printf("   ");
-                    }
-                    if (((t_op_node *)OP->neighbour)->op_presentation == HEREDOC)
-                        printf("HEREDOC\n");
-                    else if (((t_op_node *)OP->neighbour)->op_presentation == REDIR)
-                        printf("REDIR\n");
-                    else if (((t_op_node *)OP->neighbour)->op_presentation == APPEND)
-                        printf("APPEND\n");
-                    else if (((t_op_node *)OP->neighbour)->op_presentation == INPUT)
-                        printf("INPUT\n");
-                    else if (((t_op_node *)OP->neighbour)->op_presentation == PIPE)
-                        printf("PIPE\n");
-                    else if (((t_op_node *)OP->neighbour)->op_presentation == AND)
-                        printf("AND\n");
-                    else if (((t_op_node *)OP->neighbour)->op_presentation == OR)
-                        printf("OR\n");
-                    
-                    for (int i = 0; i < ((t_op_node *)OP->neighbour)->n_childs; i++)
-                    {
-                        print_nodes(((t_op_node *)OP->neighbour)->childs[i], level + 1);
-                    }
-                    printf(RESET);
-                }
-            }
-            printf("\n");
-        }
     }
-        
+    
     for (int i = 0; i < OP->n_childs; i++)
     {
         print_nodes(OP->childs[i], level + 1);
     }
-}
-
-/**
- * @details This function will parse the line and split it into commands and operators
- * @return 1 on success, 0 on failure
-*/
-
-int print_here_docs(t_here_doc *here_docs)
-{
-    t_here_doc *here_doc;
-
-    here_doc = here_docs;
-    while (here_doc)
-    {
-        here_doc = here_doc->next;
-    }
-    return (SUCCESS);
 }
 
 int parser(t_db *db, char *line)
@@ -124,7 +74,6 @@ int parser(t_db *db, char *line)
 
     t_op_node *node = db->root_node;
     print_nodes(node, 0);
-    print_here_docs(db->here_docs);
     
     return (SUCCESS);
 }

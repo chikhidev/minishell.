@@ -26,7 +26,7 @@ void set_up_flag(int    *flag, char *op)
     else if (strcmp(op, "<<") == 0)
         *flag = -2;
     else
-        error(NULL,"wrong op\n");
+        error(NULL, NULL, "wrong op\n");
 }
 
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'                 */
@@ -165,12 +165,7 @@ int track_operators(t_db *db, char  *line)
     {
         set_up_flag(&flag, ops->name);
         if (!good_place_for_op(line, ops->name, ops->i, flag))
-            return error(db, "bad place for operator");
-        // if (!check_after_op(line, ops->name, ops->i, flag))
-        //     return error(db, "bad place for op");
-        // printf("op %s  i %d\n", ops->name, ops->i);
-
-        // printf("operator -> %s   index -> %i\n", ops->name, ops->i);
+            return error(db, NULL, "bad place for operator");
         ops = ops->next;
     }
     return (SUCCESS);

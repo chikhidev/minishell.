@@ -79,7 +79,7 @@ int     main(int    ac, char    *av[],  char    *env[])
         else if (ret == 0) continue ;
 
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
-        if (!tmp) return !error(&db, "malloc failed");
+        if (!tmp) return !error(&db, NULL, "malloc failed");
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         free(line);
         line = tmp;

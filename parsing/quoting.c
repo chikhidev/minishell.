@@ -6,7 +6,7 @@ int add_quote(t_db *db, t_quote **head, int ascii, int start)
     t_quote *tmp;
 
     new = gc_malloc(db, sizeof(t_quote));
-    CATCH_ONNULL(new, error(db, "Malloc failed"));
+    CATCH_ONNULL(new, error(db, NULL, "Malloc failed"));
     new->ascii = ascii;
     new->start = start;
     new->end = -1;
@@ -59,7 +59,7 @@ int track_quotes(t_db *db, t_quote **head, char *line)
         i++;
     }
     last = last_quote(*head);
-    CATCH_ONFALSE((!(*head) || last->end != -1), error(db, "Quotes are not closed"));
+    CATCH_ONFALSE((!(*head) || last->end != -1), error(db, NULL, "Quotes are not closed"));
     return (SUCCESS);
 }
 
