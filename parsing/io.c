@@ -24,93 +24,77 @@ int create_redirection(t_db *db, t_redirection **redirections, int type, int fd)
     {
         tmp = tmp->next;
     }
-    
 
     tmp->next = new;
 
     return (SUCCESS);
 }
 
-int io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker)
+
+int io_system(t_db *db, char **args, t_redirection **res)
 {
     t_iterators it;
-    char flag; // 0 => input, 1 => output, 2 => append
-    char *filename;
     int fd;
 
     fd = INVALID;
-    it.i = 0;
-    while (line[it.i])
+    it.i = 0; // to iterate over the args
+
+    while (args[it.i])
     {
-        if (line[it.i] == '>' || line[it.i] == '<')
+        if (ft_strncmp(args[it.i], ">", 1) == 0 || ft_strncmp(args[it.i], ">>", 2) == 0)
         {
-            if (line[it.i] == '>')
+            if (!args[it.i + 1])
             {
-                flag = OUTPUTFILE;
-                if (line[it.i + 1] && line[it.i + 1] == '>')
-                {
-                    flag = APPENDFILE;
-                    it.i++;
-                }
-            }
-            else if (line[it.i] == '<')
-                flag = INPUTFILE;
-
-            it.i++;
-
-            skip_spaces(line, &it.i);
-            if (!line[it.i])
-            {
-                printf("Out of string\n");
+                printf("Out of args\n");
                 return (FAILURE);
             }
-            
-            it.j = it.i;
-            while (line[it.j] && !(is_whitespace(line[it.j]) && !is_inside_quotes(tracker->quotes, it.j)))
-                it.j++;
-            
-            filename = sub(db, line, it.i, it.j);
-            CATCH_ONNULL(filename, error(db, NULL, "Malloc failed"));
-            filename = whithout_quotes(db, filename);
-            CATCH_ONNULL(filename, error(db, NULL, "Malloc failed"));
 
-            if (flag == INPUTFILE && ft_strncmp(filename, "/dev/stdin", ft_strlen(filename)) == 0)
-            {
-                fd = STDIN_FILENO;
-            }
-            else if ((flag == OUTPUTFILE || flag == APPENDFILE)
-                && ft_strncmp(filename, "/dev/stdout", ft_strlen(filename)) == 0)
-            {
-                fd = STDOUT_FILENO;
-            }
-            else
-            {
-                if (flag == INPUTFILE)
-                    fd = open(filename, O_RDONLY);
-                else if (flag == OUTPUTFILE)
-                    fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                else if (flag == APPENDFILE)
-                    fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            }
+            if (ft_strncmp(args[it.i], ">", 1) == 0)
+                fd = open(args[it.i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (ft_strncmp(args[it.i], ">>", 2) == 0)
+                fd = open(args[it.i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 
-            it.i = it.j;
-            
             if (fd == INVALID)
             {
-                perror(filename);
+                perror(args[it.i + 1]);
                 error(db, NULL, NULL);
                 return (FAILURE);
             }
-
             CATCH_ONFAILURE(
-                create_redirection(db, res, flag, fd),
+                create_redirection(db, res, APPENDFILE - ft_strncmp(args[it.i], ">>", 2), fd),
                 FAILURE
             )
+            it.i++;
+        }
+        else if (ft_strncmp(args[it.i], "<", 1) == 0)
+        {
+            if (!args[it.i + 1])
+            {
+                printf("Out of args\n");
+                return (FAILURE);
+            }
 
-            it.i--;
+            fd = open(args[it.i + 1], O_RDONLY);
+            if (fd == INVALID)
+            {
+                perror(args[it.i + 1]);
+                error(db, NULL, NULL);
+                return (FAILURE);
+            }
+            CATCH_ONFAILURE(
+                create_redirection(db, res, INPUTFILE, fd),
+                FAILURE
+            )
+            it.i++;
+        }
+        else
+        {
+            // check if it's at the same same arg: ">file.txt" or "<file.txt"
+            PASS;
         }
         it.i++;
     }
 
     return (SUCCESS);
 }
+

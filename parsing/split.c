@@ -101,12 +101,13 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     int         op;
     int         i;
 
-    if (ft_strlen(line) == 0) return SUCCESS;
-    if (all_whitespaces(line, 0, ft_strlen(line))) return SUCCESS;
+    if (ft_strlen(line) == 0)
+        return SUCCESS;
+    if (all_whitespaces(line, 0, ft_strlen(line)))
+        return SUCCESS;
 
-    printf("working on: %s\n", line);
     tracker = gc_malloc(db, sizeof(t_tracker));
-    if (!tracker) return error(db, NULL, "Malloc failed");
+    CATCH_MALLOC(tracker);
     ft_bzero(tracker, sizeof(t_tracker));
 
     CATCH_ONFAILURE(track_quotes(db, &tracker->quotes, line), FAILURE);
@@ -147,13 +148,8 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     {
         // command scope <<<<<<<<
         CATCH_ONFAILURE(
-            create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<<<<<<<<
+            create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<
         , FAILURE);
-
-        CATCH_ONFAILURE(
-            io_system(db, line, &(CURR_CMD->redirections), tracker),
-            FAILURE
-        )
         
         ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
         CATCH_MALLOC(((t_cmd_node *)*current_node)->args);

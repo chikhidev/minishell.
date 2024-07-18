@@ -1,5 +1,6 @@
 + collect heredocs inside linked-list collector {cm:2024-07-06}
 + split commands (they are not splitted yet, they are just beeing assined as string for the moment) {cm:2024-07-07}
-- need to implement expand before splitting the command into arguments
++ need to implement expand before splitting the command into arguments
+- move io to args split to avoid time wasting...
 - done ready for execution part (i hope)
 - create a dispatcher for execution layers managing
