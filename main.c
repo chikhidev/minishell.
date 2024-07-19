@@ -52,6 +52,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env = env;
     db->last_signal = 0;
     db->redirections = NULL;
+    db->curr_type = INVALID;
     (void) ac;
     (void) av;
     i = 0;

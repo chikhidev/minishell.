@@ -186,6 +186,7 @@ typedef struct s_db
     t_here_doc  *here_docs;
     char        error;
     t_redirection   *redirections;
+    int     curr_type;
 }   t_db;
 
 /*prototypes: error.c*/

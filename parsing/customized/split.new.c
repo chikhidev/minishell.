@@ -59,23 +59,37 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
 	int		word_count;
 	char	**result;
     t_iterators it;
+    char   *tmp;
 
-	if (s == NULL)
-		return (NULL);
+	CATCH_ONNULL(s, NULL);
 	word_count = count_words(quotes, s);
 	result = (char **)gc_malloc(db, (word_count + 1) * sizeof(char *));
-	if (result == NULL)
-		return (NULL);
+    CATCH_ONNULL(result, NULL);
+    ft_bzero(result, (word_count + 1) * sizeof(char *));
 	ft_bzero(&it, sizeof(t_iterators));
     while (it.i < word_count)
     {
         skip_open_spaces(quotes, s, &it.j);
-        result[it.i] = extract_word(db, quotes, s, &it.j);
-        CATCH_ONNULL(result[it.i], NULL);
-        result[it.i] = whithout_quotes(db, result[it.i]);
-        CATCH_ONNULL(result[it.i], NULL);
-        it.i++;
+        tmp = extract_word(db, quotes, s, &it.j);
+        CATCH_ONNULL(tmp, NULL);
+
+        db->curr_type = validate_io(tmp, ft_strlen(tmp));
+        if (db->curr_type != INVALID
+            && it.i > 0)
+        {
+            skip_open_spaces(quotes, s, &it.j);
+            tmp = extract_word(db, quotes, s, &it.j);
+            CATCH_ONNULL(tmp, NULL);
+            if (open_file(db, tmp, db->curr_type) == FAILURE)
+                return (NULL);
+            word_count -= 2;
+        }
+        else
+        {
+            result[it.i] = whithout_quotes(db, tmp);
+            CATCH_ONNULL(result[it.i], NULL);
+            it.i++;
+        }
     }
-    result[it.i] = NULL;
 	return (result);
 }
