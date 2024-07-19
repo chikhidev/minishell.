@@ -7,7 +7,7 @@ void print_nodes(void *node, int level)
 
     for (int i = 0; i < level; i++)
     {
-        printf("   ");
+        printf("    ");
     }
     if (CMD->type == CMD_NODE)
     {
@@ -19,19 +19,14 @@ void print_nodes(void *node, int level)
         printf("\n");
         for (int i = 0; i < level; i++)
         {
-            printf("   ");
+            printf("    ");
         }
-        printf(MAGENTA"Redirections: ");
-        for (t_redirection *red = CMD->redirections; red; red = red->next)
-        {
-            if (red->type == INPUTFILE)
-                printf("INPUTFILE ");
-            else if (red->type == OUTPUTFILE)
-                printf("OUTPUTFILE ");
-            else if (red->type == APPENDFILE)
-                printf("APPENDFILE ");
-            printf("fd: %d ", red->fd);
-        }
+        
+        if (CMD->input_fd != STDIN_FILENO)
+            printf("Input: %d ", CMD->input_fd);
+        if (CMD->output_fd != STDOUT_FILENO)
+            printf("Output: %d ", CMD->output_fd);
+
         printf("\n"RESET);
         return ;
     }

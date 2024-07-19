@@ -80,15 +80,36 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             skip_open_spaces(quotes, s, &it.j);
             tmp = extract_word(db, quotes, s, &it.j);
             CATCH_ONNULL(tmp, NULL);
-            if (open_file(db, tmp, db->curr_type) == FAILURE)
+            if (open_file(db, tmp, db->curr_type, quotes) == FAILURE)
                 return (NULL);
             word_count -= 2;
         }
         else
         {
-            result[it.i] = whithout_quotes(db, tmp);
-            CATCH_ONNULL(result[it.i], NULL);
-            it.i++;
+            //check if the word is a redirection with a file
+            // example: ">file.txt" or >>file.txt
+            if (tmp[0] == '>' || tmp[0] == '<')
+            {
+                if (tmp[0] == '<')
+                    db->curr_type = INPUTFILE;
+                else if (tmp[1] == '>')
+                    db->curr_type = APPENDFILE;
+                else
+                    db->curr_type = OUTPUTFILE;
+            
+
+                if (open_file(db, 
+                    whithout_quotes(db, tmp + 1)
+                , db->curr_type, quotes) == FAILURE)
+                    return (NULL);
+                word_count--;
+            }
+            else
+            {
+                result[it.i] = whithout_quotes(db, tmp);
+                CATCH_ONNULL(result[it.i], NULL);
+                it.i++;
+            }
         }
     }
 	return (result);
