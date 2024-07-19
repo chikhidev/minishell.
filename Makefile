@@ -27,12 +27,15 @@ STRING = 	strings/string.c \
 			strings/string2.c \
 			strings/string3.c \
 
+BUILTENS = builtens/echo.c
+
 SRC =	main.c		\
 		memo.c		\
 		error.c
 
 SRC += $(PARSING_SRC)
 SRC += $(STRING)
+SRC += $(BUILTENS)
 SRC += $(EXECUTION_SRC)
 
 #colors

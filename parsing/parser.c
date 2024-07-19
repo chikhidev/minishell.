@@ -1,5 +1,6 @@
 #include "main.h"
 #include "parsing.h"
+#include "builtens.h"
 
 void print_nodes(void *node, int level)
 {
@@ -12,6 +13,8 @@ void print_nodes(void *node, int level)
     if (CMD->type == CMD_NODE)
     {
         printf("CMD_NODE: ");
+        if (strcmp(CMD->args[0], "echo") == 0)
+            echo(CMD->args, 3);
         for (int i = 0; (CMD->args[i]); i++)
         {
             printf("[%s] ", CMD->args[i]);

@@ -1,6 +1,7 @@
 #include "main.h"
 #include "parsing.h"
 #include "exec.h"
+#include "builtens.h"
 
 char    *line_promte()
 {
@@ -37,6 +38,11 @@ int handle_prompt(char **line)
     if (ft_strncmp(*line, "exit", 4) == 0) return -1 ; // break the loop
     if (*line[0] != '\0') add_history(*line);
     return 1 ; // nothing
+}
+
+void set_env_lst(t_db   *db, char   *env)
+{
+    
 }
 
 void    init_db(t_db *db, int ac, char *av[], char *env[])
