@@ -152,17 +152,25 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         , FAILURE);
         
         ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
+        if (db->error)
+            return error(db, NULL, NULL);
         CATCH_MALLOC(((t_cmd_node *)*current_node)->args);
 
+        // set the redirections of the command node if any
+        if (db->input_fd != INVALID)
+            ((t_cmd_node *)*current_node)->input_fd = db->input_fd;
+        if (db->output_fd != INVALID)
+            ((t_cmd_node *)*current_node)->output_fd = db->output_fd;
+        db->input_fd = INVALID;
+        db->output_fd = INVALID;
+
         // expand each argument
-        // except in case of heredoc first argument
         for (int i = 0; ((t_cmd_node *)*current_node)->args[i]; i++)
         {
             CATCH_ONFAILURE(
                 expand(db, &((t_cmd_node *)*current_node)->args[i], tracker->quotes)
             , FAILURE);
         }
-
     }
     gc_free(db, tracker);
     return SUCCESS; 

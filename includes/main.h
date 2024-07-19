@@ -62,13 +62,6 @@ typedef struct s_iterators
 #define OUTPUTFILE 1
 #define APPENDFILE 2
 
-typedef struct s_redirection
-{
-    int     type;
-    int     fd;
-    struct s_redirection *next;
-}   t_redirection;
-
 typedef struct s_op_node
 {
     int     type; // the common thing between the two nodes
@@ -77,7 +70,7 @@ typedef struct s_op_node
     int     op_presentation;
     void    **childs;
     int     n_childs;
-    t_redirection   *redirections;
+
 
     // execution part ------ <<<<<<
 }   t_op_node;
@@ -120,7 +113,9 @@ typedef struct s_cmd_node
     void    *origin; // the original node
     char    *cmd_path;
     char    **args;
-    t_redirection   *redirections;
+
+    int    input_fd;
+    int    output_fd;
 }   t_cmd_node;
 
 /**
@@ -185,7 +180,12 @@ typedef struct s_db
     t_operators *ops;
     t_here_doc  *here_docs;
     char        error;
-    t_redirection   *redirections;
+
+    /*io*/
+    int     curr_type;
+    int     input_fd;
+    int     output_fd;
+
 }   t_db;
 
 /*prototypes: error.c*/
