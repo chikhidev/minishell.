@@ -7,7 +7,10 @@
         "compare": "c",
         "type_traits": "c",
         "parsing.h": "c",
-        "exec.h": "c"
+        "exec.h": "c",
+        "libft.h": "c",
+        "readline.h": "c",
+        "string.h": "c"
     },
     "workbench.iconTheme": "vs-seti"
 }

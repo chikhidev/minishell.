@@ -17,6 +17,7 @@ PARSING_SRC = 	parsing/parser.c	\
 
 PARSING_CUSTOMED = parsing/customized/split.new.c
 
+
 PARSING_SRC += $(PARSING_CUSTOMED)
 
 EXECUTION_SRC = 	execution/exec.c \
@@ -26,8 +27,13 @@ EXECUTION_SRC = 	execution/exec.c \
 STRING = 	strings/string.c \
 			strings/string2.c \
 			strings/string3.c \
+			strings/string4.c \
 
-BUILTENS = builtens/echo.c
+BUILTENS =	builtens/echo.c \
+			builtens/export.c \
+			builtens/env.c \
+	    	env_list.c	\
+	    	exp_list.c
 
 SRC =	main.c		\
 		memo.c		\
@@ -51,7 +57,7 @@ build: all clean
 
 $(NAME): $(SRC) $(LIBFT)
 	@echo "$(YELLOW)Compiling minishell 🛠️$(RESET)"
-	cc $(CARGS) $(SRC) $(LIBFT) -lreadline -o $(NAME)
+	gcc $(CARGS) $(SRC) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)Minishell compiled successfully 🚀"
 
 $(LIBFT):

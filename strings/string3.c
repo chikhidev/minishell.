@@ -1,7 +1,7 @@
 #include "main.h"
 #include "parsing.h"
 
-int count_args(char *line, t_quote *quotes, int len)
+int count_line_args(char *line, t_quote *quotes, int len)
 {
     int i;
     int reminder;
@@ -70,4 +70,22 @@ char *whithout_quotes(t_db *db, char *line)
     ft_strlcpy(res, line + i, size + 1);
     gc_free(db, line);
     return res;
+}
+
+bool contains(char  *str, char    *sub)
+{
+    int i;
+    int j;
+
+    i = 0;
+    while (str[i])
+    {
+        j = 0;
+        while (str[i + j] == sub[j] && str[i + j] && sub[j])
+            j++;
+        if (!sub[j])
+            return true;
+        i++;
+    }
+    return false;
 }

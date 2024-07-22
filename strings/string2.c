@@ -120,3 +120,13 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
         counter++;
     return counter;
 }
+
+int count_array_len(char    **args)
+{
+    int i;
+
+    i = 0;
+    while (args[i])
+        i++;
+    return (i);
+}

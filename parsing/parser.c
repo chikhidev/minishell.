@@ -2,7 +2,7 @@
 #include "parsing.h"
 #include "builtens.h"
 
-void print_nodes(void *node, int level)
+void print_nodes(t_db   *db, void *node, int level)
 {
     if (!node) return ;
 
@@ -15,6 +15,10 @@ void print_nodes(void *node, int level)
         printf("CMD_NODE: ");
         if (strcmp(CMD->args[0], "echo") == 0)
             echo(CMD->args, 3);
+        else if (strcmp(CMD->args[0], "export") == 0)
+            export(db, CMD->args);
+        else if (strcmp(CMD->args[0], "env") == 0)
+            env(db);
         for (int i = 0; (CMD->args[i]); i++)
         {
             printf("[%s] ", CMD->args[i]);
@@ -46,7 +50,7 @@ void print_nodes(void *node, int level)
     
     for (int i = 0; i < OP->n_childs; i++)
     {
-        print_nodes(OP->childs[i], level + 1);
+        print_nodes(db, OP->childs[i], level + 1);
     }
 }
 
@@ -71,7 +75,7 @@ int parser(t_db *db, char *line)
     // // DEBUG --------------------------------------------------------
 
     t_op_node *node = db->root_node;
-    print_nodes(node, 0);
+    print_nodes(db, node, 0);
     
     return (SUCCESS);
 }

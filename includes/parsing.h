@@ -34,7 +34,7 @@ int     count_between_op(t_db *db,  char *line, int op, t_tracker *tracker);
 char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
 
 /*string3*/
-int     count_args(char *line, t_quote *quotes, int len);
+int     count_line_args(char *line, t_quote *quotes, int len);
 int     append_split(char **splitted, char *string);
 char    *sub(t_db *db, char *line, int i, int j);
 int     all_whitespaces(char *line, int start, int end);
@@ -89,6 +89,9 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *line);
 int     validate_io(char *arg, int size);
 char    *whithout_quotes(t_db *db, char *line);
 int     open_file(t_db *db, char *file, int type, t_quote *quotes);
-
+int     count_array_len(char    **args);
+bool    contains(char  *str, char    *sub);
+int     find_c(char *str, char  c);
+int     length_til(char *str, char stop);
 
 #endif
