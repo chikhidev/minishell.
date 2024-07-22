@@ -80,7 +80,9 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             skip_open_spaces(quotes, s, &it.j);
             tmp = extract_word(db, quotes, s, &it.j);
             CATCH_ONNULL(tmp, NULL);
-            if (open_file(db, tmp, db->curr_type, quotes) == FAILURE)
+            if (open_file(db, 
+                whithout_quotes(db, tmp)
+            , db->curr_type, quotes) == FAILURE)
                 return (NULL);
             word_count -= 2;
         }
