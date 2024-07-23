@@ -152,13 +152,7 @@ int     main(int    ac, char    *av[],  char    *env[])
             continue ;
         if (exec(&db, db.root_node) == FAILURE)
             continue ;
-        /* execute the cmds --------------------------------*/
-        // env_list = db.env_list;
-        // while (env_list)
-        // {
-        //     printf("%s\n", env_list->data);
-        //     env_list = env_list->next;
-        // }
+
         gc_void(&db);
     }
     free_environment(&db);

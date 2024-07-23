@@ -77,7 +77,6 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
         if (db->curr_type != INVALID
             && it.i > 0)
         {
-            printf("first\n");
             skip_open_spaces(quotes, s, &it.j);
 
             if (!s[it.j])
@@ -88,6 +87,14 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             }
 
             tmp = extract_word(db, quotes, s, &it.j);
+
+            if (validate_io(tmp, ft_strlen(tmp)) != INVALID)
+            {
+                printf("Syntax error near unexpected token `%s'\n", tmp);
+                db->error = TRUE;
+                return (NULL);
+            }
+
             CATCH_ONNULL(tmp, NULL);
             if (open_file(db, 
                 whithout_quotes(db, tmp)
@@ -101,7 +108,6 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             // example: ">file.txt" or >>file.txt
             if (tmp[0] == '>' || tmp[0] == '<')
             {
-                printf("second\n");
 
                 if (tmp[0] == '<')
                     db->curr_type = INPUTFILE;
