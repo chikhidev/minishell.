@@ -5,7 +5,7 @@
 
 int handle_prompt(char **line)
 {
-    *line = readline(GREEN"shellu> "RESET);
+    *line = readline(BOLD UNDERLINE"Shellu>"RESET" ");
     // handle ctrl + c later 
     if (!*line) return 0 ; // continue the loop
     if (ft_strncmp(*line, "exit", 4) == 0) return -1 ; // break the loop

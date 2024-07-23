@@ -68,6 +68,8 @@
 # define BLUE "\033[0;34m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
+# define BOLD      "\033[1m"
+# define UNDERLINE "\033[4m"
 
 typedef struct s_iterators
 {
