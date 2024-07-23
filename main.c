@@ -3,36 +3,9 @@
 #include "exec.h"
 #include "builtens.h"
 
-char    *line_promte()
-{
-    char    *user;
-    char    *tmp;
-
-    user = getenv("USER");
-    if (user)
-        user = ft_strdup(user);
-    else
-        user = ft_strdup("shell");
-    if (!user)
-        return (NULL);
-    tmp = ft_strjoin(GREEN"Lowa@"RESET, user);
-    free(user);
-    if (!tmp)
-        return (ft_strdup(GREEN"Lowa@shell~"RESET));
-    user = ft_strjoin(tmp, ORANGE"~ "RESET);
-    free(tmp);
-    if (!user)
-        return (ft_strdup(GREEN"Lowa@shell~"RESET));
-    return (user);
-}
-
 int handle_prompt(char **line)
 {
-    char    *promte;
-
-    promte = line_promte();
-    *line = readline(promte);
-    free(promte);
+    *line = readline(GREEN"shellu> "RESET);
     // handle ctrl + c later 
     if (!*line) return 0 ; // continue the loop
     if (ft_strncmp(*line, "exit", 4) == 0) return -1 ; // break the loop
