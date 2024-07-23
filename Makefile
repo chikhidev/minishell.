@@ -32,6 +32,8 @@ STRING = 	strings/string.c \
 BUILTENS =	builtens/echo.c \
 			builtens/export.c \
 			builtens/env.c \
+			builtens/pwd.c \
+			builtens/cd.c \
 	    	env_list.c	\
 	    	exp_list.c
 

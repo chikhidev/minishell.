@@ -10,7 +10,8 @@
         "exec.h": "c",
         "libft.h": "c",
         "readline.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "builtens.h": "c"
     },
     "workbench.iconTheme": "vs-seti"
 }

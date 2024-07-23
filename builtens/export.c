@@ -11,7 +11,8 @@ bool show_export(t_db *db)
     curr = vars;
     while (curr)
     {
-        printf("declare -x %s\"%s\"\n", curr->key, curr->val);
+        if (curr->visible)
+            printf("declare -x %s\"%s\"\n", curr->key, curr->val);
         curr = curr->next;
     }
     return true;

@@ -7,6 +7,10 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <errno.h>
+
 
 # define SIGNAL unsigned char
 # define BOOL unsigned char
@@ -105,6 +109,7 @@ typedef struct s_exp_list
 {
 	char					*key;
 	char					*val;
+    bool                    visible;
 	struct s_exp_list		*next;
 }   t_exp_list;
 

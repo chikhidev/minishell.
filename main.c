@@ -75,14 +75,15 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
         // if (!new_node)
         //     (gc_void(db), exit(1));
         len = length_til(env[i], '=');
-        key = gc_malloc(db, len + 1);
+        key = malloc(len + 1); // check malloc
         ft_strlcpy(key, env[i], len + 1);
-        val = gc_malloc(db, ft_strlen(env[i]) - len + 1);
+        val = malloc(ft_strlen(env[i]) - len + 1); // check malloc
         ft_strlcpy(val, env[i] + len, ft_strlen(env[i]) - len + 1);
-        new_node = new_exp_node(db, key, val);
+        new_node = new_exp_node(db, key, val); // check malloc
         new_node->next = NULL;
-        if (ft_strncmp(key, "_", ft_strlen(key)) != 0)
-            push_exp_back(&exp_list, new_node);
+        if (ft_strncmp(key, "_", ft_strlen(key)) == 0)
+            new_node->visible = false;
+        push_exp_back(&exp_list, new_node);
         i++;
     }
     return exp_list;
@@ -107,6 +108,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env_list = set_env_lst(db, env);
     // printf("env_list\n");
     db->exp_list = set_exp_lst(db, env);
+    // print exp_list
     (void) ac;
     (void) av;
     i = 0;
@@ -114,6 +116,32 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     {
         db->op_counter[i] = 0;
         i++;
+    }
+}
+
+void free_environment(t_db  *db)
+{
+    t_env_list  *next_env;
+    t_env_list  *curr_env;
+    t_exp_list  *next_exp;
+    t_exp_list  *curr_exp;
+
+    curr_env = db->env_list;
+    while (curr_env)
+    {
+        next_env = curr_env->next;
+        free(curr_env);
+        curr_env = next_env;
+    }
+    curr_exp = db->exp_list;
+    printf("exp_list\n");
+    while (curr_exp)
+    {
+        next_exp = curr_exp->next;
+        free(curr_exp->key);
+        free(curr_exp->val);
+        free(curr_exp);
+        curr_exp = next_exp;
     }
 }
 
@@ -154,6 +182,7 @@ int     main(int    ac, char    *av[],  char    *env[])
         // }
         gc_void(&db);
     }
+    free_environment(&db);
     gc_void(&db);
     return (SUCCESS);
 }
