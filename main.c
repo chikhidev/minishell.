@@ -69,15 +69,9 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
     db->debug = FALSE;
     db->gc = NULL;
-    db->root_node = NULL;
-    db->ops = NULL;
     db->here_docs = NULL;
     db->error = FALSE;
     db->env = env;
-    db->last_signal = 0;
-    db->curr_type = INVALID;
-    db->input_fd = INVALID;
-    db->output_fd = INVALID;
     db->env_list = set_env_lst(db, env);
     // printf("env_list\n");
     db->exp_list = set_exp_lst(db, env);
@@ -90,6 +84,17 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
         db->op_counter[i] = 0;
         i++;
     }
+}
+
+void db_reset(t_db *db)
+{
+    db->ops = NULL;
+    db->root_node = NULL;
+    db->error = FALSE;
+    db->last_signal = 0;
+    db->curr_type = INVALID;
+    db->input_fd = INVALID;
+    db->output_fd = INVALID;
 }
 
 void free_environment(t_db  *db)
@@ -129,6 +134,7 @@ int     main(int    ac, char    *av[],  char    *env[])
     init_db(&db, ac, av, env);
     while (TRUE)
     {
+        db_reset(&db);
         printf(MAGENTA);
         ret = handle_prompt(&line);
         printf(RESET);

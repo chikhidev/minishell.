@@ -77,7 +77,16 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
         if (db->curr_type != INVALID
             && it.i > 0)
         {
+            printf("first\n");
             skip_open_spaces(quotes, s, &it.j);
+
+            if (!s[it.j])
+            {
+                printf("Syntax error near unexpected token `newline'\n");
+                db->error = TRUE;
+                return (NULL);
+            }
+
             tmp = extract_word(db, quotes, s, &it.j);
             CATCH_ONNULL(tmp, NULL);
             if (open_file(db, 
@@ -92,16 +101,17 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             // example: ">file.txt" or >>file.txt
             if (tmp[0] == '>' || tmp[0] == '<')
             {
+                printf("second\n");
+
                 if (tmp[0] == '<')
                     db->curr_type = INPUTFILE;
                 else if (tmp[1] == '>')
                     db->curr_type = APPENDFILE;
                 else
                     db->curr_type = OUTPUTFILE;
-            
 
                 if (open_file(db, 
-                    whithout_quotes(db, tmp + 1)
+                    whithout_quotes(db, tmp + 1 + (db->curr_type == APPENDFILE))
                 , db->curr_type, quotes) == FAILURE)
                     return (NULL);
                 word_count--;

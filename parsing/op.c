@@ -126,7 +126,8 @@ int create_operator(t_db *db, int i, char *name)
     else
     {
         tmp = db->ops;
-        while (tmp && tmp->next)
+
+        while (tmp->next)
             tmp = tmp->next;
         tmp->next = op;
     }

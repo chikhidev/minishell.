@@ -57,6 +57,11 @@ char *whithout_quotes(t_db *db, char *line)
 
     i = 0;
     size = ft_strlen(line);
+
+    printf("%s\n", line);
+
+    printf("%d\n", size - 1);
+
     if (line[size - 1] == '\'' || line[size - 1] == '\"')
         size--;
     if (line[0] == '\'' || line[0] == '\"')
