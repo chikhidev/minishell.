@@ -13,15 +13,15 @@ void print_nodes(t_db   *db, void *node, int level)
     if (CMD->type == CMD_NODE)
     {
         printf("CMD_NODE: ");
-        if (strcmp(CMD->args[0], "echo") == 0)
+        if (ft_strcmp(CMD->args[0], "echo") == 0)
             echo(CMD->args, 3);
-        else if (strcmp(CMD->args[0], "export") == 0)
+        else if (ft_strcmp(CMD->args[0], "export") == 0)
             export(db, CMD->args);
-        else if (strcmp(CMD->args[0], "pwd") == 0)
+        else if (ft_strcmp(CMD->args[0], "pwd") == 0)
             pwd(db);
-        else if (strcmp(CMD->args[0], "env") == 0)
+        else if (ft_strcmp(CMD->args[0], "env") == 0)
             env(db);
-        else if (strcmp(CMD->args[0], "cd") == 0)
+        else if (ft_strcmp(CMD->args[0], "cd") == 0)
             cd(db, CMD->args);
         for (int i = 0; (CMD->args[i]); i++)
         {

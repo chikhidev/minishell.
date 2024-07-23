@@ -77,13 +77,13 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
         len = length_til(env[i], '=');
         key = malloc(len + 1); // check malloc
         ft_strlcpy(key, env[i], len + 1);
-        val = malloc(ft_strlen(env[i]) - len + 1); // check malloc
-        ft_strlcpy(val, env[i] + len, ft_strlen(env[i]) - len + 1);
+        val = malloc(ft_strlen(env[i]) - len - 1 + 1); // check malloc
+        ft_strlcpy(val, env[i] + len + 1, ft_strlen(env[i]) - len - 1 + 1);
         new_node = new_exp_node(db, key, val); // check malloc
         new_node->next = NULL;
         if (ft_strncmp(key, "_", ft_strlen(key)) == 0)
             new_node->visible = false;
-        push_exp_back(&exp_list, new_node);
+        push_exp_sort(&exp_list, new_node);
         i++;
     }
     return exp_list;

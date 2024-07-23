@@ -83,6 +83,8 @@ int     count_op(char *line, int op);
 /*customized*/
 char	**ft_new_split(t_db *db, t_quote *quotes, char *line);
 
+/*expanding*/
+char    *get_environment_var(char   *var, char *env[]);
 /*nodes.c*/
 // int     io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker);
 // int     io_system(t_db *db, char **args, t_redirection **res);

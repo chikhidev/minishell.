@@ -3,26 +3,7 @@
 #include "parsing.h"
 #include "string.h"
 
-char    *get_environment_var(char   *var, char *env[])
-{
-    int i;
-    char    *temp;
-    
 
-    i = 0;
-    temp = ft_strjoin(var, "=");
-    while (env[i])
-    {
-        if (ft_strncmp(temp, env[i], ft_strlen(temp)) == 0)
-        {
-            free(temp);
-            return env[i] + ft_strlen(var) + 1;
-        }
-        i++;
-    }
-    free(temp);
-    return NULL;
-}
 
 void cd(t_db    *db, char    *args[])
 {
@@ -43,7 +24,6 @@ void cd(t_db    *db, char    *args[])
             if (chdir(home) == -1)
                 perror("cd");
         }
-
     }
     else
     {

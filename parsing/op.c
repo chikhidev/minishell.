@@ -11,19 +11,19 @@
  
 void set_up_flag(int    *flag, char *op)
 {
-    if (strcmp(op, "&&") == 0)
+    if (ft_strcmp(op, "&&") == 0)
         *flag = -1;
-    else if (strcmp(op, "||") == 0)
+    else if (ft_strcmp(op, "||") == 0)
         *flag = -1;
-    else if (strcmp(op, "|") == 0)
+    else if (ft_strcmp(op, "|") == 0)
         *flag = -1;
-    else if (strcmp(op, "<") == 0)
+    else if (ft_strcmp(op, "<") == 0)
         *flag = -1;
-    else if (strcmp(op, ">") == 0)
+    else if (ft_strcmp(op, ">") == 0)
         *flag = -2;
-    else if (strcmp(op, ">>") == 0)
+    else if (ft_strcmp(op, ">>") == 0)
         *flag = -2;
-    else if (strcmp(op, "<<") == 0)
+    else if (ft_strcmp(op, "<<") == 0)
         *flag = -2;
     else
         error(NULL, NULL, "wrong op\n");

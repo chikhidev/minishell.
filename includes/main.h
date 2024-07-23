@@ -244,6 +244,6 @@ void					*push_sort(t_db *db, t_env_list  **list, char    *data);
 
 t_exp_list				*new_exp_node(t_db *db, char   *key, char    *val);
 void					add_exp_front(t_exp_list  **list,   t_exp_list	*new);
-void					push_exp_back(t_exp_list  **list,  t_exp_list	*new);
-
+void					push_exp_sort(t_exp_list  **list,  t_exp_list	*new);
+void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
 #endif

@@ -27,7 +27,7 @@ void    add_exp_front(t_exp_list  **list,   t_exp_list	*new)
 		*list = new;
 	}
 }
-void	push_exp_back(t_exp_list  **list,  t_exp_list	*new)
+void	push_exp_sort(t_exp_list  **list,  t_exp_list	*new)
 {
 	t_exp_list	*curr;
 	t_exp_list	*prev;
@@ -53,6 +53,26 @@ void	push_exp_back(t_exp_list  **list,  t_exp_list	*new)
                 prev = curr;
 				curr = curr->next;
             }
+            curr->next = new;
+		}
+	}
+}
+
+void	push_exp_back(t_exp_list  **list,  t_exp_list	*new)
+{
+	t_exp_list	*curr;
+
+	if (list)
+	{
+		if (*list == NULL)
+			add_exp_front(list, new);
+        else if (ft_strncmp(new->key, (*list)->key, ft_strlen((*list)->key)) < 0)
+			add_exp_front(list, new);
+		else
+		{
+			curr = (*list);
+			while (curr && curr->next)
+				curr = curr->next;
             curr->next = new;
 		}
 	}

@@ -41,6 +41,27 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable, in
     return (SUCCESS);
 }
 
+char    *get_environment_var(char   *var, char *env[])
+{
+    int i;
+    char    *temp;
+    
+
+    i = 0;
+    temp = ft_strjoin(var, "=");
+    while (env[i])
+    {
+        if (ft_strncmp(temp, env[i], ft_strlen(temp)) == 0)
+        {
+            free(temp);
+            return env[i] + ft_strlen(var) + 1;
+        }
+        i++;
+    }
+    free(temp);
+    return NULL;
+}
+
 char *get_env(t_db *db, char *name)
 {
     char *res;
