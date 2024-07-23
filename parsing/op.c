@@ -146,14 +146,6 @@ int track_operators(t_db *db, char  *line)
             (create_operator(db, i, "&&"), i++);
         else if (line[i] == '|' && line[i + 1] == '|')
             (create_operator(db, i, "||"), i++);
-        else if (line[i] == '<' && line[i + 1] == '<')
-            (create_operator(db, i, "<<"), i++);
-        else if (line[i] == '>' && line[i + 1] == '>')
-            (create_operator(db, i, ">>"), i++);
-        else if (line[i] == '<')
-            create_operator(db, i, "<");
-        else if (line[i] == '>')
-            create_operator(db, i, ">");
         else if (line[i] == '|')
             create_operator(db, i, "|");
 
