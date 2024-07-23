@@ -2,8 +2,9 @@
 
 t_env_list *new_env_node(t_db *db, char   *data)
 {
+	(void)db;
     t_env_list *new;
-    new = gc_malloc(db, sizeof(t_env_list));
+    new = malloc(sizeof(t_env_list));
     if (new == NULL)
         return (NULL);
     new->data = data;

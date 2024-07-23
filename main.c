@@ -51,8 +51,8 @@ t_env_list    *set_env_lst(t_db   *db, char   *env[])
     while (env[i])
     {
         new_node = new_env_node(db, env[i]);
-        if (!new_node)
-            (gc_void(db), exit(1));
+        // if (!new_node)
+        //     (gc_void(db), exit(1));
         push_env_back(&env_list, new_node);
         i++;
     }
@@ -72,16 +72,14 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     i = 0;
     while (env[i])
     {
-        new_node = new_exp_node(db, env[i], NULL);
-        if (!new_node)
-            (gc_void(db), exit(1));
+        // if (!new_node)
+        //     (gc_void(db), exit(1));
         len = length_til(env[i], '=');
         key = gc_malloc(db, len + 1);
         ft_strlcpy(key, env[i], len + 1);
         val = gc_malloc(db, ft_strlen(env[i]) - len + 1);
         ft_strlcpy(val, env[i] + len, ft_strlen(env[i]) - len + 1);
-        new_node->key = key;
-        new_node->val = val;
+        new_node = new_exp_node(db, key, val);
         new_node->next = NULL;
         if (ft_strncmp(key, "_", ft_strlen(key)) != 0)
             push_exp_back(&exp_list, new_node);
@@ -107,6 +105,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->input_fd = INVALID;
     db->output_fd = INVALID;
     db->env_list = set_env_lst(db, env);
+    // printf("env_list\n");
     db->exp_list = set_exp_lst(db, env);
     (void) ac;
     (void) av;
@@ -120,11 +119,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
 int     main(int    ac, char    *av[],  char    *env[])
 {
-    // int i = 0;
-    // while (env[i])
-    //     printf("%s\n", env[i++]);
     t_db    db;
-    // t_env_list  *env_list;
     char    *line;
     char    *tmp;
     int     ret;

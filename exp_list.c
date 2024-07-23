@@ -6,9 +6,10 @@
 
 t_exp_list *new_exp_node(t_db *db, char   *key, char    *val)
 {
+    (void)db;
     t_exp_list *new;
 
-    new = gc_malloc(db, sizeof(t_exp_list));
+    new = malloc(sizeof(t_exp_list));
     if (new == NULL)
         return (NULL);
     new->val = val;
