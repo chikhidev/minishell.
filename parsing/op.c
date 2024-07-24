@@ -18,7 +18,7 @@ void set_up_flag(int    *flag, char *op)
     else if (ft_strcmp(op, "|") == 0)
         *flag = -1;
     else if (ft_strcmp(op, "<") == 0)
-        *flag = -1;
+        *flag = -2;
     else if (ft_strcmp(op, ">") == 0)
         *flag = -2;
     else if (ft_strcmp(op, ">>") == 0)
@@ -29,8 +29,8 @@ void set_up_flag(int    *flag, char *op)
         error(NULL, NULL, "wrong op\n");
 }
 
-/* flag is -2 if needs something after  op                 '>'    '<<'    '>>'                 */
-/* flag is -1 if needs something befor & after op like    '&&'    '||'    '|'     '<'         */
+/* flag is -2 if needs something after  op                 '>'    '<<'    '>>'    '<'            */
+/* flag is -1 if needs something befor & after op like    '&&'    '||'    '|'                    */
 
 
 // ! TODO : op op is bad
@@ -41,6 +41,7 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
 
     i = op_idx;
     i += ft_strlen(op_name);
+    printf("checking for %s\n", op_name);
     if (flag == 3)
         return (SUCCESS);
     while(line[i])
@@ -63,9 +64,12 @@ bool check_befor( char    *line,   char    *op_name,   int op_idx)
     i = op_idx - 1;
     while (i >= 0)
     {
-        if (!is_whitespace(line[i]) && is_op3(line, &i) == INVALID)
+        if (is_op3(line, &i) != INVALID)
+            return 0;
+        else if (is_whitespace(line[i]))
+            i--;
+        else
             return 1;
-        i--;
     }
     return (0);
 }
@@ -79,9 +83,12 @@ bool check_after( char    *line,   char    *op_name,   int op_idx)
     i = op_idx + ft_strlen(op_name);
     while (i < len)
     {
-        if (!is_whitespace(line[i]) && is_op(line, &i) == INVALID)
+        if (is_op(line, &i) != INVALID)
+            return 0;
+        else if (is_whitespace(line[i]))
+            i++;
+        else
             return 1;
-        i++;
     }
     return (0);
 }
@@ -90,7 +97,6 @@ int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int fla
 {
     bool char_after;
     bool char_befor;
-
     char_befor = FALSE;
     char_after = FALSE;
     if (check_befor(line, op_name, op_idx))

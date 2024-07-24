@@ -26,7 +26,7 @@ bool    has_special_char(char   *str)
     i = 0;
     while (str[i])
     {
-        if (!ft_isalnum(str[i]) && str[i] != '_')
+        if (!ft_isalnum(str[i]) && str[i] != '_' && str[i] != '+' && str[i] != '=')
             return true;
         i++;
     }
@@ -40,8 +40,8 @@ bool    good_export_var(char    *var)
         return (false);
     else if (!ft_isalpha(var[0]) && var[0] != '_')
         return (false);
-    // else if (has_special_char(var))
-        // return (false);
+    else if (has_special_char(var))
+        return (false);
     else
     {
         printf("-> %s\n", var);
@@ -51,48 +51,85 @@ bool    good_export_var(char    *var)
     // no special caractwrs
 }
 
+int get_key_length(char *arg)
+{
+    int i;
+
+    i = 0;
+    while (arg[i])
+    {
+        if (arg[i] == ' ' || arg[i] == '+' || arg[i] == '=' || arg[i] == '\0')
+        {
+            printf("found a -> %d[%c]\n", arg[i], arg[i]);
+            return i;
+        }
+        i++;
+    }
+    return (i);
+}
+
+int get_val_length(char *arg,   int start_idx)
+{
+    int i;
+    int len;
+
+    len = 0;
+    i = start_idx;
+    while (arg[i])
+    {
+        if (arg[i] == ' ' || arg[i] == '\0')
+            return len;
+        i++;
+        len++;
+    }
+    return (len);
+}
+
 bool handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
     (void)db;
-    t_exp_list  *new;
     char    *key;
-    char    *val;
-    int      len;
+    // char    *val;
+    int      k_len;
+    int      v_len;
     i = 1;
+    // t_exp_list  *new;
     bool    good;
 
     good = TRUE;
     while (args[i])
     {
-        if (!good_export_var(args[i]))
+        k_len = get_key_length(args[i]);
+        key = malloc((k_len + 1) * sizeof(char));
+        if (!key)
+            return FALSE;
+        ft_strlcpy(key, args[i], k_len + 1);
+        printf("key[%d] -> %s\n", k_len, key );
+        if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
         {
-            printf("export: `%s`: not a valid identifier\n", args[i]);
-            good = FALSE;
+            // node with key only
+            // new = new_exp_node(db, key, NULL);
+            printf("adding node without val %s\n", key);
+
+        }
+        else if (args[i][k_len] == '=')
+        {
+            v_len = get_val_length(args[i], k_len + 1);
+            printf("val length -> %d\n", v_len);
         }
         else
         {
-            if (contains(args[i], "="))
-            {
-                len = length_til(args[i], '=');
-                key = malloc((len + 1) * sizeof(char));
-                if (!key)
-                    return FALSE;
-                ft_strlcpy(key, args[i], len + 1);
-                val = malloc(ft_strlen(args[i]) - len - 1 + 1); // -1 => '='   + 1  => '\0'
-                ft_strlcpy(val, args[i] + len + 1, ft_strlen(args[i]) - len - 1 + 1);
-                // printf("key[%d] -> %s\n", len + 1, key);
-                // printf("val[%ld] -> %s\n", ft_strlen(args[i]) - len - 1 + 1, val);
-                new = new_exp_node(db, key, val);
-                if (!new)
-                {
-                    gc_void(db);
-                    exit(1);
-                }
-                push_exp_back(&db->exp_list, new);
-            }
-
+            printf("error\n");
+            return FALSE;
         }
+        // new = new_exp_node(db, key, val);
+        // if (!new)
+        // {
+        //     gc_void(db);
+        //     exit(1);
+        // }
+        // push_exp_back(&db->exp_list, new);
         i++;
     }
     return good;

@@ -27,7 +27,7 @@ int open_file(t_db *db, char *file, int type, t_quote *quotes)
     int fd;
     
     expand(db, &file, quotes);
-
+    printf("file -> %s type => %d", file , type);
     if (type == APPENDFILE)
         fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)
@@ -137,8 +137,6 @@ int syntax_checker(t_db *db, char *line, int *start)
                 printf("'\n");
                 return error(db, NULL, NULL);
             }
-
-
             if (is_op_redir(line, i) == FAILURE)
                 return (FAILURE);
         }
