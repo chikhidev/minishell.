@@ -79,9 +79,11 @@ int open_heredoc(t_db *db, char *delim)
             (ft_strncmp(line, delim, ft_strlen(delim)) == 0
             && ft_strlen(line) - 1 == ft_strlen(delim)))
         {
+            free(line);
             close(pipe_fd[1]);
             break;
         }
+        expand(db, &line, NULL);
         write(pipe_fd[1], line, ft_strlen(line));
         free(line);
         write(2, "> ", 2);

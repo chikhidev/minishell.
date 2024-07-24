@@ -75,7 +75,7 @@ $(GNL):
 clean:
 	@echo "$(BLUE)Cleaning libft 🧹$(RESET)"
 	make -C libft clean
-	rm $(GNL)
+	rm -f $(GNL)
 
 fclean: clean
 	@echo "$(RED)Cleaning minishell 🧹$(RESET)"
