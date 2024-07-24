@@ -1,7 +1,9 @@
 NAME = minishell
 CARGS = -Wall -Wextra -Werror -g3 -fsanitize=address -I includes
+CFLAGS = -Wall -Wextra -Werror
 
 LIBFT = libft/libft.a
+GNL = get_next_line.o
 
 PARSING_SRC = 	parsing/parser.c	\
 				parsing/quoting.c	\
@@ -57,18 +59,23 @@ RESET = \033[0m
 all: $(NAME)
 build: all clean
 
-$(NAME): $(SRC) $(LIBFT)
+$(NAME): $(SRC) $(LIBFT) $(GNL)
 	@echo "$(YELLOW)Compiling minishell 🛠️$(RESET)"
-	gcc $(CARGS) $(SRC) $(LIBFT) -lreadline -o $(NAME)
+	cc $(CARGS) $(SRC) $(GNL) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)Minishell compiled successfully 🚀"
 
 $(LIBFT):
 	@echo "$(MAGENT)Compiling libft 🪡$(RESET)"
 	make -C libft
 
+$(GNL):
+	@echo "$(MAGENT)Compiling get_next_line 🪡$(RESET)"
+	cc $(CFLAGS) -c get_next_line/get_next_line.c
+
 clean:
 	@echo "$(BLUE)Cleaning libft 🧹$(RESET)"
 	make -C libft clean
+	rm $(GNL)
 
 fclean: clean
 	@echo "$(RED)Cleaning minishell 🧹$(RESET)"

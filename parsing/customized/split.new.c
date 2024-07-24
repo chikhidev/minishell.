@@ -95,6 +95,12 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
                 return (NULL);
             }
 
+            if (db->curr_type == HEREDOC)
+            {
+                printf("here doc\n");
+                CATCH_ONFAILURE(open_heredoc(db, tmp), NULL);
+            }
+
             CATCH_ONNULL(tmp, NULL);
             if (open_file(db, 
                 whithout_quotes(db, tmp)
@@ -104,11 +110,8 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
         }
         else
         {
-            //check if the word is a redirection with a file
-            // example: ">file.txt" or >>file.txt
             if (tmp[0] == '>' || tmp[0] == '<')
             {
-
                 if (tmp[0] == '<')
                     db->curr_type = INPUTFILE;
                 else if (tmp[1] == '>')

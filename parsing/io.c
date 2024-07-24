@@ -50,13 +50,42 @@ int open_file(t_db *db, char *file, int type, t_quote *quotes)
 
 int validate_io(char *arg, int size)
 {
-    if (ft_strncmp(arg, ">", 1) == 0 && size == 1)
-        return (OUTPUTFILE);
     if (ft_strncmp(arg, ">>", 2) == 0 && size == 2)
         return (APPENDFILE);
+    if (ft_strncmp(arg, "<<", 2) == 0 && size == 2)
+        return (HEREDOC);
+    if (ft_strncmp(arg, ">", 1) == 0 && size == 1)
+        return (OUTPUTFILE);
     if (ft_strncmp(arg, "<", 1) == 0 && size == 1)
         return (INPUTFILE);
     return (INVALID);
 }
 
+int open_heredoc(t_db *db, char *delim)
+{
+    int pipe_fd[2];
+    char *line;
 
+    if (pipe(pipe_fd) == -1)
+    {
+        error(db, "pipe", NULL);
+        return (FAILURE);
+    }
+    write(2, "> ", 2);
+    while (1)
+    {
+        line = get_next_line(0);
+        if (line == NULL || 
+            (ft_strncmp(line, delim, ft_strlen(delim)) == 0
+            && ft_strlen(line) - 1 == ft_strlen(delim)))
+        {
+            close(pipe_fd[1]);
+            break;
+        }
+        write(pipe_fd[1], line, ft_strlen(line));
+        free(line);
+        write(2, "> ", 2);
+    }
+    db->input_fd = pipe_fd[0];
+    return (SUCCESS);
+}

@@ -11,7 +11,8 @@
         "libft.h": "c",
         "readline.h": "c",
         "string.h": "c",
-        "builtens.h": "c"
+        "builtens.h": "c",
+        "get_next_line.h": "c"
     },
     "workbench.iconTheme": "vs-seti"
 }
