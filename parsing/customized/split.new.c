@@ -79,25 +79,10 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
         {
             skip_open_spaces(quotes, s, &it.j);
 
-            if (!s[it.j])
-            {
-                printf("Syntax error near unexpected token `newline'\n");
-                db->error = TRUE;
-                return (NULL);
-            }
-
             tmp = extract_word(db, quotes, s, &it.j);
-
-            if (validate_io(tmp, ft_strlen(tmp)) != INVALID)
-            {
-                printf("Syntax error near unexpected token `%s'\n", tmp);
-                db->error = TRUE;
-                return (NULL);
-            }
 
             if (db->curr_type == HEREDOC)
             {
-                printf("here doc\n");
                 CATCH_ONFAILURE(open_heredoc(db, 
                     whithout_quotes(db, tmp)
                 ), NULL);
@@ -121,10 +106,7 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
                     return (NULL);
                 word_count--;
             }
-            
-            else
-
-            if (tmp[0] == '>' || tmp[0] == '<')
+            else if (tmp[0] == '>' || tmp[0] == '<')
             {
                 if (tmp[1] == '>' && tmp[0] == '>')
                     db->curr_type = APPENDFILE;

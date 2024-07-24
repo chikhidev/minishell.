@@ -216,6 +216,7 @@ typedef struct s_db
 	char				error;
 
 	/*io*/
+	int					heredoc_counter;
 	int					curr_type;
 	int					input_fd;
 	int					output_fd;

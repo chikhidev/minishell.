@@ -69,6 +69,10 @@ int parser(t_db *db, char *line)
     i = 0;
     if (ft_strlen(line) == 0) return (SUCCESS);
     skip_spaces(line, &i);
+    CATCH_ONFAILURE(
+        syntax_checker(db, line, &i),
+        FAILURE
+    )
     if (line[i] == '\0') return (SUCCESS);
     if (track_quotes(db, &quotes, line) == FAILURE) return (FAILURE);
     if (track_paranthesis(db, &paranthesis, line, quotes) == FAILURE) return (FAILURE);

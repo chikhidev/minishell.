@@ -5,7 +5,7 @@
 
 int handle_prompt(char **line)
 {
-    *line = readline(BOLD UNDERLINE"Shellu>"RESET" ");
+    *line = readline(MAGENTA BOLD"Shellu$"RESET" ");
     // handle ctrl + c later 
     if (!*line) return 0 ; // continue the loop
     if (ft_strncmp(*line, "exit", 4) == 0) return -1 ; // break the loop
@@ -67,17 +67,15 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
     int i;
 
+    (void) ac;
+    (void) av;
     db->debug = FALSE;
     db->gc = NULL;
     db->here_docs = NULL;
     db->error = FALSE;
     db->env = env;
     db->env_list = set_env_lst(db, env);
-    // printf("env_list\n");
     db->exp_list = set_exp_lst(db, env);
-    // print exp_list
-    (void) ac;
-    (void) av;
     i = 0;
     while (i < 6)
     {
@@ -88,6 +86,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
 void db_reset(t_db *db)
 {
+    db->heredoc_counter = 0;
     db->ops = NULL;
     db->root_node = NULL;
     db->error = FALSE;
@@ -140,19 +139,15 @@ int     main(int    ac, char    *av[],  char    *env[])
         printf(RESET);
         if (ret == -1) break ;
         else if (ret == 0) continue ;
-
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
         if (!tmp) return !error(&db, NULL, "malloc failed");
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         free(line);
         line = tmp;
-
-        /* parse the line ----------------------------------*/
         if (parser(&db, line) == FAILURE)
             continue ;
         if (exec(&db, db.root_node) == FAILURE)
             continue ;
-
         gc_void(&db);
     }
     free_environment(&db);

@@ -91,6 +91,7 @@ char    *get_environment_var(char   *var, char *env[]);
 int     validate_io(char *arg, int size);
 char    *whithout_quotes(t_db *db, char *line);
 int     open_heredoc(t_db *db, char *delim);
+int     syntax_checker(t_db *db, char *line, int *start);
 
 
 int     open_file(t_db *db, char *file, int type, t_quote *quotes);

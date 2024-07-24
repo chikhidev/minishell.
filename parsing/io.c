@@ -67,10 +67,7 @@ int open_heredoc(t_db *db, char *delim)
     char *line;
 
     if (pipe(pipe_fd) == -1)
-    {
-        error(db, "pipe", NULL);
-        return (FAILURE);
-    }
+        return error(db, "pipe", NULL);
     write(2, "> ", 2);
     while (1)
     {
@@ -79,6 +76,7 @@ int open_heredoc(t_db *db, char *delim)
             (ft_strncmp(line, delim, ft_strlen(delim)) == 0
             && ft_strlen(line) - 1 == ft_strlen(delim)))
         {
+            write(2, "\n", 1);
             free(line);
             close(pipe_fd[1]);
             break;
@@ -89,5 +87,73 @@ int open_heredoc(t_db *db, char *delim)
         write(2, "> ", 2);
     }
     db->input_fd = pipe_fd[0];
+    return (SUCCESS);
+}
+
+int is_op_redir(char *line, int i)
+{
+    if (ft_strncmp(&line[i], ">>", 2) == 0
+        || ft_strncmp(&line[i], "<<", 2) == 0)
+    {
+        printf("Syntax error near unexpected token `%c%c'\n", line[i], line[i + 1]);
+        return (FAILURE);
+    }
+
+    if (ft_strncmp(&line[i], ">", 1) == 0
+        || ft_strncmp(&line[i], "<", 1) == 0)
+    {
+        printf("Syntax error near unexpected token `%c'\n", line[i]);
+        return (FAILURE);
+    }
+
+    return (SUCCESS);
+}
+
+int syntax_checker(t_db *db, char *line, int *start)
+{
+    int i;
+
+    i = *start;
+    while (line[i])
+    {
+
+        if (ft_strncmp(&line[i], ">>", 2) == 0
+            || ft_strncmp(&line[i], "<<", 2) == 0
+            || ft_strncmp(&line[i], ">", 1) == 0
+            || ft_strncmp(&line[i], "<", 1) == 0)
+        {
+            i += 1 + (line[i + 1] == '>' || line[i + 1] == '<');
+            skip_spaces(line, &i);
+            if (!line[i])
+            {
+                return error(db, NULL, "Syntax error near unexpected token `newline'");
+            }
+
+            if (line[i] == ')' || line[i] == '(' || line[i] == '|' || line[i] == '&')
+            {
+                printf("Syntax error near unexpected token `%c", line[i]);
+                if (line[i + 1] == '|' || line[i + 1] == '&')
+                    printf("%c", line[i + 1]);
+                printf("'\n");
+                return error(db, NULL, NULL);
+            }
+
+
+            if (is_op_redir(line, i) == FAILURE)
+                return (FAILURE);
+        }
+
+
+        if (line[i] == '<' && line[i + 1] == '<')
+        {
+            skip_spaces(line, &i);
+
+            db->heredoc_counter++;
+            if (db->heredoc_counter > 16)
+                return error(db, "heredoc", "maximum here-document count exceeded");
+            i++;
+        }
+        i++;
+    }
     return (SUCCESS);
 }
