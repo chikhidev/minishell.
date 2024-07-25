@@ -167,9 +167,14 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         // expand each argument
         for (int i = 0; ((t_cmd_node *)*current_node)->args[i]; i++)
         {
+            track_quotes(db, &(tracker->quotes), ((t_cmd_node *)*current_node)->args[i]);
             CATCH_ONFAILURE(
                 expand(db, &((t_cmd_node *)*current_node)->args[i], tracker->quotes)
             , FAILURE);
+            ((t_cmd_node *)*current_node)->args[i] = whithout_quotes(db, ((t_cmd_node *)*current_node)->args[i]);
+            CATCH_ONNULL(
+                ((t_cmd_node *)*current_node)->args[i], error(db, NULL, "Malloc failed")
+            )
         }
     }
     gc_free(db, tracker);

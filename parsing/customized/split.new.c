@@ -125,8 +125,8 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             }
             else
             {
-                result[it.i] = whithout_quotes(db, tmp);
-                CATCH_ONNULL(result[it.i], NULL);
+                result[it.i] = tmp;
+                // CATCH_ONNULL(result[it.i], NULL);
                 it.i++;
             }
         }
