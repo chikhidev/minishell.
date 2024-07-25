@@ -16,7 +16,7 @@ int is_op2(char *line, int *i)
     // else if (line[*i] == '>')
     //     return REDIR;
     // else if (line[*i] == '<')
-        return INPUT;
+        // return INPUT;
     return INVALID;
 }
 

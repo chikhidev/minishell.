@@ -55,16 +55,16 @@ char *whithout_quotes(t_db *db, char *line)
     char *res;
     int size;
 
-    i = 0;
+    i = 1;
     size = ft_strlen(line);
 
-    if (line[size - 1] == '\'' || line[size - 1] == '\"')
-        size--;
-    if (line[0] == '\'' || line[0] == '\"')
-    {
-        i++;
-        size--;
-    }
+    if (!(
+        (line[0] == '\'' && line[size - 1] == '\'')
+        || (line[0] == '\"' && line[size - 1] == '\"')
+    ))
+        return line;
+
+    size -= 2;
     res = gc_malloc(db, sizeof(char) * (size + 1));
     if (!res)
         return NULL;

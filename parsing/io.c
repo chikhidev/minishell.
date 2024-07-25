@@ -26,6 +26,7 @@ int open_file(t_db *db, char *file, int type, t_quote *quotes)
 {
     int fd;
     
+    fd = INVALID;
     expand(db, &file, quotes);
     printf("file -> %s type => %d", file , type);
     if (type == APPENDFILE)
