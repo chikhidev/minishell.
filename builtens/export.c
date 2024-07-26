@@ -63,7 +63,7 @@ int get_key_length(char *arg)
     i = 0;
     while (arg[i])
     {
-        if (arg[i] == ' ' || arg[i] == '+' || arg[i] == '=' || arg[i] == '\0')
+        if (arg[i] == '+' || arg[i] == '=' || arg[i] == '\0')
             return i;
         i++;
     }
@@ -79,7 +79,7 @@ int get_val_length(char *arg,   int start_idx)
     i = start_idx;
     while (arg[i])
     {
-        if (arg[i] == ' ' || arg[i] == '\0')
+        if (arg[i] == '\0')
             return len;
         i++;
         len++;

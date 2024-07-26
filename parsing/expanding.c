@@ -64,7 +64,7 @@ char    *get_environment_var(char   *var, char *env[])
 
 char *get_env(t_db *db, char *name)
 {
-    char *res;
+    t_exp_list *object;
 
 	if (!name) return (NULL);
     if (db->debug) printf("name -> %s\n", name);
@@ -80,9 +80,14 @@ char *get_env(t_db *db, char *name)
     // {
     //     return (ft_strdup(db->last_cmd));
     // }
-    res = getenv(name);
-    if (!res) return (ft_strdup(""));
-	return (ft_strdup(res));
+    // res = getenv(name);
+    object = get_exp_node(db->exp_list, name);
+    CATCH_ONNULL(
+        object,
+        ft_strdup("")
+    )
+    printf("value bringed: %s\n", object->val);
+	return (ft_strdup(object->val));
 }
 
 int valid_char(char c, int  index)
