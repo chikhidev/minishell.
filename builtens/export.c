@@ -87,6 +87,50 @@ int get_val_length(char *arg,   int start_idx)
     return (len);
 }
 
+char *get_key_from_arg(char *arg,int  *k_len)
+{
+    char    *key;
+
+    *k_len = get_key_length(arg);
+    key = malloc((*k_len + 1) * sizeof(char));
+    if (!key)
+        return FALSE;
+    ft_strlcpy(key, arg, *k_len + 1);
+    return (key);
+}
+
+char    *get_val_from_arg(char  *arg,   int *v_len, int k_len)
+{
+    char    *val;
+
+    *v_len = get_val_length(arg, k_len + 1);
+    val = malloc((*v_len + 1) * sizeof(char));
+    ft_strlcpy(val, &arg[k_len + 1], *v_len + 1);
+    val = whithout_quotes(val); // frees old val
+    *v_len = ft_strlen(val);
+    return val;
+}
+
+void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
+{
+    char    *joined;
+    if (node)
+    {
+        if (append)
+        {
+            joined = ft_strjoin(node->val, val);
+            free(node->val);
+            free(val);
+            node->val = joined;
+        }
+        else
+        {
+            free(node->val);
+            node->val = val;
+        }
+    }
+}
+
 bool handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
@@ -94,24 +138,17 @@ bool handle_export_args(t_db    *db,    char    *args[])
     char    *val;
     int      k_len;
     int      v_len;
-    char    *joined;
     t_exp_list  *node;
     bool    good;
-    bool    append;
 
     good = TRUE;
     i = 1;
     while (args[i])
     {
-        printf("arg -> %s\n", args[i]);
-        k_len = get_key_length(args[i]);
-        key = malloc((k_len + 1) * sizeof(char));
-        if (!key)
-            return FALSE;
-        ft_strlcpy(key, args[i], k_len + 1);
+
         val = NULL;
+        key = get_key_from_arg(args[i], &k_len);
         node = get_exp_node(db->exp_list, key);
-        append = FALSE;
         if (!good_export_var(key) || k_len < 1)
         {
             printf("export: `%s': not a valid identifier", args[i]);
@@ -119,28 +156,9 @@ bool handle_export_args(t_db    *db,    char    *args[])
         }
         else if (args[i][k_len] == '=')
         {
-            if (k_len > 0 && args[i][k_len - 1] == '+')
-                append = true;
-            v_len = get_val_length(args[i], k_len + 1);
-            val = malloc((v_len + 1) * sizeof(char));
-            ft_strlcpy(val, &args[i][k_len + 1], v_len + 1);
-            val = whithout_quotes(val); // frees old val
+            val = get_val_from_arg(args[i], &v_len, k_len);
             if (node)
-            {
-                if (append)
-                {
-                    joined = ft_strjoin(node->val, val);
-                    free(node->val);
-                    free(val);
-                    node->val = joined;
-                }
-                else
-                {
-                    free(node->val);
-                    node->val = val;
-                    good = true;
-                }
-            }
+                affect_node_val(node, FALSE, val);
             else
             {
                 node = new_exp_node(db, key, val);
