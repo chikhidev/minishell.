@@ -79,3 +79,17 @@ void	push_exp_back(t_exp_list  **list,  t_exp_list	*new)
 		}
 	}
 }
+
+t_exp_list  *get_exp_node(t_exp_list    *list,  char    *key)
+{
+    t_exp_list  *curr;
+
+    curr = list;
+    while (curr)
+    {
+        if (ft_strcmp(curr->key, key) == 0)
+            return curr;
+        curr = curr->next;
+    }
+    return curr;
+}

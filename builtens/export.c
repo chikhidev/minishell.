@@ -12,10 +12,13 @@ bool show_export(t_db *db)
     curr = vars;
     while (curr)
     {
-        printf("declare -x %s", curr->key);
-        if (curr->val)
-            printf("=\"%s\"", curr->val);
-        printf("\n");
+        if (ft_strcmp(curr->key, "_") != 0)
+        {
+            printf("declare -x %s", curr->key);
+            if (curr->val)
+                printf("=\"%s\"", curr->val);
+            printf("\n");
+        }
         curr = curr->next;
     }
     return true;
@@ -91,54 +94,72 @@ bool handle_export_args(t_db    *db,    char    *args[])
     char    *val;
     int      k_len;
     int      v_len;
-    t_exp_list  *new;
+    char    *joined;
+    t_exp_list  *node;
     bool    good;
+    bool    append;
 
     good = TRUE;
     i = 1;
     while (args[i])
     {
+        printf("arg -> %s\n", args[i]);
         k_len = get_key_length(args[i]);
         key = malloc((k_len + 1) * sizeof(char));
         if (!key)
             return FALSE;
         ft_strlcpy(key, args[i], k_len + 1);
+        val = NULL;
+        node = get_exp_node(db->exp_list, key);
+        append = FALSE;
         if (!good_export_var(key) || k_len < 1)
         {
             printf("export: `%s': not a valid identifier", args[i]);
             return FALSE;
         }
-        else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
-        {
-            val = NULL;
-        }
         else if (args[i][k_len] == '=')
         {
+            if (k_len > 0 && args[i][k_len - 1] == '+')
+                append = true;
             v_len = get_val_length(args[i], k_len + 1);
             val = malloc((v_len + 1) * sizeof(char));
-            CATCH_ONNULL(
-                val, NULL
-            )
             ft_strlcpy(val, &args[i][k_len + 1], v_len + 1);
-            val = whithout_quotes( val); // frees old val
-            printf("val %s\n", val);
-            CATCH_ONNULL(
-                val, NULL
-            )
-            printf("val no quotes -> [%s]\n", val);
+            val = whithout_quotes(val); // frees old val
+            if (node)
+            {
+                if (append)
+                {
+                    joined = ft_strjoin(node->val, val);
+                    free(node->val);
+                    free(val);
+                    node->val = joined;
+                }
+                else
+                {
+                    free(node->val);
+                    node->val = val;
+                    good = true;
+                }
+            }
+            else
+            {
+                node = new_exp_node(db, key, val);
+                push_exp_back(&db->exp_list, node);
+            }
+        }
+        else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
+        {
+            if (!node)
+            {
+                node = new_exp_node(db, key, val);
+                push_exp_back(&db->exp_list, node);
+            }
         }
         else
         {
             printf("export: `%s': not a valid identifier", args[i]);
             return FALSE;
         }
-        new = new_exp_node(db, key, val);
-        if (!new)
-        {
-            gc_void(db);
-            exit(1);
-        }
-        push_exp_back(&db->exp_list, new);
         i++;
     }
     return good;

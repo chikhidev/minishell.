@@ -183,6 +183,7 @@ char	*ft_strjoin_char(char *s1, char c)
 	int		len1;
 	int		len2;
 	char	*res;
+
 	if (!s1)
     {
         if (c == '\0')
@@ -199,7 +200,9 @@ char	*ft_strjoin_char(char *s1, char c)
         return (res);
     }
 	len1 = ft_strlen(s1);
-	len2 = 1;
+    len2 = 1;
+	if (c == '\0')
+        len2 = 0;
 	res = malloc(sizeof(char) * (len1 + len2 + 1));
 	if (!res)
 		return (NULL);

@@ -250,4 +250,5 @@ t_exp_list				*new_exp_node(t_db *db, char   *key, char    *val);
 void					add_exp_front(t_exp_list  **list,   t_exp_list	*new);
 void					push_exp_sort(t_exp_list  **list,  t_exp_list	*new);
 void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
+t_exp_list              *get_exp_node(t_exp_list    *list,  char    *key);
 #endif
