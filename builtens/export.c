@@ -88,7 +88,6 @@ bool handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
     char    *key;
-    char    *tmp;
     char    *val;
     int      k_len;
     int      v_len;
@@ -120,13 +119,13 @@ bool handle_export_args(t_db    *db,    char    *args[])
             CATCH_ONNULL(
                 val, NULL
             )
-            tmp = whithout_quotes(db, val);
-            CATCH_ONNULL(
-                tmp, NULL
-            )
-            free(val);
-            val = tmp;
             ft_strlcpy(val, &args[i][k_len + 1], v_len + 1);
+            val = whithout_quotes( val); // frees old val
+            printf("val %s\n", val);
+            CATCH_ONNULL(
+                val, NULL
+            )
+            printf("val no quotes -> [%s]\n", val);
         }
         else
         {

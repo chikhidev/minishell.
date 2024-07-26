@@ -84,14 +84,14 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             if (db->curr_type == HEREDOC)
             {
                 CATCH_ONFAILURE(open_heredoc(db, 
-                    whithout_quotes(db, tmp)
+                    whithout_quotes_free_db(db, tmp)
                 ), NULL);
             }
             else
             {
                 CATCH_ONNULL(tmp, NULL);
                 if (open_file(db, 
-                    whithout_quotes(db, tmp)
+                    whithout_quotes_free_db(db, tmp)
                 , db->curr_type, quotes) == FAILURE)
                     return (NULL);
             }
@@ -102,7 +102,7 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
             if (tmp[0] == '<' && tmp[1] == '<')
             {
                 db->curr_type = HEREDOC;
-                if (open_heredoc(db, whithout_quotes(db, tmp + 2)) == FAILURE)
+                if (open_heredoc(db, whithout_quotes_free_db(db, tmp + 2)) == FAILURE)
                     return (NULL);
                 word_count--;
             }
@@ -116,7 +116,7 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
                     db->curr_type = OUTPUTFILE;
 
                 if (open_file(db, 
-                    whithout_quotes(db, tmp + 1 + 
+                    whithout_quotes_free_db(db, tmp + 1 + 
                     (db->curr_type == APPENDFILE || db->curr_type == HEREDOC)
                     )
                 , db->curr_type, quotes) == FAILURE)

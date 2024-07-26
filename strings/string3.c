@@ -49,7 +49,7 @@ char *sub(t_db *db, char *line, int i, int j)
 /**
  * @details This function checks if the string is all whitespaces, pay attention that it frees the original string
  */
-char *whithout_quotes(t_db *db, char *line)
+char *whithout_quotes_free_db(t_db *db, char *line)
 {
     int i;
     char *res;
@@ -59,8 +59,8 @@ char *whithout_quotes(t_db *db, char *line)
     size = ft_strlen(line);
 
     if (!(
-        (line[0] == '\'' && line[size - 1] == '\'')
-        || (line[0] == '\"' && line[size - 1] == '\"')
+        (line[0] == SGL_QUOTE && line[size - 1] == SGL_QUOTE)
+        || (line[0] == DBL_QUOTE && line[size - 1] == DBL_QUOTE)
     ))
         return line;
 
@@ -70,6 +70,93 @@ char *whithout_quotes(t_db *db, char *line)
         return NULL;
     ft_strlcpy(res, line + i, size + 1);
     gc_free(db, line);
+    return res;
+}
+
+short inside_quot_v2(short single_opened, short  double_opened)
+{
+    if (single_opened && !double_opened)
+        return true;
+    else if (double_opened && !single_opened)
+        return true;
+    else 
+        return false;
+}
+
+int get_str_size_unquoted( char  *str)
+{
+    int i;
+    bool   single_opened;
+    bool   double_opened;
+    int len;
+    single_opened = false;
+    double_opened = false;
+    len = 0;
+    i = 0;
+    while (str[i])
+    {
+        // toggling
+        if (str[i] == SGL_QUOTE && !double_opened)
+        {
+            if (single_opened)
+                single_opened = false;
+            else
+                single_opened = true;
+            i++;
+            continue;
+        }
+        if (str[i] == DBL_QUOTE && !single_opened)
+        {
+            if (double_opened)
+                double_opened = false;
+            else
+                double_opened = true;
+            i++;
+            continue;
+        }
+        len++;
+        i++;
+    }
+    return len;
+}
+
+char *whithout_quotes(char *str)
+{
+    int i;
+    char *res;
+    // int size;
+    bool   single_opened;
+    bool   double_opened;
+
+    single_opened = false;
+    double_opened = false;
+    // size = get_str_size_unquoted(str);
+    res = NULL;
+    i = 0;
+    while (str[i])
+    {
+        // toggling
+        if (str[i] == SGL_QUOTE && !double_opened)
+        {
+            if (single_opened)
+                single_opened = false;
+            else
+                single_opened = true;
+            i++;
+            continue;
+        }
+        if (str[i] == DBL_QUOTE && !single_opened)
+        {
+            if (double_opened)
+                double_opened = false;
+            else
+                double_opened = true;
+            i++;
+            continue;
+        }
+        res = ft_strjoin_char(res, str[i]);
+        i++;
+    }
     return res;
 }
 
@@ -89,4 +176,36 @@ bool contains(char  *str, char    *sub)
         i++;
     }
     return false;
+}
+
+char	*ft_strjoin_char(char *s1, char c)
+{
+	int		len1;
+	int		len2;
+	char	*res;
+	if (!s1)
+    {
+        if (c == '\0')
+        {
+            res = malloc(1 * sizeof(char));
+            res[0] = '\0';
+        }    
+        else
+        {
+            res = malloc(2 * sizeof(char));
+            res[0] = c;
+            res[1] = '\0';
+        }
+        return (res);
+    }
+	len1 = ft_strlen(s1);
+	len2 = 1;
+	res = malloc(sizeof(char) * (len1 + len2 + 1));
+	if (!res)
+		return (NULL);
+	ft_memcpy(res, s1, len1);
+	ft_memcpy(res + len1, &c, len2);
+    free(s1);
+	res[len1 + len2] = '\0';
+	return (res);
 }

@@ -89,7 +89,6 @@ char    *get_environment_var(char   *var, char *env[]);
 // int     io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker);
 // int     io_system(t_db *db, char **args, t_redirection **res);
 int     validate_io(char *arg, int size);
-char    *whithout_quotes(t_db *db, char *line);
 int     open_heredoc(t_db *db, char *delim);
 int     syntax_checker(t_db *db, char *line, int *start);
 
