@@ -12,8 +12,10 @@ bool show_export(t_db *db)
     curr = vars;
     while (curr)
     {
-        if (curr->visible)
-            printf("declare -x %s=\"%s\"\n", curr->key, curr->val);
+        printf("declare -x %s", curr->key);
+        if (curr->val)
+            printf("=\"%s\"", curr->val);
+        printf("\n");
         curr = curr->next;
     }
     return true;
@@ -59,10 +61,7 @@ int get_key_length(char *arg)
     while (arg[i])
     {
         if (arg[i] == ' ' || arg[i] == '+' || arg[i] == '=' || arg[i] == '\0')
-        {
-            printf("found a -> %d[%c]\n", arg[i], arg[i]);
             return i;
-        }
         i++;
     }
     return (i);
@@ -88,16 +87,16 @@ int get_val_length(char *arg,   int start_idx)
 bool handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
-    (void)db;
     char    *key;
-    // char    *val;
+    char    *tmp;
+    char    *val;
     int      k_len;
     int      v_len;
-    i = 1;
-    // t_exp_list  *new;
+    t_exp_list  *new;
     bool    good;
 
     good = TRUE;
+    i = 1;
     while (args[i])
     {
         k_len = get_key_length(args[i]);
@@ -105,31 +104,42 @@ bool handle_export_args(t_db    *db,    char    *args[])
         if (!key)
             return FALSE;
         ft_strlcpy(key, args[i], k_len + 1);
-        printf("key[%d] -> %s\n", k_len, key );
-        if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
+        if (!good_export_var(key) || k_len < 1)
         {
-            // node with key only
-            // new = new_exp_node(db, key, NULL);
-            printf("adding node without val %s\n", key);
-
+            printf("export: `%s': not a valid identifier", args[i]);
+            return FALSE;
+        }
+        else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
+        {
+            val = NULL;
         }
         else if (args[i][k_len] == '=')
         {
             v_len = get_val_length(args[i], k_len + 1);
-            printf("val length -> %d\n", v_len);
+            val = malloc((v_len + 1) * sizeof(char));
+            CATCH_ONNULL(
+                val, NULL
+            )
+            tmp = whithout_quotes(db, val);
+            CATCH_ONNULL(
+                tmp, NULL
+            )
+            free(val);
+            val = tmp;
+            ft_strlcpy(val, &args[i][k_len + 1], v_len + 1);
         }
         else
         {
-            printf("error\n");
+            printf("export: `%s': not a valid identifier", args[i]);
             return FALSE;
         }
-        // new = new_exp_node(db, key, val);
-        // if (!new)
-        // {
-        //     gc_void(db);
-        //     exit(1);
-        // }
-        // push_exp_back(&db->exp_list, new);
+        new = new_exp_node(db, key, val);
+        if (!new)
+        {
+            gc_void(db);
+            exit(1);
+        }
+        push_exp_back(&db->exp_list, new);
         i++;
     }
     return good;
