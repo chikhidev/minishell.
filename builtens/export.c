@@ -56,14 +56,19 @@ bool    good_export_var(char    *var)
     // no special caractwrs
 }
 
-int get_key_length(char *arg)
+int get_key_length(char *arg, bool  *append)
 {
     int i;
 
     i = 0;
     while (arg[i])
     {
-        if (arg[i] == '+' || arg[i] == '=' || arg[i] == '\0')
+        if (arg[i] == '+')
+        {
+            *append = TRUE;
+            return (i);
+        }
+        if (arg[i] == '=' || arg[i] == '\0')
             return i;
         i++;
     }
@@ -87,11 +92,11 @@ int get_val_length(char *arg,   int start_idx)
     return (len);
 }
 
-char *get_key_from_arg(char *arg,int  *k_len)
+char *get_key_from_arg(char *arg,int  *k_len, bool  *append)
 {
     char    *key;
 
-    *k_len = get_key_length(arg);
+    *k_len = get_key_length(arg, append);
     key = malloc((*k_len + 1) * sizeof(char));
     if (!key)
         return FALSE;
@@ -99,21 +104,25 @@ char *get_key_from_arg(char *arg,int  *k_len)
     return (key);
 }
 
-char    *get_val_from_arg(char  *arg,   int *v_len, int k_len)
+char    *get_val_from_arg(char  *arg,   int *v_len, int k_len, bool append)
 {
     char    *val;
+    int     offset;
 
-    *v_len = get_val_length(arg, k_len + 1);
+    offset = 0;
+    if (append)
+        offset = 1;
+    *v_len = get_val_length(arg, k_len + 1 + offset);
     val = malloc((*v_len + 1) * sizeof(char));
-    ft_strlcpy(val, &arg[k_len + 1], *v_len + 1);
+    ft_strlcpy(val, &arg[k_len + offset + 1], *v_len + 1);
     val = whithout_quotes(val); // frees old val
-    *v_len = ft_strlen(val);
     return val;
 }
 
 void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
 {
     char    *joined;
+
     if (node)
     {
         if (append)
@@ -140,25 +149,27 @@ bool handle_export_args(t_db    *db,    char    *args[])
     int      v_len;
     t_exp_list  *node;
     bool    good;
+    bool    append;
 
     good = TRUE;
+    append = FALSE;
     i = 1;
     while (args[i])
     {
 
         val = NULL;
-        key = get_key_from_arg(args[i], &k_len);
+        key = get_key_from_arg(args[i], &k_len, &append);
         node = get_exp_node(db->exp_list, key);
         if (!good_export_var(key) || k_len < 1)
         {
             printf("export: `%s': not a valid identifier", args[i]);
             return FALSE;
         }
-        else if (args[i][k_len] == '=')
+        else if (args[i][k_len] == '=' || args[i][k_len] == '+')
         {
-            val = get_val_from_arg(args[i], &v_len, k_len);
+            val = get_val_from_arg(args[i], &v_len, k_len, append);
             if (node)
-                affect_node_val(node, FALSE, val);
+                affect_node_val(node, append, val);
             else
             {
                 node = new_exp_node(db, key, val);
