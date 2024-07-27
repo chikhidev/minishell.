@@ -17,7 +17,7 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/cmd.c \
 				parsing/io.c
 
-PARSING_CUSTOMED = parsing/customized/split.new.c
+PARSING_CUSTOMED = parsing/customized/tokenizer.c
 
 
 PARSING_SRC += $(PARSING_CUSTOMED)

@@ -81,7 +81,7 @@ int     create_cmd_node(t_db *db, void **current_node, void *parent);
 int     count_op(char *line, int op);
 
 /*customized*/
-char	**ft_new_split(t_db *db, t_quote *quotes, char *line);
+char	**tokenize(t_db *db, t_quote *quotes, char *s);
 
 /*expanding*/
 char    *get_environment_var(char   *var, char *env[]);

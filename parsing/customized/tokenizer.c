@@ -7,77 +7,94 @@ void  skip_open_spaces(t_quote *quotes, char *line, int *i)
         (*i)++;
 }
 
-static int	count_words(t_quote *quotes, char *str)
+char **append_word(t_db *db, char **result, char *save)
 {
-    BOOL        in_word;
-    t_iterators it;
+    int size;
 
-    it.i = 0;
-    it.j = 0;
-    in_word = 0;
-    while (str[it.j])
+    if (ft_strlen(save) == 0)
+        return NULL;
+
+    if (!*result)
     {
-        if (!is_whitespace(str[it.j]) && in_word == FALSE)
+        result = (char **)gc_malloc(db, 2 * sizeof(char *));
+        if (!result)
         {
-            in_word = TRUE;
-            it.i++;
+            db->error = TRUE;
+            printf("Malloc failed\n");
+            return (NULL);
         }
-        else if (!is_inside_quotes(quotes, it.j) && is_whitespace(str[it.j]))
-        {
-            in_word = FALSE;
-        }
-        it.j++;
+        result[0] = save;
+        result[1] = NULL;
+        return (result);
     }
-    return (it.i);
+
+    size = 0;
+    while (result[size])
+        size++;
+
+    result = (char **)gc_realloc(db, result, (size + 2) * sizeof(char *));
+    if (!result)
+    {
+        db->error = TRUE;
+        return (NULL);
+    }
+    result[size] = save;
+    result[size + 1] = NULL;
+
+    return (result);
 }
 
-static char	*extract_word(t_db *db, t_quote *quotes, char *s, int *start)
+char	**tokenize(t_db *db, t_quote *quotes, char *s)
 {
-    int			len;
-    char		*word;
-    int         i;
-
-    i = *start;
-    len = 0;
-    while (s[i])
-    {
-        if (is_whitespace(s[i]) && !is_inside_quotes(quotes, i))
-            break;
-        len++;
-        i++;
-    }
-    word = gc_malloc(db, (len + 1) * sizeof(char));
-    CATCH_ONNULL(word, NULL);
-    ft_strlcpy(word, s + *start, len + 1);
-    word[len] = '\0';
-    *start = i;
-    return (word);
-}
-
-char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
-{
-	int		word_count;
 	char	**result;
     t_iterators it;
-    char   *tmp;
+    char    *save;
+    int len;
 
+    save = NULL;
 	CATCH_ONNULL(s, NULL);
-	word_count = count_words(quotes, s);
-	result = (char **)gc_malloc(db, (word_count + 1) * sizeof(char *));
+	result = (char **)gc_malloc(db, sizeof(char *));
     CATCH_ONNULL(result, NULL);
-    ft_bzero(result, (word_count + 1) * sizeof(char *));
-	ft_bzero(&it, sizeof(t_iterators));
-    while (it.i < word_count)
+    result[0] = NULL;
+    skip_open_spaces(quotes, s, &it.i);
+    len = ft_strlen(s);
+    while (it.i < len)
     {
-        skip_open_spaces(quotes, s, &it.j);
-        tmp = extract_word(db, quotes, s, &it.j);
-        CATCH_ONNULL(tmp, NULL);
-
-        result[it.i] = tmp;
+        if (!(is_whitespace(s[it.i])
+            && !is_inside_quotes(quotes, it.i)))
+        {
+            save = concat(db, save, s[it.i]);
+            CATCH_ONNULL(save, NULL);
+        }
+        else if (save)
+        {
+            result = append_word(db, result, save);
+            if (!result)
+            {
+                printf("failed to append word 1\n");
+                db->error = TRUE;
+                return (NULL);
+            }
+            save = NULL;
+        }
         it.i++;
     }
+
+    if (save)
+    {
+        result = append_word(db, result, save);
+        if (!result)
+        {
+            printf("failed to append word 2\n");
+            db->error = TRUE;
+            return (NULL);
+        }
+    }
+
 	return (result);
 }
+
+// ls<<DL<infile>outfile
 
 
 // char	**ft_new_split(t_db *db, t_quote *quotes, char *s)

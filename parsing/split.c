@@ -126,7 +126,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         , FAILURE);
         
 
-        ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
+        ((t_cmd_node *)*current_node)->args = tokenize(db, tracker->quotes, line);
         if (db->error)
             return error(db, NULL, NULL);
         CATCH_MALLOC((CURR_CMD)->args);
