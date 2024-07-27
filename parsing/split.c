@@ -8,16 +8,8 @@ int is_op2(char *line, int *i)
         return AND;
     else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
         return (OR);
-    // else if (line[*i] == '>' && line[*i + 1] && line[(*i) + 1] == '>')
-    //     return (APPEND);
-    // else if (line[*i] == '<' && line[*i + 1] && line[(*i) + 1] == '<')
-    //     return (HEREDOC);
     else if (line[*i] == '|')
         return PIPE;
-    // else if (line[*i] == '>')
-    //     return REDIR;
-    // else if (line[*i] == '<')
-        // return INPUT;
     return INVALID;
 }
 
@@ -27,16 +19,8 @@ int is_op3(char *line, int *i)
         return AND;
     else if (line[*i] == '|' && *i > 0 && line[(*i) - 1] == '|' && (*i)--)
         return (OR);
-    // else if (line[*i] == '>' && *i > 0 && line[(*i) - 1] == '>' && (*i)--)
-    //     return (APPEND);
-    // else if (line[*i] == '<' && *i > 0 && line[(*i) - 1] == '<' && (*i)--)
-    //     return (HEREDOC);
     else if (line[*i] == '|')
         return PIPE;
-    // else if (line[*i] == '>')
-    //     return REDIR;
-    // else if (line[*i] == '<')
-    //     return INPUT;
     return INVALID;
 }
 
@@ -46,16 +30,8 @@ void skip_op(int *i, char *line)
         ((*i) += 2);
     else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
         ((*i) += 2);
-    // else if (line[*i] == '>' && line[*i + 1] && line[(*i) + 1] == '>')
-    //     ((*i) += 2);
-    // else if (line[*i] == '<' && line[*i + 1] && line[(*i) + 1] == '<')
-    //     ((*i) += 2);
     else if (line[*i] == '|')
         (*i)++;
-    // else if (line[*i] == '>')
-    //     (*i)++;
-    // else if (line[*i] == '<')
-    //     (*i)++;
     return;
 }
 
@@ -122,11 +98,9 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     }
     else if (op != NOT_FOUND)
     {
-
         CATCH_ONFAILURE(create_op_node(db, op, current_node, parent), FAILURE);
         // create the childs of the operator node <<<<<<<<
         CURR_OP->n_childs = count_between_op(db, line, op, tracker);
-
         splitted = split_line(db, line, CURR_OP, tracker);
         CATCH_MALLOC(splitted);
 
@@ -143,7 +117,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             )
             i++;
         }
-
     }
     else
     {
@@ -179,7 +152,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             )
         }
 
-
         // check for built-in(s)
         if (ft_strcmp(CURR_CMD->args[0], "echo") == 0)
             echo(CURR_CMD->args, 3);
@@ -191,7 +163,12 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             env(db);
         else if (ft_strcmp(CURR_CMD->args[0], "cd") == 0)
             cd(db, CURR_CMD->args);
-
+        else if (ft_strcmp(CURR_CMD->args[0], "exit") == 0)
+        {
+            error(db, NULL, NULL);
+            free_environment(db);
+            exit(0);
+        }
     }
     gc_free(db, tracker);
     return SUCCESS; 

@@ -86,6 +86,5 @@ int parser(t_db *db, char *line)
     // // DEBUG --------------------------------------------------------
     t_op_node *node = db->root_node;
     print_nodes(db, node, 0);
-    
     return (SUCCESS);
 }

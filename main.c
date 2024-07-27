@@ -10,8 +10,7 @@ int handle_prompt(t_db *db, char **line)
     *line = readline(GREEN"$> "RESET);
     printf(RESET);
     // handle ctrl + c later 
-    if (!*line) return FAILURE ; // continue the loop
-    if (ft_strncmp(*line, "exit", 4) == 0) return FAILURE ; // break the loop
+    if (!*line) return 0 ; // continue the loop
     if (*line[0] != '\0') add_history(*line);
     return SUCCESS ; // nothing
 }
@@ -141,10 +140,14 @@ int     main(int    ac, char    *av[],  char    *env[])
     {
         db_reset(&db);
         ret = handle_prompt(&db, &line);
-        if (ret == FAILURE) break ;
-        else if (ret == 0) continue ;
+        if (ret == 0) continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
-        if (!tmp) return !error(&db, NULL, "malloc failed");
+        if (!tmp) 
+        {
+            free(line);
+            free_environment(&db);
+            return !error(&db, NULL, "malloc failed");
+        }
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         free(line);
         line = tmp;
