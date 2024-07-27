@@ -73,63 +73,87 @@ char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
         tmp = extract_word(db, quotes, s, &it.j);
         CATCH_ONNULL(tmp, NULL);
 
-        db->curr_type = validate_io(tmp, ft_strlen(tmp));
-        if (db->curr_type != INVALID
-            && it.i > 0)
-        {
-            skip_open_spaces(quotes, s, &it.j);
-
-            tmp = extract_word(db, quotes, s, &it.j);
-
-            if (db->curr_type == HEREDOC)
-            {
-                CATCH_ONFAILURE(open_heredoc(db, 
-                    whithout_quotes_free_db(db, tmp)
-                ), NULL);
-            }
-            else
-            {
-                CATCH_ONNULL(tmp, NULL);
-                if (open_file(db, 
-                    whithout_quotes_free_db(db, tmp)
-                , db->curr_type, quotes) == FAILURE)
-                    return (NULL);
-            }
-            word_count -= 2;
-        }
-        else
-        {
-            if (tmp[0] == '<' && tmp[1] == '<')
-            {
-                db->curr_type = HEREDOC;
-                if (open_heredoc(db, whithout_quotes_free_db(db, tmp + 2)) == FAILURE)
-                    return (NULL);
-                word_count--;
-            }
-            else if (tmp[0] == '>' || tmp[0] == '<')
-            {
-                if (tmp[1] == '>' && tmp[0] == '>')
-                    db->curr_type = APPENDFILE;
-                else if (tmp[0] == '<')
-                    db->curr_type = INPUTFILE;
-                else
-                    db->curr_type = OUTPUTFILE;
-
-                if (open_file(db, 
-                    whithout_quotes_free_db(db, tmp + 1 + 
-                    (db->curr_type == APPENDFILE || db->curr_type == HEREDOC)
-                    )
-                , db->curr_type, quotes) == FAILURE)
-                    return (NULL);
-                word_count--;
-            }
-            else
-            {
-                result[it.i] = tmp;
-                // CATCH_ONNULL(result[it.i], NULL);
-                it.i++;
-            }
-        }
+        result[it.i] = tmp;
+        it.i++;
     }
 	return (result);
 }
+
+
+// char	**ft_new_split(t_db *db, t_quote *quotes, char *s)
+// {
+// 	int		word_count;
+// 	char	**result;
+//     t_iterators it;
+//     char   *tmp;
+
+// 	CATCH_ONNULL(s, NULL);
+// 	word_count = count_words(quotes, s);
+// 	result = (char **)gc_malloc(db, (word_count + 1) * sizeof(char *));
+//     CATCH_ONNULL(result, NULL);
+//     ft_bzero(result, (word_count + 1) * sizeof(char *));
+// 	ft_bzero(&it, sizeof(t_iterators));
+//     while (it.i < word_count)
+//     {
+//         skip_open_spaces(quotes, s, &it.j);
+//         tmp = extract_word(db, quotes, s, &it.j);
+//         CATCH_ONNULL(tmp, NULL);
+
+//         db->curr_type = validate_io(tmp, ft_strlen(tmp));
+//         if (db->curr_type != INVALID
+//             && it.i > 0)
+//         {
+//             skip_open_spaces(quotes, s, &it.j);
+
+//             tmp = extract_word(db, quotes, s, &it.j);
+//             whithout_quotes(tmp);
+
+//             if (db->curr_type == HEREDOC)
+//             {
+//                 CATCH_ONFAILURE(open_heredoc(db, 
+//                     whithout_quotes(tmp)
+//                 ), NULL);
+//             }
+//             else
+//             {
+//                 CATCH_ONNULL(tmp, NULL);
+//                 if (open_file(db, 
+//                     whithout_quotes(tmp)
+//                 , db->curr_type, quotes) == FAILURE)
+//                     return (NULL);
+//             }
+//             word_count -= 2;
+//         }
+//         else
+//         {
+//             if (tmp[0] == '<' && tmp[1] == '<')
+//             {
+//                 printf("heredoc\n");
+//                 word_count--;
+//             }
+//             else if (tmp[0] == '>' || tmp[0] == '<')
+//             {
+//                 if (tmp[1] == '>' && tmp[0] == '>')
+//                     db->curr_type = APPENDFILE;
+//                 else if (tmp[0] == '<')
+//                     db->curr_type = INPUTFILE;
+//                 else
+//                     db->curr_type = OUTPUTFILE;
+
+//                 if (open_file(db, 
+//                     whithout_quotes_free_db(db, tmp + 1 + 
+//                     (db->curr_type == APPENDFILE)
+//                     )
+//                 , db->curr_type, quotes) == FAILURE)
+//                     return (NULL);
+//                 word_count--;
+//             }
+//             else
+//             {
+//                 result[it.i] = tmp;
+//                 it.i++;
+//             }
+//         }
+//     }
+// 	return (result);
+// }

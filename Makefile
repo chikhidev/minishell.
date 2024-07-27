@@ -37,7 +37,8 @@ BUILTENS =	builtens/echo.c \
 			builtens/pwd.c \
 			builtens/cd.c \
 	    	env_list.c	\
-	    	exp_list.c
+	    	exp_list.c	\
+			builtens/index.c
 
 SRC =	main.c		\
 		memo.c		\

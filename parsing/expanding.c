@@ -76,11 +76,6 @@ char *get_env(t_db *db, char *name)
     {
         return (ft_strdup(name + 1));
     }
-    // if (ft_strncmp(name, "_", ft_strlen(name)) == 0)
-    // {
-    //     return (ft_strdup(db->last_cmd));
-    // }
-    // res = getenv(name);
     object = get_exp_node(db->exp_list, name);
     CATCH_ONNULL(
         object,
@@ -131,6 +126,7 @@ int expand(t_db *db, char **line, t_quote *quotes)
             if (!(*line)[++i]) return (SUCCESS);
             if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
                 return (FAILURE);
+            printf("expanding: %s\n", env_var_name);
             if (update_env_in_line(db, line, get_env(db, env_var_name), &i) == FAILURE)
                 return (FAILURE);
             if (!(*line)[i]) return (SUCCESS);

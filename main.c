@@ -3,14 +3,16 @@
 #include "exec.h"
 #include "builtens.h"
 
-int handle_prompt(char **line)
+int handle_prompt(t_db *db, char **line)
 {
-    *line = readline(MAGENTA BOLD"Shellu$"RESET" ");
+    (void) db;
+    printf(MAGENTA);
+    *line = readline(GREEN"$> "RESET);
+    printf(RESET);
     // handle ctrl + c later 
     if (!*line) return 0 ; // continue the loop
-    if (ft_strncmp(*line, "exit", 4) == 0) return -1 ; // break the loop
     if (*line[0] != '\0') add_history(*line);
-    return 1 ; // nothing
+    return SUCCESS ; // nothing
 }
 
 t_env_list    *set_env_lst(t_db   *db, char   *env[])
@@ -24,8 +26,11 @@ t_env_list    *set_env_lst(t_db   *db, char   *env[])
     while (env[i])
     {
         new_node = new_env_node(db, env[i]);
-        // if (!new_node)
-        //     (gc_void(db), exit(1));
+        if (!new_node)
+        {
+            // free the stuff bruh of regular malloc
+            error(db, NULL, "Malloc failed");
+        }
         push_env_back(&env_list, new_node);
         i++;
     }
@@ -134,13 +139,15 @@ int     main(int    ac, char    *av[],  char    *env[])
     while (TRUE)
     {
         db_reset(&db);
-        printf(MAGENTA);
-        ret = handle_prompt(&line);
-        printf(RESET);
-        if (ret == -1) break ;
-        else if (ret == 0) continue ;
+        ret = handle_prompt(&db, &line);
+        if (ret == 0) continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
-        if (!tmp) return !error(&db, NULL, "malloc failed");
+        if (!tmp) 
+        {
+            free(line);
+            free_environment(&db);
+            return !error(&db, NULL, "malloc failed");
+        }
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         free(line);
         line = tmp;

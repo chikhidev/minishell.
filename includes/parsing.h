@@ -99,4 +99,7 @@ bool    contains(char  *str, char    *sub);
 int     find_c(char *str, char  c);
 int     length_til(char *str, char stop);
 
+BOOL    is_newline_at_the_end(char *line);
+int     handle_heredocs(t_db *db, char *line);
+
 #endif

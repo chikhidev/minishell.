@@ -59,6 +59,7 @@ int validate_io(char *arg, int size)
         return (OUTPUTFILE);
     if (ft_strncmp(arg, "<", 1) == 0 && size == 1)
         return (INPUTFILE);
+
     return (INVALID);
 }
 
@@ -66,16 +67,26 @@ int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
     char *line;
+    char *tmp;
 
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
-    write(2, "> ", 2);
+    write(2, "(heredoc)> ", 12);
     while (1)
     {
         line = get_next_line(0);
-        if (line == NULL || 
-            (ft_strncmp(line, delim, ft_strlen(delim)) == 0
-            && ft_strlen(line) - 1 == ft_strlen(delim)))
+        if (is_newline_at_the_end(line))
+        {
+            tmp = ft_substr(line, 0, ft_strlen(line) - 1);
+            free(line);
+            line = tmp;
+        }
+        if (line == NULL
+            || (
+                ft_strcmp(delim, line) == 0
+                && ft_strlen(delim) == ft_strlen(line)
+            )
+        )
         {
             write(2, "\n", 1);
             free(line);
@@ -85,7 +96,7 @@ int open_heredoc(t_db *db, char *delim)
         expand(db, &line, NULL);
         write(pipe_fd[1], line, ft_strlen(line));
         free(line);
-        write(2, "> ", 2);
+        write(2, "(heredoc)> ", 12);
     }
     db->input_fd = pipe_fd[0];
     return (SUCCESS);
@@ -151,6 +162,38 @@ int syntax_checker(t_db *db, char *line, int *start)
             if (db->heredoc_counter > 16)
                 return error(db, "heredoc", "maximum here-document count exceeded");
             i++;
+        }
+        i++;
+    }
+    return (SUCCESS);
+}
+
+
+int handle_heredocs(t_db *db, char *line)
+{
+    int i;
+    int start;
+    int ret;
+    char *tmp;
+
+    i = 0;
+    start = 0;
+    while (line[i])
+    {
+        if (line[i] == '<' && line[i + 1] == '<')
+        {
+            start = i;
+            i += 2;
+            while (line[i] && line[i] != '\n'
+                && validate_io(&line[i], 1) == INVALID)
+                i++;
+            tmp = ft_substr(line, start + 2, i - start - 2);
+            ret = open_heredoc(db, tmp);
+            free(tmp);
+            if (ret == FAILURE)
+                return (FAILURE);
+            if (i >= (int)ft_strlen(line))
+                break;
         }
         i++;
     }

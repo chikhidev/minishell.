@@ -12,17 +12,10 @@ void print_nodes(t_db   *db, void *node, int level)
     }
     if (CMD->type == CMD_NODE)
     {
+        if (is_built_in(node))
+            return ;
+        
         printf("CMD_NODE: ");
-        if (ft_strcmp(CMD->args[0], "echo") == 0)
-            echo(CMD->args, 3);
-        else if (ft_strcmp(CMD->args[0], "export") == 0)
-            export(db, CMD->args);
-        else if (ft_strcmp(CMD->args[0], "pwd") == 0)
-            pwd(db);
-        else if (ft_strcmp(CMD->args[0], "env") == 0)
-            env(db);
-        else if (ft_strcmp(CMD->args[0], "cd") == 0)
-            cd(db, CMD->args);
         for (int i = 0; (CMD->args[i]); i++)
         {
             printf("[%s] ", CMD->args[i]);
@@ -32,7 +25,6 @@ void print_nodes(t_db   *db, void *node, int level)
         {
             printf("    ");
         }
-        
         if (CMD->input_fd != STDIN_FILENO)
             printf("Input: %d ", CMD->input_fd);
         if (CMD->output_fd != STDOUT_FILENO)
@@ -73,17 +65,26 @@ int parser(t_db *db, char *line)
         syntax_checker(db, line, &i),
         FAILURE
     )
-    if (line[i] == '\0') return (SUCCESS);
-    if (track_quotes(db, &quotes, line) == FAILURE) return (FAILURE);
-    if (track_paranthesis(db, &paranthesis, line, quotes) == FAILURE) return (FAILURE);
-    if (track_operators(db, line) == FAILURE) return (FAILURE);
-    // if (expand(db, &line, quotes) == FAILURE) return (FAILURE); let it be while splitting the commands
-    if (smart_split(db, line, &db->root_node, NULL) == FAILURE) return (FAILURE);
-
+    if (line[i] == '\0')
+        return (SUCCESS);
+    CATCH_ONFAILURE(
+        track_quotes(db, &quotes, line),
+        FAILURE
+    )
+    CATCH_ONFAILURE(
+        track_paranthesis(db, &paranthesis, line, quotes),
+        FAILURE
+    )
+    CATCH_ONFAILURE(
+        track_operators(db, line),
+        FAILURE
+    )
+    CATCH_ONFAILURE(
+        smart_split(db, line, &db->root_node, NULL),
+        FAILURE
+    )
     // // DEBUG --------------------------------------------------------
-
     t_op_node *node = db->root_node;
     print_nodes(db, node, 0);
-    
     return (SUCCESS);
 }
