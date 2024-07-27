@@ -1,5 +1,6 @@
 #include "main.h"
 #include "parsing.h"
+#include "builtens.h"
 
 int is_op2(char *line, int *i)
 {
@@ -151,31 +152,46 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<
         , FAILURE);
         
+
         ((t_cmd_node *)*current_node)->args = ft_new_split(db, tracker->quotes, line);
         if (db->error)
             return error(db, NULL, NULL);
-        CATCH_MALLOC(((t_cmd_node *)*current_node)->args);
+        CATCH_MALLOC((CURR_CMD)->args);
 
         // set the redirections of the command node if any
         if (db->input_fd != INVALID)
-            ((t_cmd_node *)*current_node)->input_fd = db->input_fd;
+            (CURR_CMD)->input_fd = db->input_fd;
         if (db->output_fd != INVALID)
-            ((t_cmd_node *)*current_node)->output_fd = db->output_fd;
+            (CURR_CMD)->output_fd = db->output_fd;
         db->input_fd = INVALID;
         db->output_fd = INVALID;
 
         // expand each argument
-        for (int i = 0; ((t_cmd_node *)*current_node)->args[i]; i++)
+        for (int i = 0; (CURR_CMD)->args[i]; i++)
         {
-            track_quotes(db, &(tracker->quotes), ((t_cmd_node *)*current_node)->args[i]);
+            track_quotes(db, &(tracker->quotes), CURR_CMD->args[i]);
             CATCH_ONFAILURE(
-                expand(db, &((t_cmd_node *)*current_node)->args[i], tracker->quotes)
+                expand(db, &(CURR_CMD)->args[i], tracker->quotes)
             , FAILURE);
-            ((t_cmd_node *)*current_node)->args[i] = whithout_quotes_free_db(db, ((t_cmd_node *)*current_node)->args[i]);
+            CURR_CMD->args[i] = whithout_quotes_free_db(db, CURR_CMD->args[i]);
             CATCH_ONNULL(
-                ((t_cmd_node *)*current_node)->args[i], error(db, NULL, "Malloc failed")
+                CURR_CMD->args[i], error(db, NULL, "Malloc failed")
             )
         }
+
+
+        // check for built-in(s)
+        if (ft_strcmp(CURR_CMD->args[0], "echo") == 0)
+            echo(CURR_CMD->args, 3);
+        else if (ft_strcmp(CURR_CMD->args[0], "export") == 0)
+            export(db, CURR_CMD->args);
+        else if (ft_strcmp(CURR_CMD->args[0], "pwd") == 0)
+            pwd(db);
+        else if (ft_strcmp(CURR_CMD->args[0], "env") == 0)
+            env(db);
+        else if (ft_strcmp(CURR_CMD->args[0], "cd") == 0)
+            cd(db, CURR_CMD->args);
+
     }
     gc_free(db, tracker);
     return SUCCESS; 
