@@ -26,9 +26,12 @@ int open_file(t_db *db, char *file, int type, t_quote *quotes)
 {
     int fd;
     
+
+    if (!file || ft_strlen(file) == 0)
+        return (SUCCESS);
     fd = INVALID;
     expand(db, &file, quotes);
-    printf("file -> %s type => %d", file , type);
+    // printf("file -> %s type => %d", file , type);
     if (type == APPENDFILE)
         fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)
