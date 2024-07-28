@@ -30,6 +30,7 @@ STRING = 	strings/string.c \
 			strings/string2.c \
 			strings/string3.c \
 			strings/string4.c \
+			strings/string5.c \
 
 BUILTENS =	builtens/echo.c \
 			builtens/export.c \

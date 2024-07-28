@@ -95,10 +95,7 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                 }
                 else
                 {
-                    CATCH_ONFAILURE(
-                        open_file(db, save, db->curr_type, quotes),
-                        NULL
-                    )
+                    open_file(db, save, db->curr_type, quotes);
                 }
                 free(save);
                 save = NULL;

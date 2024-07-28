@@ -242,6 +242,8 @@ char					*remove_paranthesis(t_db *db, char *line,
 
 int						is_op3(char *line, int *i);
 
+BOOL					contains_spaces_btwn(char *s);
+
 t_env_list				*new_env_node(t_db *db, char   *data);
 void					add_env_front(t_env_list  **list,   t_env_list	*new);
 void					push_env_back(t_env_list  **list, t_env_list	*new);

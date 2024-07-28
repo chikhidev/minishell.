@@ -38,7 +38,6 @@ int     count_line_args(char *line, t_quote *quotes, int len);
 int     append_split(char **splitted, char *string);
 char    *sub(t_db *db, char *line, int i, int j);
 int     all_whitespaces(char *line, int start, int end);
-BOOL    is_the_first(char *line, t_tracker *tracker, int op);
 
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int     track_quotes(t_db *db, t_quote **head, char *line);
@@ -100,7 +99,6 @@ int     find_c(char *str, char  c);
 int     length_til(char *str, char stop);
 
 BOOL    is_newline_at_the_end(char *line);
-int     handle_heredocs(t_db *db, char *line);
 
 char    *gc_copy(t_db *db, char *s);
 
