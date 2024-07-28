@@ -125,41 +125,24 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<
         , FAILURE);
         
-        // ! THIS IS NULL tracker->quotes   -> SEGV
         ((t_cmd_node *)*current_node)->args = tokenize(db, tracker->quotes, line);
         if (db->error)
             return error(db, NULL, NULL);
         CATCH_MALLOC((CURR_CMD)->args);
 
         // set the redirections of the command node if any
-        if (db->input_fd != INVALID)
-            (CURR_CMD)->input_fd = db->input_fd;
-        if (db->output_fd != INVALID)
-            (CURR_CMD)->output_fd = db->output_fd;
-        db->input_fd = INVALID;
-        db->output_fd = INVALID;
+        (CURR_CMD)->input_fd = db->input_fd;
+        (CURR_CMD)->output_fd = db->output_fd;
+        db->input_fd = STDIN_FILENO;
+        db->output_fd = STDOUT_FILENO;
 
         // check for built-in(s)
-        if (ft_strcmp(CURR_CMD->args[0], "echo") == 0)
-            echo(CURR_CMD->args, 3);
-        else if (ft_strcmp(CURR_CMD->args[0], "export") == 0)
-            export(db, CURR_CMD->args);
-        else if (ft_strcmp(CURR_CMD->args[0], "pwd") == 0)
-            pwd(db);
-        else if (ft_strcmp(CURR_CMD->args[0], "env") == 0)
-            env(db);
-        else if (ft_strcmp(CURR_CMD->args[0], "cd") == 0)
-            cd(db, CURR_CMD->args);
-        else if (ft_strcmp(CURR_CMD->args[0], "exit") == 0)
+        if (!is_built_in(CURR_CMD))
         {
-            error(db, NULL, NULL);
-            free_environment(db);
-            exit(0);
-        }
-
-        for (int i = 0; (CURR_CMD)->args[i]; i++)
-        {
-            (CURR_CMD)->args[i] = whithout_quotes((CURR_CMD)->args[i]);
+            for (int i = 0; (CURR_CMD)->args[i]; i++)
+            {
+                (CURR_CMD)->args[i] = whithout_quotes((CURR_CMD)->args[i]);
+            }
         }
 
     }

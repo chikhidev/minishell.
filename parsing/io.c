@@ -53,26 +53,28 @@ int check_ambigious(t_db *db, char *file)
 int open_file(t_db *db, char *file, int type, t_quote *quotes)
 {
     int fd;
-    
+    char *tmp;
 
     if (!file || ft_strlen(file) == 0)
         return (SUCCESS);
     fd = INVALID;
     if (check_ambigious(db, file) == TRUE)
-        return (FAILURE);
+    {
+        create_redirection(db, type, INVALID);
+        return FAILURE;
+    }
     expand(db, &file, quotes);
+    tmp = whithout_quotes(file);
     if (type == APPENDFILE)
-        fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        fd = open(tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)
-        fd = open(file, O_RDONLY);
+        fd = open(tmp, O_RDONLY);
     else if (type == OUTPUTFILE)
-        fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        fd = open(tmp, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
     if (fd == INVALID)
     {
-        perror(file);
-        db->error = TRUE;
-        return FAILURE;
+        perror(tmp);
     }
 
     if (create_redirection(db, type, fd) == FAILURE)

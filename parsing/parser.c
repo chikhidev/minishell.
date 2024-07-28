@@ -6,42 +6,46 @@ void print_nodes(t_db   *db, void *node, int level)
 {
     if (!node) return ;
 
-    if (is_built_in(node))
-            return ;
-    for (int i = 0; i < level; i++)
-    {
-        printf("    ");
-    }
+    for (int i = 0; i < level; i++) 
+        printf("  ");
+    if (level > 0) printf("↳");
     if (CMD->type == CMD_NODE)
     {
-        
-        printf("CMD_NODE: ");
-        for (int i = 0; (CMD->args[i]); i++)
+        if (ft_strcmp(CMD->args[0], "echo") == 0)
+            echo(CMD->args, 3);
+        else if (ft_strcmp(CMD->args[0], "export") == 0)
+            export(db, CMD->args);
+        else if (ft_strcmp(CMD->args[0], "pwd") == 0)
+            pwd(db);
+        else if (ft_strcmp(CMD->args[0], "env") == 0)
+            env(db);
+        else if (ft_strcmp(CMD->args[0], "cd") == 0)
+            cd(db, CMD->args);
+        else if (ft_strcmp(CMD->args[0], "exit") == 0)
         {
-            printf("[%s] ", CMD->args[i]);
+            error(db, NULL, NULL);
+            free_environment(db);
+            exit(0);
         }
-        printf("\n");
-        for (int i = 0; i < level; i++)
+        else
         {
-            printf("    ");
+            printf("CMD->> ");
+            for (int i = 0; CMD->args[i]; i++) {
+                printf("[%s] ", CMD->args[i]);
+            }
+            if (CMD->input_fd != STDIN_FILENO) printf("IN: %d ", CMD->input_fd);
+            if (CMD->output_fd != STDOUT_FILENO) printf("OUT: %d", CMD->output_fd);
+            printf("\n");
         }
-        if (CMD->input_fd != STDIN_FILENO)
-            printf("Input: %d ", CMD->input_fd);
-        if (CMD->output_fd != STDOUT_FILENO)
-            printf("Output: %d ", CMD->output_fd);
-
-        printf("\n"RESET);
         return ;
     }
     else if (OP->type == OP_NODE)
     {
-        printf("OP_NODE: ");
-        if (OP->op_presentation == OR)
-            printf("OR\n");
-        else if (OP->op_presentation == AND)
-            printf("AND\n");
-        else if (OP->op_presentation == PIPE)
-            printf("PIPE\n");
+        printf(MAGENTA);
+        if (OP->op_presentation == AND) printf("OP->> AND\n");
+        else if (OP->op_presentation == OR) printf("OP->> OR\n");
+        else if (OP->op_presentation == PIPE) printf("OP->> PIPE\n");
+        printf(RESET);
     }
     
     for (int i = 0; i < OP->n_childs; i++)

@@ -97,8 +97,8 @@ void db_reset(t_db *db)
     db->error = FALSE;
     db->last_signal = 0;
     db->curr_type = INVALID;
-    db->input_fd = INVALID;
-    db->output_fd = INVALID;
+    db->input_fd = STDIN_FILENO;
+    db->output_fd = STDOUT_FILENO;
 }
 
 void free_environment(t_db  *db)

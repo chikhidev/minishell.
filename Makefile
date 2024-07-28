@@ -64,7 +64,7 @@ build: all clean
 $(NAME): $(SRC) $(LIBFT) $(GNL)
 	@echo "$(YELLOW)Compiling minishell 🛠️$(RESET)"
 	cc $(CARGS) $(SRC) $(GNL) $(LIBFT) -lreadline -o $(NAME)
-	@echo "$(GREEN)Minishell compiled successfully 🚀"
+	@echo "$(GREEN)Minishell compiled successfully 🚀$(RESET)"
 
 $(LIBFT):
 	@echo "$(MAGENT)Compiling libft 🪡$(RESET)"
