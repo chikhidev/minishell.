@@ -86,17 +86,13 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                 printf("i -> %d j -> %d\n", it.i, it.j);
 
                 save = ft_substr(s, it.i, it.j - it.i);
-                printf("save -> %s\n", save);
                 CATCH_ONNULL(save, NULL);
 
                 if (db->curr_type == HEREDOC)
                 {
-                    CATCH_ONFAILURE(
-                        open_heredoc(db, save),
-                        NULL
-                    )
-                    free(save);
-                    save = NULL;
+                    CATCH_ONFAILURE(open_heredoc(db, 
+                        save
+                    ),NULL)
                 }
                 else
                 {
@@ -104,10 +100,10 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                         open_file(db, save, db->curr_type, quotes),
                         NULL
                     )
-                    free(save);
-                    save = NULL;
-                    it.i = it.j - 1;
                 }
+                free(save);
+                save = NULL;
+                it.i = it.j - 1;
             }
             if (save)
             {

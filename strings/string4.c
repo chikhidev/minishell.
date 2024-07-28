@@ -51,3 +51,23 @@ BOOL is_newline_at_the_end(char *line)
     }
     return (i > 0 && line[i - 1] == '\n');
 }
+
+char *gc_copy(t_db *db, char *s)
+{
+    char *new;
+    int i;
+
+    if (!s)
+        return (NULL);
+    new = gc_malloc(db, ft_strlen(s) + 1);
+    if (!new)
+        return (NULL);
+    i = 0;
+    while (s[i])
+    {
+        new[i] = s[i];
+        i++;
+    }
+    new[i] = '\0';
+    return (new);
+}

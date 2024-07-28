@@ -6,14 +6,14 @@ void print_nodes(t_db   *db, void *node, int level)
 {
     if (!node) return ;
 
+    if (is_built_in(node))
+            return ;
     for (int i = 0; i < level; i++)
     {
         printf("    ");
     }
     if (CMD->type == CMD_NODE)
     {
-        if (is_built_in(node))
-            return ;
         
         printf("CMD_NODE: ");
         for (int i = 0; (CMD->args[i]); i++)

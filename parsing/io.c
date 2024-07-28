@@ -72,36 +72,52 @@ int open_heredoc(t_db *db, char *delim)
     char *line;
     char *tmp;
 
+    tmp = whithout_quotes(delim);
+    if (!tmp)
+        return error(db, NULL, "malloc failed");
+    delim = tmp;
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
-    write(2, "(heredoc)> ", 12);
+    write(2, "hdc> ", 5);
     while (1)
     {
         line = get_next_line(0);
-        if (is_newline_at_the_end(line))
-        {
-            tmp = ft_substr(line, 0, ft_strlen(line) - 1);
-            free(line);
-            line = tmp;
-        }
-        if (line == NULL
-            || (
-                ft_strcmp(delim, line) == 0
-                && ft_strlen(delim) == ft_strlen(line)
-            )
-        )
+        if (!line)
         {
             write(2, "\n", 1);
-            free(line);
             close(pipe_fd[1]);
             break;
         }
-        expand(db, &line, NULL);
-        write(pipe_fd[1], line, ft_strlen(line));
+        tmp = gc_copy(db, line);
         free(line);
-        write(2, "(heredoc)> ", 12);
+        if (!tmp)
+            return error(db, NULL, "malloc failed");
+        line = tmp;
+        if (is_newline_at_the_end(line))
+        {
+            tmp = ft_substr(line, 0, ft_strlen(line) - 1);
+            if (!tmp)
+                return error(db, NULL, "malloc failed");
+            line = gc_copy(db, tmp);
+            free(tmp);
+        }
+        if (ft_strcmp(delim, line) == 0
+            && ft_strlen(delim) == ft_strlen(line))
+        {
+            write(2, "\n", 1);
+            close(pipe_fd[1]);
+            break;
+        }
+        CATCH_ONFAILURE(
+            expand(db, &line, NULL),
+            FAILURE
+        )
+        printf("line -> %s\n", line);
+        write(pipe_fd[1], line, ft_strlen(line));
+        write(2, "hdc> ", 5);
     }
     db->input_fd = pipe_fd[0];
+    free(delim);
     return (SUCCESS);
 }
 
@@ -137,6 +153,14 @@ int syntax_checker(t_db *db, char *line, int *start)
             || ft_strncmp(&line[i], ">", 1) == 0
             || ft_strncmp(&line[i], "<", 1) == 0)
         {
+            if (line[i] == '<' && line[i + 1] == '<')
+            {
+                db->heredoc_counter++;
+                if (db->heredoc_counter > 16)
+                    return error(db, "heredoc", "maximum here-document count exceeded");
+                i++;
+            }
+            
             i += 1 + (line[i + 1] == '>' || line[i + 1] == '<');
             skip_spaces(line, &i);
             if (!line[i])
@@ -156,16 +180,6 @@ int syntax_checker(t_db *db, char *line, int *start)
                 return (FAILURE);
         }
 
-
-        if (line[i] == '<' && line[i + 1] == '<')
-        {
-            skip_spaces(line, &i);
-
-            db->heredoc_counter++;
-            if (db->heredoc_counter > 16)
-                return error(db, "heredoc", "maximum here-document count exceeded");
-            i++;
-        }
         i++;
     }
     return (SUCCESS);
