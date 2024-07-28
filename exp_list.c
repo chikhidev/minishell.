@@ -14,9 +14,6 @@ t_exp_list *new_exp_node(t_db *db, char   *key, char    *val)
         return (NULL);
     new->val = val;
     new->key = key;
-    new->visible = true;
-    if (val == NULL)
-        new->visible = false;
     new->next = NULL;
     return (new);
 }

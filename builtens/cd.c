@@ -29,7 +29,7 @@ void cd(t_db    *db, char    *args[])
     {
         to = opendir(args[1]);
         if (to == NULL)
-            return perror("cd");
+            return perror(args[1]);
         chdir(args[1]);
     }
 }

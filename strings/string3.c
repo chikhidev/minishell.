@@ -183,8 +183,6 @@ char	*ft_strjoin_char(char *s1, char c)
 	int		len2;
 	char	*res;
 
-    printf("s1 => %s\n", s1);
-    printf("c  => %c\n", c);
 	if (!s1)
     {
         if (c == '\0')

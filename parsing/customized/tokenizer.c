@@ -53,6 +53,7 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
 	result = (char **)gc_malloc(db, sizeof(char *));
     CATCH_ONNULL(result, NULL);
     result[0] = NULL;
+    ft_bzero(&it, sizeof(t_iterators));
     skip_open_spaces(quotes, s, &it.i);
     len = ft_strlen(s);
     while (it.i < len)
@@ -82,8 +83,6 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                     && !(validate_io(&s[it.j], 1) != INVALID
                     || validate_io(&s[it.j], 2) != INVALID))
                     it.j++;
-
-                printf("i -> %d j -> %d\n", it.i, it.j);
 
                 save = ft_substr(s, it.i, it.j - it.i);
                 CATCH_ONNULL(save, NULL);
