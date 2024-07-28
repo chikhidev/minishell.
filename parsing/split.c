@@ -139,19 +139,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         db->input_fd = INVALID;
         db->output_fd = INVALID;
 
-        // expand each argument
-        for (int i = 0; (CURR_CMD)->args[i]; i++)
-        {
-            track_quotes(db, &(tracker->quotes), CURR_CMD->args[i]);
-            CATCH_ONFAILURE(
-                expand(db, &(CURR_CMD)->args[i], tracker->quotes)
-            , FAILURE);
-            CURR_CMD->args[i] = whithout_quotes_free_db(db, CURR_CMD->args[i]);
-            CATCH_ONNULL(
-                CURR_CMD->args[i], error(db, NULL, "Malloc failed")
-            )
-        }
-
         // check for built-in(s)
         if (ft_strcmp(CURR_CMD->args[0], "echo") == 0)
             echo(CURR_CMD->args, 3);
@@ -169,6 +156,12 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             free_environment(db);
             exit(0);
         }
+
+        for (int i = 0; (CURR_CMD)->args[i]; i++)
+        {
+            (CURR_CMD)->args[i] = whithout_quotes((CURR_CMD)->args[i]);
+        }
+
     }
     gc_free(db, tracker);
     return SUCCESS; 

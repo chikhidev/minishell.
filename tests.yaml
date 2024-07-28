@@ -215,13 +215,6 @@ here: wc takes input from main.c and outputs to file
 
 
 
-
-
-
-
-
-
-
 Shellu> pwd
 CMD_NODE: /home/abdoo/prj/Minishell
 [pwd] 
@@ -253,3 +246,12 @@ AddressSanitizer:DEADLYSIGNAL
 AddressSanitizer can not provide additional info.
 SUMMARY: AddressSanitizer: SEGV parsing/customized/tokenizer.c:6 in skip_open_spaces
 ==206098==ABORTING
+
+
+
+# the input gotta be applied to all the commands within the scope
+abchikhi@c4r8p6:~$ (head -1 && wc -l && wc -l) < save 
+line1
+2
+0
+

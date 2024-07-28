@@ -106,6 +106,11 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
             }
             if (save)
             {
+                track_quotes(db, &quotes, save);
+                CATCH_ONFAILURE(
+                    expand(db, &save, quotes)
+                , FAILURE);
+
                 result = append_word(db, result, save);
                 if (!result)
                 {
@@ -121,6 +126,11 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
 
     if (save)
     {
+        track_quotes(db, &quotes, save);
+        CATCH_ONFAILURE(
+            expand(db, &save, quotes)
+        , FAILURE);
+
         result = append_word(db, result, save);
         if (!result)
         {
