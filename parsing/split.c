@@ -125,7 +125,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
             create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<
         , FAILURE);
         
-
+        // ! THIS IS NULL tracker->quotes   -> SEGV
         ((t_cmd_node *)*current_node)->args = tokenize(db, tracker->quotes, line);
         if (db->error)
             return error(db, NULL, NULL);
