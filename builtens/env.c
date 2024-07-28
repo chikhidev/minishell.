@@ -11,7 +11,7 @@ void    env(t_db *db)
     curr = vars;
     while (curr)
     {
-        printf("%s\n", curr->data);
+        printf("%s=%s\n", curr->key, curr->val);
         curr = curr->next;
     }
 }

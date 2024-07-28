@@ -147,7 +147,8 @@ bool handle_export_args(t_db    *db,    char    *args[])
     char    *val;
     int      k_len;
     int      v_len;
-    t_exp_list  *node;
+    t_exp_list  *exp_node;
+    // t_env_list  *env_node;
     bool    good;
     bool    append;
 
@@ -159,7 +160,8 @@ bool handle_export_args(t_db    *db,    char    *args[])
 
         val = NULL;
         key = get_key_from_arg(args[i], &k_len, &append);
-        node = get_exp_node(db->exp_list, key);
+        exp_node = get_exp_node(db->exp_list, key); 
+        // env_node = get_env_node(db->env_list)
         if (!good_export_var(key) || k_len < 1)
         {
             printf("export: `%s': not a valid identifier", args[i]);
@@ -168,20 +170,20 @@ bool handle_export_args(t_db    *db,    char    *args[])
         else if (args[i][k_len] == '=' || args[i][k_len] == '+')
         {
             val = get_val_from_arg(args[i], &v_len, k_len, append);
-            if (node)
-                affect_node_val(node, append, val);
+            if (exp_node)
+                affect_node_val(exp_node, append, val);
             else
             {
-                node = new_exp_node(db, key, val);
-                push_exp_back(&db->exp_list, node);
+                exp_node = new_exp_node(db, key, val);
+                push_exp_back(&db->exp_list, exp_node);
             }
         }
         else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
         {
-            if (!node)
+            if (!exp_node)
             {
-                node = new_exp_node(db, key, val);
-                push_exp_back(&db->exp_list, node);
+                exp_node = new_exp_node(db, key, val);
+                push_exp_back(&db->exp_list, exp_node);
             }
         }
         else

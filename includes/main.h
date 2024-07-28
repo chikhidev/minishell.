@@ -103,7 +103,8 @@ typedef struct s_here_doc /*here doc saver*/
 
 typedef struct s_env_list
 {
-	char					*data;
+	char					*key;
+	char					*val;
 	bool					has_val;
 	struct s_env_list		*next;
 }   t_env_list;
@@ -251,5 +252,6 @@ void					add_exp_front(t_exp_list  **list,   t_exp_list	*new);
 void					push_exp_sort(t_exp_list  **list,  t_exp_list	*new);
 void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
 t_exp_list              *get_exp_node(t_exp_list    *list,  char    *key);
-void					free_environment(t_db  *db);			
+void					free_environment(t_db  *db);
+t_env_list              *get_env_node(t_env_list    *list,  char    *key);
 #endif
