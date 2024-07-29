@@ -5,21 +5,16 @@ char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
 {
     char *new;
     int i;
-    int j;
 
-    new = gc_malloc(db, ft_strlen(line) - 1);
     i = 0;
-    j = 0;
+    new = NULL;
     while (line[i])
     {
-        if (!(i == local_paranths->open_ || i == local_paranths->close_))
-        {
-            new[j] = line[i];
-            j++;
-        }
+        if (i > local_paranths->open_ && i < local_paranths->close_)
+            new = concat(db, new, line[i]);
         i++;
     }
-    new[j] = '\0';
+
     return new;
 }
 
