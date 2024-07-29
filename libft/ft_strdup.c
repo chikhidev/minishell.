@@ -12,6 +12,7 @@
 
 #include "libft.h"
 #include <stdlib.h>
+#include "../includes/main.h"
 
 char	*ft_strdup(t_db	*db,	const char *s1)
 {

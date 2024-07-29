@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "main.h"
 
 char	*search(const char *s, int c)
 {
@@ -81,10 +80,10 @@ int	store_line(t_db *db, char **saved, t_store *store, int fd)
 			return (free_and_fail(db, store, saved));
 		store->buff[store->bytes] = '\0';
 		store->temp = ft_strjoin(db, *saved, store->buff);
-		free(store->buff);
+		gc_free(db, store->buff);
 		if (*saved != NULL)
 		{
-			free(*saved);
+			gc_free(db, *saved);
 			*saved = NULL;
 		}
 		*saved = store->temp;

@@ -1,5 +1,6 @@
 #include "main.h"
 #include "parsing.h"
+# include "../get_next_line/get_next_line.h"
 
 int create_redirection(t_db *db, int type, int fd)
 {

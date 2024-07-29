@@ -250,7 +250,7 @@ SUMMARY: AddressSanitizer: SEGV parsing/customized/tokenizer.c:6 in skip_open_sp
 
 
 # the input gotta be applied to all the commands within the scope
-abchikhi@c4r8p6:~$ (head -1 && wc -l && wc -l) < save 
+abchikhi@c4r8p6:~$  
 line1
 2
 0

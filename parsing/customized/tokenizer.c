@@ -97,7 +97,7 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                 {
                     open_file(db, save, db->curr_type, quotes);
                 }
-                free(save);
+                gc_free(db, save);
                 save = NULL;
                 it.i = it.j - 1;
             }

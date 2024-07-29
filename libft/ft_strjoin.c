@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../includes/main.h"
+
 
 char	*ft_strjoin(t_db	*db,char const *s1, char const *s2)
 {

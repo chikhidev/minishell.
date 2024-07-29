@@ -11,6 +11,8 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../includes/main.h"
+
 
 char	*ft_substr(t_db	*db,	char const *s, unsigned int start, size_t len)
 {
