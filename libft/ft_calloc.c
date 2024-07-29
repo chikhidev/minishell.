@@ -25,20 +25,3 @@ void	*ft_calloc(size_t count, size_t size)
 	ft_bzero(ptr, nbytes);
 	return (ptr);
 }
-
-/*
-#include <stdlib.h>
-int main()
-{
-	printf("started\n");
-	void *result = ft_calloc(483648, 0);
-	printf("ft_calloc result: %p\n", result);
-
-	printf("theirs -> ");
-	result = calloc(483648, 0);
-	printf("calloc result: %p\n", result);
-
-	printf("done\n");
-	return (0);
-}
-*/

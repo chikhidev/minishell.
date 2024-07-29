@@ -261,4 +261,6 @@ void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
 t_exp_list              *get_exp_node(t_exp_list    *list,  char    *key);
 void					free_environment(t_db  *db);
 t_env_list              *get_env_node(t_env_list    *list,  char    *key);
+void					del_env_node(t_env_list    **list,  char    *key);
+void					del_exp_node(t_exp_list    **list,  char    *key);
 #endif

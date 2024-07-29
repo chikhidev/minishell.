@@ -21,9 +21,12 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
     int i = 0;
     char *key;
     char *val;
+
+    key = NULL;
+    val = NULL;
     BOOL good = FALSE;
-    
-    while (env[i]) {
+    while (env && env[i])
+    {
         good = fill_key_val(db, env[i], &key, &val);
         if (!good)
             return NULL;
@@ -47,8 +50,10 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     char            *val;
     BOOL            good;
     exp_list = NULL;
+    key = NULL;
+    val = NULL;
     i = 0;
-    while (env[i])
+    while (env && env[i])
     {
         good = fill_key_val(db, env[i], &key, &val);
         if (!good)
@@ -98,33 +103,6 @@ void db_reset(t_db *db)
     db->output_fd = STDOUT_FILENO;
 }
 
-void free_environment(t_db  *db)
-{
-    t_env_list  *next_env;
-    t_env_list  *curr_env;
-    t_exp_list  *next_exp;
-    t_exp_list  *curr_exp;
-
-    curr_env = db->env_list;
-    while (curr_env)
-    {
-        next_env = curr_env->next;
-        free(curr_env);
-        curr_env = next_env;
-    }
-    curr_exp = db->exp_list;
-    printf("exp_list\n");
-    while (curr_exp)
-    {
-        next_exp = curr_exp->next;
-        free(curr_exp->key);
-        free(curr_exp->val);
-        free(curr_exp);
-        curr_exp = next_exp;
-    }
-}
-
-
 int     main(int    ac, char    *av[],  char    *env[])
 {
     t_db    db;
@@ -143,7 +121,7 @@ int     main(int    ac, char    *av[],  char    *env[])
         if (!tmp) 
         {
             free(line);
-            free_environment(&db);
+            ec_void(&db);
             return !error(&db, NULL, "malloc failed");
         }
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);

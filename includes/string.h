@@ -26,3 +26,4 @@ char	*ft_strjoin_char_ec(t_db    *db,    char *s1, char c);
 char *whithout_quotes(t_db *db, char *line);
 char *whithout_quotes_ec(t_db  *db,  char *str);
 char	*ft_strdup_ec(t_db  *db,    const char *s1);
+char	*ft_strjoin_ec(t_db	*db,char const *s1, char const *s2);

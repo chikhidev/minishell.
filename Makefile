@@ -37,6 +37,7 @@ BUILTENS =	builtens/echo.c \
 			builtens/env.c \
 			builtens/pwd.c \
 			builtens/cd.c \
+			builtens/unset.c \
 	    	env_list.c	\
 	    	exp_list.c	\
 			builtens/index.c

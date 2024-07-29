@@ -34,7 +34,7 @@ void	push_env_back(t_env_list  **list,  t_env_list	*new)
 		else
 		{
 			last = *list;
-			while (last->next)
+			while (last && last->next)
 				last = last->next;
 			last->next = new;
 		}
@@ -52,4 +52,32 @@ t_env_list  *get_env_node(t_env_list    *list,  char    *key)
         curr = curr->next;
     }
     return curr;
+}
+
+void  del_env_node(t_env_list    **list,  char    *key)
+{
+    t_env_list  *curr;
+    t_env_list  *prev;
+
+    prev = *list;
+	if (prev)
+	{
+		if (ft_strcmp(prev->key, key) == 0)
+		{
+			*list = (*list)->next;
+			return ;
+		}
+    	curr = prev->next;
+    	while (curr)
+		{
+			if (ft_strcmp(curr->key, key) == 0)
+			{
+				prev->next = curr->next;
+				return ;
+			}
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+    return;
 }

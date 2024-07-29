@@ -21,10 +21,12 @@ void print_nodes(t_db   *db, void *node, int level)
             env(db);
         else if (ft_strcmp(CMD->args[0], "cd") == 0)
             cd(db, CMD->args);
+        else if (ft_strcmp(CMD->args[0], "unset") == 0)
+            unset(db, CMD->args);
         else if (ft_strcmp(CMD->args[0], "exit") == 0)
         {
             error(db, NULL, NULL);
-            free_environment(db);
+            ec_void(db);
             exit(0);
         }
         else

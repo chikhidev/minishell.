@@ -66,3 +66,27 @@ char	*ft_strdup_ec(t_db  *db,    const char *s1)
 	ft_memcpy((void *)clone, s1, len + 1);
 	return ((char *)clone);
 }
+
+
+char	*ft_strjoin_ec(t_db	*db,char const *s1, char const *s2)
+{
+	int		len1;
+	int		len2;
+	char	*res;
+
+	if (!s1 && !s2)
+		return (NULL);
+	else if (!s1 && s2)
+		return (ft_strdup_ec(db, s2));
+	else if (s1 && !s2)
+		return (ft_strdup_ec(db, s1));
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	res = ec_malloc(db, sizeof(char) * (len1 + len2 + 1));
+	if (!res)
+		return (NULL);
+	ft_memcpy(res, s1, len1);
+	ft_memcpy(res + len1, s2, len2);
+	res[len1 + len2] = '\0';
+	return (res);
+}

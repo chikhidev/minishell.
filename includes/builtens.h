@@ -8,6 +8,7 @@ bool export(t_db    *db, char   *args[]);
 void    env(t_db *db);
 void pwd(t_db   *db);
 void    cd(t_db *db, char   *args[]);
+void unset(t_db *db,    char    *args[]);
 BOOL is_built_in(void *node);
 int get_key_length(char *arg, bool  *append);
 int get_val_length(char *arg,   int start_idx);

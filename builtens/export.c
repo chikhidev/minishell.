@@ -40,7 +40,6 @@ bool    has_special_char(char   *str)
 
 bool    good_export_var(char    *var)
 {
-    // dont mind the $ cause we already expanded here
     if (var && (ft_isdigit(var[0])))
         return (false);
     else if (!ft_isalpha(var[0]) && var[0] != '_')
@@ -48,12 +47,8 @@ bool    good_export_var(char    *var)
     else if (has_special_char(var))
         return (false);
     else
-    {
-        printf("-> %s\n", var);
         return true;
-    }
     return true;
-    // no special caractwrs
 }
 
 int get_key_length(char *arg, BOOL  *append)
@@ -115,7 +110,6 @@ char    *get_val_from_arg(t_db  *db,    char  *arg,   int *v_len, int k_len, BOO
     *v_len = get_val_length(arg, k_len + 1 + offset);
     val = ec_malloc(db, (*v_len + 1) * sizeof(char));
     ft_strlcpy(val, &arg[k_len + offset + 1], *v_len + 1);
-    val = whithout_quotes_ec(db, val); // frees old val
     return val;
 }
 
@@ -127,14 +121,11 @@ void    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char  
     {
         if (append)
         {
-            joined = ft_strjoin(db, node->val, val);
-            free(node->val);
-            free(val);
+            joined = ft_strjoin_ec(db, node->val, val);
             node->val = joined;
         }
         else
         {
-            free(node->val);
             node->val = val;
         }
     }
@@ -148,16 +139,11 @@ void    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char  
     {
         if (append)
         {
-            joined = ft_strjoin(db, node->val, val);
-            free(node->val);
-            free(val);
+            joined = ft_strjoin_ec(db, node->val, val);
             node->val = joined;
         }
         else
-        {
-            free(node->val);
             node->val = val;
-        }
     }
 }
 
@@ -166,6 +152,10 @@ BOOL    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
     BOOL    append;
     int      k_len;
     int      v_len;
+
+    v_len = 0;
+    k_len = 0;
+    append = FALSE;
     *key = get_key_from_arg(db, arg, &k_len, &append);
     *val = get_val_from_arg(db, arg, &v_len, k_len, append);
 
@@ -178,6 +168,7 @@ bool handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
     char    *key;
+    char    *token;
     char    *val;
     int      k_len;
     int      v_len;
@@ -191,9 +182,9 @@ bool handle_export_args(t_db    *db,    char    *args[])
     i = 1;
     while (args[i])
     {
-
+        token = whithout_quotes(db, args[i]);
         val = NULL;
-        key = get_key_from_arg(db,  args[i], &k_len, &append);
+        key = get_key_from_arg(db,  token, &k_len, &append);
         exp_node = get_exp_node(db->exp_list, key); 
         env_node = get_env_node(db->env_list, key);
         if (!good_export_var(key) || k_len < 1)
@@ -201,13 +192,15 @@ bool handle_export_args(t_db    *db,    char    *args[])
             printf("export: `%s': not a valid identifier", args[i]);
             return FALSE;
         }
-        else if (args[i][k_len] == '=' || args[i][k_len] == '+')
+        else if (token[k_len] == '=' || token[k_len] == '+')
         {
-            val = get_val_from_arg(db,  args[i], &v_len, k_len, append);
+            val = get_val_from_arg(db,  token, &v_len, k_len, append);
             if (exp_node)
                 affect_exp_node_val(db, exp_node, append, val);
             else
             {
+                key = ft_strdup_ec(db, key);
+                val = ft_strdup_ec(db, val);
                 exp_node = new_exp_node(db, key, val);
                 push_exp_back(&db->exp_list, exp_node);
             }
@@ -215,13 +208,13 @@ bool handle_export_args(t_db    *db,    char    *args[])
                 affect_env_node_val(db, env_node, append, val);
             else
             {
-                key = ft_strdup(db, key);
-                val = ft_strdup(db, val);
+                key = ft_strdup_ec(db, key);
+                val = ft_strdup_ec(db, val);
                 env_node = new_env_node(db, key, val);
-                push_exp_back(&db->exp_list, exp_node);
+                push_env_back(&db->env_list, env_node);
             }
         }
-        else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
+        else if (token[k_len] == '\0' || token[k_len] == ' ')
         {
             if (!exp_node)
             {

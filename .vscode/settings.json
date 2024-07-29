@@ -12,7 +12,8 @@
     "readline.h": "c",
     "string.h": "c",
     "builtens.h": "c",
-    "get_next_line.h": "c"
+    "get_next_line.h": "c",
+    "stdlib.h": "c"
   },
   "workbench.iconTheme": "vs-seti",
   "C_Cpp_Runner.cCompilerPath": "gcc",

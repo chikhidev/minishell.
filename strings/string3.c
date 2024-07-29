@@ -266,7 +266,7 @@ char	*ft_strjoin_char_ec(t_db    *db,    char *s1, char c)
         }    
         else
         {
-            res = malloc(2 * sizeof(char));
+            res = ec_malloc(db, 2 * sizeof(char));
             res[0] = c;
             res[1] = '\0';
         }
@@ -281,7 +281,7 @@ char	*ft_strjoin_char_ec(t_db    *db,    char *s1, char c)
 		return (NULL);
 	ft_memcpy(res, s1, len1);
 	ft_memcpy(res + len1, &c, len2);
-    free(s1);
+    gc_free(db, s1);
 	res[len1 + len2] = '\0';
 	return (res);
 }
