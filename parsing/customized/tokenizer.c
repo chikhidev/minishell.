@@ -84,7 +84,7 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                     || validate_io(&s[it.j], 2) != INVALID))
                     it.j++;
 
-                save = ft_substr(s, it.i, it.j - it.i);
+                save = ft_substr(db, s, it.i, it.j - it.i);
                 CATCH_ONNULL(save, NULL);
 
                 if (db->curr_type == HEREDOC)

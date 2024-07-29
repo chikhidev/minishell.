@@ -23,7 +23,7 @@ static int	is_set(char c, const char *set)
 	return (0);
 }
 
-char	*ft_strtrim(const char *s1, const char *set)
+char	*ft_strtrim(t_db *db, const char *s1, const char *set)
 {
 	int		front;
 	int		rear;
@@ -33,7 +33,7 @@ char	*ft_strtrim(const char *s1, const char *set)
 	if (!s1)
 		return (NULL);
 	if (!set)
-		return (ft_strdup(s1));
+		return (ft_strdup(db, s1));
 	front = 0;
 	while (s1[front] && is_set(s1[front], set))
 		front++;
@@ -42,7 +42,7 @@ char	*ft_strtrim(const char *s1, const char *set)
 		rear--;
 	len = rear - front + 1;
 	if (len <= 0)
-		return (ft_strdup(""));
+		return (ft_strdup(db, ""));
 	res = malloc(sizeof(char) * (len + 1));
 	if (res == NULL)
 		return (NULL);

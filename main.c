@@ -15,48 +15,44 @@ int handle_prompt(t_db *db, char **line)
     return SUCCESS ; // nothing
 }
 
-t_env_list    *set_env_lst(t_db   *db, char   *env[])
-{
-    t_env_list      *env_list;
-    t_env_list      *new_node;
-    int             i;
-
-    env_list = NULL;
-    i = 0;
-    while (env[i])
-    {
-        new_node = new_env_node(db, env[i]);
-        if (!new_node)
-        {
-            // free the stuff bruh of regular malloc
+t_env_list *set_env_lst(t_db *db, char *env[]) {
+    t_env_list *env_list = NULL;
+    t_env_list *new_node = NULL;
+    int i = 0;
+    char *key;
+    char *val;
+    BOOL good = FALSE;
+    
+    while (env[i]) {
+        good = fill_key_val(db, env[i], &key, &val);
+        if (!good)
+            return NULL;
+        new_node = new_env_node(db, key, val);
+        if (!new_node) {
             error(db, NULL, "Malloc failed");
+            return NULL; // Ensure we return if malloc fails.
         }
+        // printf("%s[%s]", key, val);
         push_env_back(&env_list, new_node);
         i++;
     }
     return env_list;
 }
-
 t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
 {
     t_exp_list      *exp_list;
     t_exp_list      *new_node;
     int             i;
-    int             len;
     char            *key;
     char            *val;
-
+    BOOL            good;
     exp_list = NULL;
     i = 0;
     while (env[i])
     {
-        // if (!new_node)
-        //     (gc_void(db), exit(1));
-        len = length_til(env[i], '=');
-        key = malloc(len + 1); // check malloc
-        ft_strlcpy(key, env[i], len + 1);
-        val = malloc(ft_strlen(env[i]) - len - 1 + 1); // check malloc
-        ft_strlcpy(val, env[i] + len + 1, ft_strlen(env[i]) - len - 1 + 1);
+        good = fill_key_val(db, env[i], &key, &val);
+        if (!good)
+            return (NULL);
         new_node = new_exp_node(db, key, val); // check malloc
         new_node->next = NULL;
         if (ft_strncmp(key, "_", ft_strlen(key)) == 0)
@@ -76,6 +72,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     (void) av;
     db->debug = FALSE;
     db->gc = NULL;
+    db->ec = NULL;
     db->here_docs = NULL;
     db->error = FALSE;
     db->env = env;
@@ -127,6 +124,7 @@ void free_environment(t_db  *db)
     }
 }
 
+
 int     main(int    ac, char    *av[],  char    *env[])
 {
     t_db    db;
@@ -157,7 +155,7 @@ int     main(int    ac, char    *av[],  char    *env[])
             continue ;
         gc_void(&db);
     }
-    free_environment(&db);
+    ec_void(&db);
     gc_void(&db);
     return (SUCCESS);
 }

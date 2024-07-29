@@ -83,7 +83,7 @@ int     count_op(char *line, int op);
 char	**tokenize(t_db *db, t_quote *quotes, char *s);
 
 /*expanding*/
-char    *get_environment_var(char   *var, char *env[]);
+char    *get_environment_var(t_db *db, char   *var, char *env[]);
 /*nodes.c*/
 // int     io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker);
 // int     io_system(t_db *db, char **args, t_redirection **res);

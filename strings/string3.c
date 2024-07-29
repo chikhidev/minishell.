@@ -120,7 +120,7 @@ int get_str_size_unquoted( char  *str)
     return len;
 }
 
-char *whithout_quotes(char *str)
+char *whithout_quotes(t_db *db, char *str)
 {
     int i;
     char *res;
@@ -130,7 +130,7 @@ char *whithout_quotes(char *str)
 
     single_opened = false;
     double_opened = false;
-    res = ft_strdup("");
+    res = ft_strdup(db, "");
     i = 0;
     while (str[i])
     {
@@ -153,7 +153,46 @@ char *whithout_quotes(char *str)
             i++;
             continue;
         }
-        res = ft_strjoin_char(res, str[i]);
+        res = ft_strjoin_char(db, res, str[i]);
+        i++;
+    }
+    return res;
+}
+
+char *whithout_quotes_ec(t_db  *db,  char *str)
+{
+    int i;
+    char *res;
+    // int size;
+    bool   single_opened;
+    bool   double_opened;
+
+    single_opened = false;
+    double_opened = false;
+    res = ft_strdup_ec(db, "");
+    i = 0;
+    while (str[i])
+    {
+        // toggling
+        if (str[i] == SGL_QUOTE && !double_opened)
+        {
+            if (single_opened)
+                single_opened = false;
+            else
+                single_opened = true;
+            i++;
+            continue;
+        }
+        if (str[i] == DBL_QUOTE && !single_opened)
+        {
+            if (double_opened)
+                double_opened = false;
+            else
+                double_opened = true;
+            i++;
+            continue;
+        }
+        res = ft_strjoin_char_ec(db,    res, str[i]);
         i++;
     }
     return res;
@@ -177,7 +216,7 @@ bool contains(char  *str, char    *sub)
     return false;
 }
 
-char	*ft_strjoin_char(char *s1, char c)
+char	*ft_strjoin_char(t_db *db, char *s1, char c)
 {
 	int		len1;
 	int		len2;
@@ -187,7 +226,42 @@ char	*ft_strjoin_char(char *s1, char c)
     {
         if (c == '\0')
         {
-            res = malloc(1 * sizeof(char));
+            res = gc_malloc(db, 1 * sizeof(char));
+            res[0] = '\0';
+        }    
+        else
+        {
+            res = gc_malloc(db, 2 * sizeof(char));
+            res[0] = c;
+            res[1] = '\0';
+        }
+        return (res);
+    }
+	len1 = ft_strlen(s1);
+    len2 = 1;
+	if (c == '\0')
+        len2 = 0;
+	res = gc_malloc(db, sizeof(char) * (len1 + len2 + 1));
+	if (!res)
+		return (NULL);
+	ft_memcpy(res, s1, len1);
+	ft_memcpy(res + len1, &c, len2);
+    gc_free(db, s1);
+	res[len1 + len2] = '\0';
+	return (res);
+}
+
+char	*ft_strjoin_char_ec(t_db    *db,    char *s1, char c)
+{
+	int		len1;
+	int		len2;
+	char	*res;
+
+	if (!s1)
+    {
+        if (c == '\0')
+        {
+            res = ec_malloc(db, 1 * sizeof(char));
             res[0] = '\0';
         }    
         else
@@ -202,7 +276,7 @@ char	*ft_strjoin_char(char *s1, char c)
     len2 = 1;
 	if (c == '\0')
         len2 = 0;
-	res = malloc(sizeof(char) * (len1 + len2 + 1));
+	res = ec_malloc(db, sizeof(char) * (len1 + len2 + 1));
 	if (!res)
 		return (NULL);
 	ft_memcpy(res, s1, len1);

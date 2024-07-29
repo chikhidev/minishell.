@@ -16,7 +16,7 @@ void cd(t_db    *db, char    *args[])
         printf("cd : too many arguments");
     else if (count_array_len(args) == 1)
     {
-        home = get_environment_var("HOME", db->env);
+        home = get_environment_var(db, "HOME", db->env);
         if (home == NULL)
             printf("cd: home is not set");
         else

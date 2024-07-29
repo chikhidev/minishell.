@@ -51,3 +51,18 @@ BOOL contains_spaces_btwn(char *s)
     }
     return (FALSE);
 }
+
+char	*ft_strdup_ec(t_db  *db,    const char *s1)
+{
+	const char	*clone;
+	int			len;
+
+	if (s1 == NULL)
+		return (NULL);
+	len = ft_strlen(s1);
+	clone = ec_malloc(db,   sizeof(char) * (len + 1));
+	if (!clone)
+		return (NULL);
+	ft_memcpy((void *)clone, s1, len + 1);
+	return ((char *)clone);
+}

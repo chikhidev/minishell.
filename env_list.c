@@ -1,28 +1,18 @@
 #include "main.h"
 #include "string.h"
 #include "parsing.h"
+#include "builtens.h"
 
-t_env_list *new_env_node(t_db *db, char   *data)
+t_env_list *new_env_node(t_db *db, char   *key, char    *val)
 {
 	(void)db;
     t_env_list *new;
-    char    **key_val;
-    new = malloc(sizeof(t_env_list));
+    new = ec_malloc(db,  sizeof(t_env_list));
     if (new == NULL)
         return (NULL);
     new->next = NULL;
-    key_val = ft_split(data, '=');
-    // check nyll
-    if (!key_val)
-        return NULL;
-    new->key = key_val[0];
-    if (key_val[1])
-        new->val = key_val[1];
-    else
-    {
-        new->val = ft_strdup("");
-        free(key_val[1]);
-    }
+    new->key = key;
+    new->val = val;
     return (new);
 }
 void    add_env_front(t_env_list  **list,   t_env_list	*new)

@@ -141,7 +141,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         {
             for (int i = 0; (CURR_CMD)->args[i]; i++)
             {
-                (CURR_CMD)->args[i] = whithout_quotes((CURR_CMD)->args[i]);
+                (CURR_CMD)->args[i] = whithout_quotes(db, (CURR_CMD)->args[i]);
             }
         }
 

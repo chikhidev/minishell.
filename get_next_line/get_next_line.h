@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <sys/select.h>
+#include "../includes/main.h"
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
@@ -40,12 +41,12 @@ typedef struct s_store
 	char	*line;
 }	t_store;
 
-char	*ft_strdup(const char *s1);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strdup(t_db	*db,	const char *s1);
+char	*ft_strjoin(t_db	*db,	char const *s1, char const *s2);
+char	*ft_substr(t_db	*db,	char const *s, unsigned int start, size_t len);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 size_t	ft_strlen(const char *str);
 
-char	*get_next_line(int fd);
+char	*get_next_line(t_db *db, int fd);
 
 #endif

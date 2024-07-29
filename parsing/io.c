@@ -64,7 +64,7 @@ int open_file(t_db *db, char *file, int type, t_quote *quotes)
         return FAILURE;
     }
     expand(db, &file, quotes);
-    tmp = whithout_quotes(file);
+    tmp = whithout_quotes(db, file);
     if (type == APPENDFILE)
         fd = open(tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)
@@ -103,7 +103,7 @@ int open_heredoc(t_db *db, char *delim)
     char *line;
     char *tmp;
 
-    tmp = whithout_quotes(delim);
+    tmp = whithout_quotes(db, delim);
     if (!tmp)
         return error(db, NULL, "malloc failed");
     delim = tmp;
@@ -112,7 +112,7 @@ int open_heredoc(t_db *db, char *delim)
     write(2, "hdc> ", 5);
     while (1)
     {
-        line = get_next_line(0);
+        line = get_next_line(db, 0);
         if (!line)
         {
             write(2, "\n", 1);
@@ -120,17 +120,17 @@ int open_heredoc(t_db *db, char *delim)
             break;
         }
         tmp = gc_copy(db, line);
-        free(line);
+        gc_free(db, line);
         if (!tmp)
             return error(db, NULL, "malloc failed");
         line = tmp;
         if (is_newline_at_the_end(line))
         {
-            tmp = ft_substr(line, 0, ft_strlen(line) - 1);
+            tmp = ft_substr(db,     line, 0, ft_strlen(line) - 1);
             if (!tmp)
                 return error(db, NULL, "malloc failed");
             line = gc_copy(db, tmp);
-            free(tmp);
+            gc_free(db, tmp);
         }
         if (ft_strcmp(delim, line) == 0
             && ft_strlen(delim) == ft_strlen(line))
@@ -148,7 +148,7 @@ int open_heredoc(t_db *db, char *delim)
         write(2, "hdc> ", 5);
     }
     db->input_fd = pipe_fd[0];
-    free(delim);
+    gc_free(db, delim);
     return (SUCCESS);
 }
 

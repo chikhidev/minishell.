@@ -56,7 +56,7 @@ bool    good_export_var(char    *var)
     // no special caractwrs
 }
 
-int get_key_length(char *arg, bool  *append)
+int get_key_length(char *arg, BOOL  *append)
 {
     int i;
 
@@ -92,19 +92,19 @@ int get_val_length(char *arg,   int start_idx)
     return (len);
 }
 
-char *get_key_from_arg(char *arg,int  *k_len, bool  *append)
+char *get_key_from_arg(t_db *db,    char *arg,int  *k_len, BOOL  *append)
 {
     char    *key;
 
     *k_len = get_key_length(arg, append);
-    key = malloc((*k_len + 1) * sizeof(char));
+    key = ec_malloc(db, (*k_len + 1) * sizeof(char));
     if (!key)
         return FALSE;
     ft_strlcpy(key, arg, *k_len + 1);
     return (key);
 }
 
-char    *get_val_from_arg(char  *arg,   int *v_len, int k_len, bool append)
+char    *get_val_from_arg(t_db  *db,    char  *arg,   int *v_len, int k_len, BOOL append)
 {
     char    *val;
     int     offset;
@@ -113,13 +113,13 @@ char    *get_val_from_arg(char  *arg,   int *v_len, int k_len, bool append)
     if (append)
         offset = 1;
     *v_len = get_val_length(arg, k_len + 1 + offset);
-    val = malloc((*v_len + 1) * sizeof(char));
+    val = ec_malloc(db, (*v_len + 1) * sizeof(char));
     ft_strlcpy(val, &arg[k_len + offset + 1], *v_len + 1);
-    val = whithout_quotes(val); // frees old val
+    val = whithout_quotes_ec(db, val); // frees old val
     return val;
 }
 
-void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
+void    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char    *val)
 {
     char    *joined;
 
@@ -127,7 +127,7 @@ void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
     {
         if (append)
         {
-            joined = ft_strjoin(node->val, val);
+            joined = ft_strjoin(db, node->val, val);
             free(node->val);
             free(val);
             node->val = joined;
@@ -140,6 +140,40 @@ void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
     }
 }
 
+void    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char    *val)
+{
+    char    *joined;
+
+    if (node)
+    {
+        if (append)
+        {
+            joined = ft_strjoin(db, node->val, val);
+            free(node->val);
+            free(val);
+            node->val = joined;
+        }
+        else
+        {
+            free(node->val);
+            node->val = val;
+        }
+    }
+}
+
+BOOL    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
+{
+    BOOL    append;
+    int      k_len;
+    int      v_len;
+    *key = get_key_from_arg(db, arg, &k_len, &append);
+    *val = get_val_from_arg(db, arg, &v_len, k_len, append);
+
+    if (key && val)
+        return TRUE;
+    return FALSE;
+}
+
 bool handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
@@ -148,9 +182,9 @@ bool handle_export_args(t_db    *db,    char    *args[])
     int      k_len;
     int      v_len;
     t_exp_list  *exp_node;
-    // t_env_list  *env_node;
+    t_env_list  *env_node;
     bool    good;
-    bool    append;
+    BOOL    append;
 
     good = TRUE;
     append = FALSE;
@@ -159,9 +193,9 @@ bool handle_export_args(t_db    *db,    char    *args[])
     {
 
         val = NULL;
-        key = get_key_from_arg(args[i], &k_len, &append);
+        key = get_key_from_arg(db,  args[i], &k_len, &append);
         exp_node = get_exp_node(db->exp_list, key); 
-        // env_node = get_env_node(db->env_list)
+        env_node = get_env_node(db->env_list, key);
         if (!good_export_var(key) || k_len < 1)
         {
             printf("export: `%s': not a valid identifier", args[i]);
@@ -169,12 +203,21 @@ bool handle_export_args(t_db    *db,    char    *args[])
         }
         else if (args[i][k_len] == '=' || args[i][k_len] == '+')
         {
-            val = get_val_from_arg(args[i], &v_len, k_len, append);
+            val = get_val_from_arg(db,  args[i], &v_len, k_len, append);
             if (exp_node)
-                affect_node_val(exp_node, append, val);
+                affect_exp_node_val(db, exp_node, append, val);
             else
             {
                 exp_node = new_exp_node(db, key, val);
+                push_exp_back(&db->exp_list, exp_node);
+            }
+            if (env_node)
+                affect_env_node_val(db, env_node, append, val);
+            else
+            {
+                key = ft_strdup(db, key);
+                val = ft_strdup(db, val);
+                env_node = new_env_node(db, key, val);
                 push_exp_back(&db->exp_list, exp_node);
             }
         }

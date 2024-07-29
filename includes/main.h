@@ -223,16 +223,22 @@ typedef struct s_db
 	int					output_fd;
 	t_env_list			*env_list;
 	t_exp_list			*exp_list;
+	t_gc				*ec;
 }						t_db;
 
 /*prototypes: error.c*/
 int						error(t_db *db, char *specifier, char *message);
 
 /*prototypes: memo.c*/
-void					*gc_malloc(t_db *db, size_t size);
-void					gc_void(t_db *db);
-void					gc_free(t_db *db, void *ptr);
-void					*gc_realloc(t_db *db, void *ptr, size_t size);
+
+void    *gc_malloc(t_db *db, size_t size);
+void    *ec_malloc(t_db *db, size_t size);
+void    gc_free(t_db *db, void *ptr);
+void    ec_free(t_db *db, void *ptr);
+void    gc_void(t_db *db);
+void    ec_void(t_db *db);
+void    *gc_realloc(t_db *db, void *ptr, size_t size);
+
 
 /*prototypes: string.c*/
 int						count(char *line, char c);
@@ -244,7 +250,7 @@ int						is_op3(char *line, int *i);
 
 BOOL					contains_spaces_btwn(char *s);
 
-t_env_list				*new_env_node(t_db *db, char   *data);
+t_env_list				*new_env_node(t_db *db, char   *key, char	*val);
 void					add_env_front(t_env_list  **list,   t_env_list	*new);
 void					push_env_back(t_env_list  **list, t_env_list	*new);
 void					*push_sort(t_db *db, t_env_list  **list, char    *data);

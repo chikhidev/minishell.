@@ -57,7 +57,7 @@ static void	fill_string(long long number, int len, int neg, char *string)
 		string[0] = '-';
 }
 
-char	*ft_itoa(int n)
+char	*ft_itoa(t_db *db, int n)
 {
 	int			len;
 	char		*res;
@@ -68,7 +68,7 @@ char	*ft_itoa(int n)
 	neg = 0;
 	number = (long long)n;
 	if (number == 0)
-		return ((char *)ft_strdup("0"));
+		return ((char *)ft_strdup(db, "0"));
 	res = allocate_buffer(&number, &len, &neg);
 	if (!res)
 		return (NULL);

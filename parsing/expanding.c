@@ -41,19 +41,19 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable, in
     return (SUCCESS);
 }
 
-char    *get_environment_var(char   *var, char *env[])
+char    *get_environment_var(t_db *db, char   *var, char *env[])
 {
     int i;
     char    *temp;
     
 
     i = 0;
-    temp = ft_strjoin(var, "=");
+    temp = ft_strjoin(db, var, "=");
     while (env[i])
     {
         if (ft_strncmp(temp, env[i], ft_strlen(temp)) == 0)
         {
-            free(temp);
+            gc_free(db, temp);
             return env[i] + ft_strlen(var) + 1;
         }
         i++;
@@ -70,19 +70,19 @@ char *get_env(t_db *db, char *name)
     if (db->debug) printf("name -> %s\n", name);
     if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
     {
-        return (ft_itoa(db->last_signal));
+        return (ft_itoa(db, db->last_signal));
     }
     if (are_all(name, ft_isdigit))
     {
-        return (ft_strdup(name + 1));
+        return (ft_strdup(db, name + 1));
     }
     object = get_exp_node(db->exp_list, name);
     CATCH_ONNULL(
         object,
-        ft_strdup("")
+        ft_strdup(db, "")
     )
     printf("value bringed: %s\n", object->val);
-	return (ft_strdup(object->val));
+	return (ft_strdup(db, object->val));
 }
 
 int valid_char(char c, int  index)
