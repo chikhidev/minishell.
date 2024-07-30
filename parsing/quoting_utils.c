@@ -19,6 +19,7 @@ int is_inside_quotes(t_quote *head, int i)
 {
     t_quote *tmp;
 
+    if (!head) return FALSE;
     tmp = head;
     while (tmp)
     {

@@ -65,12 +65,15 @@ int track_quotes(t_db *db, t_quote **head, char *line)
 
 void reset_quotes(t_db *db, t_quote **head)
 {
+    t_quote *curr;
     t_quote *tmp;
 
-    while (*head)
+    curr = *head;
+    while (curr)
     {
-        tmp = *head;
-        *head = (*head)->next;
+        tmp = curr;
+        curr = (curr)->next;
         gc_free(db, tmp);
     }
+    *head = NULL;
 }

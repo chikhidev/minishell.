@@ -111,7 +111,7 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
     return (SUCCESS);
 }
 
-int expand(t_db *db, char **line, t_quote *quotes)
+int expand(t_db *db, char **line, t_quote **quotes)
 {
     char    *env_var_name;
     int     i;
@@ -120,7 +120,7 @@ int expand(t_db *db, char **line, t_quote *quotes)
     i = 0;
     while ((*line)[i])
     {
-        if ((*line)[i] == '$' && !inside_single_quote(quotes, i))
+        if ((*line)[i] == '$' && !inside_single_quote(*quotes, i))
         {
             if (!(*line)[++i]) return (SUCCESS);
             if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
@@ -130,8 +130,8 @@ int expand(t_db *db, char **line, t_quote *quotes)
             if (!(*line)[i]) return (SUCCESS);
             gc_free(db, env_var_name);
             env_var_name = NULL;
-            reset_quotes(db, &quotes);
-            if (!track_quotes(db, &quotes, (*line))) return (FAILURE);
+            reset_quotes(db, quotes);
+            if (!track_quotes(db, quotes, (*line))) return (FAILURE);
         }
         i++;
     }

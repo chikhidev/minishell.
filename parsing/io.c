@@ -51,7 +51,7 @@ int check_ambigious(t_db *db, char *file)
     return (FALSE);
 }
 
-int open_file(t_db *db, char *file, int type, t_quote *quotes)
+int open_file(t_db *db, char *file, int type, t_quote **quotes)
 {
     int fd;
     char *tmp;

@@ -41,7 +41,7 @@ char **append_word(t_db *db, char **result, char *save)
     return (result);
 }
 
-char	**tokenize(t_db *db, t_quote *quotes, char *s)
+char	**tokenize(t_db *db, t_quote **quotes, char *s)
 {
 	char	**result;
     t_iterators it;
@@ -54,12 +54,12 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
     CATCH_ONNULL(result, NULL);
     result[0] = NULL;
     ft_bzero(&it, sizeof(t_iterators));
-    skip_open_spaces(quotes, s, &it.i);
+    skip_open_spaces(*quotes, s, &it.i);
     len = ft_strlen(s);
     while (it.i < len)
     {
         if (!(is_whitespace(s[it.i])
-            && !is_inside_quotes(quotes, it.i))
+            && !is_inside_quotes(*quotes, it.i))
             && !(validate_io(&s[it.i], 1) != INVALID
             || validate_io(&s[it.i], 2) != INVALID))
         {
@@ -74,11 +74,11 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
             if (db->curr_type != INVALID)
             {
                 it.i += 1 + (db->curr_type == HEREDOC || db->curr_type == APPENDFILE);
-                skip_open_spaces(quotes, s, &it.i);
+                skip_open_spaces(*quotes, s, &it.i);
                 it.j = it.i;
                 while (s[it.j] && !(
                         is_whitespace(s[it.j])
-                        && !is_inside_quotes(quotes, it.j)
+                        && !is_inside_quotes(*quotes, it.j)
                     )
                     && !(validate_io(&s[it.j], 1) != INVALID
                     || validate_io(&s[it.j], 2) != INVALID))
@@ -103,7 +103,7 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
             }
             if (save)
             {
-                track_quotes(db, &quotes, save);
+                track_quotes(db, quotes, save);
                 CATCH_ONFAILURE(
                     expand(db, &save, quotes)
                 , FAILURE);
@@ -126,7 +126,7 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
 
     if (save)
     {
-        track_quotes(db, &quotes, save);
+        track_quotes(db, quotes, save);
         CATCH_ONFAILURE(
             expand(db, &save, quotes)
         , FAILURE);

@@ -56,7 +56,7 @@ int parser(t_db *db, char *line);
 int smart_split(t_db *db, char *line, void **current_node, void *parent);
 
 /*parsing/expanding.c*/
-int expand(t_db *db, char **line, t_quote *quotes);
+int expand(t_db *db, char **line, t_quote **quotes);
 char *get_env(t_db *db, char *name);
 int valid_char(char c, int  index);
 
@@ -80,7 +80,7 @@ int     create_cmd_node(t_db *db, void **current_node, void *parent);
 int     count_op(char *line, int op);
 
 /*customized*/
-char	**tokenize(t_db *db, t_quote *quotes, char *s);
+char	**tokenize(t_db *db, t_quote **quotes, char *s);
 
 /*expanding*/
 char    *get_environment_var(t_db *db, char   *var, char *env[]);
@@ -92,7 +92,7 @@ int     open_heredoc(t_db *db, char *delim);
 int     syntax_checker(t_db *db, char *line, int *start);
 
 
-int     open_file(t_db *db, char *file, int type, t_quote *quotes);
+int     open_file(t_db *db, char *file, int type, t_quote **quotes);
 int     count_array_len(char    **args);
 bool    contains(char  *str, char    *sub);
 int     find_c(char *str, char  c);
