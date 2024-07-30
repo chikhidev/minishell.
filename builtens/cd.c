@@ -24,14 +24,15 @@ void cd(t_db    *db, char    *args[])
 			printf("cd: home is not set");
 		else
 		{
-			pwd = get_pwd(db);
 			flag = chdir(home);
+			pwd = getcwd(NULL, 0);
 			if (flag == -1)
 				perror("cd");
 			if (pwd_env_node)
-				pwd_env_node->val = pwd;
+				pwd_env_node->val = ft_strdup_ec(db, pwd);
 			if (pwd_exp_node)
-				pwd_exp_node->val = pwd;
+				pwd_exp_node->val = ft_strdup_ec(db, pwd);
+			free(pwd);
 		}
 	}
 	else
@@ -42,10 +43,11 @@ void cd(t_db    *db, char    *args[])
 		flag = chdir(args[1]);
 		if (flag == -1)
 			perror("cd");
-		pwd = get_pwd(db);
+		pwd = getcwd(NULL, 0);
 		if (pwd_env_node)
-			pwd_env_node->val = pwd;
+			pwd_env_node->val = ft_strdup_ec(db, pwd);
 		if (pwd_exp_node)
-			pwd_exp_node->val = pwd;
+			pwd_exp_node->val = ft_strdup_ec(db, pwd);
+		free(pwd);
 	}
 }

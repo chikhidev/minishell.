@@ -9,7 +9,8 @@ void    *gc_malloc(t_db *db, size_t size)
     if (!db->gc)
     {
         db->gc = malloc(sizeof(t_gc));
-        if (!db->gc) return (NULL);
+        if (!db->gc)
+            return (NULL);
         db->gc->ptr = ptr;
         db->gc->next = NULL;
     }
@@ -18,9 +19,11 @@ void    *gc_malloc(t_db *db, size_t size)
         t_gc    *gc;
 
         gc = db->gc;
-        while (gc->next) gc = gc->next;
+        while (gc->next)
+            gc = gc->next;
         gc->next = malloc(sizeof(t_gc));
-        if (!gc->next) return (NULL);
+        if (!gc->next)
+            return (NULL);
         gc->next->ptr = ptr;
         gc->next->next = NULL;
     }
@@ -61,7 +64,8 @@ void    *ec_malloc(t_db *db, size_t size)
     if (!db->ec)
     {
         db->ec = malloc(sizeof(t_gc));
-        if (!db->ec) return (NULL);
+        if (!db->ec)
+            return (NULL);
         db->ec->ptr = ptr;
         db->ec->next = NULL;
     }
@@ -73,7 +77,8 @@ void    *ec_malloc(t_db *db, size_t size)
         while (ec->next)
             ec = ec->next;
         ec->next = malloc(sizeof(t_gc));
-        if (!ec->next) return (NULL);
+        if (!ec->next)
+            return (NULL);
         ec->next->ptr = ptr;
         ec->next->next = NULL;
     }

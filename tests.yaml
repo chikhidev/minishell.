@@ -257,5 +257,11 @@ line1
 
 
 
-export a=-n
+export a=-n  DONE
 "echo $a" hey
+
+
+
+"$A'$B"'$C"$D'$E
+
+$> 1'2$C"$D5"
