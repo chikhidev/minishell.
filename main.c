@@ -3,13 +3,35 @@
 #include "exec.h"
 #include "builtens.h"
 
+char *get_dir(t_db *db)
+{
+    t_env_list *home;
+    t_env_list *curr_dir;
+    char *prefix;
+    int i;
+
+    prefix = GREEN;
+    home = get_env_node(db->env_list, "HOME");
+    curr_dir = get_env_node(db->env_list, "PWD");
+    if (!home || !curr_dir)
+        return NULL;
+    i = 0;
+    while (home->val[i] && curr_dir->val[i]
+        && (home->val[i] == curr_dir->val[i]))
+        i++;
+    if (i > 1)
+       prefix = GREEN"~";
+    return (
+        ft_strjoin(db, prefix, curr_dir->val + i)
+    );
+}
+
 int handle_prompt(t_db *db, char **line)
 {
-    (void) db;
-    printf(MAGENTA);
-    *line = readline(GREEN"$> "RESET);
-    printf(RESET);
-    // handle ctrl + c later 
+    char *prompt;
+    prompt = ft_strjoin(db, get_dir(db), MAGENTA"$> "RESET);
+    *line = readline(prompt);
+    // handle ctrl + c later
     if (!*line) return 0 ; // continue the loop
     if (*line[0] != '\0') add_history(*line);
     return SUCCESS ; // nothing
@@ -29,7 +51,7 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
     {
         good = fill_key_val(db, env[i], &key, &val);
         if (!good)
-            return NULL;
+            return NULL ;
         new_node = new_env_node(db, key, val);
         if (!new_node) {
             error(db, NULL, "Malloc failed");
@@ -41,6 +63,7 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
     }
     return env_list;
 }
+
 t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
 {
     t_exp_list      *exp_list;

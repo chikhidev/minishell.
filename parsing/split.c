@@ -130,9 +130,8 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
     t_holder holder;
 
-    if (ft_strlen(line) == 0)
-        return SUCCESS;
-    if (all_whitespaces(line, 0, ft_strlen(line)))
+    if (ft_strlen(line) == 0
+        || all_whitespaces(line, 0, ft_strlen(line)))
         return SUCCESS;
     ft_bzero(&holder, sizeof(holder));
     holder.tracker = gc_malloc(db, sizeof(t_tracker));
