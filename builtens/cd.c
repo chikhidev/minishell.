@@ -9,6 +9,7 @@ void cd(t_db    *db, char    *args[])
 {
 	DIR	*to;
 	char *pwd;
+	char *token;
 	char *home;
 	int	flag;
 	t_exp_list *pwd_exp_node;
@@ -37,10 +38,13 @@ void cd(t_db    *db, char    *args[])
 	}
 	else
 	{
-		to = opendir(args[1]);
+		token = whithout_quotes_ec(db, args[1]);
+		if (!token)
+			return;
+		to = opendir(token);
 		if (to == NULL)
 			return perror(args[1]);
-		flag = chdir(args[1]);
+		flag = chdir(token);
 		if (flag == -1)
 			perror("cd");
 		pwd = getcwd(NULL, 0);

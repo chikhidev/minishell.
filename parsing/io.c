@@ -179,7 +179,7 @@ int syntax_checker(t_db *db, char *line, int *start)
     i = *start;
     while (line[i])
     {
-
+        
         if (ft_strncmp(&line[i], ">>", 2) == 0
             || ft_strncmp(&line[i], "<<", 2) == 0
             || ft_strncmp(&line[i], ">", 1) == 0
