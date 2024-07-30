@@ -15,12 +15,8 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/op.c		\
 				parsing/op2.c	\
 				parsing/cmd.c \
-				parsing/io.c
-
-PARSING_CUSTOMED = parsing/customized/tokenizer.c
-
-
-PARSING_SRC += $(PARSING_CUSTOMED)
+				parsing/io.c \
+				parsing/tokenizer.c \
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path-checker.c \
