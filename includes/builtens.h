@@ -14,4 +14,5 @@ int get_key_length(char *arg, bool  *append);
 int get_val_length(char *arg,   int start_idx);
 char *get_key_from_arg(char *arg,int  *k_len, bool  *append);
 BOOL    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val);
+char	*get_pwd(t_db	*db);
 char    *get_val_from_arg(char  *arg,   int *v_len, int k_len, bool append);

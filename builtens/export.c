@@ -109,6 +109,8 @@ char    *get_val_from_arg(t_db  *db,    char  *arg,   int *v_len, int k_len, BOO
         offset = 1;
     *v_len = get_val_length(arg, k_len + 1 + offset);
     val = ec_malloc(db, (*v_len + 1) * sizeof(char));
+    if (!val)
+        return FALSE;
     ft_strlcpy(val, &arg[k_len + offset + 1], *v_len + 1);
     return val;
 }
@@ -202,7 +204,7 @@ bool handle_export_args(t_db    *db,    char    *args[])
                 key = ft_strdup_ec(db, key);
                 val = ft_strdup_ec(db, val);
                 exp_node = new_exp_node(db, key, val);
-                push_exp_back(&db->exp_list, exp_node);
+                push_exp_sort(&db->exp_list, exp_node);
             }
             if (env_node)
                 affect_env_node_val(db, env_node, append, val);
@@ -219,7 +221,7 @@ bool handle_export_args(t_db    *db,    char    *args[])
             if (!exp_node)
             {
                 exp_node = new_exp_node(db, key, val);
-                push_exp_back(&db->exp_list, exp_node);
+                push_exp_sort(&db->exp_list, exp_node);
             }
         }
         else
