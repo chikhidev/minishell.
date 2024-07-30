@@ -23,6 +23,14 @@
 #define INPUT 6
 #define HEREDOC 7
 
+typedef struct s_holder
+{
+    int op;
+    void **current_node;
+    void *parent;
+    t_tracker *tracker;
+}   t_holder;
+
 /*string.c*/
 void    skip_spaces(char *line, int *i);
 int     are_all(char *str, int (*f)(int));
