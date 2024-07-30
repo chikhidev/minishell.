@@ -12,13 +12,13 @@ void print_nodes(t_db   *db, void *node, int level)
     if (CMD->type == CMD_NODE)
     {
         if (ft_strcmp(CMD->args[0], "echo") == 0)
-            echo(CMD->args, 3);
+            echo(db, CMD->args, 3);
         else if (ft_strcmp(CMD->args[0], "export") == 0)
             export(db, CMD->args);
         else if (ft_strcmp(CMD->args[0], "pwd") == 0)
             pwd(db);
         else if (ft_strcmp(CMD->args[0], "env") == 0)
-            env(db);
+            env(db, CMD->args);
         else if (ft_strcmp(CMD->args[0], "cd") == 0)
             cd(db, CMD->args);
         else if (ft_strcmp(CMD->args[0], "unset") == 0)

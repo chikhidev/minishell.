@@ -255,3 +255,7 @@ line1
 2
 0
 
+
+
+export a=-n
+"echo $a" hey

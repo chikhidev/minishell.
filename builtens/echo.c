@@ -1,4 +1,6 @@
 #include "main.h"
+#include "parsing.h"
+#include "string.h"
 
 bool has_new_line(char   *arg)
 {
@@ -16,9 +18,10 @@ bool has_new_line(char   *arg)
     return false;
 }
 
-void echo(char *args[], int n_args)
+void echo(t_db  *db, char *args[], int n_args)
 {
     int i;
+    char    *token;
     bool new_line;
 
     new_line = true;
@@ -31,9 +34,12 @@ void echo(char *args[], int n_args)
         i = 1;
     while (args[i])
     {
-        printf("%s", args[i]);
+        token = whithout_quotes_ec(db, args[i]);
+        if (!token)
+            return (ec_void(db)); // make sute
+        printf("%s", token);
         i++;
-        if (args[i])
+        if (token)
             printf(" ");
     }
     if (new_line)

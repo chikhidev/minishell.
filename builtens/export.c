@@ -189,10 +189,10 @@ bool handle_export_args(t_db    *db,    char    *args[])
         key = get_key_from_arg(db,  token, &k_len, &append);
         exp_node = get_exp_node(db->exp_list, key); 
         env_node = get_env_node(db->env_list, key);
-        if (!good_export_var(key) || k_len < 1)
+        if ((!good_export_var(key) || k_len < 1) || (append && token[k_len + 1] != '='))
         {
-            printf("export: `%s': not a valid identifier", args[i]);
-            return FALSE;
+            printf("export: `%s': not a valid identifier\n", args[i]);
+            good = FALSE;
         }
         else if (token[k_len] == '=' || token[k_len] == '+')
         {
@@ -226,8 +226,8 @@ bool handle_export_args(t_db    *db,    char    *args[])
         }
         else
         {
-            printf("export: `%s': not a valid identifier", args[i]);
-            return FALSE;
+            printf("export: `%s': not a valid identifier\n", args[i]);
+            good = FALSE;
         }
         i++;
     }

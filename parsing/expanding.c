@@ -81,7 +81,6 @@ char *get_env(t_db *db, char *name)
         object,
         ft_strdup(db, "")
     )
-    printf("value bringed: %s\n", object->val);
 	return (ft_strdup(db, object->val));
 }
 
@@ -126,7 +125,6 @@ int expand(t_db *db, char **line, t_quote *quotes)
             if (!(*line)[++i]) return (SUCCESS);
             if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
                 return (FAILURE);
-            printf("expanding: %s\n", env_var_name);
             if (update_env_in_line(db, line, get_env(db, env_var_name), &i) == FAILURE)
                 return (FAILURE);
             if (!(*line)[i]) return (SUCCESS);

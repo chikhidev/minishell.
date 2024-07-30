@@ -1,14 +1,24 @@
 #include "builtens.h"
+#include "parsing.h"
+#include "string.h"
 #include "main.h"
 
-void    env(t_db *db)
+void    env(t_db *db, char  *av[])
 {
+    int args_len;
     t_env_list  *curr;
 
-    curr = db->env_list;
-    while (curr)
+    args_len = count_array_len(av);
+    if (args_len != 1)
+        printf("env: '%s': No such file or directory\n", av[1]);
+    else
     {
-        printf("%s=%s\n", curr->key, curr->val);
-        curr = curr->next;
+
+        curr = db->env_list;
+        while (curr)
+        {
+            printf("%s=%s\n", curr->key, curr->val);
+            curr = curr->next;
+        }
     }
 }
