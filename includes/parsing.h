@@ -23,6 +23,14 @@
 #define INPUT 6
 #define HEREDOC 7
 
+typedef struct s_holder
+{
+    int op;
+    void **current_node;
+    void *parent;
+    t_tracker *tracker;
+}   t_holder;
+
 /*string.c*/
 void    skip_spaces(char *line, int *i);
 int     are_all(char *str, int (*f)(int));
@@ -84,22 +92,17 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s);
 
 /*expanding*/
 char    *get_environment_var(t_db *db, char   *var, char *env[]);
+
 /*nodes.c*/
-// int     io_system(t_db *db, char *line, t_redirection **res, t_tracker *tracker);
-// int     io_system(t_db *db, char **args, t_redirection **res);
 int     validate_io(char *arg, int size);
 int     open_heredoc(t_db *db, char *delim);
 int     syntax_checker(t_db *db, char *line, int *start);
-
-
 int     open_file(t_db *db, char *file, int type, t_quote **quotes);
 int     count_array_len(char    **args);
 bool    contains(char  *str, char    *sub);
 int     find_c(char *str, char  c);
 int     length_til(char *str, char stop);
-
 BOOL    is_newline_at_the_end(char *line);
-
 char    *gc_copy(t_db *db, char *s);
 
 #endif

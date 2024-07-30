@@ -71,81 +71,91 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     return splitted;
 }
 
+int process_op(t_db *db, char *line, t_holder *holder)
+{
+    void **current_node;
+    char        **splitted;
+    int i;
+
+    current_node = holder->current_node;
+    CATCH_ONFAILURE(create_op_node(db, holder->op,
+        holder->current_node, holder->parent), FAILURE);
+    CURR_OP->n_childs = count_between_op(db, line,
+        holder->op, holder->tracker);
+    splitted = split_line(db, line, CURR_OP, holder->tracker);
+    CATCH_MALLOC(splitted);
+    CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
+        CURR_OP->n_childs);
+    ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
+    i = 0;
+    while (i < CURR_OP->n_childs)
+    {
+        CATCH_ONFAILURE(
+            smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node),
+            FAILURE
+        )
+        i++;
+    }
+    return SUCCESS;
+}
+
+int process_cmd(t_db *db, char *line, t_holder *holder)
+{
+    void **current_node;
+
+    current_node = holder->current_node;
+    CATCH_ONFAILURE(
+        create_cmd_node(db, current_node, holder->parent) // create a command node -------<<<<<<<<
+    , FAILURE);
+    CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
+    if (db->error)
+        return error(db, NULL, NULL);
+    CATCH_MALLOC((CURR_CMD)->args);
+    (CURR_CMD)->input_fd = db->input_fd;
+    (CURR_CMD)->output_fd = db->output_fd;
+    db->input_fd = STDIN_FILENO;
+    db->output_fd = STDOUT_FILENO;
+    if (is_built_in(CURR_CMD))
+        return SUCCESS;
+    for (int i = 0; (CURR_CMD)->args[i]; i++)
+    {
+        (CURR_CMD)->args[i] = whithout_quotes(db, (CURR_CMD)->args[i]);
+        if ((CURR_CMD)->args[i] == NULL)
+            return error(db, NULL, "Malloc failed");
+    }
+    return SUCCESS;
+}
+
 int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
-    t_tracker   *tracker;
-    char        **splitted;
-    int         op;
-    int         i;
+    t_holder holder;
 
-    if (ft_strlen(line) == 0)
+    if (ft_strlen(line) == 0
+        || all_whitespaces(line, 0, ft_strlen(line)))
         return SUCCESS;
-    if (all_whitespaces(line, 0, ft_strlen(line)))
-        return SUCCESS;
-
-    tracker = gc_malloc(db, sizeof(t_tracker));
-    CATCH_MALLOC(tracker);
-    ft_bzero(tracker, sizeof(t_tracker));
-
-    CATCH_ONFAILURE(track_quotes(db, &tracker->quotes, line), FAILURE);
-    CATCH_ONFAILURE(track_paranthesis(db, &tracker->paranthesis,
-        line, tracker->quotes), FAILURE);
-    op = strongest_operator(line, tracker);
-
-    if (tracker->paranthesis && op == NOT_FOUND)
+    ft_bzero(&holder, sizeof(holder));
+    holder.tracker = gc_malloc(db, sizeof(t_tracker));
+    CATCH_MALLOC(holder.tracker);
+    ft_bzero(holder.tracker, sizeof(t_tracker));
+    CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
+    CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
+        line, holder.tracker->quotes), FAILURE);
+    holder.op = strongest_operator(line, holder.tracker);
+    holder.current_node = current_node;
+    if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
-        return smart_split(db, remove_paranthesis(db, line, tracker->paranthesis), current_node, parent);
+        return smart_split(db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent);
     }
-    else if (op != NOT_FOUND)
+    else if (holder.op != NOT_FOUND)
     {
-        CATCH_ONFAILURE(create_op_node(db, op, current_node, parent), FAILURE);
-        // create the childs of the operator node <<<<<<<<
-        CURR_OP->n_childs = count_between_op(db, line, op, tracker);
-        splitted = split_line(db, line, CURR_OP, tracker);
-        CATCH_MALLOC(splitted);
-
-        CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
-            CURR_OP->n_childs);
-        ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
-
-        i = 0;
-        while (i < CURR_OP->n_childs)
-        {
-            CATCH_ONFAILURE(
-                smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node),
-                FAILURE
-            )
-            i++;
-        }
+        if (process_op(db, line, &holder) == FAILURE)
+            return FAILURE;
     }
     else
     {
-        // command scope <<<<<<<<
-        CATCH_ONFAILURE(
-            create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<
-        , FAILURE);
-        
-        ((t_cmd_node *)*current_node)->args = tokenize(db, &tracker->quotes, line);
-        if (db->error)
-            return error(db, NULL, NULL);
-        CATCH_MALLOC((CURR_CMD)->args);
-
-        // set the redirections of the command node if any
-        (CURR_CMD)->input_fd = db->input_fd;
-        (CURR_CMD)->output_fd = db->output_fd;
-        db->input_fd = STDIN_FILENO;
-        db->output_fd = STDOUT_FILENO;
-
-        // check for built-in(s)
-        if (!is_built_in(CURR_CMD))
-        {
-            for (int i = 0; (CURR_CMD)->args[i]; i++)
-            {
-                (CURR_CMD)->args[i] = whithout_quotes(db, (CURR_CMD)->args[i]);
-            }
-        }
-
+        if (process_cmd(db, line, &holder) == FAILURE)
+            return FAILURE;
     }
-    gc_free(db, tracker);
+    gc_free(db, holder.tracker);
     return SUCCESS; 
 }
