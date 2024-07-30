@@ -3,7 +3,7 @@
 #include "exec.h"
 #include "builtens.h"
 
-char *get_dir(t_db *db)
+void get_dir(t_db *db, char **store)
 {
     t_env_list *home;
     t_env_list *curr_dir;
@@ -14,22 +14,23 @@ char *get_dir(t_db *db)
     home = get_env_node(db->env_list, "HOME");
     curr_dir = get_env_node(db->env_list, "PWD");
     if (!home || !curr_dir)
-        return NULL;
+        return ;
     i = 0;
     while (home->val[i] && curr_dir->val[i]
         && (home->val[i] == curr_dir->val[i]))
         i++;
     if (i > 1)
        prefix = GREEN"~";
-    return (
-        ft_strjoin(db, prefix, curr_dir->val + i)
-    );
+    *store = ft_strjoin_ec(db, prefix, curr_dir->val + i);
 }
 
 int handle_prompt(t_db *db, char **line)
 {
     char *prompt;
-    prompt = ft_strjoin(db, get_dir(db), MAGENTA"$> "RESET);
+    char *tmp;
+
+    get_dir(db, &tmp);
+    prompt = ft_strjoin(db, tmp, MAGENTA"$> "RESET);
     *line = readline(prompt);
     // handle ctrl + c later
     if (!*line) return 0 ; // continue the loop
