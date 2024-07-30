@@ -1,46 +1,6 @@
 #include "main.h"
 #include "parsing.h"
 
-void    calc_line(char *original_line, int *a, int *b, int *c)
-{
-    while (original_line[*a + *b + *c] && original_line[*a + *b + *c] != '$')
-        (*a)++;
-    *b += (original_line[*a + *b + *c] == '$');
-    while (original_line[*a + *b + *c] && valid_char(original_line[*a + *b + *c], *a + *b + *c))
-        (*b)++;
-    while (original_line[*a + *b + *c])
-        (*c)++;
-
-}
-
-/**
- * @details This function's job is to update the line with the env variables
-*/
-int    update_env_in_line(t_db *db, char **original_line, char *env_variable, int *new_pos)
-{
-    char    *new_line;
-    int     a;
-    int     b;
-    int     c;
-
-    if (!env_variable) return (SUCCESS);
-    a = 0;
-    b = 0;
-    c = 0;
-    calc_line(*original_line, &a, &b, &c);
-    new_line = gc_malloc(db, sizeof(char) * (a + ft_strlen(env_variable) + c + 1));
-    CATCH_MALLOC(new_line);
-    // if (!new_line) return error(db, NULL, "Failed to malloc new_line");
-    ft_strlcpy(new_line, *original_line, a + 1); // from 0 to a0
-    ft_strlcpy(new_line + a, env_variable, ft_strlen(env_variable) + 1); //from a + len dyal env
-    ft_strlcpy(new_line + a + ft_strlen(env_variable), *original_line + a + b, c + 1); // from a + len +
-    gc_free(db, *original_line);
-    *original_line = new_line;
-    *new_pos = a + ft_strlen(env_variable);
-    gc_free(db, env_variable);
-    return (SUCCESS);
-}
-
 char    *get_environment_var(t_db *db, char   *var, char *env[])
 {
     int i;
@@ -100,6 +60,7 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
 {
     char    *tmp;
 
+    tmp = NULL;
     while ((*line)[(*i)] && valid_char((*line)[*i], *i))
     {
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
@@ -111,26 +72,64 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
     return (SUCCESS);
 }
 
+int updated_line(t_db *db, char **line, char *variable_name, t_iterators *reminder)
+{
+    char *new_line;
+    char *tmp;
+    int reached;
+
+    if (ft_strlen(variable_name) == 0)
+        return reminder->i;
+    tmp = ft_substr(db, *line, 0, reminder->i);
+    if (!tmp)
+        return error(db, NULL, "Malloc failed");
+    new_line = ft_strjoin(db, tmp, get_env(db, variable_name));
+    if (!new_line)
+        return error(db, NULL, "Malloc failed");
+    gc_free(db, tmp);
+    reached = ft_strlen(new_line) - 1;
+    tmp = ft_substr(db, *line, reminder->j, ft_strlen(*line));
+    if (!tmp)
+        return error(db, NULL, "Malloc failed");
+
+    gc_free(db, *line);
+    *line = ft_strjoin(db, new_line, tmp);
+    if (!*line)
+        return error(db, NULL, "Malloc failed");
+    return reached;
+}
+
 int expand(t_db *db, char **line, t_quote **quotes)
 {
     char    *env_var_name;
     int     i;
+    t_iterators reminder;
+    int len;
 
+    len = ft_strlen(*line);
+    reminder.i = -1;
+    reminder.j = -1;
     env_var_name = NULL;
     i = 0;
-    while ((*line)[i])
+    while (i < len)
     {
         if ((*line)[i] == '$' && !inside_single_quote(*quotes, i))
         {
+            reminder.i = i;
             if (!(*line)[++i]) return (SUCCESS);
             if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
                 return (FAILURE);
-            if (update_env_in_line(db, line, get_env(db, env_var_name), &i) == FAILURE)
+            reminder.j = i;
+            i = updated_line(db, line, env_var_name, &reminder);
+            if (i == INVALID)
                 return (FAILURE);
-            if (!(*line)[i]) return (SUCCESS);
+            len = ft_strlen(*line);
+            if (i >= len)
+                return (SUCCESS);
             gc_free(db, env_var_name);
             env_var_name = NULL;
             reset_quotes(db, quotes);
+            *quotes = NULL;
             if (!track_quotes(db, quotes, (*line))) return (FAILURE);
         }
         i++;

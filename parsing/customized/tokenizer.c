@@ -131,6 +131,8 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             expand(db, &save, quotes)
         , FAILURE);
 
+        
+
         if (ft_strlen(save) > 0)
         {
             result = append_word(db, result, save);
