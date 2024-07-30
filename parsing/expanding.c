@@ -37,7 +37,7 @@ int    update_env_in_line(t_db *db, char **original_line, char *env_variable, in
     gc_free(db, *original_line);
     *original_line = new_line;
     *new_pos = a + ft_strlen(env_variable);
-    free(env_variable);
+    gc_free(db, env_variable);
     return (SUCCESS);
 }
 
@@ -58,7 +58,7 @@ char    *get_environment_var(t_db *db, char   *var, char *env[])
         }
         i++;
     }
-    free(temp);
+    gc_free(db, temp);
     return NULL;
 }
 

@@ -108,12 +108,15 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
                     expand(db, &save, quotes)
                 , FAILURE);
 
-                result = append_word(db, result, save);
-                if (!result)
+                if (ft_strlen(save) > 0)
                 {
-                    printf("failed to append word 1\n");
-                    db->error = TRUE;
-                    return (NULL);
+                    result = append_word(db, result, save);
+                    if (!result)
+                    {
+                        printf("failed to append word 2\n");
+                        db->error = TRUE;
+                        return (NULL);
+                    }
                 }
                 save = NULL;
             }
@@ -128,12 +131,15 @@ char	**tokenize(t_db *db, t_quote *quotes, char *s)
             expand(db, &save, quotes)
         , FAILURE);
 
-        result = append_word(db, result, save);
-        if (!result)
+        if (ft_strlen(save) > 0)
         {
-            printf("failed to append word 2\n");
-            db->error = TRUE;
-            return (NULL);
+            result = append_word(db, result, save);
+            if (!result)
+            {
+                printf("failed to append word 2\n");
+                db->error = TRUE;
+                return (NULL);
+            }
         }
     }
 
