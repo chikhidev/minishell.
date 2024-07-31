@@ -199,7 +199,10 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     holder.parent = parent;
     if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
-        return process_scope(db, line, &holder);
+        return smart_split(db, 
+            remove_paranthesis(db, line, holder.tracker->paranthesis)
+        , current_node, parent);
+        // return process_scope(db, line, &holder);
     }
     else if (holder.op != NOT_FOUND)
     {
