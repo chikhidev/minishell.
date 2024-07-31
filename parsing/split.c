@@ -140,6 +140,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
     CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
         line, holder.tracker->quotes), FAILURE);
+    holder.parent = parent;
     holder.op = strongest_operator(line, holder.tracker);
     holder.current_node = current_node;
     if (holder.tracker->paranthesis && holder.op == NOT_FOUND)

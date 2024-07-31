@@ -72,7 +72,7 @@ int exec(t_db   *db, void *node)
         if (is_built_in(node))
         {
             exec_builtin(db, CMD);
-            
+            printf("parent: %p\n", CMD->origin);           
         }
         else
         {
