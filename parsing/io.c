@@ -6,16 +6,16 @@ int create_redirection(t_db *db, int type, int fd)
 {
     if (type == INPUTFILE)
     {
-        if (db->input_fd != STDIN_FILENO)
+        if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
         {
             close(db->input_fd);
         }
         db->input_fd = fd;
         db->curr_type = INPUTFILE;
     }
-    else if (type == APPENDFILE | type == OUTPUTFILE)
+    else if (type == APPENDFILE || type == OUTPUTFILE)
     {
-        if (db->output_fd != STDOUT_FILENO)
+        if (db->output_fd != STDOUT_FILENO && db->output_fd != INVALID)
         {
             close(db->output_fd);
         }
@@ -150,7 +150,7 @@ int open_heredoc(t_db *db, char *delim)
         write(pipe_fd[1], line, ft_strlen(line));
         write(2, "> ", 2);
     }
-    if (db->input_fd != STDIN_FILENO)
+    if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
     {
         close(db->input_fd);
     }
