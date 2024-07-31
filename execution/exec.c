@@ -39,6 +39,36 @@ int apply(t_db *db, void **current_node)
  * @return signal SUCCESS or FAILURE
  */
 
+
+int handle_op_node(t_db    *db,    void    *node)
+{
+    (void)db;
+    printf(MAGENTA);
+    if (OP->op_presentation == AND)
+        printf("OP->> AND\n");
+    else if (OP->op_presentation == OR)
+        printf("OP->> OR\n");
+    else if (OP->op_presentation == PIPE)
+        printf("OP->> PIPE\n");
+    printf(RESET);
+    return (SUCCESS);
+}
+
+int handle_cmd_node(t_db    *db,    void    *node)
+{
+    (void) db;
+    printf("CMD->> ");
+    for (int i = 0; CMD->args[i]; i++) {
+        printf("[%s] ", CMD->args[i]);
+    }
+    if (CMD->input_fd != STDIN_FILENO)
+        printf("IN: %d ", CMD->input_fd);
+    if (CMD->output_fd != STDOUT_FILENO)
+        printf("OUT: %d", CMD->output_fd);
+    printf("\n");
+    return (SUCCESS);
+}
+
 int exec_builtin(t_db   *db,t_cmd_node *node)
 {
     if (ft_strcmp(CMD->args[0], "echo") == 0)
@@ -70,36 +100,13 @@ int exec(t_db   *db, void *node)
     if (CMD->type == CMD_NODE)
     {
         if (is_built_in(node))
-        {
             exec_builtin(db, CMD);
-            printf("parent: %p\n", CMD->origin);           
-        }
         else
-        {
-            printf("CMD->> ");
-            for (int i = 0; CMD->args[i]; i++) {
-                printf("[%s] ", CMD->args[i]);
-            }
-            if (CMD->input_fd != STDIN_FILENO)
-                printf("IN: %d ", CMD->input_fd);
-            if (CMD->output_fd != STDOUT_FILENO)
-                printf("OUT: %d", CMD->output_fd);
-            printf("\n");
-        }
-        return SUCCESS;
+            handle_cmd_node(db, node);
     }
     else if (OP->type == OP_NODE)
-    {
-        printf(MAGENTA);
-        if (OP->op_presentation == AND) printf("OP->> AND\n");
-        else if (OP->op_presentation == OR) printf("OP->> OR\n");
-        else if (OP->op_presentation == PIPE) printf("OP->> PIPE\n");
-        printf(RESET);
-    }
-    
+        handle_op_node(db, node);
     for (int i = 0; i < OP->n_childs; i++)
-    {
         exec(db, OP->childs[i]);
-    }
     return SUCCESS;
 }
