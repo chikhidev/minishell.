@@ -1,7 +1,7 @@
 #include "main.h"
 #include "builtens.h"
 
-void unset(t_db *db,    char    *args[])
+int unset(t_db *db,    char    *args[])
 {
     int i;
 
@@ -12,4 +12,5 @@ void unset(t_db *db,    char    *args[])
         del_exp_node(&db->exp_list, args[i]);
         i++;
     }
+    return (SUCCESS);
 }

@@ -18,12 +18,14 @@ bool has_new_line(char   *arg)
     return false;
 }
 
-void echo(t_db  *db, char *args[], int n_args)
+int echo(t_db  *db, char *args[])
 {
     int i;
     char    *token;
     bool new_line;
+    int n_args;
 
+    n_args = count_array_len(args);
     new_line = true;
     if (n_args > 1 && !has_new_line(args[1]))
     {
@@ -36,7 +38,7 @@ void echo(t_db  *db, char *args[], int n_args)
     {
         token = whithout_quotes_ec(db, args[i]);
         if (!token)
-            return (ec_void(db)); // make sute
+            return (ec_void(db), FAILURE); // make sute
         printf("%s", token);
         i++;
         if (token)
@@ -44,4 +46,5 @@ void echo(t_db  *db, char *args[], int n_args)
     }
     if (new_line)
         printf("\n");
+    return (SUCCESS);
 }

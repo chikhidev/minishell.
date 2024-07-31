@@ -308,8 +308,8 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
     }
     CATCH_ONFALSE((!last_unclosed_paranth(*head)), error(db, NULL, "syntax error: near '('"));
     if (verify_double_scope(*head, line) == FAILURE)
-        return error(db, NULL, "Syntax error  : double scopes");
+        return error(db, NULL, "syntax error  : double scopes");
     if (verify_scope_surrounding(*head, line) == FAILURE)
-        return error(db, NULL, "Syntax error missing operator near scope");
+        return error(db, NULL, "syntax error missing operator near scope");
     return (SUCCESS);
 }

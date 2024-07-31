@@ -2,7 +2,7 @@
 #include "parsing.h"
 #include "string.h"
 
-bool show_export(t_db *db)
+int show_export(t_db *db)
 {
     // show export here;
     t_exp_list  *vars;
@@ -21,10 +21,10 @@ bool show_export(t_db *db)
         }
         curr = curr->next;
     }
-    return true;
+    return (SUCCESS);
 }
 
-bool    has_special_char(char   *str)
+int    has_special_char(char   *str)
 {
     int i;
 
@@ -32,23 +32,23 @@ bool    has_special_char(char   *str)
     while (str[i])
     {
         if (!ft_isalnum(str[i]) && str[i] != '_' && str[i] != '+' && str[i] != '=')
-            return true;
+            return (TRUE);
         i++;
     }
-    return (false);
+    return (FALSE);
 }
 
-bool    good_export_var(char    *var)
+int    good_export_var(char    *var)
 {
     if (var && (ft_isdigit(var[0])))
-        return (false);
+        return (FALSE);
     else if (!ft_isalpha(var[0]) && var[0] != '_')
-        return (false);
+        return (FALSE);
     else if (has_special_char(var))
-        return (false);
+        return (FALSE);
     else
-        return true;
-    return true;
+        return TRUE;
+    return TRUE;
 }
 
 int get_key_length(char *arg, BOOL  *append)
@@ -115,7 +115,7 @@ char    *get_val_from_arg(t_db  *db,    char  *arg,   int *v_len, int k_len, BOO
     return val;
 }
 
-void    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char    *val)
+int    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char    *val)
 {
     char    *joined;
 
@@ -124,6 +124,8 @@ void    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char  
         if (append)
         {
             joined = ft_strjoin_ec(db, node->val, val);
+            if (!joined)
+                return (FALSE);
             node->val = joined;
         }
         else
@@ -131,9 +133,10 @@ void    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char  
             node->val = val;
         }
     }
+    return (SUCCESS);
 }
 
-void    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char    *val)
+int    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char    *val)
 {
     char    *joined;
 
@@ -142,11 +145,14 @@ void    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char  
         if (append)
         {
             joined = ft_strjoin_ec(db, node->val, val);
+            if (!joined)
+                return (FALSE);
             node->val = joined;
         }
         else
             node->val = val;
     }
+    return (SUCCESS);
 }
 
 BOOL    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
@@ -166,7 +172,7 @@ BOOL    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
     return FALSE;
 }
 
-bool handle_export_args(t_db    *db,    char    *args[])
+int handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
     char    *key;
@@ -176,7 +182,7 @@ bool handle_export_args(t_db    *db,    char    *args[])
     int      v_len;
     t_exp_list  *exp_node;
     t_env_list  *env_node;
-    bool    good;
+    BOOL    good;
     BOOL    append;
 
     good = TRUE;
@@ -234,7 +240,7 @@ bool handle_export_args(t_db    *db,    char    *args[])
     return good;
 }
 
-bool export(t_db    *db, char   *args[])
+int export(t_db    *db, char   *args[])
 {
     int n_args;
 

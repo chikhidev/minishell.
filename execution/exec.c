@@ -1,6 +1,7 @@
 #include "main.h"
 #include "parsing.h"
 #include "exec.h"
+#include "builtens.h"
 
 /**
  * @brief This function will apply the command
@@ -37,34 +38,68 @@ int apply(t_db *db, void **current_node)
  * @brief This function will execute the each command in the tree
  * @return signal SUCCESS or FAILURE
  */
-int exec(t_db *db, void **current_node)
+
+int exec_builtin(t_db   *db,t_cmd_node *node)
 {
+    if (ft_strcmp(CMD->args[0], "echo") == 0)
+        return echo(db, CMD->args);
+    else if (ft_strcmp(CMD->args[0], "export") == 0)
+        return export(db, CMD->args);
+    else if (ft_strcmp(CMD->args[0], "pwd") == 0)
+        return pwd(db);
+    else if (ft_strcmp(CMD->args[0], "env") == 0)
+        return env(db, CMD->args);
+    else if (ft_strcmp(CMD->args[0], "cd") == 0)
+        return cd(db, CMD->args);
+    else if (ft_strcmp(CMD->args[0], "unset") == 0)
+        unset(db, CMD->args);
+    else if (ft_strcmp(CMD->args[0], "exit") == 0)
+    {
+        error(db, NULL, NULL);
+        ec_void(db);
+        exit(0);
+    }
+    return 1;
+}
 
-    (void)db;
-    (void)current_node;
-    // >>>>> rebuild the logic <<<<<<
-    // SIGNAL path_signal;
 
-    // if (!current_node)
-    //     return FAILURE;
-
-    // printf("%p\n", current_node);
-    // printf("%d\n", CURR_CMD->type);
-
-    // if (CURR_CMD->type == CMD_NODE)
-    // {
-    //     return apply(db, current_node);
-    // }
-    // else if (CURR_OP->type == OP_NODE)
-    // {
-    //     for (int i = 0; i < CURR_OP->n_childs; i++)
-    //     {
-    //         path_signal = exec(db, &CURR_OP->childs[i]);
-    //         if (path_signal == FAILURE && CURR_OP->op_presentation == AND)
-    //         {
-    //             return FAILURE;
-    //         }
-    //     }
-    // }
+int exec(t_db   *db, void *node)
+{
+    if (!node)
+        return SUCCESS;
+    if (CMD->type == CMD_NODE)
+    {
+        if (is_built_in(node))
+        {
+            exec_builtin(db, CMD);
+            
+        }
+        else
+        {
+            printf("CMD->> ");
+            for (int i = 0; CMD->args[i]; i++) {
+                printf("[%s] ", CMD->args[i]);
+            }
+            if (CMD->input_fd != STDIN_FILENO)
+                printf("IN: %d ", CMD->input_fd);
+            if (CMD->output_fd != STDOUT_FILENO)
+                printf("OUT: %d", CMD->output_fd);
+            printf("\n");
+        }
+        return SUCCESS;
+    }
+    else if (OP->type == OP_NODE)
+    {
+        printf(MAGENTA);
+        if (OP->op_presentation == AND) printf("OP->> AND\n");
+        else if (OP->op_presentation == OR) printf("OP->> OR\n");
+        else if (OP->op_presentation == PIPE) printf("OP->> PIPE\n");
+        printf(RESET);
+    }
+    
+    for (int i = 0; i < OP->n_childs; i++)
+    {
+        exec(db, OP->childs[i]);
+    }
     return SUCCESS;
 }

@@ -3,14 +3,14 @@
 #include "string.h"
 #include "main.h"
 
-void    env(t_db *db, char  *av[])
+int    env(t_db *db, char  *av[])
 {
     int args_len;
     t_env_list  *curr;
 
     args_len = count_array_len(av);
     if (args_len != 1)
-        printf("env: '%s': No such file or directory\n", av[1]);
+        return (printf("env: '%s': No such file or directory\n", av[1]), FAILURE);
     else
     {
 
@@ -21,4 +21,5 @@ void    env(t_db *db, char  *av[])
             curr = curr->next;
         }
     }
+    return (SUCCESS);
 }
