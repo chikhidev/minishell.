@@ -12,12 +12,18 @@
 #define PIPE_PRIORITY 2
 #define REDIR_PRIORITY 3
 
+#define OPEN_PARANTH '('
+#define CLOSE_PARANTH ')'
+
 /**
  * @details Defining the representations of the operators:
 */
 #define OR 1
 #define AND 2
 #define PIPE 3
+
+
+
 #define REDIR 4
 #define APPEND 5
 #define INPUT 6
@@ -104,5 +110,7 @@ int     find_c(char *str, char  c);
 int     length_til(char *str, char stop);
 BOOL    is_newline_at_the_end(char *line);
 char    *gc_copy(t_db *db, char *s);
+
+void  skip_open_spaces(t_quote *quotes, char *line, int *i);
 
 #endif
