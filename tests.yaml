@@ -262,6 +262,57 @@ export a=-n  DONE
 
 
 
-"$A'$B"'$C"$D'$E
+~/Desktop/minishell$> ls | wc &&k
+=================================================================
+==144968==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000006e5c at pc 0x0000004d25d2 bp 0x7ffeef776eb0 sp 0x7ffeef776ea8
+READ of size 1 at 0x602000006e5c thread T0
+    #0 0x4d25d1 in split_line /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:50:12
+    #1 0x4d2edb in process_op /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:85:16
+    #2 0x4d3a43 in smart_split /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:152:13
+    #3 0x4ce04f in parser /nfs/homes/sgouzi/Desktop/minishell/parsing/parser.c:34:5
+    #4 0x4cca6f in main /nfs/homes/sgouzi/Desktop/minishell/main.c:154:13
+    #5 0x7f886e3d3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #6 0x7f886e3d3e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #7 0x41f344 in _start (/nfs/homes/sgouzi/Desktop/minishell/minishell+0x41f344)
 
-$> 1'2$C"$D5"
+0x602000006e5c is located 0 bytes to the right of 12-byte region [0x602000006e50,0x602000006e5c)
+allocated by thread T0 here:
+    #0 0x49a20d in malloc (/nfs/homes/sgouzi/Desktop/minishell/minishell+0x49a20d)
+    #1 0x4ccb3b in gc_malloc /nfs/homes/sgouzi/Desktop/minishell/memo.c:7:11
+    #2 0x4cc887 in main /nfs/homes/sgouzi/Desktop/minishell/main.c:144:15
+    #3 0x7f886e3d3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:50:12 in split_line
+Shadow bytes around the buggy address:
+  0x0c047fff8d70: fa fa fd fa fa fa fd fd fa fa fd fa fa fa fd fd
+  0x0c047fff8d80: fa fa fd fd fa fa fd fd fa fa fd fa fa fa fd fd
+  0x0c047fff8d90: fa fa fd fa fa fa fd fd fa fa 00 00 fa fa 00 00
+  0x0c047fff8da0: fa fa 00 fa fa fa 01 fa fa fa fd fa fa fa 00 01
+  0x0c047fff8db0: fa fa fd fd fa fa 00 05 fa fa 01 fa fa fa fd fd
+=>0x0c047fff8dc0: fa fa 00 04 fa fa 00 04 fa fa 00[04]fa fa 00 00
+  0x0c047fff8dd0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+  0x0c047fff8de0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 01
+  0x0c047fff8df0: fa fa 00 00 fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8e00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8e10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==144968==ABORTING
