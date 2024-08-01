@@ -48,12 +48,12 @@ int valid_char(char c, int  index)
 {
     (void)index;
     if (isdigit(c))
-        return (TRUE);
+        return (true);
     if (c == '?')
-        return (TRUE);
+        return (true);
     if (c == '_' || ft_isalnum(c))
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }
 
 int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)

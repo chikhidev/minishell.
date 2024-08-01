@@ -10,7 +10,7 @@ void get_dir(t_db *db, char **store)
     char *prefix;
     int i;
 
-    prefix = GREEN;
+    prefix = NULL;
     home = get_env_node(db->env_list, "HOME");
     curr_dir = get_env_node(db->env_list, "PWD");
     if (!home || !curr_dir)
@@ -20,8 +20,17 @@ void get_dir(t_db *db, char **store)
         && (home->val[i] == curr_dir->val[i]))
         i++;
     if (i > 1)
-       prefix = GREEN"~";
+       prefix = "~";
     *store = ft_strjoin_ec(db, prefix, curr_dir->val + i);
+}
+
+void handle_sigint(int signum)
+{
+    (void)signum;
+    write(STDOUT_FILENO, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 }
 
 int handle_prompt(t_db *db, char **line)
@@ -30,12 +39,13 @@ int handle_prompt(t_db *db, char **line)
     char *tmp;
 
     get_dir(db, &tmp);
-    prompt = ft_strjoin(db, tmp, MAGENTA"$> "RESET);
+    signal(SIGINT, handle_sigint);
+    prompt = ft_strjoin(db, tmp, GREEN"$ "RESET);
     *line = readline(prompt);
     // handle ctrl + c later
-    if (!*line) return 0 ; // continue the loop
+    if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
-    return SUCCESS ; // nothing
+    return SUCCESS ; /*nothing*/
 }
 
 t_env_list *set_env_lst(t_db *db, char *env[]) {
@@ -47,7 +57,7 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
 
     key = NULL;
     val = NULL;
-    BOOL good = FALSE;
+    bool good = false;
     while (env && env[i])
     {
         good = fill_key_val(db, env[i], &key, &val);
@@ -72,7 +82,7 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     int             i;
     char            *key;
     char            *val;
-    BOOL            good;
+    bool            good;
     exp_list = NULL;
     key = NULL;
     val = NULL;
@@ -99,11 +109,11 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
     (void) ac;
     (void) av;
-    db->debug = FALSE;
+    db->debug = false;
     db->gc = NULL;
     db->ec = NULL;
     db->here_docs = NULL;
-    db->error = FALSE;
+    db->error = false;
     db->env = env;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
@@ -120,7 +130,7 @@ void db_reset(t_db *db)
     db->heredoc_counter = 0;
     db->ops = NULL;
     db->root_node = NULL;
-    db->error = FALSE;
+    db->error = false;
     db->last_signal = 0;
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
@@ -136,10 +146,12 @@ int     main(int    ac, char    *av[],  char    *env[])
 
     line = NULL;
     init_db(&db, ac, av, env);
-    while (TRUE)
+    while (true)
     {
         db_reset(&db);
         ret = handle_prompt(&db, &line);
+        if (ret == FAILURE)
+            break ;
         if (ret == 0) continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
         if (!tmp) 

@@ -9,23 +9,23 @@ int inside_single_quote(t_quote *head, int   i)
     while (q)
     {
         if (q->ascii == SNGLQUOTE && i >= q->start && i <= q->end)
-            return (TRUE);
+            return (true);
         q = q->next;
     }
-    return (FALSE);
+    return (false);
 }
 
 int is_inside_quotes(t_quote *head, int i)
 {
     t_quote *tmp;
 
-    if (!head) return FALSE;
+    if (!head) return false;
     tmp = head;
     while (tmp)
     {
         if (i >= tmp->start && i <= tmp->end)
-            return (TRUE);
+            return (true);
         tmp = tmp->next;
     }
-    return (FALSE);
+    return (false);
 }

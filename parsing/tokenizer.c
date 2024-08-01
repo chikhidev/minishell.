@@ -19,7 +19,7 @@ char **append_word(t_db *db, char **result, char *save)
         result = (char **)gc_malloc(db, 2 * sizeof(char *));
         if (!result)
         {
-            db->error = TRUE;
+            db->error = true;
             printf("Malloc failed\n");
             return (NULL);
         }
@@ -33,7 +33,7 @@ char **append_word(t_db *db, char **result, char *save)
     result = (char **)gc_realloc(db, result, (size + 2) * sizeof(char *));
     if (!result)
     {
-        db->error = TRUE;
+        db->error = true;
         return (NULL);
     }
     result[size] = save;
@@ -114,7 +114,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     if (!result)
                     {
                         printf("failed to append word 2\n");
-                        db->error = TRUE;
+                        db->error = true;
                         return (NULL);
                     }
                 }
@@ -139,7 +139,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             if (!result)
             {
                 printf("failed to append word 2\n");
-                db->error = TRUE;
+                db->error = true;
                 return (NULL);
             }
         }

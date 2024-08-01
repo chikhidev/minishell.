@@ -6,18 +6,21 @@ int create_redirection(t_db *db, int type, int fd)
 {
     if (type == INPUTFILE)
     {
+        if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
+        {
+            close(db->input_fd);
+        }
         db->input_fd = fd;
         db->curr_type = INPUTFILE;
     }
-    else if (type == OUTPUTFILE)
+    else if (type == APPENDFILE || type == OUTPUTFILE)
     {
+        if (db->output_fd != STDOUT_FILENO && db->output_fd != INVALID)
+        {
+            close(db->output_fd);
+        }
         db->output_fd = fd;
-        db->curr_type = OUTPUTFILE;
-    }
-    else if (type == APPENDFILE)
-    {
-        db->output_fd = fd;
-        db->curr_type = APPENDFILE;
+        db->curr_type = type;
     }
 
     return (SUCCESS);
@@ -33,22 +36,22 @@ int check_ambigious(t_db *db, char *file)
         if (!store)
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
         if (store && store->val && store->val[0] == '\0')
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
 
         if (store && contains_spaces_btwn(store->val))
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
     }
 
-    return (FALSE);
+    return (false);
 }
 
 int open_file(t_db *db, char *file, int type, t_quote **quotes)
@@ -59,7 +62,7 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
     if (!file || ft_strlen(file) == 0)
         return (SUCCESS);
     fd = INVALID;
-    if (check_ambigious(db, file) == TRUE)
+    if (check_ambigious(db, file) == true)
     {
         create_redirection(db, type, INVALID);
         return FAILURE;
@@ -110,7 +113,7 @@ int open_heredoc(t_db *db, char *delim)
     delim = tmp;
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
-    write(2, "hdc> ", 5);
+    write(2, "> ", 2);
     while (1)
     {
         line = get_next_line(db, 0);
@@ -144,9 +147,12 @@ int open_heredoc(t_db *db, char *delim)
             expand(db, &line, NULL),
             FAILURE
         )
-        printf("line -> %s\n", line);
         write(pipe_fd[1], line, ft_strlen(line));
-        write(2, "hdc> ", 5);
+        write(2, "> ", 2);
+    }
+    if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
+    {
+        close(db->input_fd);
     }
     db->input_fd = pipe_fd[0];
     gc_free(db, delim);

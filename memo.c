@@ -137,7 +137,7 @@ void    ec_void(t_db *db)
     db->ec = NULL;
 }
 
-// void *ft_realloc(t_db    *db,    void    *old_ptr,   size_t  size,  BOOL free_)
+// void *ft_realloc(t_db    *db,    void    *old_ptr,   size_t  size,  bool free_)
 // {
 //     void    *new_ptr;
 
