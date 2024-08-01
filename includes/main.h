@@ -210,21 +210,22 @@ typedef struct s_db
 	int					debug;
 	void				*root_node;
 	t_gc				*gc;
+	t_gc				*ec;
 	char				**env;
 	int					op_counter[6];
 	int					last_signal;
 	t_operators			*ops;
 	t_here_doc			*here_docs;
 	char				error;
-
+	int					*pids;
 	/*io*/
 	int					heredoc_counter;
 	int					curr_type;
 	int					input_fd;
 	int					output_fd;
+	int					pipe[2];
 	t_env_list			*env_list;
 	t_exp_list			*exp_list;
-	t_gc				*ec;
 }						t_db;
 
 /*prototypes: error.c*/

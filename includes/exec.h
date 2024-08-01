@@ -1,6 +1,7 @@
+#include <sys/types.h>
+#include <sys/wait.h>
 #ifndef EXEC_H
 #define EXEC_H
-
 // exec.c
 // int exec(t_db *db, void **current_node);
 int exec(t_db   *db, void *node);

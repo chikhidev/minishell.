@@ -8,5 +8,6 @@ BOOL is_built_in(void *node)
         || ft_strcmp(CMD->args[0], "pwd") == 0
         || ft_strcmp(CMD->args[0], "env") == 0
         || ft_strcmp(CMD->args[0], "cd") == 0
+        || ft_strcmp(CMD->args[0], "exit") == 0
     );
 }
