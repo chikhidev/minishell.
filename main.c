@@ -65,7 +65,7 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
             return NULL ;
         new_node = new_env_node(db, key, val);
         if (!new_node) {
-            error(db, NULL, "Malloc failed");
+            error(db, NULL, "Malloc failed6");
             return NULL; // Ensure we return if malloc fails.
         }
         // printf("%s[%s]", key, val);
@@ -118,11 +118,6 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
     i = 0;
-    while (i < 6)
-    {
-        db->op_counter[i] = 0;
-        i++;
-    }
 }
 
 void db_reset(t_db *db)

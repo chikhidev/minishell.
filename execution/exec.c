@@ -39,17 +39,66 @@ int apply(t_db *db, void **current_node)
  * @return signal SUCCESS or FAILURE
  */
 
+int handle_dup(t_db     *db,    int  child_i,	int	temp_fd0)
+{
+	dup2(db->pipe[1], STDOUT_FILENO);
+    if (child_i == 0)
+    {
+        // dup infile  dup2(e)
+        // dup2()
+    }
+    else
+    {
+        dup2(temp_fd0, STDIN_FILENO);
+    }
+	return (SUCCESS);
+}
+
+int handle_pipe_op(t_db *db,    void    *node)
+{
+    int i;
+    int tmp_fd0;
+    char    *path;
+    char    **args;
+    // fork
+    db->pids = malloc((OP->n_childs + 1) * (sizeof(pid_t)));
+    db->pids[OP->n_childs] = -2;
+    i = 0;
+    if (pipe(db->pipe) == -1)
+        return (FAILURE);
+    close(db->pipe[1]);
+    tmp_fd0 = db->pipe[0];
+    while (i < OP->n_childs)
+    {
+        db->pids[i] = fork();
+        if (db->pids[i] == 0)
+        {
+			handle_dup(db,	i,	tmp_fd0);
+            args = ((t_cmd_node*)OP->childs[i])->args;
+            path = cmd_path(db, args[0]);
+            execve(path, args, NULL);
+            perror(args[0]);
+            exit(1);
+        }
+        else
+            waitpid(db->pids[i], NULL, 0);
+        i++;
+    }
+	close(db->pipe[0]);
+	close(db->pipe[1]);
+	close(tmp_fd0);
+    return (SUCCESS);
+}
 
 int handle_op_node(t_db    *db,    void    *node)
 {
-    (void)db;
-    printf(MAGENTA);
     if (OP->op_presentation == AND)
         printf("OP->> AND\n");
     else if (OP->op_presentation == OR)
         printf("OP->> OR\n");
     else if (OP->op_presentation == PIPE)
-        printf("OP->> PIPE\n");
+        handle_pipe_op(db, node);
+
     printf(RESET);
     return (SUCCESS);
 }
@@ -87,26 +136,26 @@ int exec_builtin(t_db   *db,t_cmd_node *node)
     {
         error(db, NULL, NULL);
         ec_void(db);
+        gc_void(db);
         exit(0);
     }
     return 1;
 }
 
-
 int exec(t_db   *db, void *node)
 {
     if (!node)
-        return SUCCESS;
+        return (SUCCESS);
     if (CMD->type == CMD_NODE)
     {
         if (is_built_in(node))
             exec_builtin(db, CMD);
         else
-            handle_cmd_node(db, node);
+			handle_cmd_node(db, node);
     }
     else if (OP->type == OP_NODE)
         handle_op_node(db, node);
     for (int i = 0; i < OP->n_childs; i++)
         exec(db, OP->childs[i]);
-    return SUCCESS;
+    return (SUCCESS);
 }

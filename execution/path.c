@@ -12,24 +12,24 @@ char    *cmd_path(t_db *db, char *filename)
     char **paths;
     char *path;
     char *tmp;
+    t_env_list  *path_node;
 
     if (!filename)
         return NULL;
-    (void)db;
-    paths = ft_split(db, getenv("PATH"), ':');
+    path_node = get_env_node(db->env_list, "PATH");
+    if (!path_node)
+        return (NULL);
+    paths = ft_split(db, path_node->val, ':');
     if (!paths)
         return NULL;
-
     for (int i = 0; paths[i]; i++)
     {
         path = ft_strjoin(db, paths[i], "/");
         if (!path)
             return NULL;
-
         tmp = ft_strjoin(db, path, filename);
         if (!tmp)
             return NULL;
-
         gc_free(db, path);
         if (access(tmp, F_OK) == 0)
         {

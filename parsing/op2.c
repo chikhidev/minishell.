@@ -27,7 +27,7 @@ int push_heredoc(t_db *db, t_op_node *here_doc) // here_doc is a t_op_node
     {
         db->here_docs = gc_malloc(db, sizeof(t_here_doc));
         if (!db->here_docs)
-            return error(db, NULL, "Malloc failed");
+            return error(db, NULL, "Malloc failed9");
         db->here_docs->ptr = here_doc;
         db->here_docs->next = NULL;
         return (SUCCESS);
@@ -37,7 +37,7 @@ int push_heredoc(t_db *db, t_op_node *here_doc) // here_doc is a t_op_node
         tmp = tmp->next;
     tmp->next = gc_malloc(db, sizeof(t_here_doc));
     if (!tmp->next)
-        return (error(db, NULL, "Malloc failed"));
+        return (error(db, NULL, "Malloc failed10"));
     tmp->next->ptr = here_doc;
     tmp->next->next = NULL;
     return (SUCCESS);

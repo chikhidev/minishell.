@@ -327,3 +327,11 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 ~/minishell$ 
 ~/minishell$ cd
 ~/minishell$ 
+
+
+
+$> pwd
+$> unset PWD
+$> env | grep PWD
+$> cd $PWD
+$> pwd

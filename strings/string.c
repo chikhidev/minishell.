@@ -9,13 +9,15 @@ char    *concat(t_db *db, char *s, char single_char)
     if (!s)
     {
         new = gc_malloc(db, 2 * sizeof(char));
-        if (!new) return (NULL);
+        if (!new)
+            return (NULL);
         new[0] = single_char;
         new[1] = '\0';
         return (new);
     }
     new = gc_malloc(db, ft_strlen(s) + 2);
-    if (!new) return (NULL);
+    if (!new)
+        return (NULL);
     i = 0;
     while (s && s[i])
     {
