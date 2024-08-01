@@ -104,8 +104,10 @@ int validate_io(char *arg, int size)
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
+    int pid;
     char *line;
     char *tmp;
+    int child_status;
 
     tmp = whithout_quotes(db, delim);
     if (!tmp)
@@ -113,49 +115,72 @@ int open_heredoc(t_db *db, char *delim)
     delim = tmp;
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
-    write(2, "> ", 2);
-    while (1)
+    pid = fork(); /*we fork to handle signals inside the child*/
+    if (pid == -1)
+        return error(db, "fork", NULL);
+    if (pid == 0)
     {
-        line = get_next_line(db, 0);
-        if (!line)
+        signal(SIGINT, SIG_DFL);
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+        write(2, "> ", 2);
+        while (1)
         {
-            write(2, "\n", 1);
-            close(pipe_fd[1]);
-            break;
-        }
-        tmp = gc_copy(db, line);
-        gc_free(db, line);
-        if (!tmp)
-            return error(db, NULL, "malloc failed");
-        line = tmp;
-        if (is_newline_at_the_end(line))
-        {
-            tmp = ft_substr(db,     line, 0, ft_strlen(line) - 1);
+            line = get_next_line(db, 0);
+            if (!line)
+            {
+                write(2, "\n", 1);
+                close(pipe_fd[1]);
+                break;
+            }
+            tmp = gc_copy(db, line);
+            gc_free(db, line);
             if (!tmp)
                 return error(db, NULL, "malloc failed");
-            line = gc_copy(db, tmp);
-            gc_free(db, tmp);
+            line = tmp;
+            if (is_newline_at_the_end(line))
+            {
+                tmp = ft_substr(db,     line, 0, ft_strlen(line) - 1);
+                if (!tmp)
+                    return error(db, NULL, "malloc failed");
+                line = gc_copy(db, tmp);
+                gc_free(db, tmp);
+            }
+            if (ft_strcmp(delim, line) == 0
+                && ft_strlen(delim) == ft_strlen(line))
+            {
+                write(2, "\n", 1);
+                close(pipe_fd[1]);
+                break;
+            }
+            CATCH_ONFAILURE(
+                expand(db, &line, NULL),
+                FAILURE
+            )
+            write(pipe_fd[1], line, ft_strlen(line));
+            write(2, "> ", 2);
         }
-        if (ft_strcmp(delim, line) == 0
-            && ft_strlen(delim) == ft_strlen(line))
+        if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
         {
-            write(2, "\n", 1);
-            close(pipe_fd[1]);
-            break;
+            close(db->input_fd);
         }
-        CATCH_ONFAILURE(
-            expand(db, &line, NULL),
-            FAILURE
-        )
-        write(pipe_fd[1], line, ft_strlen(line));
-        write(2, "> ", 2);
+        gc_void(db);
+        ec_void(db);
+        exit(0);
     }
-    if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
+
+    // wait for the child to finish
+    waitpid(pid, &child_status, 0);
+    if (feedback(child_status).signal == SIGINT)
     {
-        close(db->input_fd);
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+        return (FAILURE);
     }
+    close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];
-    gc_free(db, delim);
+    db->curr_type = HEREDOC;
+
     return (SUCCESS);
 }
 

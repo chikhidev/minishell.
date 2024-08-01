@@ -40,7 +40,8 @@ BUILTENS =	builtens/echo.c \
 
 SRC =	main.c		\
 		memo.c		\
-		error.c
+		error.c	\
+		signals.c
 
 SRC += $(PARSING_SRC)
 SRC += $(STRING)

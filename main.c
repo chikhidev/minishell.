@@ -165,8 +165,8 @@ int     main(int    ac, char    *av[],  char    *env[])
         line = tmp;
         if (parser(&db, line) == FAILURE)
             continue ;
-        if (exec(&db, db.root_node) == FAILURE)
-            continue ;
+        // if (exec(&db, db.root_node) == FAILURE)
+        //     continue ;
         gc_void(&db);
     }
     ec_void(&db);
