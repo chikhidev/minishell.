@@ -26,16 +26,14 @@ char *get_env(t_db *db, char *name)
 {
     t_exp_list *object;
 
-	if (!name) return (NULL);
-    if (db->debug) printf("name -> %s\n", name);
+	if (!name)
+        return (NULL);
+    if (db->debug)
+        printf("name -> %s\n", name);
     if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
-    {
         return (ft_itoa(db, db->last_signal));
-    }
     if (are_all(name, ft_isdigit))
-    {
         return (ft_strdup(db, name + 1));
-    }
     object = get_exp_node(db->exp_list, name);
     CATCH_ONNULL(
         object,
@@ -64,7 +62,8 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
     while ((*line)[(*i)] && valid_char((*line)[*i], *i))
     {
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
-        CATCH_MALLOC(tmp);
+        if (!tmp)
+            return (error(db, NULL, "Malloc failed7"));
         gc_free(db, *env_var_name);
         *env_var_name = tmp;
         (*i)++;
@@ -82,20 +81,20 @@ int updated_line(t_db *db, char **line, char *variable_name, t_iterators *remind
         return reminder->i;
     tmp = ft_substr(db, *line, 0, reminder->i);
     if (!tmp)
-        return error(db, NULL, "Malloc failed");
+        return error(db, NULL, "Malloc failed1");
     new_line = ft_strjoin(db, tmp, get_env(db, variable_name));
     if (!new_line)
-        return error(db, NULL, "Malloc failed");
+        return error(db, NULL, "Malloc failed2");
     gc_free(db, tmp);
     reached = ft_strlen(new_line) - 1;
     tmp = ft_substr(db, *line, reminder->j, ft_strlen(*line));
     if (!tmp)
-        return error(db, NULL, "Malloc failed");
+        return error(db, NULL, "Malloc failed3");
 
     gc_free(db, *line);
     *line = ft_strjoin(db, new_line, tmp);
     if (!*line)
-        return error(db, NULL, "Malloc failed");
+        return error(db, NULL, "Malloc failed4");
     return reached;
 }
 

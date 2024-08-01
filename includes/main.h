@@ -25,7 +25,7 @@
 // triggers
 # define CATCH_MALLOC(x) \
 	if (!x)             \
-		return (error(db, NULL, "Malloc failed"));
+		return (error(db, NULL, "Malloc failed7"));
 # define CATCH(x, message) \
 	if (x == FAILURE)     \
 		return (error(db, NULL, message));
@@ -209,7 +209,6 @@ typedef struct s_db
 	t_gc				*gc;
 	t_gc				*ec;
 	char				**env;
-	int					op_counter[6];
 	int					last_signal;
 	t_operators			*ops;
 	t_here_doc			*here_docs;
