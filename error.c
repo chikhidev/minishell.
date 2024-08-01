@@ -10,6 +10,6 @@ int error(t_db *db, char *specifier, char *msg)
             printf("%s: %s\n", specifier, msg);
     }
     gc_void(db);
-    db->error = TRUE;
+    db->error = true;
     return (FAILURE);
 }

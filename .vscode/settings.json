@@ -13,7 +13,8 @@
     "string.h": "c",
     "builtens.h": "c",
     "get_next_line.h": "c",
-    "stdlib.h": "c"
+    "stdlib.h": "c",
+    "fcntl.h": "c"
   },
   "workbench.iconTheme": "vs-seti",
   "C_Cpp_Runner.cCompilerPath": "gcc",

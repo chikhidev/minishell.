@@ -265,10 +265,10 @@ int only_spaces(char *line, int start, int close)
     while (i < close)
     {
         if (!is_whitespace(line[i]))
-            return (FALSE);
+            return (false);
         i++;
     }
-    return (TRUE);
+    return (true);
 }
 // db->paranthesis
 int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
@@ -298,7 +298,7 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
         {
             CATCH_ONNULL(last_opened, error(db, NULL, "syntax error: near ')'"));
             last_opened->close_ = i;
-            CATCH_ONFALSE((!only_spaces(line, last_opened->open_, last_opened->close_)),
+            CATCH_ONfalse((!only_spaces(line, last_opened->open_, last_opened->close_)),
                 // FAILURE); // instead of failure khasna error !
                 error(db, NULL, "syntax error: near ')'")); // salah lbatal forgot this <<<<<<
         }
@@ -306,7 +306,7 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
             return error(db, NULL, "syntax error: near ')'");
         i++;
     }
-    CATCH_ONFALSE((!last_unclosed_paranth(*head)), error(db, NULL, "syntax error: near '('"));
+    CATCH_ONfalse((!last_unclosed_paranth(*head)), error(db, NULL, "syntax error: near '('"));
     if (verify_double_scope(*head, line) == FAILURE)
         return error(db, NULL, "syntax error  : double scopes");
     if (verify_scope_surrounding(*head, line) == FAILURE)

@@ -14,16 +14,12 @@
 
 
 # define SIGNAL unsigned char
-# define BOOL unsigned char
-# define TRUE 1
-# define FALSE 0
 # define SUCCESS 1
 # define FAILURE 0
 # define NOT_FOUND -1
 # define INVALID -1
 # define VALIDE 1
 # define PASS
-
 
 
 // triggers
@@ -39,8 +35,8 @@
 # define CATCH_ONNULL(x, return_) \
 	if (x == NULL)               \
 		return (return_);
-# define CATCH_ONFALSE(x, return_) \
-	if (x == FALSE)               \
+# define CATCH_ONfalse(x, return_) \
+	if (x == false)               \
 		return (return_);
 # define CATCH_ONINVALID(x, return_) \
 	if (x == INVALID)               \
@@ -250,7 +246,7 @@ char					*remove_paranthesis(t_db *db, char *line,
 
 int						is_op3(char *line, int *i);
 
-BOOL					contains_spaces_btwn(char *s);
+bool					contains_spaces_btwn(char *s);
 
 t_env_list				*new_env_node(t_db *db, char   *key, char	*val);
 void					add_env_front(t_env_list  **list,   t_env_list	*new);

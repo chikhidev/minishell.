@@ -57,7 +57,7 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
 
     key = NULL;
     val = NULL;
-    BOOL good = FALSE;
+    bool good = false;
     while (env && env[i])
     {
         good = fill_key_val(db, env[i], &key, &val);
@@ -82,7 +82,7 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     int             i;
     char            *key;
     char            *val;
-    BOOL            good;
+    bool            good;
     exp_list = NULL;
     key = NULL;
     val = NULL;
@@ -109,11 +109,11 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
     (void) ac;
     (void) av;
-    db->debug = FALSE;
+    db->debug = false;
     db->gc = NULL;
     db->ec = NULL;
     db->here_docs = NULL;
-    db->error = FALSE;
+    db->error = false;
     db->env = env;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
@@ -130,7 +130,7 @@ void db_reset(t_db *db)
     db->heredoc_counter = 0;
     db->ops = NULL;
     db->root_node = NULL;
-    db->error = FALSE;
+    db->error = false;
     db->last_signal = 0;
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
@@ -146,7 +146,7 @@ int     main(int    ac, char    *av[],  char    *env[])
 
     line = NULL;
     init_db(&db, ac, av, env);
-    while (TRUE)
+    while (true)
     {
         db_reset(&db);
         ret = handle_prompt(&db, &line);

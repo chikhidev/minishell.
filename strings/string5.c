@@ -32,7 +32,7 @@ char *gc_join(t_db *db, char *s1, char *s2)
 }
 
 
-BOOL contains_spaces_btwn(char *s)
+bool contains_spaces_btwn(char *s)
 {
     int i;
 
@@ -43,13 +43,13 @@ BOOL contains_spaces_btwn(char *s)
         {
             skip_spaces(s, &i);
             if (!s[i])
-                return (FALSE);
+                return (false);
             if (s[i] && !is_whitespace(s[i]))
-                return (TRUE);
+                return (true);
         }
         i++;
     }
-    return (FALSE);
+    return (false);
 }
 
 char	*ft_strdup_ec(t_db  *db,    const char *s1)

@@ -128,7 +128,7 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
 
 int process_scope(t_db *db, char *line, t_holder *holder)
 {
-    BOOL ignore;
+    bool ignore;
     char *tmp;
     char *scope;
 	t_iterators it;
@@ -136,7 +136,7 @@ int process_scope(t_db *db, char *line, t_holder *holder)
 
     printf("treating line: %s\n", line);
     scope = NULL;
-    ignore = FALSE;
+    ignore = false;
     ft_bzero(&it, sizeof(t_iterators));
     while (line[it.i])
     {

@@ -36,22 +36,22 @@ int check_ambigious(t_db *db, char *file)
         if (!store)
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
         if (store && store->val && store->val[0] == '\0')
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
 
         if (store && contains_spaces_btwn(store->val))
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
     }
 
-    return (FALSE);
+    return (false);
 }
 
 int open_file(t_db *db, char *file, int type, t_quote **quotes)
@@ -62,7 +62,7 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
     if (!file || ft_strlen(file) == 0)
         return (SUCCESS);
     fd = INVALID;
-    if (check_ambigious(db, file) == TRUE)
+    if (check_ambigious(db, file) == true)
     {
         create_redirection(db, type, INVALID);
         return FAILURE;

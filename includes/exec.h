@@ -10,7 +10,7 @@ int exec_builtin(t_db   *db,t_cmd_node *node);
 char    *cmd_path(t_db *db, char *filename);
 
 // path-checker.c
-BOOL    is_absolute_path(char *path);
-BOOL    is_relative_path(char *path);
+bool    is_absolute_path(char *path);
+bool    is_relative_path(char *path);
 
 #endif

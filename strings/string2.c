@@ -53,14 +53,14 @@ int strongest_operator(char *line, t_tracker *tracker)
 
 // int count_between_op(t_db *db, char *line, int op, t_tracker *tracker)
 // {
-//     BOOL    in_word;
+//     bool    in_word;
 //     int     i;
 //     int     counter;
 
 
 //     (void)db;
 //     i = 0;
-//     in_word = FALSE;
+//     in_word = false;
 //     counter = 0;
 //     while (line[i])
 //     {
@@ -68,11 +68,11 @@ int strongest_operator(char *line, t_tracker *tracker)
 //             && !is_inside_quotes(tracker->quotes, i)
 //             && !is_inside_paranthesis(tracker->paranthesis, i))
 //         {
-//             in_word = FALSE;
+//             in_word = false;
 //         }
 //         else if (!is_whitespace(line[i]))
 //         {
-//             in_word = TRUE;
+//             in_word = true;
 //             counter++;
 //             while (line[i] && !is_whitespace(line[i]))
 //                 i++;

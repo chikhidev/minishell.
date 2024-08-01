@@ -1,7 +1,7 @@
 #include "builtens.h"
 #include "parsing.h"
 
-BOOL is_built_in(void *node)
+bool is_built_in(void *node)
 {
     return (ft_strcmp(CMD->args[0], "echo") == 0
         || ft_strcmp(CMD->args[0], "export") == 0

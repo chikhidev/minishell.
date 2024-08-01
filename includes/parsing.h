@@ -108,7 +108,7 @@ int     count_array_len(char    **args);
 bool    contains(char  *str, char    *sub);
 int     find_c(char *str, char  c);
 int     length_til(char *str, char stop);
-BOOL    is_newline_at_the_end(char *line);
+bool    is_newline_at_the_end(char *line);
 char    *gc_copy(t_db *db, char *s);
 
 void  skip_open_spaces(t_quote *quotes, char *line, int *i);

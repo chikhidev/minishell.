@@ -97,8 +97,8 @@ int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int fla
 {
     bool char_after;
     bool char_befor;
-    char_befor = FALSE;
-    char_after = FALSE;
+    char_befor = false;
+    char_after = false;
     if (check_befor(line, op_name, op_idx))
         char_befor = true;
     if (check_after(line, op_name, op_idx))
@@ -188,10 +188,10 @@ int track_operators(t_db *db, char  *line)
 int is_valid_op(char c, char next_c)
 {
     if (c == '&' && next_c && next_c == '&')
-        return (TRUE);
+        return (true);
     else if (c == '|' && next_c && next_c == '|')
-        return (TRUE);
+        return (true);
     else if (c == '|' || c == '>' || c == '<')
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }
