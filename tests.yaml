@@ -316,3 +316,14 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
   Right alloca redzone:    cb
   Shadow gap:              cc
 ==144968==ABORTING
+
+
+
+
+# still cd not working properly
+~$ 
+~$ cd minishell/
+~/minishell$ 
+~/minishell$ 
+~/minishell$ cd
+~/minishell$ 

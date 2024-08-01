@@ -204,16 +204,11 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         , current_node, parent);
         // return process_scope(db, line, &holder);
     }
-    else if (holder.op != NOT_FOUND)
-    {
-        if (process_op(db, line, &holder) == FAILURE)
+    else if (holder.op != NOT_FOUND
+        && process_op(db, line, &holder) == FAILURE)
             return FAILURE;
-    }
-    else
-    {
-        if (process_cmd(db, line, &holder) == FAILURE)
+    else if (process_cmd(db, line, &holder) == FAILURE)
             return FAILURE;
-    }
     gc_free(db, holder.tracker);
     return SUCCESS; 
 }
