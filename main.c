@@ -105,7 +105,6 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
 
 void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
-    int i;
 
     (void) ac;
     (void) av;
@@ -117,7 +116,6 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env = env;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
-    i = 0;
 }
 
 void db_reset(t_db *db)
@@ -141,6 +139,7 @@ int     main(int    ac, char    *av[],  char    *env[])
 
     line = NULL;
     init_db(&db, ac, av, env);
+
     while (true)
     {
         db_reset(&db);

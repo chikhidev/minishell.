@@ -57,7 +57,7 @@ int cd(t_db    *db, char    *args[])
 		if (pwd_env_node)
 			pwd_env_node->val = ft_strdup_ec(db, pwd);
 		if (pwd_env_node && pwd_env_node->val == NULL)
-			return (perror("malloc"),closedir(to), FAILURE);
+			return (perror("malloc"), closedir(to), FAILURE);
 		if (pwd_exp_node)
 			pwd_exp_node->val = ft_strdup_ec(db, pwd);
 		if (pwd_exp_node && pwd_exp_node->val == NULL)

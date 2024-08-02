@@ -81,3 +81,42 @@ void  del_env_node(t_env_list    **list,  char    *key)
 	}
     return;
 }
+
+char	**env_list_to_env_arr(t_db	*db)
+{
+	t_env_list	*env_list;
+	char	**env_arr;
+	int	env_len;
+	env_len = 0;
+	char	*temp;
+
+	env_arr = NULL;
+	env_list = db->env_list;
+	while (env_list)
+	{
+		env_list = env_list->next;
+		env_len++;
+	}
+	env_arr = ec_malloc(db, sizeof(char	*) * (env_len + 1));
+	if (!env_arr)
+		return (NULL);
+	env_list = db->env_list;
+	env_len = 0;
+	while (env_list)
+	{
+		env_arr[env_len] = ec_malloc(db, ft_strlen(env_list->key) + 1 + ft_strlen(env_list->val) + 1);
+		if (!env_arr[env_len])
+			return (NULL);
+		temp = ft_strjoin(db, env_list->key, "=");
+		if (!temp)
+			return (NULL);
+		temp = ft_strjoin(db, temp, env_list->val);
+		if (!temp)
+			return (NULL);
+		env_arr[env_len++] = temp;
+		env_list = env_list->next;
+	}
+
+	env_arr[env_len] = NULL;
+	return env_arr;
+}

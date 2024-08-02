@@ -262,4 +262,9 @@ void					free_environment(t_db  *db);
 t_env_list              *get_env_node(t_env_list    *list,  char    *key);
 void					del_env_node(t_env_list    **list,  char    *key);
 void					del_exp_node(t_exp_list    **list,  char    *key);
+char					**env_list_to_env_arr(t_db	*db);
+
+
+/* FUNCTIONS */
+
 #endif

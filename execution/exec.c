@@ -60,7 +60,8 @@ int handle_pipe_op(t_db *db,    void    *node)
     int tmp_fd0;
     char    *path;
     char    **args;
-    // fork
+    char    **env;
+
     db->pids = malloc((OP->n_childs + 1) * (sizeof(pid_t)));
     db->pids[OP->n_childs] = -2;
     i = 0;
@@ -75,8 +76,10 @@ int handle_pipe_op(t_db *db,    void    *node)
         {
 			handle_dup(db,	i,	tmp_fd0);
             args = ((t_cmd_node*)OP->childs[i])->args;
+            printf("args[0]  %s\n", args[0]);
             path = cmd_path(db, args[0]);
-            execve(path, args, NULL);
+            env = env_list_to_env_arr(db);
+            execve(path, args, env);
             perror(args[0]);
             exit(1);
         }
@@ -154,7 +157,9 @@ int exec(t_db   *db, void *node)
 			handle_cmd_node(db, node);
     }
     else if (OP->type == OP_NODE)
+    {
         handle_op_node(db, node);
+    }
     for (int i = 0; i < OP->n_childs; i++)
         exec(db, OP->childs[i]);
     return (SUCCESS);
