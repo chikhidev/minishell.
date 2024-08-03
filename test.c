@@ -102,6 +102,7 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     return exp_list;
 }
 
+
 void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
 
@@ -129,53 +130,140 @@ void db_reset(t_db *db)
     db->output_fd = STDOUT_FILENO;
 }
 
+int pipex(t_db  *db, int   n_childs)
+{
+    int pipe_fd[2];
+    int read_fd;
 
-// [ls , -la]
-// int pipex(t_db  *db, int   n_childs)
-// {
-//     int read_fd;
+    pipe(pipe_fd);
+    read_fd = pipe_fd[0];
 
-//     pipe(db->pipe);
-//     read_fd = db->pipe[0];
+    // if (n_childs == 1)
+    // {
+    //     char    **args;
+    //     args = ft_split(db, "ls -la",' ');
+    //     for (int i = 0; i < n_childs; i++)
+    //     {
+    //         int id = fork();
+    //         if (id == 0)
+    //         {
+    //             execve("/bin/ls", args, NULL);
+    //         }
+    //         else
+    //             waitpid(id, NULL, 0);
+    //     }
+    // }
+    // else if (n_childs == 2)
+    // {
+    //     char    **args;
+    //     for (int i = 0; i < n_childs; i++)
+    //     {
+    //         int id = fork();
+    //         if (id == 0)
+    //         {
+    //             if (i == 0)
+    //             {
+    //                 if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+    //                     printf("errr \n");
+    //                 close(pipe_fd[0]);
+    //                 close(pipe_fd[1]);
+    //                 args = ft_split(db, "ls -la",' ');
+    //                 execve("/bin/ls", args, NULL);
+    //             }
+    //             else
+    //             {
 
-//     for (int i = 0; i < n_childs; i++)
-//     {
-//         if (i == 0)
-//         {
-//             int id = fork();
-//             if (id == CHILD)
-//                 child(db, &read_fd, n_childs, i);
-//             else
-//                 parent(db, &read_fd, n_childs, i);
-//         }
-//         else if (i == n_childs - 1)
-//         {
-//             int id = fork();
-//             if (id == CHILD)
-//                 child(db, &read_fd, n_childs, i);
-//             else
-//                 parent(db, &read_fd, n_childs, i);
-//         }
-//         else
-//         {
-//             int id = fork();
-//             if (id == CHILD)
-//                 child(db, &read_fd, n_childs, i);
-//             else
-//                 parent(db, &read_fd, n_childs, i);
-//         }
-//     }
-//     close(db->pipe[0]);
-//     close(db->pipe[1]);
+    //                 dup2(pipe_fd[0], STDIN_FILENO);
+    //                 close(pipe_fd[0]);
+    //                 close(pipe_fd[1]);
+    //                 args = ft_split(db, "wc",' ');
+    //                 execve("/bin/wc", args, NULL);
+    //             }
+    //         }
+    //     }
+    //     close(pipe_fd[0]);
+    //     close(pipe_fd[1]);
+    //     for (int i = 0; i < n_childs; i++)
+    //     {
+    //         wait(NULL);
+    //     }
+    // }
+    // else if (n_childs == 4)
+    // {
+    for (int i = 0; i < n_childs; i++)
+    {
+        if (i == 0)
+        {
+            int id = fork();
+            if (id == CHILD)
+            {
+                dup2(pipe_fd[1], STDOUT_FILENO); // Redirect stdout to the pipe
+                close(pipe_fd[0]);
+                close(pipe_fd[1]);
+                char **args = ft_split(db, "ls -la", ' ');
+                execve("/bin/ls", args, NULL);
+            }
+            else
+            {
+                read_fd = pipe_fd[0];
+                close(pipe_fd[1]);
+                pipe(pipe_fd);
+            }
+        }
+        else if (i == n_childs - 1)
+        {
+            int id = fork();
+            if (id == CHILD)
+            {
+                dup2(read_fd, STDIN_FILENO); 
+                // close(read_fd); // added
+                close(pipe_fd[0]);
+                close(pipe_fd[1]);
+                char **args = ft_split(db, "rev", ' ');
+                execve("/bin/rev", args, NULL);
+            }
+            else
+            {
+                close(pipe_fd[0]);
+                read_fd = pipe_fd[0]; // changed pos from up to here
+                close(pipe_fd[1]);
+                // pipe(pipe_fd); // [7, 8]
+            }
+        }
+        else
+        {
+                int id = fork();
+                if (id == CHILD)
+                {
+                    dup2(read_fd, STDIN_FILENO); // Redirect stdin from the pipe
+                    dup2(pipe_fd[1], STDOUT_FILENO); // Redirect stdout to the pipe
+                    // close(read_fd); // dont close
+                    close(pipe_fd[0]);
+                    close(pipe_fd[1]);
+                    char **args = ft_split(db, "wc", ' ');
+                    execve("/bin/wc", args, NULL);
+                }
+                else
+                {
+                    close(read_fd); // new
+                    read_fd = pipe_fd[0];
+                    close(pipe_fd[1]);
+                    pipe(pipe_fd); // [7, 8]
+                }
+        }
+    }
+    close(pipe_fd[0]);
+    close(pipe_fd[1]);
 
-//     for (int i = 0; i < n_childs; i++)
-//     {
-//         wait(NULL);
-//     }
+    for (int i = 0; i < n_childs; i++)
+    {
+        wait(NULL);
+    }
+    // }
 
-//     return (SUCCESS);
-// }
- 
+    return (SUCCESS);
+}
+
 int     main(int    ac, char    *av[],  char    *env[])
 {
     t_db    db;
@@ -189,6 +277,8 @@ int     main(int    ac, char    *av[],  char    *env[])
     while (true)
     {
         db_reset(&db);
+        pipex(&db, 3);
+        exit(1);
         ret = handle_prompt(&db, &line);
         if (ret == FAILURE)
             break ;

@@ -2,6 +2,8 @@
 #include <sys/wait.h>
 #ifndef EXEC_H
 #define EXEC_H
+
+#define CHILD 0
 // exec.c
 // int exec(t_db *db, void **current_node);
 int exec(t_db   *db, void *node);
