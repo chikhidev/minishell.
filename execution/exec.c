@@ -87,8 +87,7 @@ int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
         execve(path, args, NULL);
     else
         execve(args[0], args, NULL);
-    execve(ft_strjoin(db, "/bin/", args[0]), args, NULL);
-    perror("execve failed"); // If execve fails, print error
+    perror(args[0]); // If execve fails, print error
     exit(EXIT_FAILURE); // Exit with failure if execve fails
     return (SUCCESS);
 }
@@ -137,7 +136,7 @@ int handle_pipe_op(t_db *db,    void    *node)
 
 int handle_op_node(t_db    *db,    void    *node)
 {
-    printf("OP->> PIPE\n");
+    // printf("OP->> PIPE\n");
     if (OP->op_presentation == AND)
         printf("OP->> AND\n");
     else if (OP->op_presentation == OR)
@@ -175,6 +174,7 @@ int handle_cmd_node(t_db    *db,    void    *node)
             execve(path, args, NULL);
         else
             execve(args[0], args, NULL);
+        perror(args[0]);
         return (FAILURE);
     }
     else
