@@ -45,10 +45,14 @@ int handle_single_cmd(t_db *db,    void    *node)
 int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
 {
     t_cmd_node *command;
-
+    int sig;
     command = (t_cmd_node *)OP->childs[child_i];
     char    **args = command->args;
     char    *path;
+
+    if (expanded(db, args) == FAILURE)
+        return FAILURE;
+    
     if (node->n_childs == 1)
         return (handle_single_cmd(db, node));
     
@@ -66,7 +70,10 @@ int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
     
     // dprintf(2, "args[0] %s %zu\n", args[0], ft_strlen(args[0]));
     if (is_built_in(command))
-        exec_builtin(db, command);
+    {
+        sig = exec_builtin(db, command);
+        exit(sig);
+    }
     else
     {
         path = cmd_path(db, args[0]);
@@ -97,7 +104,7 @@ int handle_pipe_op(t_db *db,    void    *node)
     int read_fd;
     t_cmd_node *command;
 
-    db->pids = malloc((OP->n_childs + 1) * (sizeof(pid_t)));
+    db->pids = gc_malloc(db, (OP->n_childs + 1) * (sizeof(pid_t)));
     db->pids[OP->n_childs] = -2;
 
     i = 0;
@@ -106,7 +113,6 @@ int handle_pipe_op(t_db *db,    void    *node)
     while (i < OP->n_childs)
     {
         command = (t_cmd_node *)OP->childs[i];
-        // printf("gona fork for %s\n", command->args[0]);
         int id = fork();
         if (id == CHILD)
             child(db, &read_fd, OP, i);
@@ -155,10 +161,13 @@ int handle_cmd_node(t_db    *db,    void    *node)
     command = (t_cmd_node  *)node;
     if (command->type != CMD_NODE)
         return (SUCCESS);
-     args = command->args;
+    args = command->args;
     id = fork();
     if (id == 0)
     {
+        if (expanded(db, args) == FAILURE)
+            return FAILURE;
+
         env_arr = env_list_to_env_arr(db);
         path = cmd_path(db, args[0]);
         if (path)

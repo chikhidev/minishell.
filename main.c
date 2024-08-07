@@ -35,13 +35,14 @@ void handle_sigint(int signum)
 
 int handle_prompt(t_db *db, char **line)
 {
-    char *prompt;
-    char *tmp;
+    // char *prompt;
+    
+    // char *tmp;
 
-    get_dir(db, &tmp);
+    (void)db,
+    // get_dir(db, &tmp);
     signal(SIGINT, handle_sigint);
-    prompt = ft_strjoin(db, tmp, GREEN"$ "RESET);
-    *line = readline(prompt);
+    *line = readline(GREEN"$ "RESET);
     // handle ctrl + c later
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
@@ -104,7 +105,6 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
 
 void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
-
     (void) ac;
     (void) av;
     db->debug = false;
@@ -130,52 +130,6 @@ void db_reset(t_db *db)
 }
 
 
-// [ls , -la]
-// int pipex(t_db  *db, int   n_childs)
-// {
-//     int read_fd;
-
-//     pipe(db->pipe);
-//     read_fd = db->pipe[0];
-
-//     for (int i = 0; i < n_childs; i++)
-//     {
-//         if (i == 0)
-//         {
-//             int id = fork();
-//             if (id == CHILD)
-//                 child(db, &read_fd, n_childs, i);
-//             else
-//                 parent(db, &read_fd, n_childs, i);
-//         }
-//         else if (i == n_childs - 1)
-//         {
-//             int id = fork();
-//             if (id == CHILD)
-//                 child(db, &read_fd, n_childs, i);
-//             else
-//                 parent(db, &read_fd, n_childs, i);
-//         }
-//         else
-//         {
-//             int id = fork();
-//             if (id == CHILD)
-//                 child(db, &read_fd, n_childs, i);
-//             else
-//                 parent(db, &read_fd, n_childs, i);
-//         }
-//     }
-//     close(db->pipe[0]);
-//     close(db->pipe[1]);
-
-//     for (int i = 0; i < n_childs; i++)
-//     {
-//         wait(NULL);
-//     }
-
-//     return (SUCCESS);
-// }
- 
 int     main(int    ac, char    *av[],  char    *env[])
 {
     t_db    db;

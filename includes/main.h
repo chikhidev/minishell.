@@ -11,6 +11,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <signal.h>
+#include <sys/wait.h>
 
 
 # define SIGNAL unsigned char
@@ -63,12 +64,23 @@
 # define RED "\033[0;31m"
 # define ORANGE "\033[0;33m"
 # define MAGENTA "\033[0;35m"
-# define GREEN "\033[0;32m"
+# define GREEN "\033[2;32m"
 # define BLUE "\033[0;34m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
 # define BOLD      "\033[1m"
 # define UNDERLINE "\033[4m"
+
+/**
+ * @details This is gonna represent the child process's feedback
+ * to use it simply call the function feedback
+ */
+typedef struct feedback
+{
+	int	signal;
+	int status;
+}	t_feedback;
+
 
 typedef struct s_iterators
 {
@@ -264,6 +276,7 @@ void					del_env_node(t_env_list    **list,  char    *key);
 void					del_exp_node(t_exp_list    **list,  char    *key);
 char					**env_list_to_env_arr(t_db	*db);
 
+t_feedback				*feedback(t_db *db, int status);
 
 /* FUNCTIONS */
 

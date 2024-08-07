@@ -1,5 +1,5 @@
 NAME = minishell
-CARGS = -Wall -Wextra -Werror -g3 -I includes -fsanitize=address 
+CARGS = -Wall -Wextra -Werror -I includes -g3 -fsanitize=address 
 CFLAGS = -Wall -Wextra -Werror
 
 LIBFT = libft/libft.a
@@ -41,7 +41,8 @@ BUILTENS =	builtens/echo.c \
 
 SRC =	main.c		\
 		memo.c		\
-		error.c
+		error.c	\
+		signals.c
 
 SRC += $(PARSING_SRC)
 SRC += $(STRING)

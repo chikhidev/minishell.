@@ -135,3 +135,22 @@ int expand(t_db *db, char **line, t_quote **quotes)
     }
     return (SUCCESS);
 }
+
+
+int expanded(t_db *db, char **args)
+{
+    t_quote *head;
+    int64_t i;
+
+    head = NULL;
+    i = 0;
+    while (args[i])
+    {
+        track_quotes(db, &head, *args);
+        if (expand(db, &args[i], &head) == FAILURE)
+            return FAILURE;
+        i++;
+    }
+
+    return SUCCESS;
+}
