@@ -149,6 +149,7 @@ int handle_cmd_node(t_db    *db,    void    *node)
     int id;
     t_cmd_node *command;
     char    **args;
+    char    **env_arr;
     char    *path;
 
     command = (t_cmd_node  *)node;
@@ -158,12 +159,12 @@ int handle_cmd_node(t_db    *db,    void    *node)
     id = fork();
     if (id == 0)
     {
-        
+        env_arr = env_list_to_env_arr(db);
         path = cmd_path(db, args[0]);
         if (path)
-            execve(path, args, NULL);
+            execve(path, args, env_arr);
         else
-            execve(args[0], args, NULL);
+            execve(args[0], args, env_arr);
         perror(args[0]);
         return (FAILURE);
     }
