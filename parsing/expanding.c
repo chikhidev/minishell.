@@ -142,6 +142,7 @@ int expanded(t_db *db, char **args)
     t_quote *head;
     int64_t i;
 
+    head = NULL;
     i = 0;
     while (args[i])
     {

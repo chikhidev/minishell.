@@ -27,7 +27,8 @@ t_quote *last_quote(t_quote *head)
 {
     t_quote *tmp;
 
-    if (!head) return (NULL);
+    if (!head)
+        return (NULL);
     tmp = head;
     while (tmp->next)
         tmp = tmp->next;
