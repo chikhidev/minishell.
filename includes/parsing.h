@@ -22,8 +22,6 @@
 #define AND 2
 #define PIPE 3
 
-
-
 #define REDIR 4
 #define APPEND 5
 #define INPUT 6

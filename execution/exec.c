@@ -8,12 +8,13 @@
  * @return signal SUCCESS or FAILURE
  */
 
-extern int dprintf (int __fd, const char *__restrict __fmt, ...);
+extern int dprintf (int __fd, const char *__restrict __fmt, ...); // remove later
 
 int not_first_child(int child_idx)
 {
     return (child_idx != 0);
 }
+
 int not_last_child(int  child_idx, int  n_childs)
 {
     return (child_idx != n_childs - 1);
@@ -165,9 +166,6 @@ int handle_cmd_node(t_db    *db,    void    *node)
     id = fork();
     if (id == 0)
     {
-        if (expanded(db, args) == FAILURE)
-            return FAILURE;
-
         env_arr = env_list_to_env_arr(db);
         path = cmd_path(db, args[0]);
         if (path)
@@ -207,6 +205,8 @@ int exec(t_db   *db, void *node)
         return (SUCCESS);
     if (CMD->type == CMD_NODE)
     {
+        if (expanded(db, CMD->args) == FAILURE)
+            return FAILURE;
         if (is_built_in(node))
             return exec_builtin(db, CMD);
         else
