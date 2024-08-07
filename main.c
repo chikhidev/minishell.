@@ -35,13 +35,14 @@ void handle_sigint(int signum)
 
 int handle_prompt(t_db *db, char **line)
 {
-    char *prompt;
-    char *tmp;
+    // char *prompt;
+    
+    // char *tmp;
 
-    get_dir(db, &tmp);
+    (void)db,
+    // get_dir(db, &tmp);
     signal(SIGINT, handle_sigint);
-    prompt = ft_strjoin(db, tmp, GREEN"$ "RESET);
-    *line = readline(prompt);
+    *line = readline(GREEN"$ "RESET);
     // handle ctrl + c later
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
@@ -105,8 +106,6 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
 
 void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
-    int i;
-
     (void) ac;
     (void) av;
     db->debug = false;
@@ -117,7 +116,6 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env = env;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
-    i = 0;
 }
 
 void db_reset(t_db *db)
@@ -160,8 +158,8 @@ int     main(int    ac, char    *av[],  char    *env[])
         line = tmp;
         if (parser(&db, line) == FAILURE)
             continue ;
-        // if (exec(&db, db.root_node) == FAILURE)
-        //     continue ;
+        if (exec(&db, db.root_node) == FAILURE)
+            continue ;
         gc_void(&db);
     }
     ec_void(&db);

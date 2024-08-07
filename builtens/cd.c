@@ -19,14 +19,14 @@ int cd(t_db    *db, char    *args[])
 	{
 		home_node = get_env_node(db->env_list, "HOME");
 		if (home_node == NULL)
-			printf("cd: home is not set");
+			printf("cd: home is not set\n");
 		else
 		{
 			to = opendir(home_node->val);
 			if (to == NULL)
 				return (perror(args[1]), FAILURE);
 			if (chdir(home_node->val) == -1)
-				return (printf("cd: home is not set"), FAILURE);
+				return (printf("cd: home is not set\n"), FAILURE);
 			pwd = getcwd(NULL, 0);
 			if (pwd_env_node)
 				pwd_env_node->val = ft_strdup_ec(db, pwd);
