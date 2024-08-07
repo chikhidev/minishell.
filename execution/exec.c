@@ -4,117 +4,176 @@
 #include "builtens.h"
 
 /**
- * @brief This function will apply the command
- * @return signal of eather command was applied or not --> this is gonna be helpful in case of && and || operators
- */
-int apply(t_db *db, void **current_node)
-{
-    // int pid;
-    (void)db;
-
-    if (!current_node)
-        return FAILURE;
-    CURR_CMD->cmd_path = CURR_CMD->args[0];
-    if (is_relative_path(CURR_CMD->cmd_path))
-    {
-        if (access(CURR_CMD->cmd_path, F_OK) != 0)
-        {
-            perror(CURR_CMD->cmd_path);
-        }
-    }
-    // else if (!is_absolute_path(CURR_CMD->cmd_path))
-    // {
-    //     if (access(CURR_CMD->cmd_path, F_OK) != 0)
-    //     {
-    //         CURR_CMD->cmd_path = cmd_path(db, CURR_CMD->cmd_path);
-    //         if (!CURR_CMD->cmd_path)
-    //             return error(db, "Command not found");
-    //     }
-    // }
-    return SUCCESS;
-}
-
-/**
  * @brief This function will execute the each command in the tree
  * @return signal SUCCESS or FAILURE
  */
 
-int handle_dup(t_db     *db,    int  child_i,	int	temp_fd0)
+extern int dprintf (int __fd, const char *__restrict __fmt, ...);
+
+int not_first_child(int child_idx)
 {
-	dup2(db->pipe[1], STDOUT_FILENO);
-    if (child_i == 0)
+    return (child_idx != 0);
+}
+int not_last_child(int  child_idx, int  n_childs)
+{
+    return (child_idx != n_childs - 1);
+}
+
+int handle_single_cmd(t_db *db,    void    *node)
+{
+    int id;
+    t_cmd_node *command = (t_cmd_node *)OP->childs[0];
+    char    **args = command->args;
+    char    *path;
+
+    id = fork();
+    if (id == 0)
     {
-        // dup infile  dup2(e)
-        // dup2()
+        path = cmd_path(db, args[0]);
+        if (path)
+            execve(path, args, NULL);
+        else
+            execve(args[0], args, NULL);
+        return (FAILURE);
     }
     else
+        wait(NULL);
+    return (SUCCESS);
+}
+
+
+int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
+{
+    t_cmd_node *command;
+
+    command = (t_cmd_node *)OP->childs[child_i];
+    char    **args = command->args;
+    char    *path;
+
+    if (expanded(db, args) == FAILURE)
+        return (FAILURE);
+
+    if (node->n_childs == 1)
+        return (handle_single_cmd(db, node));
+    
+    if (not_last_child(child_i, OP->n_childs))
     {
-        dup2(temp_fd0, STDIN_FILENO);
+        dup2(db->pipe[1], STDOUT_FILENO); // now every child except last one will write in the pipe
     }
-	return (SUCCESS);
+
+    if (not_first_child(child_i))
+    {
+        // dprintf(2,"readfd will be closed and has %d\n", *read_fd);
+        dup2(*read_fd, STDIN_FILENO);
+        close(*read_fd);
+    }
+    
+    // dprintf(2, "args[0] %s %zu\n", args[0], ft_strlen(args[0]));
+    if (is_built_in(command))
+        exec_builtin(db, command);
+    else
+    {
+        path = cmd_path(db, args[0]);
+        if (path)
+            execve(path, args, NULL);
+        else
+            execve(args[0], args, NULL);
+        perror(args[0]); // If execve fails, print error
+        return (FAILURE);
+    }
+    return (SUCCESS);
+}
+int parent(t_db *db,    int *read_fd,    int n_childs,  int child_i)
+{
+    if (not_last_child(child_i, n_childs))
+    {
+        close(*read_fd); // pipe[0];
+        *read_fd = db->pipe[0];
+        close(db->pipe[1]);
+        pipe(db->pipe);
+    }
+    return (SUCCESS);
 }
 
 int handle_pipe_op(t_db *db,    void    *node)
 {
     int i;
-    int tmp_fd0;
-    char    *path;
-    char    **args;
-    // fork
+    int read_fd;
+    // t_cmd_node *command;
+
     db->pids = malloc((OP->n_childs + 1) * (sizeof(pid_t)));
     db->pids[OP->n_childs] = -2;
+
     i = 0;
     if (pipe(db->pipe) == -1)
-        return (FAILURE);
-    close(db->pipe[1]);
-    tmp_fd0 = db->pipe[0];
+        return (gc_void(db), error(db, NULL, "dup"));
     while (i < OP->n_childs)
     {
-        db->pids[i] = fork();
-        if (db->pids[i] == 0)
-        {
-			handle_dup(db,	i,	tmp_fd0);
-            args = ((t_cmd_node*)OP->childs[i])->args;
-            path = cmd_path(db, args[0]);
-            execve(path, args, NULL);
-            perror(args[0]);
-            exit(1);
-        }
+        // command = (t_cmd_node *)OP->childs[i];
+        // printf("gona fork for %s\n", command->args[0]);
+        int id = fork();
+
+        if (id == CHILD)
+            child(db, &read_fd, OP, i);
         else
-            waitpid(db->pids[i], NULL, 0);
+            parent(db, &read_fd, OP->n_childs, i);
         i++;
     }
-	close(db->pipe[0]);
-	close(db->pipe[1]);
-	close(tmp_fd0);
+    i = 0;
+    while (i < OP->n_childs)
+    {
+        wait(NULL);
+        i++;
+    }
+    close(db->pipe[0]);
+    close(db->pipe[1]);
     return (SUCCESS);
 }
 
 int handle_op_node(t_db    *db,    void    *node)
 {
+    // printf("OP->> PIPE\n");
     if (OP->op_presentation == AND)
         printf("OP->> AND\n");
     else if (OP->op_presentation == OR)
         printf("OP->> OR\n");
     else if (OP->op_presentation == PIPE)
-        handle_pipe_op(db, node);
-
+    {
+        if (handle_pipe_op(db, node) == FAILURE)
+        {
+            dprintf(2, "error\n");
+            return (FAILURE);
+        }
+    }
     printf(RESET);
     return (SUCCESS);
 }
 
 int handle_cmd_node(t_db    *db,    void    *node)
 {
-    (void) db;
-    printf("CMD->> ");
-    for (int i = 0; CMD->args[i]; i++) {
-        printf("[%s] ", CMD->args[i]);
+    int id;
+    t_cmd_node *command;
+    char    **args;
+    char    *path;
+
+    command = (t_cmd_node  *)node;
+    if (command->type != CMD_NODE)
+        return (SUCCESS);
+     args = command->args;
+    id = fork();
+    if (id == 0)
+    {
+        
+        path = cmd_path(db, args[0]);
+        if (path)
+            execve(path, args, NULL);
+        else
+            execve(args[0], args, NULL);
+        perror(args[0]);
+        return (FAILURE);
     }
-    if (CMD->input_fd != STDIN_FILENO)
-        printf("IN: %d ", CMD->input_fd);
-    if (CMD->output_fd != STDOUT_FILENO)
-        printf("OUT: %d", CMD->output_fd);
-    printf("\n");
+    else
+        wait(NULL);
     return (SUCCESS);
 }
 
@@ -131,15 +190,10 @@ int exec_builtin(t_db   *db,t_cmd_node *node)
     else if (ft_strcmp(CMD->args[0], "cd") == 0)
         return cd(db, CMD->args);
     else if (ft_strcmp(CMD->args[0], "unset") == 0)
-        unset(db, CMD->args);
+        return unset(db, CMD->args);
     else if (ft_strcmp(CMD->args[0], "exit") == 0)
-    {
-        error(db, NULL, NULL);
-        ec_void(db);
-        gc_void(db);
-        exit(0);
-    }
-    return 1;
+        exit_(db,   CMD->args);
+    return FAILURE;
 }
 
 int exec(t_db   *db, void *node)
@@ -148,14 +202,19 @@ int exec(t_db   *db, void *node)
         return (SUCCESS);
     if (CMD->type == CMD_NODE)
     {
+        if (expanded(db, CMD->args) == FAILURE)
+            return (FAILURE);
+
         if (is_built_in(node))
-            exec_builtin(db, CMD);
+            return exec_builtin(db, CMD);
         else
-			handle_cmd_node(db, node);
+			return handle_cmd_node(db, node);
     }
     else if (OP->type == OP_NODE)
-        handle_op_node(db, node);
-    for (int i = 0; i < OP->n_childs; i++)
-        exec(db, OP->childs[i]);
+    {
+        if (handle_op_node(db, node) == FAILURE)
+            return error(db, NULL, "pipe");
+    }
+
     return (SUCCESS);
 }

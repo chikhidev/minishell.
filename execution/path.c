@@ -30,13 +30,11 @@ char    *cmd_path(t_db *db, char *filename)
         tmp = ft_strjoin(db, path, filename);
         if (!tmp)
             return NULL;
-        gc_free(db, path);
         if (access(tmp, F_OK) == 0)
         {
             free_array(db, paths);
             return tmp;
         }
-        gc_free(db, tmp);
     }
 
     return NULL;

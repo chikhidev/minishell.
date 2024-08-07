@@ -171,12 +171,14 @@ int open_heredoc(t_db *db, char *delim)
 
     // wait for the child to finish
     waitpid(pid, &child_status, 0);
-    if (feedback(child_status).signal == SIGINT)
+
+    if (feedback(db, child_status)->signal == SIGINT)
     {
         close(pipe_fd[0]);
         close(pipe_fd[1]);
         return (FAILURE);
     }
+    
     close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;

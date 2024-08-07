@@ -126,60 +126,6 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
     return SUCCESS;
 }
 
-int process_scope(t_db *db, char *line, t_holder *holder)
-{
-    bool ignore;
-    char *tmp;
-    char *scope;
-	t_iterators it;
-
-
-    printf("treating line: %s\n", line);
-    scope = NULL;
-    ignore = false;
-    ft_bzero(&it, sizeof(t_iterators));
-    while (line[it.i])
-    {
-        if (((line[it.i] == OPEN_PARANTH || line[it.i] == CLOSE_PARANTH)
-            && !is_inside_quotes(holder->tracker->quotes, it.i)))
-            ignore = !ignore;
-        else if (ignore)
-        {
-            tmp = concat(db, scope, line[it.i]);
-            if (!tmp)
-                return error(db, NULL, "Malloc failed");
-            gc_free(db, scope);
-            scope = tmp;
-        }
-        else if (!ignore)
-        {
-            db->curr_type = is_valid_op(line[it.i], 2);
-            if (db->curr_type == INVALID)
-                db->curr_type = is_valid_op(line[it.i], 1);
-            if (db->curr_type != INVALID)
-            {
-                printf("was here: %d\n", it.i);
-                it.i += 1 + (db->curr_type == HEREDOC || db->curr_type == APPEND);
-                skip_open_spaces(holder->tracker->quotes, line, &it.i);
-                printf("now here: %d\n", it.i);
-                tmp = NULL;
-                while (line[it.i] && !(is_whitespace(line[it.i]) && !is_inside_quotes(holder->tracker->quotes, it.i)))
-                {
-                    tmp = concat(db, tmp, line[it.i]);
-                    it.i++;
-                }
-                printf("file name->>> %s\n", tmp);
-                it.i -= 1;
-            }
-        }
-        it.i++;
-    }
-    printf("scope: %s\n", scope);
-    return SUCCESS;
-    // return smart_split(db, scope, holder->current_node,
-    //     holder->parent);
-}
-
 int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
     t_holder holder;
@@ -194,21 +140,23 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
     CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
         line, holder.tracker->quotes), FAILURE);
+    holder.parent = parent;
     holder.op = strongest_operator(line, holder.tracker);
     holder.current_node = current_node;
-    holder.parent = parent;
     if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
-        return smart_split(db, 
-            remove_paranthesis(db, line, holder.tracker->paranthesis)
-        , current_node, parent);
-        // return process_scope(db, line, &holder);
+        return smart_split(db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent);
     }
-    else if (holder.op != NOT_FOUND
-        && process_op(db, line, &holder) == FAILURE)
+    else if (holder.op != NOT_FOUND)
+    {
+        if (process_op(db, line, &holder) == FAILURE)
             return FAILURE;
-    else if (process_cmd(db, line, &holder) == FAILURE)
+    }
+    else
+    {
+        if (process_cmd(db, line, &holder) == FAILURE)
             return FAILURE;
+    }
     gc_free(db, holder.tracker);
     return SUCCESS; 
 }

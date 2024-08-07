@@ -35,10 +35,10 @@ char *get_env(t_db *db, char *name)
     if (are_all(name, ft_isdigit))
         return (ft_strdup(db, name + 1));
     object = get_exp_node(db->exp_list, name);
-    CATCH_ONNULL(
-        object,
-        ft_strdup(db, "")
-    )
+    // CATCH_ONNULL(
+    //     object,
+    //     ft_strdup(db, "")
+    // )
 	return (ft_strdup(db, object->val));
 }
 
@@ -134,4 +134,22 @@ int expand(t_db *db, char **line, t_quote **quotes)
         i++;
     }
     return (SUCCESS);
+}
+
+
+int expanded(t_db *db, char **args)
+{
+    t_quote *head;
+    int64_t i;
+
+    i = 0;
+    while (args[i])
+    {
+        track_quotes(db, &head, *args);
+        if (expand(db, &args[i], &head) == FAILURE)
+            return FAILURE;
+        i++;
+    }
+
+    return SUCCESS;
 }

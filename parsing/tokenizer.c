@@ -101,15 +101,8 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 save = NULL;
                 it.i = it.j - 1;
             }
-            if (save)
+            if (save && ft_strlen(save) > 0)
             {
-                track_quotes(db, quotes, save);
-                CATCH_ONFAILURE(
-                    expand(db, &save, quotes)
-                , FAILURE);
-
-                if (ft_strlen(save) > 0)
-                {
                     result = append_word(db, result, save);
                     if (!result)
                     {
@@ -119,22 +112,12 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     }
                 }
                 save = NULL;
-            }
         }
         it.i++;
     }
 
-    if (save)
+    if (save && ft_strlen(save) > 0)
     {
-        track_quotes(db, quotes, save);
-        CATCH_ONFAILURE(
-            expand(db, &save, quotes)
-        , FAILURE);
-
-        
-
-        if (ft_strlen(save) > 0)
-        {
             result = append_word(db, result, save);
             if (!result)
             {
@@ -142,7 +125,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 db->error = true;
                 return (NULL);
             }
-        }
     }
 
 	return (result);

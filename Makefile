@@ -1,5 +1,5 @@
 NAME = minishell
-CARGS = -Wall -Wextra -Werror -g3 -I includes #-fsanitize=address 
+CARGS = -Wall -Wextra -Werror -I includes -g3 -fsanitize=address 
 CFLAGS = -Wall -Wextra -Werror
 
 LIBFT = libft/libft.a
@@ -34,6 +34,7 @@ BUILTENS =	builtens/echo.c \
 			builtens/pwd.c \
 			builtens/cd.c \
 			builtens/unset.c \
+			builtens/exit.c \
 	    	env_list.c	\
 	    	exp_list.c	\
 			builtens/index.c
