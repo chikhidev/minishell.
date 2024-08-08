@@ -1,5 +1,5 @@
 NAME = minishell
-CARGS = -Wall -Wextra -I includes -g3 #-Werror
+CARGS = -Wall -Wextra -Werror -I includes -g3
 
 
 LIBFT = libft/libft.a

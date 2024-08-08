@@ -143,8 +143,25 @@ int create_operator(t_db *db, int i, char *name)
     }
     return (SUCCESS);
 }
+// int track_operators(t_db *db, char  *line, t_quote  *quotes)
+// {
+//     int i;
+//     (void) db;
+//     i = 0;
+//     while (line[i])
+//     {
+//         if (line[i] == '&' && line[i + 1] == '&' && is_inside_quotes(quotes, i))
+//             return (FAILURE);
+//         else if (line[i] == '|' && line[i + 1] == '|' && is_inside_quotes(quotes, i))
+//             return (FAILURE);
+//         else if (line[i] == '|'  && is_inside_quotes(quotes, i))
+//             return (FAILURE);
+//         i++;
+//     }
+//     return (SUCCESS);
+// }
 
-int track_operators(t_db *db, char  *line)
+int track_operators(t_db *db, char  *line, t_quote  *quotes)
 {
     t_operators *ops;
     int i;
@@ -153,11 +170,11 @@ int track_operators(t_db *db, char  *line)
     i = 0;
     while (line[i])
     {
-        if (line[i] == '&' && line[i + 1] == '&')
+        if (line[i] == '&' && line[i + 1] == '&' && !is_inside_quotes(quotes, i))
             (create_operator(db, i, "&&"), i++);
-        else if (line[i] == '|' && line[i + 1] == '|')
+        else if (line[i] == '|' && line[i + 1] == '|' && !is_inside_quotes(quotes, i))
             (create_operator(db, i, "||"), i++);
-        else if (line[i] == '|')
+        else if (line[i] == '|' && !is_inside_quotes(quotes, i))
             create_operator(db, i, "|");
         i++;
     }

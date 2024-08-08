@@ -28,7 +28,7 @@ int parser(t_db *db, char *line)
         FAILURE
     )
     CATCH_ONFAILURE(
-        track_operators(db, line),
+        track_operators(db, line, quotes),
         FAILURE
     )
     CATCH_ONFAILURE(

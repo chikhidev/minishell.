@@ -79,7 +79,7 @@ int is_inside_paranthesis(t_parnth *head, int i);
 
 /*op.c*/
 int is_valid_op(char c, char next_c);
-int track_operators(t_db *db, char  *line);
+int track_operators(t_db *db, char  *line,  t_quote *quotes);
 int is_operator_backward(char    *s, int  i);
 int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 
