@@ -63,7 +63,7 @@ int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
 
     if (expanded(db, args) == FAILURE)
         return FAILURE;
-    
+
     if (child_i == 0)
     {
         dup2(db->pipe[1], STDOUT_FILENO);
@@ -86,7 +86,7 @@ int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
         close(db->pipe[1]);
         close(2);
     }
-    
+
     // dprintf(2, "args[0] %s %zu\n", args[0], ft_strlen(args[0]));
     if (is_built_in(command))
     {
@@ -206,13 +206,36 @@ int handle_cmd_node(t_db    *db,    void    *node)
     if (id == 0)
     {
         env_arr = env_list_to_env_arr(db);
-        path = cmd_path(db, args[0]);
-        if (path)
-            execve(path, args, env_arr);
+        path = args[0];
+        /**
+         logic to track if the command path is relative or absolute
+         if the path is relative ->
+              check the permisssions and just execute it :)
+         else when the path is absolute then ->
+              check the permissions and just execute it ;)
+         else it just a regular command so check if it's there and execute it
+        */
+        if (is_relative_path(path) || is_absolute_path(path))
+        {
+            if (access(path, F_OK) + access(path, X_OK) != 0)
+            {
+                perror(path);
+                exit(error(db, NULL, NULL) + 127 - (access(path, X_OK) != 0));
+            }
+        }
         else
-            execve(args[0], args, env_arr);
-        perror(args[0]);
-        return (FAILURE);
+        {
+            path = cmd_path(db, args[0]);
+            if (db->error)
+                exit(126);
+            if (!path)
+            {
+                error(db, args[0], "command not found ya hamid\n");
+                exit(127);
+            }
+        }
+        execve(path, args, env_arr);
+        exit(127);
     }
     else
         wait(NULL);
