@@ -178,7 +178,7 @@ int open_heredoc(t_db *db, char *delim)
         close(pipe_fd[1]);
         return (FAILURE);
     }
-    
+
     close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;
@@ -212,7 +212,7 @@ int syntax_checker(t_db *db, char *line, int *start)
     i = *start;
     while (line[i])
     {
-        
+
         if (ft_strncmp(&line[i], ">>", 2) == 0
             || ft_strncmp(&line[i], "<<", 2) == 0
             || ft_strncmp(&line[i], ">", 1) == 0
@@ -225,7 +225,7 @@ int syntax_checker(t_db *db, char *line, int *start)
                     return error(db, "heredoc", "maximum here-document count exceeded");
                 i++;
             }
-            
+
             i += 1 + (line[i + 1] == '>' || line[i + 1] == '<');
             skip_spaces(line, &i);
             if (!line[i])
@@ -249,4 +249,3 @@ int syntax_checker(t_db *db, char *line, int *start)
     }
     return (SUCCESS);
 }
-

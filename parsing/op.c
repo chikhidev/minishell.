@@ -4,11 +4,11 @@
 /*
     good = 1 means in good place (befor and after)
 */
- 
+
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'     '<'    '|'          */
 /* flag is -1 if needs something befor & after op like    '&&'   '||'                                  */
 
- 
+
 void set_up_flag(int    *flag, char *op)
 {
     if (ft_strcmp(op, "&&") == 0)
@@ -55,8 +55,8 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
     return SUCCESS;
 }
 
-// && befor after 
-// < 
+// && befor after
+// <
 bool check_befor( char    *line,   char    *op_name,   int op_idx)
 {
     int i;

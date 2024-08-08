@@ -17,7 +17,6 @@ char    *cmd_path(t_db *db, char *filename)
     if (!filename)
         return NULL;
     path_node = get_exp_node(db->exp_list, "PATH");
-    printf("path: %s\n", path_node->val);
     if (!path_node)
     {
         return (NULL);
@@ -27,7 +26,6 @@ char    *cmd_path(t_db *db, char *filename)
         return NULL;
     for (int i = 0; paths[i]; i++)
     {
-        printf("searching in %s\n", paths[i]);
         path = ft_strjoin(db, paths[i], "/");
         if (!path)
         {
