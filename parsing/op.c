@@ -64,7 +64,9 @@ bool check_befor( char    *line,   char    *op_name,   int op_idx)
     i = op_idx - 1;
     while (i >= 0)
     {
-        if (is_op3(line, &i) != INVALID)
+        if (line[i] == '(')
+            return 0;
+        else if (is_op3(line, &i) != INVALID)
             return 0;
         else if (is_whitespace(line[i]))
             i--;
@@ -83,6 +85,8 @@ bool check_after( char    *line,   char    *op_name,   int op_idx)
     i = op_idx + ft_strlen(op_name);
     while (i < len)
     {
+        if (line[i] == ')')
+            return 0;
         if (is_op(line, &i) != INVALID)
             return 0;
         else if (is_whitespace(line[i]))
@@ -155,7 +159,6 @@ int track_operators(t_db *db, char  *line)
             (create_operator(db, i, "||"), i++);
         else if (line[i] == '|')
             create_operator(db, i, "|");
-
         i++;
     }
     i = 0;

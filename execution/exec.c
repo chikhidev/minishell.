@@ -177,7 +177,7 @@ int handle_op_node(t_db    *db,    void    *node)
     // printf("OP->> PIPE\n");
     if (OP->op_presentation == AND)
     {
-
+        
     }
     else if (OP->op_presentation == OR)
         printf("OP->> OR\n");
