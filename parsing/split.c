@@ -110,19 +110,13 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
     CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
     if (db->error)
         return error(db, NULL, NULL);
+    
     CATCH_MALLOC((CURR_CMD)->args);
     (CURR_CMD)->input_fd = db->input_fd;
     (CURR_CMD)->output_fd = db->output_fd;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
-    if (is_built_in(CURR_CMD))
-        return SUCCESS;
-    for (int i = 0; (CURR_CMD)->args[i]; i++)
-    {
-        (CURR_CMD)->args[i] = whithout_quotes(db, (CURR_CMD)->args[i]);
-        if ((CURR_CMD)->args[i] == NULL)
-            return error(db, NULL, "Malloc failed");
-    }
+
     return SUCCESS;
 }
 
