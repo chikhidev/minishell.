@@ -2,7 +2,7 @@
 #include "builtens.h"
 #include <errno.h>
 
-int pwd(t_db   *db)
+int pwd_(t_db   *db)
 {
 	(void)db;
 	char *pwd;

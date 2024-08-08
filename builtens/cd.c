@@ -3,7 +3,7 @@
 #include "parsing.h"
 #include "string.h"
 
-int cd(t_db    *db, char    *args[])
+int cd_(t_db    *db, char    *args[])
 {
 	DIR	*to;
 	char *pwd;

@@ -241,7 +241,7 @@ int handle_export_args(t_db    *db,    char    *args[])
     return good;
 }
 
-int export(t_db    *db, char   *args[])
+int export_(t_db    *db, char   *args[])
 {
     int n_args;
 

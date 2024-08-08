@@ -342,3 +342,28 @@ bash: syntax error near unexpected token `|'
 ➜  sgouzi minishell git:(parsing U:6 ?:2 ✗) 
 
 // must be fixed in syntax checker
+
+
+valgrind --track-fds=yes ./minishell  // to check open fds
+
+
+➜  sgouzi minishell git:(parsing U:11 ✗) ./minishell 
+$ echo '''"$Hecho '''"$HOME"'""
+"/nfs/homes/sgouzi" 
+$ 
+➜  sgouzi minishell git:(parsing U:11 ✗) 
+
+
+
+➜  sgouzi minishell git:(parsing U:11 ✗) export HOLA=24
+➜  sgouzi minishell git:(parsing U:11 ✗) ./minishell 
+$ export HOLA=12
+$ echo $"HOLA"
+$HOLA 
+$ export HOLA=12
+$ 
+➜  sgouzi minishell git:(parsing U:11 ✗) echo $HOLA
+24
+➜  sgouzi minishell git:(parsing U:11 ✗) echo $"HOLA"
+HOLA
+➜  sgouzi minishell git:(parsing U:11 ✗) 

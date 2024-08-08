@@ -1,7 +1,7 @@
 #include "main.h"
 #include "builtens.h"
 
-int unset(t_db *db,    char    *args[])
+int unset_(t_db *db,    char    *args[])
 {
     int i;
 

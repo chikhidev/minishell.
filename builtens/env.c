@@ -3,7 +3,7 @@
 #include "string.h"
 #include "main.h"
 
-int    env(t_db *db, char  *av[])
+int    env_(t_db *db, char  *av[])
 {
     int args_len;
     t_env_list  *curr;

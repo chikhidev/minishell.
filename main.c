@@ -41,7 +41,7 @@ int handle_prompt(t_db *db, char **line)
 
     (void)db,
     // get_dir(db, &tmp);
-    signal(SIGINT, handle_sigint);
+    // signal(SIGINT, handle_sigint);
     *line = readline(GREEN"$ "RESET);
     // handle ctrl + c later
     if (!*line) return FAILURE; /*stop the loop*/
@@ -165,5 +165,8 @@ int     main(int    ac, char    *av[],  char    *env[])
     }
     ec_void(&db);
     gc_void(&db);
+    close(0);
+    close(1);
+    close(2);
     return (SUCCESS);
 }

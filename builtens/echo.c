@@ -18,7 +18,7 @@ bool has_new_line(char   *arg)
     return false;
 }
 
-int echo(t_db  *db, char *args[])
+int echo_(t_db  *db, char *args[])
 {
     int i;
     char    *token;

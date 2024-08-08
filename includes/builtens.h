@@ -3,16 +3,16 @@
 #ifndef BUILTENS_H
 #define BUILTENS_H
 
-int		echo(t_db *db, char *args[]);
+int		echo_(t_db *db, char *args[]);
 int		show_export(t_db *db);
 int		has_special_char(char   *str);
 int		good_export_var(char    *var);
-int		export(t_db    *db, char   *args[]);
-int		env(t_db *db,   char    *args[]);
-int		pwd(t_db   *db);
+int		export_(t_db    *db, char   *args[]);
+int		env_(t_db *db,   char    *args[]);
+int		pwd_(t_db   *db);
 int		exit_(t_db  *db,    char    *args[]);
-int		cd(t_db *db, char   *args[]);
-int		unset(t_db *db,    char    *args[]);
+int		cd_(t_db *db, char   *args[]);
+int		unset_(t_db *db,    char    *args[]);
 bool	is_built_in(void *node);
 int		get_key_length(char *arg, bool  *append);
 int		get_val_length(char *arg,   int start_idx);

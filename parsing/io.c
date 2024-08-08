@@ -120,7 +120,7 @@ int open_heredoc(t_db *db, char *delim)
         return error(db, "fork", NULL);
     if (pid == 0)
     {
-        signal(SIGINT, SIG_DFL);
+        // signal(SIGINT, SIG_DFL);
         close(pipe_fd[0]);
         close(pipe_fd[1]);
         write(2, "> ", 2);
