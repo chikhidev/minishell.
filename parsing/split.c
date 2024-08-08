@@ -139,12 +139,15 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     holder.current_node = current_node;
     if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
+        holder.is_scope = true;
         return smart_split(db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent);
     }
     else if (holder.op != NOT_FOUND)
     {
         if (process_op(db, line, &holder) == FAILURE)
             return FAILURE;
+        CURR_OP->is_scope = holder.is_scope;
+        holder.is_scope = false;
     }
     else
     {

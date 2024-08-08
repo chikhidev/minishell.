@@ -36,7 +36,7 @@ void handle_sigint(int signum)
 int handle_prompt(t_db *db, char **line)
 {
     // char *prompt;
-    
+
     // char *tmp;
 
     (void)db,
@@ -110,7 +110,6 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->debug = false;
     db->gc = NULL;
     db->ec = NULL;
-    db->here_docs = NULL;
     db->error = false;
     db->env = env;
     db->env_list = set_env_lst(db, env);
@@ -148,7 +147,7 @@ int     main(int    ac, char    *av[],  char    *env[])
             break ;
         if (ret == 0) continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
-        if (!tmp) 
+        if (!tmp)
         {
             free(line);
             ec_void(&db);

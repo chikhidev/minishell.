@@ -32,6 +32,9 @@ typedef struct s_holder
     int op;
     void **current_node;
     void *parent;
+
+    bool is_scope;
+
     t_tracker *tracker;
 }   t_holder;
 

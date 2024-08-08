@@ -102,6 +102,8 @@ typedef struct s_op_node
 	void				**childs;
 	int					n_childs;
 
+	bool	is_scope;
+
 	// execution part ------ <<<<<<
 }						t_op_node;
 
@@ -217,21 +219,30 @@ typedef struct s_tracker
 typedef struct s_db
 {
 	int					debug;
+    /*tree head*/
 	void				*root_node;
+    /*momory management*/
 	t_gc				*gc;
 	t_gc				*ec;
+    /*storing init data*/
 	char				**env;
+    /*storing in tracked signals*/
 	int					last_signal;
+
 	t_operators			*ops;
-	t_here_doc			*here_docs;
-	char				error;
+    /*error flag*/
+	bool				error;
+    /**process id(s) for childs*/
 	int					*pids;
+
 	/*io*/
 	int					heredoc_counter;
 	int					curr_type;
 	int					input_fd;
 	int					output_fd;
 	int					pipe[2];
+
+    /*local envirement variables*/
 	t_env_list			*env_list;
 	t_exp_list			*exp_list;
 }						t_db;
