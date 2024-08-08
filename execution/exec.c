@@ -82,6 +82,7 @@ int child(t_db *db,    int *read_fd,    t_op_node   *node,  int child_i)
     {
         dup2(*read_fd, STDIN_FILENO);
         dup2(db->pipe[1], STDOUT_FILENO);
+        close(db->pipe[0]);
         close(*read_fd);
         close(db->pipe[1]);
         close(2);
