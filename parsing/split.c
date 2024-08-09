@@ -146,6 +146,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     {
         if (process_op(db, line, &holder) == FAILURE)
             return FAILURE;
+
         CURR_OP->is_scope = holder.is_scope;
         holder.is_scope = false;
     }
@@ -153,6 +154,9 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     {
         if (process_cmd(db, line, &holder) == FAILURE)
             return FAILURE;
+
+        CURR_CMD->is_scope = holder.is_scope;
+        holder.is_scope = false;
     }
     gc_free(db, holder.tracker);
     return SUCCESS; 

@@ -17,6 +17,7 @@ int safe_close(int  *fd)
     }
     return (SUCCESS);
 }
+
 extern int dprintf (int __fd, const char *__restrict __fmt, ...); // remove later
 
 int not_first_child(int child_idx)
@@ -138,7 +139,7 @@ int parent(t_db *db,    int *read_fd,    int n_childs,  int child_i)
         check the permissions and just execute it ;)
     else it just a regular command so check if it's there and execute it
 */
-int child_dup(t_db *db, int  index,void    *node)
+int duping(t_db *db, int  index,void    *node)
 {
     if (index == 0)
     {
@@ -165,42 +166,17 @@ int child_dup(t_db *db, int  index,void    *node)
     return (SUCCESS);
 }
 
-int parnt_dup(t_db *db, int  index,void    *node)
-{
-    if (index == 0)
-    {
-        close(db->pipe[1]);
-        db->read_fd = db->pipe[0];
-        if (index != OP->n_childs - 2)
-            pipe(db->pipe);
-    }
-    else if (index == OP->n_childs - 1)
-    {
-        close(db->pipe[0]);
-        close(db->pipe[1]);
-        close(db->read_fd);
-    }
-    else
-    {
-        close(db->pipe[1]);
-        close(db->read_fd);
-        db->read_fd = db->pipe[0];
-        pipe(db->pipe);
-    }
-    return (SUCCESS);
-}
-
-char    *get_path(t_db  *db, char    **args)
+char    * prepare_exec(t_db   *db, char    *args[])
 {
     char    *path;
 
-    path = args[0];
-    if (is_relative_path(path) || is_absolute_path(path))
+    path = NULL;
+    if (is_relative_path(args[0]) || is_absolute_path(args[0]))
     {
-        if (access(path, F_OK) + access(path, X_OK) != 0)
+        if (access(args[0], F_OK) + access(args[0], X_OK) != 0)
         {
-            perror(path);
-            exit(error(db, NULL, NULL) + 127 - (access(path, X_OK) != 0));
+            perror(args[0]);
+            exit(error(db, NULL, NULL) + 127 - (access(args[0], X_OK) != 0));
         }
     }
     else
@@ -228,6 +204,7 @@ int handle_pipe_op(t_db *db,    void    *node)
     pipe(db->pipe);
     while (i < OP->n_childs)
     {
+        printf("pipe    -> %s\n", ((t_cmd_node*)OP->childs[i])->args[0]);
         if (exec(db, OP->childs[i], i) == FAILURE)
             return (FAILURE);
         i++;
@@ -240,12 +217,7 @@ int handle_pipe_op(t_db *db,    void    *node)
     }
     return (SUCCESS);
 }
-int handle_and_op(t_db *db,    void    *node)
-{
-    (void) db;
-    (void) node;
-    return (SUCCESS);
-}
+
 int handle_cmd_node(t_db    *db,    void    *node,  int index)
 {
 
@@ -256,25 +228,48 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
     char    *path;
 
     command = (t_cmd_node  *)node;
-
+    if (command->type != CMD_NODE)
+        return (SUCCESS);
+    
     id = fork();
     if (id == CHILD)
     {
         if (((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE)
-            child_dup(db, index, node);
+            duping(db, index, node);
+    
         args = command->args;
         env_arr = env_list_to_env_arr(db);
-        path = get_path(db, args);
-        execve(path, args, env_arr);
-        exit(127);
+        path = prepare_exec(db, args);
     }
     else
     {
         if ( ((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE)
-            parnt_dup(db, index, node);
-        waitpid(-1, &db->last_signal, 0);
-        db->last_signal = feedback(db, db->last_signal)->signal;
-
+        {
+            if (index == 0)
+            {
+                close(db->pipe[1]);
+                db->read_fd = db->pipe[0];
+                if (index != OP->n_childs - 2)
+                    pipe(db->pipe);
+            }
+            else if (index == OP->n_childs - 1)
+            {
+                close(db->pipe[0]);
+                close(db->pipe[1]);
+                close(db->read_fd);
+            }
+            else
+            {
+                close(db->pipe[1]);
+                close(db->read_fd);
+                db->read_fd = db->pipe[0];
+                pipe(db->pipe);
+            }
+        }
+        if (index == -1)
+            db->pids[0] = id;
+        else
+            db->pids[index] = id;
     }
     return (SUCCESS);
 }
@@ -314,8 +309,6 @@ int exec(t_db   *db, void *node,    int index)
     else if (OP->op_presentation == PIPE)
     {
         if (handle_pipe_op(db, node) == FAILURE)
-            return (FAILURE);
-        if (handle_and_op(db, node) == FAILURE)
             return (FAILURE);
     }
 

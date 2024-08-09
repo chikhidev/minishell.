@@ -163,6 +163,9 @@ typedef struct s_cmd_node
 	char				**args;
 	int					input_fd;
 	int					output_fd;
+
+	bool is_scope;
+
 }						t_cmd_node;
 
 /**
@@ -241,7 +244,7 @@ typedef struct s_db
 	int					input_fd;
 	int					output_fd;
 	int					pipe[2];
-
+	int					read_fd;
     /*local envirement variables*/
 	t_env_list			*env_list;
 	t_exp_list			*exp_list;

@@ -38,10 +38,9 @@ int handle_prompt(t_db *db, char **line)
     // char *prompt;
 
     // char *tmp;
-
     (void)db,
     // get_dir(db, &tmp);
-    // signal(SIGINT, handle_sigint);
+    signal(SIGINT, handle_sigint);
     *line = readline(GREEN"$ "RESET);
     // handle ctrl + c later
     if (!*line) return FAILURE; /*stop the loop*/
@@ -158,7 +157,7 @@ int     main(int    ac, char    *av[],  char    *env[])
         line = tmp;
         if (parser(&db, line) == FAILURE)
             continue ;
-        if (exec(&db, db.root_node) == FAILURE)
+        if (exec(&db, db.root_node, -1) == FAILURE)
             continue ;
         gc_void(&db);
     }

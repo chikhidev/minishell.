@@ -100,7 +100,11 @@ int validate_io(char *arg, int size)
 
     return (INVALID);
 }
-
+void    signalhandel(int signal)
+{
+    if (signal == 2)
+        exit(0);
+}
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
@@ -108,6 +112,7 @@ int open_heredoc(t_db *db, char *delim)
     char *line;
     char *tmp;
     int child_status;
+    struct sigaction sa;
 
     tmp = whithout_quotes(db, delim);
     if (!tmp)
@@ -120,6 +125,8 @@ int open_heredoc(t_db *db, char *delim)
         return error(db, "fork", NULL);
     if (pid == 0)
     {
+        sa.sa_handler = signalhandel;
+        sigaction(SIGINT, &sa, NULL);
         // signal(SIGINT, SIG_DFL);
         close(pipe_fd[0]);
         close(pipe_fd[1]);
@@ -168,17 +175,26 @@ int open_heredoc(t_db *db, char *delim)
         ec_void(db);
         exit(0);
     }
-
     // wait for the child to finish
+    signal(SIGCHLD, SIG_IGN);
     waitpid(pid, &child_status, 0);
 
-    if (feedback(db, child_status)->signal == SIGINT)
-    {
+    dprintf(2, "child sig: %d\n", feedback(db, child_status)->signal);
+
+    // if (feedback(db, child_status)->signal == SIGINT)
+    // {
+    //     error(db, NULL, "f;sdjfh;lsjhg;dfjhgd;jghriogh\n");
+    //     close(pipe_fd[0]);
+    //     close(pipe_fd[1]);
+    //     return (FAILURE);
+    // }
+    if (child_status != 0)
+    { 
+        error(db, NULL, "f;sdjfh;lsjhg;dfjhgd;jghriogh\n");
         close(pipe_fd[0]);
         close(pipe_fd[1]);
         return (FAILURE);
     }
-
     close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;
