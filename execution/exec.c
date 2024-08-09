@@ -254,9 +254,10 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
     char    **args;
     char    **env_arr;
     char    *path;
+    int signal_catcher;
 
     command = (t_cmd_node  *)node;
-
+    signal_catcher = 0;
     id = fork();
     if (id == CHILD)
     {
@@ -272,9 +273,8 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
     {
         if ( ((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE)
             parnt_dup(db, index, node);
-        waitpid(-1, &db->last_signal, 0);
-        db->last_signal = feedback(db, db->last_signal)->signal;
-
+        waitpid(-1, &signal_catcher, 0);
+        db->last_signal = feedback(db, signal_catcher)->signal;
     }
     return (SUCCESS);
 }

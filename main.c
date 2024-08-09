@@ -106,6 +106,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
     (void) ac;
     (void) av;
+    db->last_signal = 0;
     db->debug = false;
     db->gc = NULL;
     db->ec = NULL;
@@ -121,7 +122,6 @@ void db_reset(t_db *db)
     db->ops = NULL;
     db->root_node = NULL;
     db->error = false;
-    db->last_signal = 0;
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;

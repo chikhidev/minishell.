@@ -5,7 +5,7 @@ char    *get_environment_var(t_db *db, char   *var, char *env[])
 {
     int i;
     char    *temp;
-    
+
 
     i = 0;
     temp = ft_strjoin(db, var, "=");
@@ -35,10 +35,7 @@ char *get_env(t_db *db, char *name)
     if (are_all(name, ft_isdigit))
         return (ft_strdup(db, name + 1));
     object = get_exp_node(db->exp_list, name);
-    // CATCH_ONNULL(
-    //     object,
-    //     ft_strdup(db, "")
-    // )
+    
 	return (ft_strdup(db, object->val));
 }
 
@@ -151,7 +148,7 @@ int expanded(t_db *db, char **args)
 
         if (expand(db, &args[i], &head) == FAILURE)
             return FAILURE;
-            
+
         args[i] = whithout_quotes(db, args[i]);
 
         if (args[i] == NULL)
