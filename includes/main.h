@@ -107,6 +107,13 @@ typedef struct s_op_node
 	// execution part ------ <<<<<<
 }						t_op_node;
 
+typedef struct s_ip_addrs
+{
+	pid_t				ip_addr;
+	struct s_ip_addrs	*next;
+}						t_ip_addrs;
+
+
 typedef struct s_here_doc /*here doc saver*/
 {
 	t_op_node *ptr;
@@ -247,6 +254,7 @@ typedef struct s_db
 	int					read_fd;
     /*local envirement variables*/
 	t_env_list			*env_list;
+	t_ip_addrs			*ip;
 	t_exp_list			*exp_list;
 }						t_db;
 

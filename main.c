@@ -114,11 +114,13 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env = env;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
+    db->ip = NULL;
 }
 
 void db_reset(t_db *db)
 {
     db->heredoc_counter = 0;
+    db->ops = NULL;
     db->ops = NULL;
     db->root_node = NULL;
     db->error = false;
@@ -160,9 +162,11 @@ int     main(int    ac, char    *av[],  char    *env[])
         if (exec(&db, db.root_node, -1) == FAILURE)
             continue ;
         gc_void(&db);
+        ip_void(&db);
     }
     ec_void(&db);
     gc_void(&db);
+    ip_void(&db);
     close(0);
     close(1);
     close(2);

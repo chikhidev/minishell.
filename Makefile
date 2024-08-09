@@ -20,7 +20,8 @@ PARSING_SRC = 	parsing/parser.c	\
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path-checker.c \
-					execution/path.c
+					execution/path.c \
+					execution/exit_status.c
 
 STRING = 	strings/string.c \
 			strings/string2.c \
