@@ -97,6 +97,7 @@ bool    node_in_pipe(void    *node)
 
 int handle_pipe_op(t_db *db,    void    *node)
 {
+    printf("inside pipe\n");
     int i;
     int status;
     t_ip_addrs  *ip;
@@ -126,8 +127,22 @@ int handle_pipe_op(t_db *db,    void    *node)
 
 int handle_and_op(t_db *db,    void    *node)
 {
-    (void) db;
-    (void) node;
+    printf("inside and \n");
+
+    int i;
+    int status;
+  
+    i = 0;
+    while (i < OP->n_childs)
+    {
+        if (exec(db, OP->childs[i], i) == FAILURE)
+            return (FAILURE);
+        wait(&status);
+        db->last_signal = feedback(db, status)->signal;
+        if (db->last_signal != 0)
+            return (FAILURE);
+        i++;
+    }
     return (SUCCESS);
 }
 
@@ -161,7 +176,6 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
         {
             if (node_in_pipe(node))
                 child_dup(db, index, node);
-            
             args = command->args;
             env_arr = env_list_to_env_arr(db);
             path = get_path(db, args);
@@ -267,6 +281,9 @@ int exec(t_db   *db, void *node,    int index)
     {
         if (handle_pipe_op(db, node) == FAILURE)
             return (FAILURE);
+    }
+    else if (OP->op_presentation == AND)
+    {
         if (handle_and_op(db, node) == FAILURE)
             return (FAILURE);
     }
