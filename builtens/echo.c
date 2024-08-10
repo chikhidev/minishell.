@@ -38,7 +38,7 @@ int echo_(t_db  *db, char *args[])
     {
         token = whithout_quotes_ec(db, args[i]);
         if (!token)
-            return (ec_void(db), FAILURE); // make sute
+            return (ec_void(db), 1); // make sute
         printf("%s", token);
         i++;
         if (token)
@@ -46,5 +46,5 @@ int echo_(t_db  *db, char *args[])
     }
     if (new_line)
         printf("\n");
-    return (SUCCESS);
+    return (0);
 }

@@ -347,7 +347,7 @@ bash: syntax error near unexpected token `|'
 valgrind --track-fds=yes ./minishell  // to check open fds
 
 
-➜  sgouzi minishell git:(parsing U:11 ✗) ./minishell 
+➜  sgouzi minishell git:(parsing U:11 ✗) ./minishell
 $ echo '''"$Hecho '''"$HOME"'""
 "/nfs/homes/sgouzi" 
 $ 
@@ -366,4 +366,11 @@ $
 24
 ➜  sgouzi minishell git:(parsing U:11 ✗) echo $"HOLA"
 HOLA
-➜  sgouzi minishell git:(parsing U:11 ✗) 
+➜  sgouzi minishell git:(parsing U:11 ✗)
+
+
+
+➜  sgouzi minishell git:(parsing U:3 ✗) ./minishell 
+$ echo $NOT_HING
+Segmentation fault (core dumped)
+➜  sgouzi minishell git:(parsing U:3 ✗) 

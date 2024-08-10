@@ -10,7 +10,7 @@ int pwd_(t_db   *db)
 	pwd = getcwd(NULL, 0);
 	printf("%s\n", pwd);
 	if (pwd == NULL)
-		return FAILURE;
+		return 1;
 	free(pwd);
-	return SUCCESS;
+	return 0;
 }

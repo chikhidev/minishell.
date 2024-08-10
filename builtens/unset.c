@@ -12,5 +12,5 @@ int unset_(t_db *db,    char    *args[])
         del_exp_node(&db->exp_list, args[i]);
         i++;
     }
-    return (SUCCESS);
+    return (0);
 }
