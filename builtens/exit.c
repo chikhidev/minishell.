@@ -17,7 +17,8 @@ int exit_(t_db  *db,    char    *av[])
     }
     if (args_len == 2)
         exit_code = ft_atoi(av[1]);
-    gc_void(db);
+
+    error(db, NULL, "exit");
     ec_void(db);
     exit(exit_code);
 }

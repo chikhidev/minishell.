@@ -3,7 +3,6 @@
 #include "exec.h"
 #include "builtens.h"
 
-
 /**
  logic to track if the command path is relative or absolute
     if the path is relative ->
@@ -91,6 +90,11 @@ char    *get_path(t_db  *db, char    **args)
     return (path);
 }
 
+bool    node_in_pipe(void    *node)
+{
+    return (((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE);
+}
+
 int handle_pipe_op(t_db *db,    void    *node)
 {
     int i;
@@ -107,7 +111,6 @@ int handle_pipe_op(t_db *db,    void    *node)
             return (FAILURE);
         i++;
     }
-
     i = 0;
     ip = db->ip;
     while (ip)
@@ -118,6 +121,7 @@ int handle_pipe_op(t_db *db,    void    *node)
     ip_void(db);
     return (SUCCESS);
 }
+
 int handle_and_op(t_db *db,    void    *node)
 {
     (void) db;
@@ -125,9 +129,9 @@ int handle_and_op(t_db *db,    void    *node)
     return (SUCCESS);
 }
 
+
 int handle_cmd_node(t_db    *db,    void    *node,  int index)
 {
-
     int id;
     t_cmd_node *command;
     char    **args;
@@ -137,26 +141,31 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
 
     command = (t_cmd_node  *)node;
     signal_catcher = 0;
-    id = fork();
-    if (id == CHILD)
+    if (is_built_in(node)) // if in built in then execute it (it forks inside the built in if node inside of a pipe)
+        exec_builtin(db, node, index);
+    else // exec a cmd (fork)
     {
-        if (((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE)
-            child_dup(db, index, node);
-        args = command->args;
-        env_arr = env_list_to_env_arr(db);
-        path = get_path(db, args);
-        execve(path, args, env_arr);
-        exit(127);
-    }
-    else
-    {
-        if ( ((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE)
-            parnt_dup(db, index, node);
-        if ((t_op_node *)CMD->origin == NULL) // no parent means wait directly
-            waitpid(id, &db->last_signal, 0);
+        id = fork();
+        if (id == CHILD)
+        {
+            if (node_in_pipe(node))
+                child_dup(db, index, node);
+            args = command->args;
+            env_arr = env_list_to_env_arr(db);
+            path = get_path(db, args);
+            execve(path, args, env_arr);
+            exit(127);
+        }
         else
-            ip_add(db, id); // else add it to linked list to wait it later
-        db->last_signal = feedback(db, signal_catcher)->signal;
+        {
+            if (node_in_pipe(node))
+                parnt_dup(db, index, node);
+            if ((t_op_node *)CMD->origin == NULL) // no parent means wait directly
+                waitpid(id, &signal_catcher, 0);
+            else
+                ip_add(db, id); // else add it to linked list to wait it later
+            db->last_signal = feedback(db, signal_catcher)->signal;
+        }
     }
     return (SUCCESS);
 }
@@ -166,7 +175,7 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
  * @return signal SUCCESS or FAILURE
  */
 
-int exec_builtin(t_db   *db,t_cmd_node *node)
+int run_builtin(t_db   *db,t_cmd_node *node)
 {
     if (ft_strcmp(CMD->args[0], "echo") == 0)
         return echo_(db, CMD->args);
@@ -182,7 +191,39 @@ int exec_builtin(t_db   *db,t_cmd_node *node)
         return unset_(db, CMD->args);
     else if (ft_strcmp(CMD->args[0], "exit") == 0)
         exit_(db,   CMD->args);
-    return FAILURE;
+    return 127;
+}
+
+int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
+{
+    int id;
+    int signal_catcher;
+    signal_catcher = 0;
+
+    if (node_in_pipe(node)) // if inside a pipe then we need to fork
+    {
+        id = fork();
+        if (id == CHILD) // if child (dup and execute it and get signal)
+        {
+            if (node_in_pipe(node))
+                child_dup(db, index, node);
+            signal_catcher = run_builtin(db, node);
+            exit(signal_catcher);
+        }
+        else // in parent we dup back and wait
+        {
+            if (node_in_pipe(node))
+                parnt_dup(db, index, node);
+            if ((t_op_node *)CMD->origin == NULL) // no parent means wait directly
+                waitpid(id, &signal_catcher, 0);
+            else
+                ip_add(db, id); // else add it to linked list to wait it later
+            db->last_signal = feedback(db, signal_catcher)->signal;
+        }
+    }
+    else // not inside a pipe, only run it, with no forking
+        db->last_signal = run_builtin(db, node);
+    return SUCCESS;
 }
 
 
@@ -199,8 +240,6 @@ int exec(t_db   *db, void *node,    int index)
     {
         if (expanded(db, CMD->args) == FAILURE)
             return FAILURE;
-        if (is_built_in(node))
-            return exec_builtin(db, CMD);
         else
 			return handle_cmd_node(db, node, index);
     }
