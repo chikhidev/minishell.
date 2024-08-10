@@ -129,6 +129,15 @@ int handle_and_op(t_db *db,    void    *node)
     return (SUCCESS);
 }
 
+int handle_redirections(t_db    *db,    void    *node)
+{
+    (void) db;
+    if (CMD->input_fd != 0)
+        dup2(CMD->input_fd, STDIN_FILENO);
+    if (CMD->output_fd != 1)
+        dup2(CMD->output_fd, STDOUT_FILENO);
+    return (SUCCESS);
+}
 
 int handle_cmd_node(t_db    *db,    void    *node,  int index)
 {
@@ -141,6 +150,7 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
 
     command = (t_cmd_node  *)node;
     signal_catcher = 0;
+
     if (is_built_in(node)) // if in built in then execute it (it forks inside the built in if node inside of a pipe)
         exec_builtin(db, node, index);
     else // exec a cmd (fork)
@@ -150,9 +160,11 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
         {
             if (node_in_pipe(node))
                 child_dup(db, index, node);
+            
             args = command->args;
             env_arr = env_list_to_env_arr(db);
             path = get_path(db, args);
+            handle_redirections(db, node);
             execve(path, args, env_arr);
             exit(127);
         }
@@ -205,15 +217,14 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
         id = fork();
         if (id == CHILD) // if child (dup and execute it and get signal)
         {
-            if (node_in_pipe(node))
-                child_dup(db, index, node);
+            child_dup(db, index, node);
+            handle_redirections(db, node);
             signal_catcher = run_builtin(db, node);
             exit(signal_catcher);
         }
         else // in parent we dup back and wait
         {
-            if (node_in_pipe(node))
-                parnt_dup(db, index, node);
+            parnt_dup(db, index, node);
             if ((t_op_node *)CMD->origin == NULL) // no parent means wait directly
                 waitpid(id, &signal_catcher, 0);
             else
