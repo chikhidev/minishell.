@@ -233,7 +233,15 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
         }
     }
     else // not inside a pipe, only run it, with no forking
+    {
+        int stdout_ = dup(STDOUT_FILENO);
+        int stdin_ = dup(STDIN_FILENO);
+        handle_redirections(db, node);
         db->last_signal = run_builtin(db, node);
+        dup2(stdin_, STDIN_FILENO);
+        dup2(stdout_, STDOUT_FILENO);
+        
+    }
     return SUCCESS;
 }
 
