@@ -83,7 +83,7 @@ char    *get_path(t_db  *db, char    **args)
             exit(126);
         if (!path)
         {
-            error(db, args[0], "command not found ya hamid\n");
+            error(db, args[0], "command not found ya hamid");
             exit(127);
         }
     }
@@ -98,6 +98,7 @@ bool    node_in_pipe(void    *node)
 int handle_pipe_op(t_db *db,    void    *node)
 {
     int i;
+    int status;
     t_ip_addrs  *ip;
     db->pipe[0] = -2;
     db->pipe[1] = -2;
@@ -115,10 +116,11 @@ int handle_pipe_op(t_db *db,    void    *node)
     ip = db->ip;
     while (ip)
     {
-        waitpid(ip->ip_addr, &db->last_signal, 0);
+        waitpid(ip->ip_addr, &status, 0);
         ip = ip->next;
     }
     ip_void(db);
+    db->last_signal = feedback(db, status)->signal;
     return (SUCCESS);
 }
 
@@ -150,7 +152,6 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
 
     command = (t_cmd_node  *)node;
     signal_catcher = 0;
-
     if (is_built_in(node)) // if in built in then execute it (it forks inside the built in if node inside of a pipe)
         exec_builtin(db, node, index);
     else // exec a cmd (fork)

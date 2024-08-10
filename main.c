@@ -159,8 +159,6 @@ int     main(int    ac, char    *av[],  char    *env[])
         line = tmp;
         if (parser(&db, line) == FAILURE)
             continue ;
-        
- 
         if (exec(&db, db.root_node, -1) == FAILURE)
             continue ;
 
