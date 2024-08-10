@@ -374,3 +374,16 @@ HOLA
 $ echo $NOT_HING
 Segmentation fault (core dumped)
 ➜  sgouzi minishell git:(parsing U:3 ✗) 
+
+
+
+
+$ ls &&  lss | wc
+inside and 
+builtens    execution	   get_next_line.o  main.c    minishell  readline.supp	tests.yaml
+env_list.c  exp_list.c	   includes	    Makefile  parsing	 signals.c	triggers.c
+error.c     get_next_line  libft	    memo.c    push.sh	 strings
+inside pipe
+lss: command not found ya hamid
+      0       0       0
+
