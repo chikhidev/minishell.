@@ -179,8 +179,6 @@ int open_heredoc(t_db *db, char *delim)
     signal(SIGCHLD, SIG_IGN);
     waitpid(pid, &child_status, 0);
 
-    dprintf(2, "child sig: %d\n", feedback(db, child_status)->signal);
-
     // if (feedback(db, child_status)->signal == SIGINT)
     // {
     //     error(db, NULL, "f;sdjfh;lsjhg;dfjhgd;jghriogh\n");

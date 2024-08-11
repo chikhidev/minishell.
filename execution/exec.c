@@ -68,6 +68,8 @@ char    *get_path(t_db  *db, char    **args)
     char    *path;
 
     path = args[0];
+    if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0 || is_str_empty(db, path))
+        return ft_strdup(db, path);
     if (is_relative_path(path) || is_absolute_path(path))
     {
         if (access(path, F_OK) + access(path, X_OK) != 0)
@@ -105,14 +107,12 @@ int handle_pipe_op(t_db *db,    void    *node)
     db->pids = gc_malloc(db, (OP->n_childs) * (sizeof(pid_t)));
     i = 0;
     db->read_fd = -2;
+    printf("is inside scope -> %d\n", OP->is_scope);
     pipe(db->pipe);
     while (i < OP->n_childs)
     {
         if (exec(db, OP->childs[i], i) == FAILURE)
-        {
             return (FAILURE);
-
-        }
         i++;
     }
     i = 0;
@@ -133,7 +133,6 @@ int handle_and_op(t_db *db,    void    *node)
 {
     int i;
     int status;
-  
     i = 0;
     while (i < OP->n_childs)
     {
@@ -152,7 +151,6 @@ int handle_or_op(t_db *db,    void    *node)
 {
     int i;
     int status;
-  
     i = 0;
     while (i < OP->n_childs)
     {
@@ -175,6 +173,26 @@ int handle_redirections(t_db    *db,    void    *node)
     if (CMD->output_fd != 1)
         dup2(CMD->output_fd, STDOUT_FILENO);
     return (SUCCESS);
+}
+
+int handle_is_dir(t_db *db, char    *arg)
+{
+    DIR *dir;
+
+    bool    is_dir;
+    if (is_str_empty(db, arg) || ft_strcmp(arg, ".") == 0 || ft_strcmp(arg, "..") == 0)
+        return (printf("%s: command not found\n", arg), 1);
+    is_dir = false;
+
+    dir = opendir(arg);
+    if (dir)
+    {
+        printf("%s Is a directory\n", arg);
+        is_dir = 1;
+    }
+    if (closedir(dir) == -1)
+        return -1;
+    return is_dir;
 }
 
 int handle_cmd_node(t_db    *db,    void    *node,  int index)
@@ -202,6 +220,8 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
             path = get_path(db, args);
             handle_redirections(db, node);
             execve(path, args, env_arr);
+            if (!handle_is_dir(db, path))
+                perror(args[0]);
             exit(127);
         }
         else
@@ -241,6 +261,7 @@ int run_builtin(t_db   *db,t_cmd_node *node)
         exit_(db,   CMD->args);
     return 127;
 }
+
 
 int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
 {

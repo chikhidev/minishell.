@@ -151,7 +151,23 @@ $
 $ ls >salah  # redirects to salah
 $ ls ">salah" # runs ls on file ">salah"
 '>salah'
+------------ watch
+➜   ls ">salah"
+ls: cannot access '>salah': No such file or directory
+➜   ls >salah
+➜   ls ">salah"
+ls: cannot access '>salah': No such file or directory
+➜   ./minishell 
+$ rm salah
+$ ls >salah
+$ cat salah
+builtens
+env_list.c
+...
+$ ls ">salah"
 $ 
+
+
 
 
 $ ls > *
@@ -185,70 +201,6 @@ ls && cat << DLIMITER cm0 cmd1 cmd2 << DELIMITER2 cm0 cm1 || wc -l
 
 
 
-
-[DEBUG] line: (pwd && wd) << ls
-=================================================================
-==40775==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000003840 at pc 0x56668473b9ca bp 0x7fff80ede990 sp 0x7fff80ede980
-READ of size 8 at 0x602000003840 thread T0
-    #0 0x56668473b9c9 in print_nodes parsing/parser.c:44
-    #1 0x56668473be30 in parser parsing/parser.c:98
-    #2 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
-    #3 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #4 0x710ff0629e3f in __libc_start_main_impl ../csu/libc-start.c:392
-    #5 0x56668473a3c4 in _start (/home/gouzi/Desktop/code 💻/1337/minishell/minishell+0x23c4)
-
-0x602000003840 is located 0 bytes to the right of 16-byte region [0x602000003830,0x602000003840)
-allocated by thread T0 here:
-    #0 0x710ff0ab4887 in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:145
-    #1 0x56668473acfb in gc_malloc /home/gouzi/Desktop/code 💻/1337/minishell/memo.c:7
-    #2 0x56668474051c in smart_split parsing/split.c:159
-    #3 0x566684740090 in smart_split parsing/split.c:120
-    #4 0x566684740418 in smart_split parsing/split.c:147
-    #5 0x56668473bdb6 in parser parsing/parser.c:92
-    #6 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
-    #7 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-
-wc << delim > file < main.c
-
-here: wc takes input from main.c and outputs to file
-(cmd1  < blockInput) <  globalInput > globalOutput
-
-
-
-Shellu> pwd
-CMD_NODE: /home/abdoo/prj/Minishell
-[pwd] 
-
-Shellu> 
-Shellu> 
-Shellu> pwd && ls
-OP_NODE: AND
-    CMD_NODE: /home/abdoo/prj/Minishell
-[pwd] 
-    
-    CMD_NODE: [ls] 
-    
-➜  minishell git:(parsing U:5 ?:37) ✗ ./minishell 
-$> export 
-AddressSanitizer:DEADLYSIGNAL
-=================================================================
-==206098==ERROR: AddressSanitizer: SEGV on unknown address 0x601fdfdf86e0 (pc 0x5dda9c3fb13f bp 0x7ffddfdf3470 sp 0x7ffddfdf3450 T0)
-==206098==The signal is caused by a READ memory access.
-    #0 0x5dda9c3fb13f in skip_open_spaces parsing/customized/tokenizer.c:6
-    #1 0x5dda9c3fb5a4 in tokenize parsing/customized/tokenizer.c:56
-    #2 0x5dda9c3f529e in smart_split parsing/split.c:129
-    #3 0x5dda9c3f16ac in parser parsing/parser.c:82
-    #4 0x5dda9c3f067a in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:154
-    #5 0x7eef83c29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-    #6 0x7eef83c29e3f in __libc_start_main_impl ../csu/libc-start.c:392
-    #7 0x5dda9c3ef564 in _start (/home/gouzi/Desktop/code 💻/1337/minishell/minishell+0x3564)
-
-AddressSanitizer can not provide additional info.
-SUMMARY: AddressSanitizer: SEGV parsing/customized/tokenizer.c:6 in skip_open_spaces
-==206098==ABORTING
-
-
-
 # the input gotta be applied to all the commands within the scope
 abchikhi@c4r8p6:~$  
 line1
@@ -256,77 +208,6 @@ line1
 0
 
 
-
-export a=-n  DONE
-"echo $a" hey
-
-
-
-~/Desktop/minishell$> ls | wc &&k
-=================================================================
-==144968==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000006e5c at pc 0x0000004d25d2 bp 0x7ffeef776eb0 sp 0x7ffeef776ea8
-READ of size 1 at 0x602000006e5c thread T0
-    #0 0x4d25d1 in split_line /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:50:12
-    #1 0x4d2edb in process_op /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:85:16
-    #2 0x4d3a43 in smart_split /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:152:13
-    #3 0x4ce04f in parser /nfs/homes/sgouzi/Desktop/minishell/parsing/parser.c:34:5
-    #4 0x4cca6f in main /nfs/homes/sgouzi/Desktop/minishell/main.c:154:13
-    #5 0x7f886e3d3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
-    #6 0x7f886e3d3e3f in __libc_start_main csu/../csu/libc-start.c:392:3
-    #7 0x41f344 in _start (/nfs/homes/sgouzi/Desktop/minishell/minishell+0x41f344)
-
-0x602000006e5c is located 0 bytes to the right of 12-byte region [0x602000006e50,0x602000006e5c)
-allocated by thread T0 here:
-    #0 0x49a20d in malloc (/nfs/homes/sgouzi/Desktop/minishell/minishell+0x49a20d)
-    #1 0x4ccb3b in gc_malloc /nfs/homes/sgouzi/Desktop/minishell/memo.c:7:11
-    #2 0x4cc887 in main /nfs/homes/sgouzi/Desktop/minishell/main.c:144:15
-    #3 0x7f886e3d3d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow /nfs/homes/sgouzi/Desktop/minishell/parsing/split.c:50:12 in split_line
-Shadow bytes around the buggy address:
-  0x0c047fff8d70: fa fa fd fa fa fa fd fd fa fa fd fa fa fa fd fd
-  0x0c047fff8d80: fa fa fd fd fa fa fd fd fa fa fd fa fa fa fd fd
-  0x0c047fff8d90: fa fa fd fa fa fa fd fd fa fa 00 00 fa fa 00 00
-  0x0c047fff8da0: fa fa 00 fa fa fa 01 fa fa fa fd fa fa fa 00 01
-  0x0c047fff8db0: fa fa fd fd fa fa 00 05 fa fa 01 fa fa fa fd fd
-=>0x0c047fff8dc0: fa fa 00 04 fa fa 00 04 fa fa 00[04]fa fa 00 00
-  0x0c047fff8dd0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
-  0x0c047fff8de0: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 01
-  0x0c047fff8df0: fa fa 00 00 fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c047fff8e00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c047fff8e10: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-  Shadow gap:              cc
-==144968==ABORTING
-
-
-
-
-# still cd not working properly
-~$ 
-~$ cd minishell/
-~/minishell$ 
-~/minishell$ 
-~/minishell$ cd
-~/minishell$ 
 
 
 
@@ -387,3 +268,57 @@ inside pipe
 lss: command not found ya hamid
       0       0       0
 
+
+
+echo -n -n  not like bash
+
+
+
+
+
+
+
+[DEBUG] line: (pwd && wd) << ls
+=================================================================
+==40775==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000003840 at pc 0x56668473b9ca bp 0x7fff80ede990 sp 0x7fff80ede980
+READ of size 8 at 0x602000003840 thread T0
+    #0 0x56668473b9c9 in print_nodes parsing/parser.c:44
+    #1 0x56668473be30 in parser parsing/parser.c:98
+    #2 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
+    #3 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x710ff0629e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #5 0x56668473a3c4 in _start (/home/gouzi/Desktop/code 💻/1337/minishell/minishell+0x23c4)
+
+0x602000003840 is located 0 bytes to the right of 16-byte region [0x602000003830,0x602000003840)
+allocated by thread T0 here:
+    #0 0x710ff0ab4887 in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:145
+    #1 0x56668473acfb in gc_malloc /home/gouzi/Desktop/code 💻/1337/minishell/memo.c:7
+    #2 0x56668474051c in smart_split parsing/split.c:159
+    #3 0x566684740090 in smart_split parsing/split.c:120
+    #4 0x566684740418 in smart_split parsing/split.c:147
+    #5 0x56668473bdb6 in parser parsing/parser.c:92
+    #6 0x56668473abd1 in main /home/gouzi/Desktop/code 💻/1337/minishell/main.c:87
+    #7 0x710ff0629d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+wc << delim > file < main.c
+
+here: wc takes input from main.c and outputs to file
+(cmd1  < blockInput) <  globalInput > globalOutput
+
+
+
+$ ""
+: command not found
+$ export PATH=""
+$ ls
+ls: command not found ya hamid
+$ dsl
+dsl: command not found ya hamid
+$ echo "@@$$#%^&*((^&"
+syntax error  : double scopes
+$ echo "@@$$#%^&*((^&><<<<<<<<<<<<<,"
+Syntax error near unexpected token `<<'
+$ ""
+: command not found
+$ $dsadf
+seg fault

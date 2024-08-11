@@ -90,3 +90,14 @@ char	*ft_strjoin_ec(t_db	*db,char const *s1, char const *s2)
 	res[len1 + len2] = '\0';
 	return (res);
 }
+
+int is_str_empty(t_db   *db,    char    *str)
+{
+    char    *unquoted;
+
+    unquoted = whithout_quotes(db, str);
+    if (ft_strcmp(unquoted, "") == 0)
+        return 1;
+    else
+        return 0;
+}

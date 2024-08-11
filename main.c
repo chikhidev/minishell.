@@ -41,7 +41,7 @@ int handle_prompt(t_db *db, char **line)
     (void)db,
     // get_dir(db, &tmp);
     signal(SIGINT, handle_sigint);
-    *line = readline(GREEN"$ "RESET);
+    *line = readline("$ ");
     // handle ctrl + c later
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
@@ -139,7 +139,6 @@ int     main(int    ac, char    *av[],  char    *env[])
 
     line = NULL;
     init_db(&db, ac, av, env);
-
     while (true)
     {
         db_reset(&db);
