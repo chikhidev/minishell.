@@ -14,9 +14,9 @@ t_feedback *feedback(t_db *db, int status)
     // 2. the status --> the last 8 bits
 
     // shift the status to the right by 8 bits
-    feed->signal = status >> 8;
+    feed->signal = status & 255;
     // mask the status with 255
-    feed->status = status & 255;
+    feed->status = status >> 8;
 
     return (feed);
 }

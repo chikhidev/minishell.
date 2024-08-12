@@ -3,7 +3,7 @@
 
 void  skip_open_spaces(t_quote *quotes, char *line, int *i)
 {
-    while (line[*i] && is_whitespace(line[*i]) && !is_inside_quotes(quotes, *i))
+    while (line[*i] && is_whitespace(line[*i]) && !is_inside_quotes_list(quotes, *i))
         (*i)++;
 }
 
@@ -59,7 +59,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     while (it.i < len)
     {
         if (!(is_whitespace(s[it.i])
-            && !is_inside_quotes(*quotes, it.i))
+            && !is_inside_quotes_list(*quotes, it.i))
             && !(validate_io(&s[it.i], 1) != INVALID
             || validate_io(&s[it.i], 2) != INVALID))
         {
@@ -78,7 +78,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 it.j = it.i;
                 while (s[it.j] && !(
                         is_whitespace(s[it.j])
-                        && !is_inside_quotes(*quotes, it.j)
+                        && !is_inside_quotes_list(*quotes, it.j)
                     )
                     && !(validate_io(&s[it.j], 1) != INVALID
                     || validate_io(&s[it.j], 2) != INVALID))

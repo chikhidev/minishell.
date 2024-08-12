@@ -50,7 +50,7 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     while (line[i])
     {
         if (is_op2(line, &i) == op->op_presentation
-            && !is_inside_quotes(tracker->quotes, i)
+            && !is_inside_quotes_list(tracker->quotes, i)
             && !is_inside_paranthesis(tracker->paranthesis, i))
         {
             splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));

@@ -15,7 +15,7 @@ int inside_single_quote(t_quote *head, int   i)
     return (false);
 }
 
-int is_inside_quotes(t_quote *head, int i)
+int is_inside_quotes_list(t_quote *head, int i)
 {
     t_quote *tmp;
 

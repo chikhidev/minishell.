@@ -28,3 +28,4 @@ char *whithout_quotes_ec(t_db  *db,  char *str);
 char	*ft_strdup_ec(t_db  *db,    const char *s1);
 char	*ft_strjoin_ec(t_db	*db,char const *s1, char const *s2);
 int     is_str_empty(t_db   *db,    char    *str);
+bool is_inside_quotes_line(char *line, int index);

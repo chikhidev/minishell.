@@ -107,7 +107,6 @@ int handle_pipe_op(t_db *db,    void    *node)
     db->pids = gc_malloc(db, (OP->n_childs) * (sizeof(pid_t)));
     i = 0;
     db->read_fd = -2;
-    printf("is inside scope -> %d\n", OP->is_scope);
     pipe(db->pipe);
     while (i < OP->n_childs)
     {
@@ -123,9 +122,7 @@ int handle_pipe_op(t_db *db,    void    *node)
         ip = ip->next;
     }
     ip_void(db);
-    db->last_signal = feedback(db, status)->signal;
-    if (db->last_signal != 0)
-        return (FAILURE);
+    db->last_signal = feedback(db, status)->status;
     return (SUCCESS);
 }
 
@@ -138,8 +135,11 @@ int handle_and_op(t_db *db,    void    *node)
     {
         if (exec(db, OP->childs[i], i) == FAILURE)
             return (FAILURE);
-        wait(&status);
-        db->last_signal = feedback(db, status)->signal;
+        if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
+        {
+            wait(&status);
+            db->last_signal = feedback(db, status)->status;
+        }
         if (db->last_signal != 0)
             return (FAILURE);
         i++;
@@ -149,15 +149,20 @@ int handle_and_op(t_db *db,    void    *node)
 
 int handle_or_op(t_db *db,    void    *node)
 {
+    printf("OR   \n");
+
     int i;
     int status;
     i = 0;
     while (i < OP->n_childs)
     {
         if (exec(db, OP->childs[i], i) == FAILURE)
-            return (FAILURE);
-        wait(&status);
-        db->last_signal = feedback(db, status)->signal;
+            ;
+        if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
+        {
+            wait(&status);
+            db->last_signal = feedback(db, status)->status;
+        }
         if (db->last_signal == 0)
             return (FAILURE);
         i++;
@@ -321,6 +326,7 @@ int exec(t_db   *db, void *node,    int index)
     }
     else if (OP->op_presentation == PIPE)
     {
+        printf("PIPE    \n");
         if (handle_pipe_op(db, node) == FAILURE)
             return (FAILURE);
     }

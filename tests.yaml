@@ -307,13 +307,7 @@ here: wc takes input from main.c and outputs to file
 
 
 
-$ ""
-: command not found
-$ export PATH=""
-$ ls
-ls: command not found ya hamid
-$ dsl
-dsl: command not found ya hamid
+
 $ echo "@@$$#%^&*((^&"
 syntax error  : double scopes
 $ echo "@@$$#%^&*((^&><<<<<<<<<<<<<,"
@@ -322,3 +316,13 @@ $ ""
 : command not found
 $ $dsadf
 seg fault
+
+
+
+$ ls|wc&&ps
+     22      22     207
+s: command not found ya hamid
+
+._.
+
+

@@ -13,7 +13,7 @@ int count_line_args(char *line, t_quote *quotes, int len)
     while (i < len)
     {
         reminder = i;
-        while (line[i] && !is_whitespace(line[i]) && !is_inside_quotes(quotes, i))
+        while (line[i] && !is_whitespace(line[i]) && !is_inside_quotes_list(quotes, i))
             i++;
         if (reminder != i)
             count++;
@@ -118,6 +118,22 @@ int get_str_size_unquoted( char  *str)
         i++;
     }
     return len;
+}
+
+bool is_inside_quotes_line(char *line, int index)
+{
+    bool in_single_quote = false;
+    bool in_double_quote = false;
+    int i = 0;
+    while(i <= index)
+    {
+        if (line[i] == SGL_QUOTE)
+            in_single_quote = !in_single_quote;
+        else if (line[i] == DOBLQUOTE)
+            in_double_quote = !in_double_quote;
+        i++;
+    }
+    return (in_single_quote || in_double_quote);
 }
 
 char *whithout_quotes(t_db *db, char *str)

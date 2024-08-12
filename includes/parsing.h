@@ -56,7 +56,7 @@ int     all_whitespaces(char *line, int start, int end);
 
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int     track_quotes(t_db *db, t_quote **head, char *line);
-int     is_inside_quotes(t_quote *head, int i);
+int     is_inside_quotes_list(t_quote *head, int i);
 void    reset_quotes(t_db *db, t_quote **head);
 int     inside_single_quote(t_quote *head, int i);
 

@@ -40,7 +40,7 @@ int strongest_operator(char *line, t_tracker *tracker)
         if (tmp.op_presentation != INVALID)
         {
             tmp.priority = priority_of_op(tmp.op_presentation);
-            if (!is_inside_quotes(tracker->quotes, i)
+            if (!is_inside_quotes_list(tracker->quotes, i)
                 && !is_inside_paranthesis(tracker->paranthesis, i)
                 && ((tmp.priority <= strongest.priority && tmp.priority != -1)
                 || strongest.priority == -1))
@@ -65,7 +65,7 @@ int strongest_operator(char *line, t_tracker *tracker)
 //     while (line[i])
 //     {
 //         if (is_op(line, &i) == op
-//             && !is_inside_quotes(tracker->quotes, i)
+//             && !is_inside_quotes_list(tracker->quotes, i)
 //             && !is_inside_paranthesis(tracker->paranthesis, i))
 //         {
 //             in_word = false;
@@ -103,7 +103,7 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
     while (line[i])
     {
         if (is_op(line, &i) == op
-            && !is_inside_quotes(tracker->quotes, i)
+            && !is_inside_quotes_list(tracker->quotes, i)
             && !is_inside_paranthesis(tracker->paranthesis, i))
         {
             counter++;
@@ -111,7 +111,7 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
         }
         i++;
     } 
-    if (reminder < i && !all_whitespaces(line, reminder, i) && !is_inside_quotes(tracker->quotes, i))
+    if (reminder < i && !all_whitespaces(line, reminder, i) && !is_inside_quotes_list(tracker->quotes, i))
         counter++;
     return counter;
 }

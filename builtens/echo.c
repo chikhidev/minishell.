@@ -9,6 +9,8 @@ bool    is_new_line_op(char *arg)
     i = 1;
     if (!arg[0] || arg[0] != '-')
         return false;
+    if (!arg[1])
+        return false;
     while (arg[i])
     {
         if (arg[i] != 'n')
@@ -32,7 +34,6 @@ int get_start_idx(char   **args, bool    *new_line)
             skip++;
             *new_line = false;
         }
-        
         if (!is_new_line_op(args[i]))
             return skip;
         i++;
@@ -56,7 +57,7 @@ int echo_(t_db  *db, char *args[])
             return (ec_void(db), 1); // make sute
         printf("%s", token);
         i++;
-        if (token)
+        if (i != n_args)
             printf(" ");
     }
     if (new_line)
