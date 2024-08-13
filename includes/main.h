@@ -250,6 +250,8 @@ typedef struct s_db
 	int					curr_type;
 	int					input_fd;
 	int					output_fd;
+	int					stdin_dup;
+	int					stdout_dup;
 	int					pipe[2];
 	int					read_fd;
     /*local envirement variables*/

@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
+#include "main.h"
 #ifndef EXEC_H
 #define EXEC_H
 

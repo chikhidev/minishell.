@@ -52,7 +52,10 @@ void	push_exp_sort(t_exp_list  **list,  t_exp_list	*new)
                 prev = curr;
 				curr = curr->next;
             }
-            curr->next = new;
+            if (curr)
+				curr->next = new;
+			else
+				add_exp_front(list, new);
 		}
 	}
 }

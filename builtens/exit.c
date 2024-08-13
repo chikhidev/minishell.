@@ -21,5 +21,9 @@ int exit_(t_db  *db,    char    *av[])
     error(db, NULL, "exit");
     ec_void(db);
     gc_void(db);
+    if (db->stdin_dup != -1)
+        close(db->stdin_dup);
+    if (db->stdout_dup != -1)
+        close(db->stdout_dup);
     exit(exit_code);
 }

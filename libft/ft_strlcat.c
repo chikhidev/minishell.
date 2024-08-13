@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:19:17 by abchikhi          #+#    #+#             */
-/*   Updated: 2023/11/02 13:19:19 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:46:22 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,3 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	dst[dst_len] = '\0';
 	return (dst_len + ft_strlen(&src[src_index]));
 }
-
-// #include <stdio.h>πsplit
-
-// int main() {
-//     char dst[100] = "Hello there how are you......!";
-//     char src[100] = "how are";
-//     size_t size = 150;
-
-//     dst[0] = '\0';
-
-//     ft_strlcat(dst, src, 100);
-
-//     printf("%s\n", dst);
-
-//     return 0;
-// }

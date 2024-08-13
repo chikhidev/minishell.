@@ -115,6 +115,8 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
     db->ip = NULL;
+    db->stdin_dup = -1;
+    db->stdout_dup = -1;
 }
 
 void db_reset(t_db *db)
@@ -128,7 +130,9 @@ void db_reset(t_db *db)
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
 }
-
+void quit_signal_handler(int signal) {
+    (void)signal;
+}
 
 int     main(int    ac, char    *av[],  char    *env[])
 {
@@ -142,10 +146,13 @@ int     main(int    ac, char    *av[],  char    *env[])
     while (true)
     {
         db_reset(&db);
+        signal(SIGQUIT, quit_signal_handler);
         ret = handle_prompt(&db, &line);
+        signal(SIGQUIT, quit_signal_handler);
         if (ret == FAILURE)
             break ;
-        if (ret == 0) continue ;
+        if (ret == 0)
+            continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
         if (!tmp)
         {

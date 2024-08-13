@@ -17,6 +17,7 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/cmd.c \
 				parsing/io.c \
 				parsing/tokenizer.c \
+				parsing/wildcard.c
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path-checker.c \

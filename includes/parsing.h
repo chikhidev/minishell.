@@ -114,5 +114,5 @@ bool    is_newline_at_the_end(char *line);
 char    *gc_copy(t_db *db, char *s);
 
 void  skip_open_spaces(t_quote *quotes, char *line, int *i);
-
+char    *wildcard(t_db *db, char *line);
 #endif
