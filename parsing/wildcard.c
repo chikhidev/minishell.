@@ -11,87 +11,85 @@ bool    starts_with(char    *str,   char    *sub)
 #define FILE_ 8
 #define DIR_ 4
 
+
 /*
     * recursively read the curr dir
 */
 
-char	*strdup(const char *s1)
+char    *wrap_with_signle_quote(t_db *db, char    *name)
 {
-	const char	*clone;
-	int			len;
+    char    *new_name;
 
-	if (s1 == NULL)
-		return (NULL);
-	len = ft_strlen(s1);
-	clone = malloc(sizeof(char) * (len + 1));
-	if (!clone)
-		return (NULL);
-	ft_memcpy((void *)clone, s1, len + 1);
-	return ((char *)clone);
+    new_name = NULL;
+    new_name = ft_strjoin(db, new_name, "'");
+    new_name = ft_strjoin(db, new_name, name);
+    new_name = ft_strjoin(db, new_name, "'");
+
+    return (new_name);
 }
 
-
-char	*strjoin(char const *s1, char const *s2)
+char    *get_dir_files(t_db *db, char    *path)
 {
-	int		len1;
-	int		len2;
-	char	*res;
-
-	if (!s1 && !s2)
-		return (NULL);
-	else if (!s1 && s2)
-		return (strdup(s2));
-	else if (s1 && !s2)
-		return (strdup(s1));
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	res = malloc(sizeof(char) * (len1 + len2 + 1));
-	if (!res)
-		return (NULL);
-	ft_memcpy(res, s1, len1);
-	ft_memcpy(res + len1, s2, len2);
-	res[len1 + len2] = '\0';
-	return (res);
-}
-void    get_dir_files(  char    *path)
-{
+    char    *files;
+    (void)db;
     DIR *curr_dir;
     struct dirent *entry;
+    bool    first_time;
+
+    first_time = true;
+    files = NULL;
     curr_dir = opendir(path);
-    do
+
+    entry = readdir(curr_dir);
+    if (entry)
     {
-        if (!curr_dir)
-            return;
+        if (all_whitespaces(entry->d_name, 0, ft_strlen(entry->d_name)))
+        {
+            files = ft_strjoin(db, files, "'");
+            files = ft_strjoin(db, files, entry->d_name);
+            files = ft_strjoin(db, files, "'");
+        }
+        else
+            files = ft_strjoin(db, files, entry->d_name);
+    }
+    while (entry)
+    {
         entry = readdir(curr_dir);
         if (!entry)
-            return;
-        if (entry->d_type == DIR_ && !starts_with(entry->d_name, "."))
+            break;
+        files = ft_strjoin(db, files, " ");
+        if (all_whitespaces(entry->d_name, 0, ft_strlen(entry->d_name)))
         {
-            printf("%s \n\n", entry->d_name);
-            path = strjoin(path, "/");
-            get_dir_files(strjoin(path, entry->d_name));
-            printf("\n");
+            files = ft_strjoin(db, files, "'");
+            files = ft_strjoin(db, files, entry->d_name);
+            files = ft_strjoin(db, files, "'");
         }
-        else if (!starts_with(entry->d_name, "."))
-        {
-            printf("%s ", entry->d_name);
-        }
+        else
+            files = ft_strjoin(db, files, entry->d_name);
     }
-    while (entry);
+    return files;
 }
 
 char    *wildcard(t_db *db, char *line)
 {
     (void)db;
     int i;
-
+    char    *before_astress;
+    char    *afterr_astress;
+    char    *files;
+    char    *new_line;
+    char   *cwd = ".";
     i = 0;
-    char   *cwd = "/nfs/homes/sgouzi/Desktop/minishell/parent";
     while (line[i])
     {
         if (line[i] == '*' && !is_inside_quotes_line(line, i))
         {
-            get_dir_files(cwd);
+            before_astress = ft_substr(db, line, 0, i);
+            files = get_dir_files(db, cwd);
+            afterr_astress = ft_substr(db, line, i + 2, ft_strlen(line + i));
+            new_line = ft_strjoin(db, before_astress, files);
+            new_line = ft_strjoin(db, new_line, afterr_astress);
+            printf("%s\n", new_line);
         }
         i++;
     }

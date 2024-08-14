@@ -115,4 +115,12 @@ char    *gc_copy(t_db *db, char *s);
 
 void  skip_open_spaces(t_quote *quotes, char *line, int *i);
 char    *wildcard(t_db *db, char *line);
+
+
+
+t_file_entry *new_ent_node(t_db *db, struct dirent  *ent);
+void    add_ent_front(t_file_entry  **list,   t_file_entry	*new);
+void	push_ent_back(t_file_entry  **list,  t_file_entry	*new);
+t_file_entry  *get_ent_node(t_file_entry    *list,  char    *name,  unsigned char   type);
+void  del_ent_node(t_file_entry    **list,  char    *name, unsigned char    type);
 #endif

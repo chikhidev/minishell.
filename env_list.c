@@ -5,7 +5,6 @@
 
 t_env_list *new_env_node(t_db *db, char   *key, char    *val)
 {
-	(void)db;
     t_env_list *new;
     new = ec_malloc(db,  sizeof(t_env_list));
     if (new == NULL)

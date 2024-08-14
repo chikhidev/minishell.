@@ -145,6 +145,15 @@ typedef struct s_gc
 	struct s_gc			*next;
 }						t_gc;
 
+
+
+typedef struct s_file_entry
+{
+	struct dirent				*entry;
+	struct s_file_entry			*next;
+}						t_file_entry;
+
+
 /**
  * @details The tree data structure of storing the commands
  * we will have two different types of nodes:

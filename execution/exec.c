@@ -333,7 +333,6 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
     return (SUCCESS);
 }
 
-
 int run_builtin(t_db   *db,t_cmd_node *node)
 {
     if (ft_strcmp(CMD->args[0], "echo") == 0)
@@ -440,7 +439,6 @@ int exec(t_db   *db, void *node,    int index)
     if (!node)
         return (SUCCESS);
     printf("in scope -> %d\n", CMD->is_scope);
-
     if (node_in_scope(node))
     {
         printf("in scope -> %d\n", CMD->is_scope);
