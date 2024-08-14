@@ -102,6 +102,9 @@ typedef struct s_op_node
 	void				**childs;
 	int					n_childs;
 
+	int input_fd;
+	int output_fd;
+
 	bool	is_scope;
 
 	// execution part ------ <<<<<<
@@ -232,6 +235,11 @@ typedef struct s_tracker
 	t_quote				*quotes;
 }						t_tracker;
 
+typedef struct s_str_lst
+{
+	char	*str;
+	struct s_str_lst	*next;
+}	t_str_lst;
 /**
  * @details The db structure is used to store all data needed
  */

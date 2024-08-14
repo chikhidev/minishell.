@@ -240,3 +240,13 @@ last 1   2
 ==1407238== For lists of detected and suppressed errors, rerun with: -s
 ==1407238== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 $ 
+
+
+Minihell$ ls&&ps
+' '   a   b   c   d
+s: command not found ya hamid
+Minihell$ 
+
+
+
+ls * -la : " "   ' ' problem

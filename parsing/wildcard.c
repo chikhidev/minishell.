@@ -3,10 +3,6 @@
 #include "../includes/main.h"
 #include "../includes/string.h"
 
-bool    starts_with(char    *str,   char    *sub)
-{
-    return ft_strncmp(str, sub, ft_strlen(sub)) == 0;
-}
 
 #define FILE_ 8
 #define DIR_ 4
@@ -15,6 +11,26 @@ bool    starts_with(char    *str,   char    *sub)
 /*
     * recursively read the curr dir
 */
+
+int handle_wildcard(t_db *db, char  **result)
+{
+    DIR *curr_dir;
+    struct dirent *entry;
+    curr_dir = opendir(".");
+    if (curr_dir)
+    {
+        entry = readdir(curr_dir);
+        while (entry)
+        {
+            if (!starts_with(entry->d_name, "."))
+                result = append_word(db, result, entry->d_name);
+            entry = readdir(curr_dir);
+        }
+    }
+    return (SUCCESS);
+
+}
+
 
 char    *wrap_with_signle_quote(t_db *db, char    *name)
 {
@@ -34,23 +50,19 @@ char    *get_dir_files(t_db *db, char    *path)
     (void)db;
     DIR *curr_dir;
     struct dirent *entry;
-    bool    first_time;
+    t_str_lst    *str_lst;
+    t_str_lst    *new_str;
 
-    first_time = true;
     files = NULL;
+    str_lst = NULL;
     curr_dir = opendir(path);
 
     entry = readdir(curr_dir);
     if (entry)
     {
-        if (all_whitespaces(entry->d_name, 0, ft_strlen(entry->d_name)))
-        {
-            files = ft_strjoin(db, files, "'");
-            files = ft_strjoin(db, files, entry->d_name);
-            files = ft_strjoin(db, files, "'");
-        }
-        else
-            files = ft_strjoin(db, files, entry->d_name);
+        files = ft_strjoin(db, files, entry->d_name);
+        new_str = new_str_node(db, files);
+        push_str_back(&str_lst, new_str);
     }
     while (entry)
     {
@@ -58,14 +70,9 @@ char    *get_dir_files(t_db *db, char    *path)
         if (!entry)
             break;
         files = ft_strjoin(db, files, " ");
-        if (all_whitespaces(entry->d_name, 0, ft_strlen(entry->d_name)))
-        {
-            files = ft_strjoin(db, files, "'");
-            files = ft_strjoin(db, files, entry->d_name);
-            files = ft_strjoin(db, files, "'");
-        }
-        else
-            files = ft_strjoin(db, files, entry->d_name);
+        files = ft_strjoin(db, files, entry->d_name);
+        new_str = new_str_node(db, files);
+        push_str_back(&str_lst, new_str);
     }
     return files;
 }

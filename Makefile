@@ -18,6 +18,7 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/io.c \
 				parsing/tokenizer.c \
 				parsing/wildcard.c \
+				parsing/str_list.c \
 				parsing/file_entry.c \
 
 EXECUTION_SRC = 	execution/exec.c \
