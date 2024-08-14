@@ -137,6 +137,8 @@ int     main(int    ac, char    *av[],  char    *env[])
             return !error(&db, NULL, "malloc failed");
         }
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
+        // wildcard(&db, line);
+        // exit(1);
         free(line);
         line = tmp;
         if (parser(&db, line) == FAILURE)

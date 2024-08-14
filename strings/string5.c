@@ -101,3 +101,7 @@ int is_str_empty(t_db   *db,    char    *str)
     else
         return 0;
 }
+bool    starts_with(char    *str,   char    *sub)
+{
+    return ft_strncmp(str, sub, ft_strlen(sub)) == 0;
+}

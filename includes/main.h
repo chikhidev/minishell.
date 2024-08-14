@@ -150,6 +150,15 @@ typedef struct s_gc
 	struct s_gc			*next;
 }						t_gc;
 
+
+
+typedef struct s_file_entry
+{
+	struct dirent				*entry;
+	struct s_file_entry			*next;
+}						t_file_entry;
+
+
 /**
  * @details The tree data structure of storing the commands
  * we will have two different types of nodes:
@@ -228,6 +237,11 @@ typedef struct s_tracker
 	t_quote				*quotes;
 }						t_tracker;
 
+typedef struct s_str_lst
+{
+	char	*str;
+	struct s_str_lst	*next;
+}	t_str_lst;
 /**
  * @details The db structure is used to store all data needed
  */

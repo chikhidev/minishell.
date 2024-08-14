@@ -127,7 +127,7 @@ char    *get_path(t_db  *db, char    **args)
 
     path = args[0];
     if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0 || is_str_empty(db, path))
-        return ft_strdup(db, path);
+        return ft_strdup(db, path); // TODO minde the files with names as
     if (is_relative_path(path) || is_absolute_path(path))
     {
         if (access(path, F_OK) + access(path, X_OK) != 0)
@@ -332,7 +332,6 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
     }
     return (SUCCESS);
 }
-
 
 int run_builtin(t_db   *db,t_cmd_node *node)
 {

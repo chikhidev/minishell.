@@ -47,6 +47,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     t_iterators it;
     char    *save;
     int len;
+    (void)db;
+    DIR *curr_dir;
+    struct dirent *entry;
 
     save = NULL;
 	CATCH_ONNULL(s, NULL);
@@ -105,6 +108,24 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             }
             if (ft_strlen(save) > 0)
             {
+                if (ft_strcmp(save, "*") == 0)
+                {
+                    curr_dir = opendir(".");
+                    if (curr_dir)
+                    {
+                        entry = readdir(curr_dir);
+                        while (entry)
+                        {
+                            if (!starts_with(entry->d_name, "."))
+                            {
+                                result = append_word(db, result, entry->d_name);
+                            }
+                            entry = readdir(curr_dir);
+                        }
+                    }
+                }
+                else
+                {                    
                     result = append_word(db, result, save);
                     if (!result)
                     {
@@ -114,6 +135,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     }
                 }
                 save = NULL;
+            }
         }
         it.i++;
     }
@@ -127,6 +149,11 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 db->error = true;
                 return (NULL);
             }
+    }
+
+    for (int i = 0; result[i]; i ++)
+    {
+        printf("args[%d]: %s\n", i, result[i]);
     }
 
 	return (result);
