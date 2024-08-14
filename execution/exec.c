@@ -410,6 +410,7 @@ int handle_node(t_db   *db, void *node,    int index)
 {
     if (CMD->type == CMD_NODE)
     {
+        
         if (expanded(db, CMD->args) == FAILURE)
             return FAILURE;
         else
@@ -439,11 +440,14 @@ int exec(t_db   *db, void *node,    int index)
 
     if (!node)
         return (SUCCESS);
-    printf("in scope -> %d\n", CMD->is_scope);
+    // printf("in scope -> %d\n", CMD->is_scope);
+
+    if (OP->input_fd == INVALID || OP->output_fd == INVALID)
+            return FAILURE;
 
     if (node_in_scope(node))
     {
-        printf("in scope -> %d\n", CMD->is_scope);
+        // printf("in scope -> %d\n", CMD->is_scope);
         id = fork();
         if (id == CHILD)
         {

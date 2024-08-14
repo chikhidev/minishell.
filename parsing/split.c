@@ -121,9 +121,19 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
     return SUCCESS;
 }
 
+/**
+ * ---------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------
+ * -------------------------------------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------------------------
+ */
+
+
+
 int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
-    t_holder holder;
+    t_holder holder; // holder varibale so we make sure of that this data will be given to children if exists
 
     if (ft_strlen(line) == 0
         || all_whitespaces(line, 0, ft_strlen(line)))
@@ -131,13 +141,18 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     ft_bzero(&holder, sizeof(holder));
     holder.tracker = gc_malloc(db, sizeof(t_tracker));
     CATCH_MALLOC(holder.tracker);
-    ft_bzero(holder.tracker, sizeof(t_tracker));
     CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
     CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
         line, holder.tracker->quotes), FAILURE);
+    
     holder.parent = parent;
-    holder.op = strongest_operator(line, holder.tracker);
+    holder.op = strongest_operator(line, holder.tracker); 
     holder.current_node = current_node;
+
+    /* this is the scope responsible of handling the scope paranthesis removing 
+        in this case it's obviouse that it is a scope so we assign the 'is_scope' variable to be true in this case and later we toggle it
+        THEN we continue our recursion with no sopes ...
+     */
     if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
         holder.is_scope = true;
@@ -145,6 +160,11 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
                 db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent
             );
     }
+    /**
+     * this case means we have an operator
+     * take the most powerful operator and start splitting the line whenever that op is appeared
+     * and if the operator is inside scope we assign the 'is_scope' to true 
+     */
     else if (holder.op != NOT_FOUND)
     {
         if (process_op(db, line, &holder) == FAILURE)
@@ -153,14 +173,17 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         CURR_OP->is_scope = holder.is_scope;
         holder.is_scope = false;
     }
+    /**
+     *  in this case if we are left with no paranthesis and no operator this means that this must ne a COMMAND
+     *  so we use a TOKENIZER to identify each character and use for each a spicific action
+     */
     else
     {
         if (process_cmd(db, line, &holder) == FAILURE)
-            return FAILURE;
+            return (db->error != true); // failure in case of error happened else just success
 
         CURR_CMD->is_scope = holder.is_scope;
         holder.is_scope = false;
     }
-    gc_free(db, holder.tracker);
     return SUCCESS;
 }

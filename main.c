@@ -3,27 +3,6 @@
 #include "exec.h"
 #include "builtens.h"
 
-void get_dir(t_db *db, char **store)
-{
-    t_env_list *home;
-    t_env_list *curr_dir;
-    char *prefix;
-    int i;
-
-    prefix = NULL;
-    home = get_env_node(db->env_list, "HOME");
-    curr_dir = get_env_node(db->env_list, "PWD");
-    if (!home || !curr_dir)
-        return ;
-    i = 0;
-    while (home->val[i] && curr_dir->val[i]
-        && (home->val[i] == curr_dir->val[i]))
-        i++;
-    if (i > 1)
-       prefix = "~";
-    *store = ft_strjoin_ec(db, prefix, curr_dir->val + i);
-}
-
 void handle_sigint(int signum)
 {
     (void)signum;
@@ -35,14 +14,10 @@ void handle_sigint(int signum)
 
 int handle_prompt(t_db *db, char **line)
 {
-    // char *prompt;
 
-    // char *tmp;
     (void)db,
-    // get_dir(db, &tmp);
     signal(SIGINT, handle_sigint);
-    *line = readline("$ ");
-    // handle ctrl + c later
+    *line = readline("Minihell$ ");
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
     return SUCCESS ; /*nothing*/
@@ -54,10 +29,10 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
     int i = 0;
     char *key;
     char *val;
+    bool good = false;
 
     key = NULL;
     val = NULL;
-    bool good = false;
     while (env && env[i])
     {
         good = fill_key_val(db, env[i], &key, &val);

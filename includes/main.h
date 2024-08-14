@@ -102,6 +102,9 @@ typedef struct s_op_node
 	void				**childs;
 	int					n_childs;
 
+	int input_fd;
+	int output_fd;
+
 	bool	is_scope;
 
 	// execution part ------ <<<<<<

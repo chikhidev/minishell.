@@ -6,6 +6,7 @@ void    *gc_malloc(t_db *db, size_t size)
 
     ptr = malloc(size);
     if (!ptr) return (NULL);
+    ft_bzero(ptr, size);
     if (!db->gc)
     {
         db->gc = malloc(sizeof(t_gc));

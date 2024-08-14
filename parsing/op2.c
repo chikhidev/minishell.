@@ -27,6 +27,8 @@ int    create_op_node(t_db *db, int op, void **current_node, void *parent)
     ((t_op_node *)*current_node)->priority = priority_of_op(op);
     ((t_op_node *)*current_node)->op_presentation = op;
     ((t_op_node *)*current_node)->n_childs = 0;
+    ((t_op_node *)*current_node)->input_fd = STDIN_FILENO;
+    ((t_op_node *)*current_node)->output_fd = STDOUT_FILENO;
 
     return (SUCCESS);
 }

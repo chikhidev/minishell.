@@ -79,7 +79,7 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
     if (fd == INVALID)
     {
         perror(tmp);
-        return FAILURE;
+        // return FAILURE;
     }
 
     if (create_redirection(db, type, fd) == FAILURE)
