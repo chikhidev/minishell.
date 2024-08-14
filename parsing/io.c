@@ -1,6 +1,5 @@
 #include "main.h"
 #include "parsing.h"
-# include "../get_next_line/get_next_line.h"
 
 int create_redirection(t_db *db, int type, int fd)
 {
@@ -101,11 +100,13 @@ int validate_io(char *arg, int size)
 
     return (INVALID);
 }
+
 void    signalhandel(int signal)
 {
     if (signal == 2)
         exit(0);
 }
+
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
@@ -168,15 +169,10 @@ int open_heredoc(t_db *db, char *delim)
     }
     // parent process
         // wait for the child to finish
-    wait(&child_status);
     signal(SIGCHLD, SIG_IGN);
+    wait(&child_status);
 
-    if (feedback(db, child_status)->signal != 0)
-    {
-        close(pipe_fd[0]);
-        close(pipe_fd[1]);
-        return (FAILURE);
-    }
+    printf("status taken from heredoc: %d\n", feedback(db, child_status)->status);
 
     close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];

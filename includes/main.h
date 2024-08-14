@@ -19,6 +19,8 @@
 # define FAILURE 0
 # define NOT_FOUND -1
 # define INVALID -1
+# define MISSING_FILE -2
+# define PERMISSION_DENIED -3
 # define VALIDE 1
 # define PASS
 
@@ -257,6 +259,10 @@ typedef struct s_db
 	int					stdout_dup;
 	int					pipe[2];
 	int					read_fd;
+
+	// has the permission to run the line? by default yes.
+	bool				exec_line;
+
     /*local envirement variables*/
 	t_env_list			*env_list;
 	t_ip_addrs			*ip;

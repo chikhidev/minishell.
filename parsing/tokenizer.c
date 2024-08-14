@@ -66,7 +66,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             save = concat(db, save, s[it.i]);
             CATCH_ONNULL(save, NULL);
         }
-        else
+        else if (!is_inside_quotes_list(*quotes, it.i))
         {
             db->curr_type = validate_io(&s[it.i], 2);
             if (db->curr_type == INVALID)
@@ -89,9 +89,11 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 
                 if (db->curr_type == HEREDOC)
                 {
-                    CATCH_ONFAILURE(open_heredoc(db,
-                        save
-                    ), NULL)
+                    if (open_heredoc(db, save) == FAILURE)
+                    {
+                        db->exec_line = false;
+                        return NULL;
+                    }
                 }
                 else
                 {
