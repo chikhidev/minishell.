@@ -61,15 +61,21 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     len = ft_strlen(s);
     while (it.i < len)
     {
-        if (!(is_whitespace(s[it.i])
-            && !is_inside_quotes_list(*quotes, it.i))
-            && !(validate_io(&s[it.i], 1) != INVALID
-            || validate_io(&s[it.i], 2) != INVALID))
+        if (!(
+                is_whitespace(s[it.i])
+                && !is_inside_quotes_list(*quotes, it.i)
+            )
+            && !(
+                (
+                    validate_io(&s[it.i], 1) != INVALID
+                    || validate_io(&s[it.i], 2) != INVALID
+                ) && !is_inside_quotes_list(*quotes, it.i)
+            ))
         {
             save = concat(db, save, s[it.i]);
             CATCH_ONNULL(save, NULL);
         }
-        else if (!is_inside_quotes_list(*quotes, it.i))
+        else
         {
             db->curr_type = validate_io(&s[it.i], 2);
             if (db->curr_type == INVALID)
