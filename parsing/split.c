@@ -84,7 +84,7 @@ int process_op(t_db *db, char *line, t_holder *holder)
         holder->op, holder->tracker);
     splitted = split_line(db, line, CURR_OP, holder->tracker);
     CATCH_MALLOC(splitted);
-    CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
+    CURR_OP->childs = gc_malloc(db, sizeof(void *) *
         CURR_OP->n_childs);
     ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
     i = 0;
@@ -107,10 +107,11 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
     CATCH_ONFAILURE(
         create_cmd_node(db, current_node, holder->parent) // create a command node -------<<<<<<<<
     , FAILURE);
+
     CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
     if (db->error)
         return error(db, NULL, NULL);
-    
+
     CATCH_MALLOC((CURR_CMD)->args);
     (CURR_CMD)->input_fd = db->input_fd;
     (CURR_CMD)->output_fd = db->output_fd;
@@ -159,5 +160,5 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         holder.is_scope = false;
     }
     gc_free(db, holder.tracker);
-    return SUCCESS; 
+    return SUCCESS;
 }

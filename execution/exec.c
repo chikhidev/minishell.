@@ -172,7 +172,8 @@ int handle_pipe_op(t_db *db,    void    *node)
             return (FAILURE);
         i++;
     }
-    i = 0;
+
+    status = 0;
     ip = db->ip;
     while (ip)
     {
@@ -292,6 +293,10 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
     int signal_catcher;
 
     command = (t_cmd_node  *)node;
+
+    if (!command->args || !command->args[0])
+        return SUCCESS;
+
     signal_catcher = 0;
     if (is_built_in(node))
         exec_builtin(db, node, index);
@@ -449,5 +454,3 @@ int exec(t_db   *db, void *node,    int index)
         handle_node(db, node, index);
     return (SUCCESS);
 }
-
-

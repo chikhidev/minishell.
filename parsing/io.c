@@ -130,73 +130,56 @@ int open_heredoc(t_db *db, char *delim)
         // signal(SIGINT, SIG_DFL);
         close(pipe_fd[0]);
         close(pipe_fd[1]);
-        write(2, "> ", 2);
         while (1)
         {
-            line = get_next_line(db, 0);
+            line = readline("> ");
             if (!line)
             {
                 write(2, "\n", 1);
                 close(pipe_fd[1]);
                 break;
             }
-            tmp = gc_copy(db, line);
-            gc_free(db, line);
-            if (!tmp)
-                return error(db, NULL, "malloc failed");
-            line = tmp;
-            if (is_newline_at_the_end(line))
-            {
-                tmp = ft_substr(db,     line, 0, ft_strlen(line) - 1);
-                if (!tmp)
-                    return error(db, NULL, "malloc failed");
-                line = gc_copy(db, tmp);
-                gc_free(db, tmp);
-            }
+
             if (ft_strcmp(delim, line) == 0
                 && ft_strlen(delim) == ft_strlen(line))
             {
                 write(2, "\n", 1);
                 close(pipe_fd[1]);
+                free(line);
                 break;
             }
-            CATCH_ONFAILURE(
-                expand(db, &line, NULL),
-                FAILURE
-            )
+
+            if (expand(db, &line, NULL) == FAILURE)
+		        exit((error(db, NULL, "Malloc failed")) + 1);
+
             write(pipe_fd[1], line, ft_strlen(line));
-            write(2, "> ", 2);
+            write(pipe_fd[1], "\n", 1);
+            free(line);
         }
+
         if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
         {
             close(db->input_fd);
         }
-        gc_void(db);
-        ec_void(db);
-        exit(0);
-    }
-    // wait for the child to finish
-    signal(SIGCHLD, SIG_IGN);
-    waitpid(pid, &child_status, 0);
 
-    // if (feedback(db, child_status)->signal == SIGINT)
-    // {
-    //     error(db, NULL, "f;sdjfh;lsjhg;dfjhgd;jghriogh\n");
-    //     close(pipe_fd[0]);
-    //     close(pipe_fd[1]);
-    //     return (FAILURE);
-    // }
-    if (child_status != 0)
-    { 
-        error(db, NULL, "f;sdjfh;lsjhg;dfjhgd;jghriogh\n");
+        ec_void(db);
+        exit((error(db, NULL, NULL))); /*no error*/
+    }
+    // parent process
+        // wait for the child to finish
+    wait(&child_status);
+    signal(SIGCHLD, SIG_IGN);
+
+    if (feedback(db, child_status)->signal != 0)
+    {
         close(pipe_fd[0]);
         close(pipe_fd[1]);
         return (FAILURE);
     }
+
     close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;
-
     return (SUCCESS);
 }
 
