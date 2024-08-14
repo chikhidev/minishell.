@@ -439,8 +439,11 @@ int exec(t_db   *db, void *node,    int index)
 
     if (!node)
         return (SUCCESS);
+    printf("in scope -> %d\n", CMD->is_scope);
+
     if (node_in_scope(node))
     {
+        printf("in scope -> %d\n", CMD->is_scope);
         id = fork();
         if (id == CHILD)
         {

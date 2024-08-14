@@ -74,11 +74,12 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
     else if (type == INPUTFILE)
         fd = open(tmp, O_RDONLY);
     else if (type == OUTPUTFILE)
-        fd = open(tmp, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        fd = open(tmp, O_WRONLY  | O_CREAT | O_TRUNC, 0644);
 
     if (fd == INVALID)
     {
         perror(tmp);
+        return FAILURE;
     }
 
     if (create_redirection(db, type, fd) == FAILURE)

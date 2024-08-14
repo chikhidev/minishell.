@@ -89,19 +89,23 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 
                 if (db->curr_type == HEREDOC)
                 {
-                    CATCH_ONFAILURE(open_heredoc(db, 
+                    CATCH_ONFAILURE(open_heredoc(db,
                         save
-                    ),NULL)
+                    ), NULL)
                 }
                 else
                 {
-                    open_file(db, save, db->curr_type, quotes);
+                    if (open_file(db, save, db->curr_type, quotes) == FAILURE)
+                    {
+                        db->error = true;
+                        return NULL;
+                    }
                 }
                 gc_free(db, save);
                 save = NULL;
                 it.i = it.j - 1;
             }
-            if (save && ft_strlen(save) > 0)
+            if (ft_strlen(save) > 0)
             {
                     result = append_word(db, result, save);
                     if (!result)
@@ -116,7 +120,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
         it.i++;
     }
 
-    if (save && ft_strlen(save) > 0)
+    if (ft_strlen(save) > 0)
     {
             result = append_word(db, result, save);
             if (!result)
@@ -125,7 +129,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 db->error = true;
                 return (NULL);
             }
-    }    
+    }
 
 	return (result);
 }
