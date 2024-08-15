@@ -70,7 +70,8 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     validate_io(&s[it.i], 1) != INVALID
                     || validate_io(&s[it.i], 2) != INVALID
                 ) && !is_inside_quotes_list(*quotes, it.i)
-            ))
+            )
+        )
         {
             save = concat(db, save, s[it.i]);
             CATCH_ONNULL(save, NULL);
@@ -148,19 +149,19 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 
     if (ft_strlen(save) > 0)
     {
-            result = append_word(db, result, save);
-            if (!result)
-            {
-                printf("failed to append word 2\n");
-                db->error = true;
-                return (NULL);
-            }
+        result = append_word(db, result, save);
+        if (!result)
+        {
+            printf("failed to append word 2\n");
+            db->error = true;
+            return (NULL);
+        }
     }
 
-    for (int i = 0; result[i]; i ++)
-    {
-        printf("args[%d]: %s\n", i, result[i]);
-    }
+    // for (int i = 0; result[i]; i ++)
+    // {
+    //     printf("args[%d]: %s\n", i, result[i]);
+    // }
 
 	return (result);
 }

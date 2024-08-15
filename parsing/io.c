@@ -169,10 +169,10 @@ int open_heredoc(t_db *db, char *delim)
     }
     // parent process
         // wait for the child to finish
-    signal(SIGCHLD, SIG_IGN);
-    wait(&child_status);
+    // signal(SIGCHLD, SIG_IGN);
+    waitpid(pid, &child_status, 0);
 
-    printf("status taken from heredoc: %d\n", feedback(db, child_status)->status);
+    printf("signal taken from heredoc: %d\n", feedback(db, child_status)->signal);
 
     close(pipe_fd[1]);
     db->input_fd = pipe_fd[0];
@@ -206,7 +206,6 @@ int syntax_checker(t_db *db, char *line, int *start)
     i = *start;
     while (line[i])
     {
-
         if (ft_strncmp(&line[i], ">>", 2) == 0
             || ft_strncmp(&line[i], "<<", 2) == 0
             || ft_strncmp(&line[i], ">", 1) == 0
@@ -215,7 +214,7 @@ int syntax_checker(t_db *db, char *line, int *start)
             if (line[i] == '<' && line[i + 1] == '<')
             {
                 db->heredoc_counter++;
-                if (db->heredoc_counter > 16)
+                if (db->heredoc_counter > 15)
                     return error(db, "heredoc", "maximum here-document count exceeded");
                 i++;
             }

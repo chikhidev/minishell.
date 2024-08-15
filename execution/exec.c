@@ -189,10 +189,13 @@ int handle_and_op(t_db *db,    void    *node)
 {
     int i;
     int status;
-    bool op_in_scope;
+    // bool op_in_scope;
+
+    // // if (OP->is_scope)
+    // //     op_in_scope = true;
+    // op_in_scope = OP->is_scope; /*bruh much better*/
     i = 0;
-    if (OP->is_scope)
-        op_in_scope = true;
+
     while (i < OP->n_childs)
         {
             if (exec(db, OP->childs[i], i) == FAILURE)
