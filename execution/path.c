@@ -16,39 +16,50 @@ char    *cmd_path(t_db *db, char *filename)
 
     if (!filename)
         return NULL;
-    path_node = get_exp_node(db->exp_list, "PATH");
-    if (!path_node)
-    {
-        return (NULL);
-    }
-    paths = ft_split(db, path_node->val, ':');
-    if (!paths)
-        return NULL;
-    for (int i = 0; paths[i]; i++)
-    {
-        path = ft_strjoin(db, paths[i], "/");
-        if (!path)
-        {
-            error(db, NULL, "Malloc failed");
-            return NULL;
-        }
-        tmp = ft_strjoin(db, path, filename);
-        if (!tmp)
-        {
-            error(db, NULL, "Malloc failed");
-            return NULL;
-        }
 
-        if (access(tmp, F_OK) == 0)
+    path_node = get_exp_node(db->exp_list, "PATH");
+    if (path_node)
+    {
+        paths = ft_split(db, path_node->val, ':');
+        if (!paths)
+            return NULL;
+        
+        for (int i = 0; paths[i]; i++)
         {
-            free_array(db, paths);
-            if (access(tmp, X_OK) != 0)
+            path = ft_strjoin(db, paths[i], "/");
+            if (!path)
             {
-                error(db, tmp, "Permission denied");
+                error(db, NULL, "Malloc failed");
                 return NULL;
             }
-            return tmp;
+            tmp = ft_strjoin(db, path, filename);
+            if (!tmp)
+            {
+                error(db, NULL, "Malloc failed");
+                return NULL;
+            }
+
+            if (access(tmp, F_OK) == 0)
+            {
+                free_array(db, paths);
+                if (access(tmp, X_OK) != 0)
+                {
+                    error(db, tmp, "Permission denied");
+                    return NULL;
+                }
+                return tmp;
+            }
         }
+    }
+
+    if (access(filename, F_OK) == 0)
+    {
+        if (access(filename, X_OK) != 0)
+        {
+            error(db, filename, "Permission denied");
+            return NULL;
+        } 
+        return filename;
     }
 
     return NULL;

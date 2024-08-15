@@ -35,7 +35,13 @@ char *get_env(t_db *db, char *name)
     if (are_all(name, ft_isdigit))
         return (ft_strdup(db, name + 1));
     object = get_exp_node(db->exp_list, name);
-	return (ft_strdup(db, object->val));
+
+    if (object)
+    {
+        return ft_strdup(db, object->val);
+    }
+
+	return (ft_strdup(db, "''"));
 }
 
 int valid_char(char c, int  index)
