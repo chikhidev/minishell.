@@ -181,7 +181,7 @@ int handle_pipe_op(t_db *db,    void    *node)
         ip = ip->next;
     }
     ip_void(db);
-    db->last_signal = feedback(db, status)->status;
+    feedback(db, status);
     return (SUCCESS);
 }
 
@@ -203,7 +203,8 @@ int handle_and_op(t_db *db,    void    *node)
             if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
             {
                 wait(&status);
-                db->last_signal = feedback(db, status)->status;
+                
+                feedback(db, status);
             }
             if (db->last_signal != 0)
                 return (FAILURE);
@@ -224,7 +225,8 @@ int handle_or_op(t_db *db,    void    *node)
         if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
         {
             wait(&status);
-            db->last_signal = feedback(db, status)->status;
+
+            feedback(db, status);
         }
         if (db->last_signal == 0)
             return (FAILURE);
@@ -330,7 +332,8 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
                 waitpid(id, &signal_catcher, 0);
             else
                 ip_add(db, id); //
-            db->last_signal = feedback(db, signal_catcher)->signal;
+            
+            feedback(db, signal_catcher);
         }
     }
     return (SUCCESS);
@@ -384,7 +387,8 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
                 waitpid(id, &signal_catcher, 0);
             else
                 ip_add(db, id); // else add it to linked list to wait it later
-            db->last_signal = feedback(db, signal_catcher)->signal;
+            
+            feedback(db, signal_catcher);
         }
     }
     else // not inside a pipe, only run it, with no forking

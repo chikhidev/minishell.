@@ -109,7 +109,7 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
     , FAILURE);
 
     CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
-    if (db->error)
+    if (db->error || !db->exec_line)
         return error(db, NULL, NULL);
 
     CATCH_MALLOC((CURR_CMD)->args);
@@ -135,6 +135,8 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
     t_holder holder; // holder varibale so we make sure of that this data will be given to children if exists
 
+    if (db->error || !db->exec_line)
+        return FAILURE;
     if (ft_strlen(line) == 0
         || all_whitespaces(line, 0, ft_strlen(line)))
         return SUCCESS;

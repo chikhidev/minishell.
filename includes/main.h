@@ -23,6 +23,8 @@
 # define PERMISSION_DENIED -3
 # define VALIDE 1
 # define PASS
+# define GOOD 1
+# define BAD 0
 
 
 // triggers
@@ -60,6 +62,10 @@
 # define OP ((t_op_node *)node)
 # define CMD ((t_cmd_node *)node)
 
+# define IS_CHILD (pid == 0)
+# define IS_PARENT (pid > 0)
+# define IS_ERROR (pid < 0)
+
 /**
  * @details This is the color codes for the shell
  */
@@ -72,16 +78,6 @@
 # define RESET "\033[0m"
 # define BOLD      "\033[1m"
 # define UNDERLINE "\033[4m"
-
-/**
- * @details This is gonna represent the child process's feedback
- * to use it simply call the function feedback
- */
-typedef struct feedback
-{
-	int	signal;
-	int status;
-}	t_feedback;
 
 
 typedef struct s_iterators
@@ -317,13 +313,13 @@ void					add_exp_front(t_exp_list  **list,   t_exp_list	*new);
 void					push_exp_sort(t_exp_list  **list,  t_exp_list	*new);
 void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
 t_exp_list              *get_exp_node(t_exp_list    *list,  char    *key);
-void					free_environment(t_db  *db);
+// void					free_environment(t_db  *db);
 t_env_list              *get_env_node(t_env_list    *list,  char    *key);
 void					del_env_node(t_env_list    **list,  char    *key);
 void					del_exp_node(t_exp_list    **list,  char    *key);
 char					**env_list_to_env_arr(t_db	*db);
 
-t_feedback				*feedback(t_db *db, int status);
+void					feedback(t_db *db, int process_res);
 
 /* FUNCTIONS */
 

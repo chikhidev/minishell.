@@ -6,17 +6,24 @@
 void handle_sigint(int signum)
 {
     (void)signum;
+
     write(STDOUT_FILENO, "\n", 1);
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
 }
 
-int handle_prompt(t_db *db, char **line)
-{
 
-    (void)db,
-    signal(SIGINT, handle_sigint);
+int handle_prompt(t_db *db, char **line)
+{    
+    (void)db;
+    struct sigaction sa;
+
+    sa.sa_handler = handle_sigint;
+    sigaction(SIGINT, &sa, NULL);
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa, NULL);
+
     *line = readline("Minihell$ ");
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);

@@ -101,10 +101,14 @@ int validate_io(char *arg, int size)
     return (INVALID);
 }
 
-void    signalhandel(int signal)
+void signalhandel(int signal)
 {
-    if (signal == 2)
-        exit(0);
+    if (signal == SIGINT)
+    {
+        write(2, "\n", 1);
+        exit(130);
+    }
+    exit(1);
 }
 
 int open_heredoc(t_db *db, char *delim)
@@ -122,16 +126,20 @@ int open_heredoc(t_db *db, char *delim)
     delim = tmp;
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
-    pid = fork(); /*we fork to handle signals inside the child*/
+
+    pid = fork(); /* we fork to handle signals inside the child */
     if (pid == -1)
         return error(db, "fork", NULL);
-    if (pid == 0)
+    
+    if (IS_CHILD)
     {
         sa.sa_handler = signalhandel;
         sigaction(SIGINT, &sa, NULL);
-        // signal(SIGINT, SIG_DFL);
+        sa.sa_handler = SIG_IGN;
+        sigaction(SIGQUIT, &sa, NULL);
+
         close(pipe_fd[0]);
-        close(pipe_fd[1]);
+
         while (1)
         {
             line = readline("> ");
@@ -142,8 +150,7 @@ int open_heredoc(t_db *db, char *delim)
                 break;
             }
 
-            if (ft_strcmp(delim, line) == 0
-                && ft_strlen(delim) == ft_strlen(line))
+            if (ft_strcmp(delim, line) == 0)
             {
                 write(2, "\n", 1);
                 close(pipe_fd[1]);
@@ -152,7 +159,7 @@ int open_heredoc(t_db *db, char *delim)
             }
 
             if (expand(db, &line, NULL) == FAILURE)
-		        exit((error(db, NULL, "Malloc failed")) + 1);
+                exit((error(db, NULL, "Malloc failed")) + 1);
 
             write(pipe_fd[1], line, ft_strlen(line));
             write(pipe_fd[1], "\n", 1);
@@ -165,19 +172,29 @@ int open_heredoc(t_db *db, char *delim)
         }
 
         ec_void(db);
-        exit((error(db, NULL, NULL))); /*no error*/
+        exit(0); /* Exit normally */
     }
-    // parent process
-        // wait for the child to finish
-    signal(SIGCHLD, SIG_IGN); // !important
-    waitpid(pid, &child_status, 0);
 
-    printf("signal taken from heredoc: %d\n", feedback(db, child_status)->signal);
+    /*-------------------------------Parent process------------------------------*/
+    // cancel SIGINT and SIGQUIT they sound be handled by the child
+
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &sa, NULL);
+    // sigaction(SIGQUIT, &sa, NULL);
+
 
     close(pipe_fd[1]);
+    wait(&child_status);
+
+    feedback(db, child_status);
+    if (db->last_signal != 0)
+        return FAILURE;
+    
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;
-    return (SUCCESS);
+
+
+    return SUCCESS;
 }
 
 int is_op_redir(char *line, int i)
