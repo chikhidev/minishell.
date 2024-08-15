@@ -18,13 +18,17 @@ int handle_prompt(t_db *db, char **line)
 {    
     (void)db;
     struct sigaction sa;
+    char *tmp;
 
     sa.sa_handler = handle_sigint;
     sigaction(SIGINT, &sa, NULL);
     sa.sa_handler = SIG_IGN;
     sigaction(SIGQUIT, &sa, NULL);
 
-    *line = readline("Minihell$ ");
+    tmp = ft_strjoin(db, "\001" GREEN "\002Minishell\001" RESET "\002", "$ ");
+
+    *line = readline(tmp);
+    gc_free(db, tmp);
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
     return SUCCESS ; /*nothing*/

@@ -25,6 +25,9 @@ int create_redirection(t_db *db, int type, int fd)
     return (SUCCESS);
 }
 
+
+
+
 int check_ambigious(t_db *db, char *file)
 {
     t_exp_list *store;
@@ -53,6 +56,9 @@ int check_ambigious(t_db *db, char *file)
     return (false);
 }
 
+
+
+
 int open_file(t_db *db, char *file, int type, t_quote **quotes)
 {
     int fd;
@@ -61,11 +67,13 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
     if (!file || ft_strlen(file) == 0)
         return (SUCCESS);
     fd = INVALID;
+
     if (check_ambigious(db, file) == true)
     {
         create_redirection(db, type, INVALID);
         return FAILURE;
     }
+
     expand(db, &file, quotes);
     tmp = whithout_quotes(db, file);
     if (type == APPENDFILE)
@@ -75,17 +83,20 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
     else if (type == OUTPUTFILE)
         fd = open(tmp, O_WRONLY  | O_CREAT | O_TRUNC, 0644);
 
-    if (fd == INVALID)
-    {
-        perror(tmp);
-        // return FAILURE;
-    }
-
     if (create_redirection(db, type, fd) == FAILURE)
         return (FAILURE);
 
+    if (fd == INVALID)
+    {
+        perror(tmp);
+        return (FAILURE);
+    }
+
     return (SUCCESS);
 }
+
+
+
 
 int validate_io(char *arg, int size)
 {
@@ -101,6 +112,9 @@ int validate_io(char *arg, int size)
     return (INVALID);
 }
 
+
+
+
 void signalhandel(int signal)
 {
     if (signal == SIGINT)
@@ -111,6 +125,9 @@ void signalhandel(int signal)
     exit(1);
 }
 
+
+
+
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
@@ -120,6 +137,7 @@ int open_heredoc(t_db *db, char *delim)
     int child_status;
     struct sigaction sa;
 
+    ft_bzero(&sa, sizeof(struct sigaction));
     tmp = whithout_quotes(db, delim);
     if (!tmp)
         return error(db, NULL, "malloc failed");
@@ -145,6 +163,7 @@ int open_heredoc(t_db *db, char *delim)
             line = readline("> ");
             if (!line)
             {
+                dprintf(2, "Warning: here-document delimited by end-of-file (wanted `%s')\n", delim);
                 close(pipe_fd[1]);
                 break;
             }
@@ -191,9 +210,12 @@ int open_heredoc(t_db *db, char *delim)
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;
 
-
     return SUCCESS;
 }
+
+
+
+
 
 int is_op_redir(char *line, int i)
 {
@@ -213,6 +235,9 @@ int is_op_redir(char *line, int i)
 
     return (SUCCESS);
 }
+
+
+
 
 int syntax_checker(t_db *db, char *line, int *start)
 {

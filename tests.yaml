@@ -254,3 +254,15 @@ ls * -la : " "   ' ' problem
 
 Minihell$ echo "'$USER"
 abdoo
+
+
+
+----------------------------------+
+minishell$ << DL | wc             |
+>                                 |
+                                  |
+                                  |
+^C                                |
+^C^C^C      7       0       7     |
+minishell$                        |
+----------------------------------+

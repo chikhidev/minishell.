@@ -50,7 +50,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     (void)db;
     DIR *curr_dir;
     struct dirent *entry;
+    bool    read_write_perm;
 
+    read_write_perm = true;
     save = NULL;
 	CATCH_ONNULL(s, NULL);
 	result = (char **)gc_malloc(db, sizeof(char *));
@@ -71,12 +73,14 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     || validate_io(&s[it.i], 2) != INVALID
                 ) && !is_inside_quotes_list(*quotes, it.i)
             )
+            &&
+            read_write_perm
         )
         {
             save = concat(db, save, s[it.i]);
             CATCH_ONNULL(save, NULL);
         }
-        else
+        else if (read_write_perm)
         {
             db->curr_type = validate_io(&s[it.i], 2);
             if (db->curr_type == INVALID)
@@ -107,7 +111,10 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 }
                 else
                 {
-                    open_file(db, save, db->curr_type, quotes);
+                    if (open_file(db, save, db->curr_type, quotes) == FAILURE)
+                    {
+                        read_write_perm = false;
+                    }
                 }
                 gc_free(db, save);
                 save = NULL;
