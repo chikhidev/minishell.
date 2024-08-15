@@ -169,7 +169,7 @@ int open_heredoc(t_db *db, char *delim)
     }
     // parent process
         // wait for the child to finish
-    // signal(SIGCHLD, SIG_IGN);
+    signal(SIGCHLD, SIG_IGN); // !important
     waitpid(pid, &child_status, 0);
 
     printf("signal taken from heredoc: %d\n", feedback(db, child_status)->signal);
