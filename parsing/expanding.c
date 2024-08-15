@@ -73,30 +73,58 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
     return (SUCCESS);
 }
 
+/**
+ * @param edges: the indexes of the start and the end to put the value
+ */
+int update_index(t_db *db, char **line, char *value, t_iterators *edges)
+{
+    char *tmp;
+    char *tmp2;
+
+    tmp = ft_substr(db, *line, 0, edges->i);
+    if (!tmp)
+        return error(db, NULL, "Malloc failed8");
+
+    tmp2 = ft_strjoin(db, tmp, value);
+    if (!tmp2)
+        return error(db, NULL, "Malloc failed9");
+
+    gc_free(db, tmp);
+
+    tmp = ft_substr(db, *line, edges->j + 1, ft_strlen(*line));
+    if (!tmp)
+        return error(db, NULL, "Malloc failed10");
+
+    tmp2 = ft_strjoin(db, tmp2, tmp);
+    if (!tmp2)
+        return error(db, NULL, "Malloc failed11");
+
+    gc_free(db, tmp);
+    gc_free(db, *line);
+
+    *line = tmp2;
+
+    return SUCCESS;
+}
+
 int updated_line(t_db *db, char **line, char *variable_name, t_iterators *reminder)
 {
-    char *new_line;
+    // char *new_line;
     char *tmp;
     int reached;
 
     if (ft_strlen(variable_name) == 0)
         return reminder->i;
-    tmp = ft_substr(db, *line, 0, reminder->i);
+    
+    tmp = get_env(db, variable_name);
     if (!tmp)
-        return error(db, NULL, "Malloc failed1");
-    new_line = ft_strjoin(db, tmp, get_env(db, variable_name));
-    if (!new_line)
-        return error(db, NULL, "Malloc failed2");
-    gc_free(db, tmp);
-    reached = ft_strlen(new_line) - 1;
-    tmp = ft_substr(db, *line, reminder->j, ft_strlen(*line));
-    if (!tmp)
-        return error(db, NULL, "Malloc failed3");
-
-    gc_free(db, *line);
-    *line = ft_strjoin(db, new_line, tmp);
-    if (!*line)
         return error(db, NULL, "Malloc failed4");
+
+    if (update_index(db, line, tmp, reminder) == FAILURE)
+        return INVALID;
+
+    reached = reminder->i + ft_strlen(tmp) - 1;
+    gc_free(db, tmp);
     return reached;
 }
 
@@ -106,6 +134,7 @@ int expand(t_db *db, char **line, t_quote **quotes)
     int     i;
     t_iterators reminder;
     int len;
+    char *tmp;
 
     len = ft_strlen(*line);
     reminder.i = -1;
@@ -117,20 +146,54 @@ int expand(t_db *db, char **line, t_quote **quotes)
         if ((*line)[i] == '$' && !inside_single_quote(*quotes, i))
         {
             reminder.i = i;
-            if (!(*line)[++i]) return (SUCCESS);
-            if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
-                return (FAILURE);
-            reminder.j = i;
-            i = updated_line(db, line, env_var_name, &reminder);
-            if (i == INVALID)
-                return (FAILURE);
+
+            if (!(*line)[++i])
+            {
+                return (SUCCESS);
+            }
+
+            if ((*line)[i] == '\'' || (*line)[i] == '\"')
+            {
+                reminder.i = i - 1; /* $ should be included int the trim, so dont include it */
+                i++; /* skip the quote */
+
+                // skip everything until the next quote and then continue
+                while ((*line)[i] && (*line)[i] != '\'' && (*line)[i] != '\"')
+                    i++;
+                if (!(*line)[i])
+                    return (SUCCESS);
+                
+                reminder.j = i + 1; /* include the quote */
+
+                tmp = ft_substr(db, *line, reminder.i + 2, reminder.j - reminder.i - 3);
+                if (!tmp)
+                    return (FAILURE);
+                
+                i = update_index(db, line, tmp, &reminder);
+                if (i == INVALID)
+                    return (FAILURE);
+            }
+            else
+            {
+                if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
+                    return (FAILURE);
+                reminder.j = i - 1;
+
+                i = updated_line(db, line, env_var_name, &reminder);
+                if (i == INVALID)
+                    return (FAILURE);
+                
+                gc_free(db, env_var_name);
+                env_var_name = NULL;
+            }
+
             len = ft_strlen(*line);
             if (i >= len)
                 return (SUCCESS);
-            gc_free(db, env_var_name);
-            env_var_name = NULL;
+
             reset_quotes(db, quotes);
             *quotes = NULL;
+
             if (!track_quotes(db, quotes, (*line))) return (FAILURE);
         }
         i++;

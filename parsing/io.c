@@ -145,14 +145,12 @@ int open_heredoc(t_db *db, char *delim)
             line = readline("> ");
             if (!line)
             {
-                write(2, "\n", 1);
                 close(pipe_fd[1]);
                 break;
             }
 
             if (ft_strcmp(delim, line) == 0)
             {
-                write(2, "\n", 1);
                 close(pipe_fd[1]);
                 free(line);
                 break;
