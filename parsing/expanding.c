@@ -214,7 +214,6 @@ int expanded(t_db *db, char **args)
     i = 0;
     while (args[i])
     {
-
         track_quotes(db, &head, args[i]);
 
         if (expand(db, &args[i], &head) == FAILURE)
