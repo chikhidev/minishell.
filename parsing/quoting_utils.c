@@ -23,7 +23,7 @@ int is_inside_quotes_list(t_quote *head, int i)
     tmp = head;
     while (tmp)
     {
-        if (i >= tmp->start && i <= tmp->end)
+        if (i > tmp->start && i < tmp->end)
             return (true);
         tmp = tmp->next;
     }

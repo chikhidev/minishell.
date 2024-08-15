@@ -152,7 +152,10 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 return (SUCCESS);
             }
 
-            if ((*line)[i] == '\'' || (*line)[i] == '\"')
+            if (
+                    ((*line)[i] == '\'' || (*line)[i] == '\"')
+                    && !is_inside_quotes_list(*quotes, i)
+                )
             {
                 reminder.i = i - 1; /* $ should be included int the trim, so dont include it */
                 i++; /* skip the quote */

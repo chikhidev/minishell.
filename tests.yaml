@@ -266,3 +266,11 @@ minishell$ << DL | wc             |
 ^C^C^C      7       0       7     |
 minishell$                        |
 ----------------------------------+
+
+
+Minishell$ echo '$"USER'
+$USER
+Minishell$ ls '$"USER'
+ls: cannot access '$"USER': No such file or directory
+Minishell$ cat '$"USER'
+cat: '$"USER': No such file or directory
