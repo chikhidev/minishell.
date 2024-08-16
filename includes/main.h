@@ -274,6 +274,8 @@ typedef struct s_db
 	// has the permission to run the line? by default yes.
 	bool				exec_line;
 
+	bool				scope;
+
     /*local envirement variables*/
 	t_env_list			*env_list;
 	t_ip_addrs			*ip;

@@ -108,6 +108,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
 void db_reset(t_db *db)
 {
+    db->scope = false;
     db->exec_line = true;
     db->heredoc_counter = 0;
     db->ops = NULL;

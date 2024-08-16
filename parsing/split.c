@@ -87,6 +87,10 @@ int process_op(t_db *db, char *line, t_holder *holder)
     CURR_OP->childs = gc_malloc(db, sizeof(void *) *
         CURR_OP->n_childs);
     ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
+
+    CURR_OP->is_scope = db->scope;
+    db->scope = false;
+
     i = 0;
     while (i < CURR_OP->n_childs)
     {
@@ -137,9 +141,11 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
 
     if (db->error || !db->exec_line)
         return FAILURE;
+    
     if (ft_strlen(line) == 0
         || all_whitespaces(line, 0, ft_strlen(line)))
         return SUCCESS;
+    
     ft_bzero(&holder, sizeof(holder));
     holder.tracker = gc_malloc(db, sizeof(t_tracker));
     CATCH_MALLOC(holder.tracker);
@@ -157,7 +163,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
      */
     if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
-        holder.is_scope = true;
+        db->scope = true;
         return smart_split(
                 db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent
             );
@@ -171,9 +177,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     {
         if (process_op(db, line, &holder) == FAILURE)
             return FAILURE;
-
-        CURR_OP->is_scope = holder.is_scope;
-        holder.is_scope = false;
     }
     /**
      *  in this case if we are left with no paranthesis and no operator this means that this must ne a COMMAND
@@ -184,8 +187,9 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
         if (process_cmd(db, line, &holder) == FAILURE)
             return (db->error != true); // failure in case of error happened else just success
 
-        CURR_CMD->is_scope = holder.is_scope;
-        holder.is_scope = false;
+
+        CURR_CMD->is_scope = db->scope;
+        db->scope = false;
     }
     return SUCCESS;
 }
