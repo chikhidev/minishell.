@@ -26,7 +26,15 @@ int handle_prompt(t_db *db, char **line)
     sa.sa_handler = SIG_IGN;
     sigaction(SIGQUIT, &sa, NULL);
 
-    tmp = ft_strjoin(db, "\001" GREEN "\002>_\001" RESET "\002", "$ ");
+    tmp = NULL;
+    if (db->last_signal == 0)
+    {
+        tmp = ft_strjoin(db, "\001" GREEN "\002>_\001" RESET "\002", "$ ");
+    }
+    else
+    {
+        tmp = ft_strjoin(db, "\001" RED "\002>_\001" RESET "\002", "$ ");
+    }
 
     *line = readline(tmp);
     gc_free(db, tmp);

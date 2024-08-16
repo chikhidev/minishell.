@@ -70,10 +70,10 @@
 /**
  * @details This is the color codes for the shell
  */
-# define RED "\033[0;31m"
 # define ORANGE "\033[0;33m"
 # define MAGENTA "\033[0;35m"
 # define GREEN "\033[1;32m"
+# define RED "\033[1;31m"
 # define BLUE "\033[0;34m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
