@@ -38,6 +38,7 @@ int go_home(t_db    *db, char    *args[])
 			return (perror("malloc"), 1);
 		if (chdir(home_node->val) == -1)
 			return (printf("cd: home is not set\n"), 1);
+		free(pwd);
 		pwd = getcwd(NULL, 0);
 		if (pwd_env_node)
 			pwd_env_node->val = ft_strdup_ec(db, pwd);
@@ -73,7 +74,7 @@ int	go_dir(t_db    *db, char    *args[])
 		return (perror("malloc"), 1);
 	to = opendir(token);
 	if (to == NULL)
-		return (perror(args[1]), 1);
+		return (dprintf(2, "cd: "), perror(args[1]), 1);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 			return (perror("cd"), 1);
@@ -87,6 +88,7 @@ int	go_dir(t_db    *db, char    *args[])
 		return (perror("malloc"), 1);
 	if (chdir(token) == -1)
 		return (perror("cd"),closedir(to), 1);
+	free(pwd);
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 		return (perror("cd"),closedir(to), 1);

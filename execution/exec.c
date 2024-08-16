@@ -202,10 +202,11 @@ int handle_redirections(t_db    *db,    void    *node)
 
 int handle_is_dir(t_db *db, char    *arg)
 {
+    (void)db;
     DIR *dir;
 
     bool    is_dir;
-    if (is_str_empty(db, arg) || ft_strcmp(arg, ".") == 0 || ft_strcmp(arg, "..") == 0)
+    if (ft_strcmp(arg, ".") == 0 || ft_strcmp(arg, "..") == 0)
         return (printf("%s: command not found\n", arg), 1);
     is_dir = false;
 
@@ -322,7 +323,6 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
     int id;
     int signal_catcher;
     signal_catcher = 0;
-
     if (node_in_pipe(node)) // if inside a pipe then we need to fork
     {
         id = fork();
@@ -340,7 +340,6 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
                 waitpid(id, &signal_catcher, 0);
             else
                 ip_add(db, id); // else add it to linked list to wait it later
-            
             catch_feedback(db, signal_catcher);
         }
     }
@@ -376,6 +375,7 @@ int handle_node(t_db   *db, void *node,    int index)
     }
     else if (OP->op_presentation == PIPE)
     {
+        db->is_in_process = true;
         if (handle_pipe_op(db, node) == FAILURE)
             return (FAILURE);
     }
@@ -395,7 +395,9 @@ int handle_node(t_db   *db, void *node,    int index)
 int exec(t_db   *db, void *node,    int index)
 {
     int id;
+    int status;
 
+    status = 0;
     if (!node)
         return (SUCCESS);
     // printf("in scope -> %d\n", CMD->is_scope);
@@ -405,6 +407,7 @@ int exec(t_db   *db, void *node,    int index)
 
     if (node_in_scope(node))
     {
+        db->is_in_process = true;
         // printf("in scope -> %d\n", CMD->is_scope);
         id = fork();
         if (id == CHILD)
@@ -413,7 +416,7 @@ int exec(t_db   *db, void *node,    int index)
             exit(db->last_signal);
         }
         else
-            wait(NULL);
+            (wait (&status), catch_feedback(db, status));
     }
     else
         handle_node(db, node, index);

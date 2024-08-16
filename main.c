@@ -126,6 +126,7 @@ void db_reset(t_db *db)
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
+    db->is_in_process = false;
 }
 
 int     main(int    ac, char    *av[],  char    *env[])

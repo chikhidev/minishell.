@@ -9,3 +9,20 @@ Minishell$ export b="h"
 Minishell$ echo $b Hola
 h Hola
 Minishell$ 
+
+
+
+sgouzi@c3r8p2:~/Desktop/minishell$ exit $HOLA HOLA
+exit
+bash: exit: HOLA: numeric argument required
+sgouzi@c3r8p2:~/Desktop/minishell$ bash
+sgouzi@c3r8p2:~/Desktop/minishell$ exit $HOLA $HOLA
+exit
+
+
+problem in giving me args (i get 3 args even tho $HOLA isnt supposed to be an arg)
+
+
+Minishell$ echo $HOMEEEE $HOMEEEE
+ $HOMEEEE
+Minishell$ 
