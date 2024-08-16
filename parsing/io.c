@@ -120,9 +120,7 @@ int open_heredoc(t_db *db, char *delim)
     char *line;
     char *tmp;
     int child_status;
-    struct sigaction sa;
 
-    ft_bzero(&sa, sizeof(struct sigaction));
     tmp = whithout_quotes(db, delim);
     if (!tmp)
         return error(db, NULL, "malloc failed");
