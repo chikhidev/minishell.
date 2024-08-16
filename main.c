@@ -22,6 +22,7 @@ int handle_prompt(t_db *db, char **line)
 
     sa.sa_handler = handle_sigint;
     sigaction(SIGINT, &sa, NULL);
+
     sa.sa_handler = SIG_IGN;
     sigaction(SIGQUIT, &sa, NULL);
 
@@ -117,9 +118,6 @@ void db_reset(t_db *db)
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
 }
-void quit_signal_handler(int signal) {
-    (void)signal;
-}
 
 int     main(int    ac, char    *av[],  char    *env[])
 {
@@ -127,15 +125,24 @@ int     main(int    ac, char    *av[],  char    *env[])
     char    *line;
     char    *tmp;
     int     ret;
+    struct sigaction sa;
 
+
+    ft_bzero(&sa, sizeof(struct sigaction));
     line = NULL;
     init_db(&db, ac, av, env);
     while (true)
     {
         db_reset(&db);
-        signal(SIGQUIT, quit_signal_handler);
         ret = handle_prompt(&db, &line);
-        signal(SIGQUIT, quit_signal_handler);
+
+        // signal handlig to ignore SIGINT and SIGQUIT
+        sa.sa_handler = SIG_IGN;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGQUIT, &sa, NULL);
+        // sigaction(SIGQUIT, &sa, NULL);
+
+
         if (ret == FAILURE)
             break ;
         if (ret == 0)

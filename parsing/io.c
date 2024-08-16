@@ -113,21 +113,6 @@ int validate_io(char *arg, int size)
 }
 
 
-
-
-void signalhandel(int signal)
-{
-    if (signal == SIGINT)
-    {
-        write(2, "\n", 1);
-        exit(130);
-    }
-    exit(1);
-}
-
-
-
-
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
@@ -151,10 +136,7 @@ int open_heredoc(t_db *db, char *delim)
     
     if (IS_CHILD)
     {
-        sa.sa_handler = signalhandel;
-        sigaction(SIGINT, &sa, NULL);
-        sa.sa_handler = SIG_IGN;
-        sigaction(SIGQUIT, &sa, NULL);
+        heredoc_signals_handling();
 
         close(pipe_fd[0]);
 
@@ -195,15 +177,12 @@ int open_heredoc(t_db *db, char *delim)
     /*-------------------------------Parent process------------------------------*/
     // cancel SIGINT and SIGQUIT they sound be handled by the child
 
-    sa.sa_handler = SIG_IGN;
-    sigaction(SIGINT, &sa, NULL);
-    // sigaction(SIGQUIT, &sa, NULL);
-
+    parent_signals_handling();
 
     close(pipe_fd[1]);
     wait(&child_status);
 
-    feedback(db, child_status);
+    catch_feedback(db, child_status);
     if (db->last_signal != 0)
         return FAILURE;
     

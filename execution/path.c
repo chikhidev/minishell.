@@ -51,11 +51,7 @@ char    *cmd_path(t_db *db, char *filename)
             }
         }
     }
-
-    /**
-     * check localy..
-     */
-    if (access(filename, F_OK) == 0)
+    else if (access(filename, F_OK) == 0)
     {
         if (access(filename, X_OK) != 0)
         {

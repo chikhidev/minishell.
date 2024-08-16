@@ -9,52 +9,6 @@ bool    node_in_scope(void  *node)
     return (CMD->type == CMD_NODE && CMD->is_scope) || (OP->type == OP_NODE && OP->is_scope);
 }
 
-// int run_cmd(t_db    *db, int index,  void    *node)
-// {
-//     int id;
-//     t_cmd_node *command;
-//     char    **args;
-//     char    **env_arr;
-//     char    *path;
-//     int signal_catcher;
-
-//     command = (t_cmd_node  *)node;
-//     signal_catcher = 0;
-//     if (is_built_in(node))
-//         exec_builtin(db, node, index);
-//     else
-//     {
-//         id = fork();
-//         if (id == CHILD)
-//         {
-//             if (node_in_pipe(node))
-//                 child_dup(db, index, node);
-//             args = command->args;
-//             env_arr = env_list_to_env_arr(db);
-//             path = get_path(db, args);
-//             handle_redirections(db, node);
-//             if (CMD->input_fd != -1 && CMD->output_fd != -1)
-//                 execve(path, args, env_arr);
-//             else
-//                 exit(1);
-//             if (!handle_is_dir(db, path))
-//                 perror(args[0]);
-//             exit(127);
-//         }
-//         else
-//         {
-//             if (node_in_pipe(node))
-//                 parnt_dup(db, index, node);
-//             if ((t_op_node *)CMD->origin == NULL)
-//                 waitpid(id, &signal_catcher, 0);
-//             else
-//                 ip_add(db, id);
-//             db->last_signal = feedback(db, signal_catcher)->signal;
-//         }
-//     }
-//     return (SUCCESS);
-// }
-
 /**
  logic to track if the command path is relative or absolute
     if the path is relative ->
@@ -181,7 +135,7 @@ int handle_pipe_op(t_db *db,    void    *node)
         ip = ip->next;
     }
     ip_void(db);
-    feedback(db, status);
+    catch_feedback(db, status);
     return (SUCCESS);
 }
 
@@ -189,13 +143,8 @@ int handle_and_op(t_db *db,    void    *node)
 {
     int i;
     int status;
-    // bool op_in_scope;
 
-    // // if (OP->is_scope)
-    // //     op_in_scope = true;
-    // op_in_scope = OP->is_scope; /*bruh much better*/
     i = 0;
-
     while (i < OP->n_childs)
         {
             if (exec(db, OP->childs[i], i) == FAILURE)
@@ -204,7 +153,7 @@ int handle_and_op(t_db *db,    void    *node)
             {
                 wait(&status);
                 
-                feedback(db, status);
+                catch_feedback(db, status);
             }
             if (db->last_signal != 0)
                 return (FAILURE);
@@ -226,7 +175,7 @@ int handle_or_op(t_db *db,    void    *node)
         {
             wait(&status);
 
-            feedback(db, status);
+            catch_feedback(db, status);
         }
         if (db->last_signal == 0)
             return (FAILURE);
@@ -286,23 +235,96 @@ void    child_slash_sig_handler(int sig)
 
 */
 
+// void cmd_signalhandel(int signal)
+// {
+//     if (signal == SIGINT)
+//     {
+//         dprintf(2, "^C\n");
+//         exit(130);
+//     }
+//     if (signal == SIGQUIT)
+//     {
+//         dprintf(2, "^\\Quit (core dumped)\n");
+//         exit(131);
+//     }
+//     exit(1);
+// }
+
+// int handle_cmd_node(t_db    *db,    void    *node,  int index)
+// {
+//     int id;
+//     t_cmd_node *command;
+//     char    **args;
+//     char    **env_arr;
+//     char    *path;
+//     int signal_catcher;
+
+//     struct sigaction sa;
+
+//     ft_bzero(&sa, sizeof(struct sigaction));
+//     command = (t_cmd_node  *)node;
+//     if (!command->args || !command->args[0])
+//         return SUCCESS;
+
+//     signal_catcher = 0;
+//     if (is_built_in(node))
+//         exec_builtin(db, node, index);
+//     else
+//     {
+//         id = fork();
+//         if (id == CHILD)
+//         {
+
+//             sa.sa_handler = cmd_signalhandel;
+//             sigaction(SIGINT, &sa, NULL);
+//             sigaction(SIGQUIT, &sa, NULL);
+
+//             if (node_in_pipe(node))
+//                 child_dup(db, index, node);
+//             args = command->args;
+//             env_arr = env_list_to_env_arr(db);
+//             path = get_path(db, args);
+//             handle_redirections(db, node);
+//             if (CMD->input_fd != -1 && CMD->output_fd != -1)
+//                 execve(path, args, env_arr);
+//             else
+//                 exit(1);
+//             if (!handle_is_dir(db, path))
+//                 perror(args[0]);
+//             exit(127);
+//         }
+//         else
+//         {
+//             if (node_in_pipe(node))
+//                 parnt_dup(db, index, node);
+//             if ((t_op_node *)CMD->origin == NULL)
+//                 waitpid(id, &signal_catcher, 0);
+//             else
+//                 ip_add(db, id); //
+            
+//             catch_feedback(db, signal_catcher);
+//         }
+//     }
+//     return (SUCCESS);
+// }
 
 
-int handle_cmd_node(t_db    *db,    void    *node,  int index)
+
+int handle_cmd_node(t_db *db, void *node, int index)
 {
     int id;
     t_cmd_node *command;
-    char    **args;
-    char    **env_arr;
-    char    *path;
+    char **args;
+    char **env_arr;
+    char *path;
     int signal_catcher;
 
-    command = (t_cmd_node  *)node;
+    signal_catcher = 0;
 
+    command = (t_cmd_node *)node;
     if (!command->args || !command->args[0])
         return SUCCESS;
 
-    signal_catcher = 0;
     if (is_built_in(node))
         exec_builtin(db, node, index);
     else
@@ -310,22 +332,29 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
         id = fork();
         if (id == CHILD)
         {
+            cmd_signals_handling(); //-------------------------------------------------<<-
+
             if (node_in_pipe(node))
                 child_dup(db, index, node);
             args = command->args;
             env_arr = env_list_to_env_arr(db);
             path = get_path(db, args);
             handle_redirections(db, node);
+
             if (CMD->input_fd != -1 && CMD->output_fd != -1)
                 execve(path, args, env_arr);
             else
                 exit(1);
+            
             if (!handle_is_dir(db, path))
                 perror(args[0]);
+            
             exit(127);
         }
         else
         {
+            parent_signals_handling(); //-------------------------------------------------<<-
+
             if (node_in_pipe(node))
                 parnt_dup(db, index, node);
             if ((t_op_node *)CMD->origin == NULL)
@@ -333,11 +362,15 @@ int handle_cmd_node(t_db    *db,    void    *node,  int index)
             else
                 ip_add(db, id); //
             
-            feedback(db, signal_catcher);
+            catch_feedback(db, signal_catcher);
         }
     }
     return (SUCCESS);
 }
+
+
+
+
 
 int run_builtin(t_db   *db,t_cmd_node *node)
 {
@@ -357,12 +390,6 @@ int run_builtin(t_db   *db,t_cmd_node *node)
         exit_(db,   CMD->args);
     return 127;
 }
-
-//     if (CMD->input_fd != 0)
-//         dup2(CMD->input_fd, STDIN_FILENO);
-//     if (CMD->output_fd != 1)
-//         dup2(CMD->output_fd, STDOUT_FILENO);
-
 
 int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
 {
@@ -388,7 +415,7 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
             else
                 ip_add(db, id); // else add it to linked list to wait it later
             
-            feedback(db, signal_catcher);
+            catch_feedback(db, signal_catcher);
         }
     }
     else // not inside a pipe, only run it, with no forking

@@ -320,7 +320,13 @@ void					del_env_node(t_env_list    **list,  char    *key);
 void					del_exp_node(t_exp_list    **list,  char    *key);
 char					**env_list_to_env_arr(t_db	*db);
 
-void					feedback(t_db *db, int process_res);
+void					catch_feedback(t_db *db, int process_res);
+
+
+/*signals*/
+void cmd_signals_handling(void);
+void parent_signals_handling(void);
+void heredoc_signals_handling(void);
 
 /* FUNCTIONS */
 
