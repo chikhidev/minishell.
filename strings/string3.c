@@ -28,10 +28,12 @@ int append_split(char **splitted, char *string)
 
     if (!string)
         return FAILURE;
+
     i = 0;
     while (splitted[i])
         i++;
     splitted[i] = string;
+
     return SUCCESS;
 }
 
@@ -43,6 +45,7 @@ char *sub(t_db *db, char *line, int i, int j)
     if (!res)
         return NULL;
     ft_strlcpy(res, line + i, j - i + 1);
+
     return res;
 }
 

@@ -98,9 +98,10 @@ int is_str_empty(t_db   *db,    char    *str)
     unquoted = whithout_quotes(db, str);
     if (ft_strcmp(unquoted, "") == 0)
         return 1;
-    else
-        return 0;
+
+    return 0;
 }
+
 bool    starts_with(char    *str,   char    *sub)
 {
     return ft_strncmp(str, sub, ft_strlen(sub)) == 0;

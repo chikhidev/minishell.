@@ -138,8 +138,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                         }
                     }
                 }
-                else
+                else if (!will_be_unused_arg(db, save))
                 {                    
+
                     result = append_word(db, result, save);
                     if (!result)
                     {
@@ -154,8 +155,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
         it.i++;
     }
 
-    if (ft_strlen(save) > 0)
+    if (ft_strlen(save) > 0 && !will_be_unused_arg(db, save))
     {
+
         result = append_word(db, result, save);
         if (!result)
         {

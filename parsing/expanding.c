@@ -41,7 +41,7 @@ char *get_env(t_db *db, char *name)
         return ft_strdup(db, object->val);
     }
 
-	return (ft_strdup(db, "''"));
+	return (ft_strdup(db, ""));
 }
 
 int valid_char(char c, int  index)

@@ -302,6 +302,9 @@ char					*concat(t_db *db, char *s, char single_char);
 char					*remove_paranthesis(t_db *db, char *line,
 							t_parnth *local_paranths);
 
+bool 					will_be_unused_arg(t_db *db, char *arg);
+
+
 int						is_op3(char *line, int *i);
 
 bool					contains_spaces_btwn(char *s);
@@ -321,6 +324,7 @@ t_env_list              *get_env_node(t_env_list    *list,  char    *key);
 void					del_env_node(t_env_list    **list,  char    *key);
 void					del_exp_node(t_exp_list    **list,  char    *key);
 char					**env_list_to_env_arr(t_db	*db);
+
 
 void					catch_feedback(t_db *db, int process_res);
 
