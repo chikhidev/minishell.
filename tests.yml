@@ -1,0 +1,11 @@
+
+echo $\"HOLA\"
+
+
+
+Minishell$ export b=""
+Minishell$ echo $b Hola
+Minishell$ export b="h"
+Minishell$ echo $b Hola
+h Hola
+Minishell$ 

@@ -45,17 +45,13 @@ int echo_(t_db  *db, char *args[])
 {
     int i;
     bool new_line;
-    char    *token;
     int n_args;
     (void)db;
     n_args = count_array_len(args);
     i = get_start_idx(args, &new_line);
     while (i < n_args)
     {
-        token = whithout_quotes_ec(db, args[i]);
-        if (!token)
-            return (ec_void(db), 1); // make sute
-        printf("%s", token);
+        printf("%s", args[i]);
         i++;
         if (i != n_args)
             printf(" ");

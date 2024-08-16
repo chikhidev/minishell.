@@ -369,7 +369,6 @@ int handle_node(t_db   *db, void *node,    int index)
 {
     if (CMD->type == CMD_NODE)
     {
-        
         if (expanded(db, CMD->args) == FAILURE)
             return FAILURE;
         else
