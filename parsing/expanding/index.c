@@ -39,7 +39,7 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 
                 reminder.j = i - 1;
 
-                printf("concatted: %s\n", env_var_name);
+                // printf("concatted: %s\n", env_var_name);
 
                 i = updated_line(db, line, env_var_name, &reminder);
                 if (i == INVALID)

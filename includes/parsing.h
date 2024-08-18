@@ -103,7 +103,7 @@ char    *get_environment_var(t_db *db, char   *var, char *env[]);
 int     validate_io(char *arg, int size);
 int     open_heredoc(t_db *db, char *delim);
 int     syntax_checker(t_db *db, char *line, int *start);
-int     open_file(t_db *db, char *file, int type, t_quote **quotes);
+int     open_file(t_db *db, char *file, int type);
 int     count_array_len(char    **args);
 bool    contains(char  *str, char    *sub);
 int     find_c(char *str, char  c);

@@ -184,6 +184,7 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
      */
     else
     {
+        // TODO: remove this tokinizer untill the last steps maybe...
         if (process_cmd(db, line, &holder) == FAILURE)
             return (db->error != true); // failure in case of error happened else just success
 

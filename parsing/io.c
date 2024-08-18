@@ -59,8 +59,9 @@ int check_ambigious(t_db *db, char *file)
 
 
 
-int open_file(t_db *db, char *file, int type, t_quote **quotes)
+int open_file(t_db *db, char *file, int type)
 {
+    t_quote *quotes;
     int fd;
     char *tmp;
 
@@ -74,7 +75,9 @@ int open_file(t_db *db, char *file, int type, t_quote **quotes)
         return FAILURE;
     }
 
-    expand(db, &file, quotes);
+    track_quotes(db, &quotes, file);
+    expand(db, &file, &quotes);
+
     tmp = whithout_quotes(db, file);
     if (type == APPENDFILE)
         fd = open(tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);

@@ -47,7 +47,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     t_iterators it;
     char    *save;
     int len;
-    (void)db;
     DIR *curr_dir;
     struct dirent *entry;
     bool    read_write_perm;
@@ -111,7 +110,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 }
                 else
                 {
-                    if (open_file(db, save, db->curr_type, quotes) == FAILURE)
+                    if (open_file(db, save, db->curr_type) == FAILURE)
                     {
                         read_write_perm = false;
                     }
