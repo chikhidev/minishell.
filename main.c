@@ -20,7 +20,9 @@ int handle_prompt(t_db *db, char **line)
     struct sigaction sa;
     char *tmp;
 
+    sa.sa_flags = 0;
     sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
     sigaction(SIGINT, &sa, NULL);
 
     sa.sa_handler = SIG_IGN;

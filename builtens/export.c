@@ -4,6 +4,9 @@
 
 int show_export(t_db *db)
 {
+    int status;
+
+    status = 0;
     // show export here;
     t_exp_list  *vars;
     t_exp_list  *curr;
@@ -21,7 +24,7 @@ int show_export(t_db *db)
         }
         curr = curr->next;
     }
-    return (SUCCESS);
+    return (status);
 }
 
 int    has_special_char(char   *str)
