@@ -81,7 +81,7 @@ char    *get_path(t_db  *db, char    **args)
 
     path = args[0];
     if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0 || is_str_empty(db, path))
-        return ft_strdup(db, path); // TODO minde the files with names as
+        return ft_strdup(db, path);
     if (is_relative_path(path) || is_absolute_path(path))
     {
         if (access(path, F_OK) + access(path, X_OK) != 0)
@@ -126,6 +126,7 @@ int handle_pipe_op(t_db *db,    void    *node)
             return (FAILURE);
         i++;
     }
+
     status = 0;
     ip = db->ip;
     while (ip)
@@ -148,9 +149,10 @@ int handle_and_op(t_db *db,    void    *node)
     {
         if (exec(db, OP->childs[i], i) == FAILURE)
             return (FAILURE);
-        if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE && !is_built_in(OP->childs[i]))
+        if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
         {
             wait(&status);
+            
             catch_feedback(db, status);
         }
         if (db->last_signal != 0)
@@ -169,9 +171,10 @@ int handle_or_op(t_db *db,    void    *node)
     {
         if (exec(db, OP->childs[i], i) == FAILURE)
             return FAILURE;
-        if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE && !is_built_in(OP->childs[i]))
+        if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
         {
             wait(&status);
+
             catch_feedback(db, status);
         }
         if (db->last_signal == 0)
@@ -233,92 +236,63 @@ void    child_slash_sig_handler(int sig)
 
 */
 
-// int parent(t_db *db, void *node, int index, int pid)
-// {
-//     int signal_catcher;
 
-//     signal_catcher = 0;
-//     parent_signals_handling();
-
-//     if (node_in_pipe(node))
-//         parnt_dup(db, index, node);
-//     if ((t_op_node *)CMD->origin == NULL)
-//         waitpid(pid, &signal_catcher, 0);
-//     else if (node_in_pipe(node))
-//         ip_add(db, pid); //
-//     catch_feedback(db, signal_catcher);
-
-//     return (SUCCESS);
-// }
-
-int exec_cmd(t_db *db, void *node)
-{
-    t_cmd_node *command;
-    char **env_arr;
-    char *path;
-
-    command = (t_cmd_node *)node;
-    env_arr = env_list_to_env_arr(db);
-    path = get_path(db, command->args);
-    handle_redirections(db, node);
-    if (CMD->input_fd != -1 && CMD->output_fd != -1)
-        execve(path, command->args, env_arr);
-    else
-        exit(1);
-    if (!handle_is_dir(db, path))
-        perror(command->args[0]);
-    exit(127);
-}
 int handle_cmd_node(t_db *db, void *node, int index)
 {
     int id;
     t_cmd_node *command;
+    char **args;
+    char **env_arr;
+    char *path;
     int signal_catcher;
 
     signal_catcher = 0;
+
     command = (t_cmd_node *)node;
     if (!command->args || !command->args[0])
         return SUCCESS;
 
     if (is_built_in(node))
-    {
         exec_builtin(db, node, index);
-    }
     else
     {
-        if (node_in_scope(node))
-        {
-            if (node_in_pipe(node))
-                child_dup(db, index, node);
-        }
         id = fork();
         if (id == CHILD)
         {
-            cmd_signals_handling(); //-------------------------------------------------<<-
-            if (!node_in_scope(node))
-            {
-                if (node_in_pipe(node))
-                    child_dup(db, index, node);
-            }
-            exec_cmd(db, node);
+            cmd_signals_handling();
+            if (node_in_pipe(node))
+                child_dup(db, index, node);
+            args = command->args;
+            env_arr = env_list_to_env_arr(db);
+            path = get_path(db, args);
+            handle_redirections(db, node);
+
+            if (CMD->input_fd != -1 && CMD->output_fd != -1)
+                execve(path, args, env_arr);
+            else
+                exit(1);
+            if (!handle_is_dir(db, path))
+                perror(args[0]);
+            exit(127);
         }
         else
         {
-            parent_signals_handling(); //-------------------------------------------------<<-
-            if (!node_in_scope(node))
-            {
-                if (node_in_pipe(node))
-                    parnt_dup(db, index, node);
-            }
+            parent_signals_handling();
+            if (node_in_pipe(node))
+                parnt_dup(db, index, node);
             if ((t_op_node *)CMD->origin == NULL)
                 waitpid(id, &signal_catcher, 0);
-            else if (node_in_pipe(node))
+            else
                 ip_add(db, id); //
+            
             catch_feedback(db, signal_catcher);
         }
     }
     return (SUCCESS);
 }
+
+
+
 
 
 int run_builtin(t_db   *db,t_cmd_node *node)
@@ -376,6 +350,7 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
         close(db->stdin_dup);
         close(db->stdout_dup);
     }
+    
     return SUCCESS;
 }
 
@@ -415,7 +390,6 @@ int handle_node(t_db   *db, void *node,    int index)
 
 int exec(t_db   *db, void *node,    int index)
 {
-    int id;
     int status;
 
     status = 0;
@@ -425,23 +399,7 @@ int exec(t_db   *db, void *node,    int index)
 
     if (OP->input_fd == INVALID || OP->output_fd == INVALID)
             return FAILURE;
-
-    if (node_in_scope(node))
-    {
-        id = fork();
-        if (id == CHILD)
-        {
-            handle_node(db, node, index);
-            exit(db->last_signal);
-        }
-        else
-        {
-            if (node_in_pipe(node))
-                parnt_dup(db, index, node);
-            (wait (&status), catch_feedback(db, status));
-        }
-    }
-    else
-        handle_node(db, node, index);
+    
+    handle_node(db, node, index);
     return (SUCCESS);
 }

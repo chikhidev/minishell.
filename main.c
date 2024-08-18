@@ -45,6 +45,36 @@ int handle_prompt(t_db *db, char **line)
     return SUCCESS ; /*nothing*/
 }
 
+t_env_list *set_default_env(t_db *db)
+{
+    t_env_list  *new;
+
+    new = new_env_node(db, "PWD", getcwd(NULL, 0));
+    push_env_back(&db->env_list, new);
+    new = new_env_node(db, "OSH", getcwd(NULL, 0));
+    push_env_back(&db->env_list, new);
+    new = new_env_node(db, "SHLVL", "1");
+    push_env_back(&db->env_list, new);
+    new = new_env_node(db, "_", "/usr/bin/env");
+    push_env_back(&db->env_list, new);
+    return (db->env_list);
+}
+
+t_exp_list *set_default_exp(t_db *db)
+{
+    t_exp_list  *new;
+
+    new = new_exp_node(db, "PWD", getcwd(NULL, 0));
+    push_exp_back(&db->exp_list, new);
+    new = new_exp_node(db, "OSH", getcwd(NULL, 0));
+    push_exp_back(&db->exp_list, new);
+    new = new_exp_node(db, "SHLVL", "1");
+    push_exp_back(&db->exp_list, new);
+    new = new_exp_node(db, "_", "/usr/bin/exp");
+    push_exp_back(&db->exp_list, new);
+    return (db->exp_list);
+}
+
 t_env_list *set_env_lst(t_db *db, char *env[]) {
     t_env_list *env_list = NULL;
     t_env_list *new_node = NULL;
@@ -55,6 +85,9 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
 
     key = NULL;
     val = NULL;
+    if (env == NULL || !env[0])
+       return (set_default_env(db));
+   
     while (env && env[i])
     {
         good = fill_key_val(db, env[i], &key, &val);
@@ -84,6 +117,8 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     key = NULL;
     val = NULL;
     i = 0;
+    if (env == NULL || !env[0])
+        return (set_default_exp(db));
     while (env && env[i])
     {
         good = fill_key_val(db, env[i], &key, &val);
@@ -109,6 +144,8 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->ec = NULL;
     db->error = false;
     db->env = env;
+    db->env_list = NULL;
+    db->exp_list = NULL;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
     db->ip = NULL;
