@@ -167,11 +167,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
         }
     }
 
-    // for (int i = 0; result[i]; i ++)
-    // {
-    //     printf("args[%d]: %s\n", i, result[i]);
-    // }
-
 	return (result);
 }
 

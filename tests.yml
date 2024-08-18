@@ -26,3 +26,11 @@ problem in giving me args (i get 3 args even tho $HOLA isnt supposed to be an ar
 Minishell$ echo $HOMEEEE $HOMEEEE
  $HOMEEEE
 Minishell$ 
+
+
+>_$ echo $"$USER"
+inside quotes
+args[0] -> echo
+args[1] -> $"$USER"
+inside quotes
+$USER

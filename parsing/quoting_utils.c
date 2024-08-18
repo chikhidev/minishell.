@@ -29,3 +29,18 @@ int is_inside_quotes_list(t_quote *head, int i)
     }
     return (false);
 }
+
+bool is_quote_oppening(t_quote *head, int i)
+{
+    t_quote *q;
+
+    q = head;
+    while (q)
+    {
+        if (q->start == i)
+            return true;
+
+        q = q->next;
+    }
+    return false;
+}

@@ -71,8 +71,8 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent);
 /*parsing/expanding.c*/
 int     expand(t_db *db, char **line, t_quote **quotes);
 int     expanded(t_db *db, char **line);
-char *get_env(t_db *db, char *name);
-int valid_char(char c, int  index);
+char    *get_env(t_db *db, char *name);
+int     valid_char(char c, int  index);
 
 /*parsing/paranths.c and paranths2.c*/
 int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes);
@@ -111,7 +111,11 @@ int     length_til(char *str, char stop);
 bool    is_newline_at_the_end(char *line);
 char    *gc_copy(t_db *db, char *s);
 
+
+/*quoting*/
 void  skip_open_spaces(t_quote *quotes, char *line, int *i);
+bool    is_quote_oppening(t_quote *head, int i);
+
 
 
 

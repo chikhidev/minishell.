@@ -10,7 +10,6 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/paranths.c	\
 				parsing/paranths2.c \
 				parsing/split.c		\
-				parsing/expanding.c	\
 				parsing/op.c		\
 				parsing/op2.c	\
 				parsing/cmd.c \
@@ -19,6 +18,12 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/wildcard.c \
 				parsing/str_list.c \
 				parsing/file_entry.c \
+
+EXPANDING = parsing/expanding/index.c \
+			parsing/expanding/utils1.c \
+			parsing/expanding/utils2.c \
+
+PARSING_SRC += $(EXPANDING)
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path-checker.c \

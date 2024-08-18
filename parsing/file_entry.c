@@ -38,6 +38,7 @@ void	push_ent_back(t_file_entry  **list,  t_file_entry	*new)
 		}
 	}
 }
+
 t_file_entry  *get_ent_node(t_file_entry    *list,  char    *name,  unsigned char   type)
 {
     t_file_entry  *curr;
