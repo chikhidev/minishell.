@@ -19,7 +19,7 @@ int go_home(t_db    *db, char    *args[])
 	old_pwd_env_node = get_env_node(db->env_list, "OLDPWD");
 	home_node = get_env_node(db->env_list, "HOME");
 	if (home_node == NULL)
-		printf("cd: home is not set\n");
+		return (printf("cd: home not set\n"), 1);
 	else
 	{
 		to = opendir(home_node->val);
@@ -37,15 +37,23 @@ int go_home(t_db    *db, char    *args[])
 		if (old_pwd_exp_node && old_pwd_exp_node->val == NULL)
 			return (perror("malloc"), 1);
 		if (chdir(home_node->val) == -1)
-			return (printf("cd: home is not set\n"), 1);
+			return (printf("cd: home not set\n"), 1);
 		free(pwd);
 		pwd = getcwd(NULL, 0);
 		if (pwd_env_node)
+		{
+			if (!pwd_env_node->val)
+				return (printf("cd: home not set\n"), 1);
 			pwd_env_node->val = ft_strdup_ec(db, pwd);
+		}
 		if (pwd_env_node && pwd_env_node->val == NULL)
 			return (perror("malloc"), 1);
 		if (pwd_exp_node)
+		{
+			if (!pwd_exp_node->val)
+				return (printf("cd: home not set\n"), 1);
 			pwd_exp_node->val = ft_strdup_ec(db, pwd);
+		}
 		if (pwd_exp_node && pwd_exp_node->val == NULL)
 			return (perror("malloc"), 1);
 		closedir(to);
@@ -108,7 +116,7 @@ int cd_(t_db    *db, char    *args[])
 {
 	
 	if (count_array_len(args) > 2)
-		return (printf("cd : too many arguments"), 1);
+		return (printf("cd : too many arguments\n"), 1);
 	else if (count_array_len(args) == 1)
 		return (go_home(db, args));
 	else

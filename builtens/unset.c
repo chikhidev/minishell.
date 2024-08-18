@@ -1,5 +1,6 @@
 #include "main.h"
 #include "builtens.h"
+#include <string.h>
 
 int unset_(t_db *db,    char    *args[])
 {
@@ -8,8 +9,11 @@ int unset_(t_db *db,    char    *args[])
     i = 1;
     while (args[i])
     {
-        del_env_node(&db->env_list, args[i]);
-        del_exp_node(&db->exp_list, args[i]);
+        if (ft_strcmp(args[i], "_") != 0)
+        {
+            del_env_node(&db->env_list, args[i]);
+            del_exp_node(&db->exp_list, args[i]);
+        }
         i++;
     }
     return (0);
