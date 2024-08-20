@@ -8,6 +8,19 @@ bool    node_in_scope(void  *node)
 {
     return (CMD->type == CMD_NODE && CMD->is_scope) || (OP->type == OP_NODE && OP->is_scope);
 }
+void    waiter(t_db *db, int  *status)
+{
+    t_ip_addrs  *ip;
+
+    ip = db->ip;
+    while (ip)
+    {
+        waitpid(ip->ip_addr, status, 0);
+        ip = ip->next;
+    }
+    ip_void(db);
+    catch_feedback(db, *status);
+}
 
 /**
  logic to track if the command path is relative or absolute
@@ -30,7 +43,11 @@ int child_dup(t_db *db, int  index,void    *node)
     }
     else if (index == pipe_node->n_childs - 1)
     {
-        dup2(db->read_fd, STDIN_FILENO);
+        if (db->read_fd != -2)
+        {
+            dup2(db->read_fd, STDIN_FILENO);
+            close(db->read_fd);
+        }
         close(db->pipe[0]);
         close(db->pipe[1]);
         close(db->read_fd);
@@ -109,33 +126,24 @@ bool    node_in_pipe(void    *node)
     return (((t_op_node *)CMD->origin) && ((t_op_node *)CMD->origin)->op_presentation == PIPE);
 }
 
-int handle_pipe_op(t_db *db,    void    *node)
+int handle_pipe_op(t_db *db,    void    *node, int  index)
 {
     int i;
+    (void)index;
     int status;
-    t_ip_addrs  *ip;
     db->pipe[0] = -2;
     db->pipe[1] = -2;
     db->pids = gc_malloc(db, (OP->n_childs) * (sizeof(pid_t)));
     i = 0;
     db->read_fd = -2;
+    status = 0;
     pipe(db->pipe);
     while (i < OP->n_childs)
     {
-        if (exec(db, OP->childs[i], i) == FAILURE)
-            return (FAILURE);
+        exec(db, OP->childs[i], i);
         i++;
     }
-
-    status = 0;
-    ip = db->ip;
-    while (ip)
-    {
-        waitpid(ip->ip_addr, &status, 0);
-        ip = ip->next;
-    }
-    ip_void(db);
-    catch_feedback(db, status);
+    waiter(db, &status);
     return (SUCCESS);
 }
 
@@ -152,7 +160,6 @@ int handle_and_op(t_db *db,    void    *node)
         if (((t_cmd_node *) OP->childs[i])->type == CMD_NODE)
         {
             wait(&status);
-            
             catch_feedback(db, status);
         }
         if (db->last_signal != 0)
@@ -221,12 +228,6 @@ int handle_is_dir(t_db *db, char    *arg)
     return is_dir;
 }
 
-void    child_slash_sig_handler(int sig)
-{
-    (void)sig;
-    printf("Caught signa in child l\n");
-}
-
 /*
     if in built in then execute it
         (it forks inside the built in if node inside of a pipe)
@@ -236,7 +237,6 @@ void    child_slash_sig_handler(int sig)
 
 */
 
-
 int handle_cmd_node(t_db *db, void *node, int index)
 {
     int id;
@@ -245,7 +245,6 @@ int handle_cmd_node(t_db *db, void *node, int index)
     char **env_arr;
     char *path;
     int signal_catcher;
-
     signal_catcher = 0;
 
     command = (t_cmd_node *)node;
@@ -260,13 +259,15 @@ int handle_cmd_node(t_db *db, void *node, int index)
         if (id == CHILD)
         {
             cmd_signals_handling();
-            if (node_in_pipe(node))
-                child_dup(db, index, node);
+            if (!node_in_scope(node))
+            {
+                if (node_in_pipe(node))
+                    child_dup(db, index, node);
+            }
             args = command->args;
             env_arr = env_list_to_env_arr(db);
             path = get_path(db, args);
             handle_redirections(db, node);
-
             if (CMD->input_fd != -1 && CMD->output_fd != -1)
                 execve(path, args, env_arr);
             else
@@ -290,10 +291,6 @@ int handle_cmd_node(t_db *db, void *node, int index)
     }
     return (SUCCESS);
 }
-
-
-
-
 
 int run_builtin(t_db   *db,t_cmd_node *node)
 {
@@ -354,12 +351,6 @@ int exec_builtin(t_db   *db,t_cmd_node *node, int   index)
     return SUCCESS;
 }
 
-
-/**
- * @brief This function will execute the each command in the tree
- * @return signal SUCCESS or FAILURE
- */
-
 int handle_node(t_db   *db, void *node,    int index)
 {
     if (CMD->type == CMD_NODE)
@@ -372,7 +363,7 @@ int handle_node(t_db   *db, void *node,    int index)
     else if (OP->op_presentation == PIPE)
     {
         db->is_in_process = true;
-        if (handle_pipe_op(db, node) == FAILURE)
+        if (handle_pipe_op(db, node, index) == FAILURE)
             return (FAILURE);
     }
     else if (OP->op_presentation == AND)
@@ -391,7 +382,7 @@ int handle_node(t_db   *db, void *node,    int index)
 int exec(t_db   *db, void *node,    int index)
 {
     int status;
-
+    int id;
     status = 0;
     if (!node)
         return (SUCCESS);
@@ -399,7 +390,25 @@ int exec(t_db   *db, void *node,    int index)
 
     if (OP->input_fd == INVALID || OP->output_fd == INVALID)
             return FAILURE;
-    
-    handle_node(db, node, index);
+    if (node_in_scope(node))
+    {
+        id = fork();
+        if (id == CHILD)
+        {
+            if (node_in_pipe(node))
+                child_dup(db, index, node);
+            handle_redirections(db, node);
+            handle_node(db, node, index);
+            exit(db->last_signal);
+        }
+        else
+        {
+            if (node_in_pipe(node))
+                parnt_dup(db, index, node);
+            waitpid(id, &status, 0);
+        }
+    }
+    else
+        handle_node(db, node, index);
     return (SUCCESS);
 }

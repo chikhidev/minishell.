@@ -26,7 +26,7 @@ int is_op3(char *line, int *i)
 
 void skip_op(int *i, char *line)
 {
-    if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')
+    if (line[*i] == '&' && line[*i + 1] && line[(*i) + 1] == '&')
         ((*i) += 2);
     else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
         ((*i) += 2);

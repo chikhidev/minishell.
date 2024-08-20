@@ -156,19 +156,13 @@ char *whithout_quotes(t_db *db, char *str)
         // toggling
         if (str[i] == SGL_QUOTE && !double_opened)
         {
-            if (single_opened)
-                single_opened = false;
-            else
-                single_opened = true;
+            single_opened = !single_opened;
             i++;
             continue;
         }
         if (str[i] == DBL_QUOTE && !single_opened)
         {
-            if (double_opened)
-                double_opened = false;
-            else
-                double_opened = true;
+            double_opened = !double_opened;
             i++;
             continue;
         }

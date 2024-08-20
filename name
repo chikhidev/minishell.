@@ -1,22 +1,66 @@
-builtens
-env_list.c
-error.c
-execution
-exp_list.c
-includes
-libft
-main.c
-Makefile
-memo.c
-minishell
-name
-parsing
-push.sh
-readline.supp
-rules.md
-SECURITY.md
-signals.c
-strings
-tests
-tests.yml
-triggers.c
+void    waiter(t_db *db, int  *status)
+{
+    t_ip_addrs  *ip;
+
+    ip = db->ip;
+    while (ip)
+    {
+        waitpid(ip->ip_addr, status, 0);
+        ip = ip->next;
+    }
+    ip_void(db);
+}
+
+
+int handle_cmd_node(t_db *db, void *node, int index)
+{
+    int id;
+    t_cmd_node *command;
+    char **args;
+    char **env_arr;
+    char *path;
+    int signal_catcher;
+
+    signal_catcher = 0;
+
+    command = (t_cmd_node *)node;
+    if (!command->args || !command->args[0])
+        return SUCCESS;
+
+    if (is_built_in(node))
+        exec_builtin(db, node, index);
+    else // cmd
+    {
+        id = fork();
+        if (id == CHILD)
+        {
+            cmd_signals_handling();
+
+            args = command->args;
+            env_arr = env_list_to_env_arr(db);
+            path = get_path(db, args);
+            handle_redirections(db, node);
+
+            if (CMD->input_fd != -1 && CMD->output_fd != -1)
+                execve(path, args, env_arr);
+            else
+                exit(1);
+            if (!handle_is_dir(db, path))
+                perror(args[0]);
+            exit(127);
+        }
+        else
+        {
+            parent_signals_handling();
+            if (node_in_pipe(node))
+                parnt_dup(db, index, node);
+            if ((t_op_node *)CMD->origin == NULL)
+                waitpid(id, &signal_catcher, 0);
+            else
+                ip_add(db, id); //
+            
+            catch_feedback(db, signal_catcher);
+        }
+    }
+    return (SUCCESS);
+}

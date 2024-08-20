@@ -56,15 +56,13 @@ int check_ambigious(t_db *db, char *file)
     return (false);
 }
 
-
-
-
 int open_file(t_db *db, char *file, int type)
 {
     t_quote *quotes;
     int fd;
     char *tmp;
 
+    quotes = NULL;
     if (!file || ft_strlen(file) == 0)
         return (SUCCESS);
     fd = INVALID;
@@ -97,9 +95,6 @@ int open_file(t_db *db, char *file, int type)
 
     return (SUCCESS);
 }
-
-
-
 
 int validate_io(char *arg, int size)
 {

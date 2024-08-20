@@ -194,7 +194,7 @@ int handle_export_args(t_db    *db,    char    *args[])
     i = 1;
     while (args[i])
     {
-        token = whithout_quotes(db, args[i]);
+        token = args[i];
         val = NULL;
         key = get_key_from_arg(db,  token, &k_len, &append);
         exp_node = get_exp_node(db->exp_list, key); 
