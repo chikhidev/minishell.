@@ -185,13 +185,10 @@ int     main(int    ac, char    *av[],  char    *env[])
         db_reset(&db);
         ret = handle_prompt(&db, &line);
 
-        // signal handlig to ignore SIGINT and SIGQUIT
         sa.sa_handler = SIG_IGN;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGQUIT, &sa, NULL);
-        // sigaction(SIGQUIT, &sa, NULL);
-
-
+        
         if (ret == FAILURE)
             break ;
         if (ret == 0)
@@ -210,7 +207,7 @@ int     main(int    ac, char    *av[],  char    *env[])
         line = tmp;
         if (parser(&db, line) == FAILURE)
             continue ;
-        if (exec(&db, db.root_node, -1) == FAILURE)
+        if (exec(&db, db.root_node, NULL, -1) == FAILURE)
             continue ;
 
         gc_void(&db);

@@ -90,7 +90,7 @@ int priority_of_op(int op);
 int create_op_node(t_db *db, int op, void **current_node, void *parent);
 
 /*cmd.c*/
-int     create_cmd_node(t_db *db, void **current_node, void *parent);
+int     create_cmd_node(t_db *db, void **current_node, void *parent, char *line);
 int     count_op(char *line, int op);
 
 /*customized*/

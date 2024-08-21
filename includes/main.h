@@ -26,7 +26,7 @@
 # define PASS
 # define GOOD 1
 # define BAD 0
-
+# define CLOSED -2
 
 // triggers
 # define CATCH_MALLOC(x) \
@@ -160,7 +160,7 @@ typedef struct s_file_entry
  * @details The tree data structure of storing the commands
  * we will have two different types of nodes:
  * 1 - command node => (cmd, args)
- * 2 - operator node => (&&, ||, |, >, <, >>, <<)
+ * 2 - operator node => (&&, ||, |)
  */
 
 # define CMD_NODE 1
@@ -175,14 +175,17 @@ typedef struct s_file_entry
  */
 typedef struct s_cmd_node
 {
-	int type;     // the common thing between the two nodes
-	void *origin; // the original node
-	char				*cmd_path;
+	int 				type;     // the common thing between the two nodes
+	void 				*origin; // the original node
+	char				*line;
+
+
+	// this is gonna be only in the child proccess just when it gonna e executed!!!
 	char				**args;
 	int					input_fd;
 	int					output_fd;
 
-	bool is_scope;
+	bool 				is_scope;
 
 }						t_cmd_node;
 

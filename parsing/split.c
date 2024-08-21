@@ -109,18 +109,18 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
 
     current_node = holder->current_node;
     CATCH_ONFAILURE(
-        create_cmd_node(db, current_node, holder->parent) // create a command node -------<<<<<<<<
+        create_cmd_node(db, current_node, holder->parent, line) // create a command node -------<<<<<<<<
     , FAILURE);
 
-    CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
-    if (db->error || !db->exec_line)
-        return error(db, NULL, NULL);
+    // CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
+    // if (db->error || !db->exec_line)
+    //     return error(db, NULL, NULL);
 
-    CATCH_MALLOC((CURR_CMD)->args);
-    (CURR_CMD)->input_fd = db->input_fd;
-    (CURR_CMD)->output_fd = db->output_fd;
-    db->input_fd = STDIN_FILENO;
-    db->output_fd = STDOUT_FILENO;
+    // CATCH_MALLOC((CURR_CMD)->args);
+    // (CURR_CMD)->input_fd = db->input_fd;
+    // (CURR_CMD)->output_fd = db->output_fd;
+    // db->input_fd = STDIN_FILENO;
+    // db->output_fd = STDOUT_FILENO;
 
     return SUCCESS;
 }
