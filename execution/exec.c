@@ -50,6 +50,22 @@ char    *get_path(t_db  *db, char    **args)
     }
     return (path);
 }
+int dup_cmd_io(t_cmd_node *command)
+{
+    if (command->input_fd != INVALID && command->input_fd != STDIN_FILENO)
+    {
+        dup2(command->input_fd, STDIN_FILENO);
+        ft_close(&command->input_fd);
+    }
+
+    if (command->output_fd != INVALID && command->output_fd != STDOUT_FILENO)
+    {
+        dup2(command->output_fd, STDOUT_FILENO);
+        ft_close(&command->output_fd);
+    }
+    return (SUCCESS);
+}
+
 void    waiter(t_db *db, int  *status);
 
 int    **prepare_pipes(t_db  *db,   int n_pipes)
@@ -84,23 +100,30 @@ void    waiter(t_db *db, int  *status)
 
 int dup_pipes(int **pipes, int   index) // index -> 2
 {
+    if (!pipes)
+        return SUCCESS;
     int n_pipes = get_pipes_count(pipes);
     if (index == 0)
     {
-        dup2(pipes[0][1], STDOUT_FILENO);
-        // ft_close(&pipes[0][1]);
+        dprintf(2, "%d is standard input F\n", pipes[0][1]);
+        if (pipes[0][1] != CLOSED)
+            dup2(pipes[0][1], STDOUT_FILENO);
     }
     else if (index == n_pipes) // 2 == 2
     {
-        dup2(pipes[n_pipes - 1][0], STDIN_FILENO);
-        // ft_close(&pipes[n_pipes - 1][0]);
+        dprintf(2, "%d is standard input L\n", pipes[n_pipes - 1][0]);
+        if (pipes[n_pipes - 1][0] != CLOSED)
+            dup2(pipes[n_pipes - 1][0], STDIN_FILENO);
     }
     else
     {
-        dup2(pipes[index - 1][0], STDIN_FILENO);
-        dup2(pipes[index][1], STDOUT_FILENO);
-        // ft_close(&pipes[index - 1][0]);
-        // ft_close(&pipes[index][1]);
+        dprintf(2, "%d is standard input B\n", pipes[index - 1][0]);
+        dprintf(2, "%d is standard output B\n", pipes[index][1]);
+        if (pipes[index - 1][0] != CLOSED)
+            dup2(pipes[index - 1][0], STDIN_FILENO);
+        if (pipes[index][1] != CLOSED)
+            dup2(pipes[index][1], STDOUT_FILENO);
+        
     }
     return (SUCCESS);
 }
@@ -127,39 +150,53 @@ int close_all_pipes(t_db  *db, int    **pipes)
     return (SUCCESS);
 }
 
-int handle_pipe_op(t_db *db,    void    *node, int  index)
+int handle_pipe_op(t_db *db,    void    *node,  int **parent_pipes,int  index)
 {
     int i;
-    (void)index;
+    int id;
     int status;
     int **pipes;
     i = 0;
+    (void) parent_pipes;
     status = 0;
     
     pipes = prepare_pipes(db, OP->n_childs - 1);
-    while (i < OP->n_childs)
+    if (OP->is_scope)
     {
-        exec(db, OP->childs[i], pipes, i);
-        i++;
+        id = fork();
+        if (id == CHILD)
+        {
+            dup_pipes(parent_pipes, index);
+            close_all_pipes(db, parent_pipes);
+            ip_void(db);
+            while (i < OP->n_childs)
+            {
+                exec(db, OP->childs[i], pipes, i);
+                i++;
+            }
+            close_all_pipes(db, pipes);
+            waiter(db, &status);
+            exit(db->last_signal);
+        }
+        else
+        {
+            close_all_pipes(db, pipes);
+            waitpid(id, &status, 0);
+            // waiter(db, &status);
+        }
     }
-    close_all_pipes(db, pipes);
-    waiter(db, &status);
-    return (SUCCESS);
-}
-
-int dup_cmd_io(t_cmd_node *command)
-{
-    if (command->input_fd != INVALID && command->input_fd != STDIN_FILENO)
+    else // no scope
     {
-        dup2(command->input_fd, STDIN_FILENO);
-        ft_close(&command->input_fd);
+        while (i < OP->n_childs)
+        {
+            exec(db, OP->childs[i], pipes, i);
+            i++;
+        }
+        close_all_pipes(db, pipes);
+        waiter(db, &status);
     }
-
-    if (command->output_fd != INVALID && command->output_fd != STDOUT_FILENO)
-    {
-        dup2(command->output_fd, STDOUT_FILENO);
-        ft_close(&command->output_fd);
-    }
+    close_all_pipes(db, parent_pipes);
+    catch_feedback(db, status);
     return (SUCCESS);
 }
 
@@ -195,7 +232,6 @@ int handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     int status;
     t_quote *q;
 
-    printf("reached execution\n");
     q = NULL;
     track_quotes(db, &q, CMD->line);
     CMD->args = tokenize(db, &q, CMD->line);
@@ -237,9 +273,10 @@ int exec(t_db   *db, void *node, int    **pipes,   int index)
     status = 0;
     if (!node)
         return (SUCCESS);
+
     if (CMD->type == CMD_NODE)
         return handle_cmd_node(db, node, pipes, index);
     else if (OP->op_presentation == PIPE)
-        return handle_pipe_op(db, node, index);
+        return handle_pipe_op(db, node, pipes, index);
     return (SUCCESS);
 }

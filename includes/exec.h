@@ -9,7 +9,7 @@
 // int exec(t_db *db, void **current_node);
 int exec(t_db   *db, void *node,  int   **pipes,  int index);
 int exec_builtin(t_db   *db,t_cmd_node *node, int   index);
-int handle_pipe_op(t_db *db, void *node, int index);
+int handle_pipe_op(t_db *db, void *node, int **pipes, int index);
 int handle_cmd_node(t_db *db, void *node, int **pipes, int index);
 // path.c
 int run_builtin(t_db   *db,t_cmd_node *node);

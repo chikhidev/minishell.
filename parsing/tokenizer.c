@@ -27,7 +27,6 @@ char **append_word(t_db *db, char **result, char *save)
             printf("Malloc failed\n");
             return (NULL);
         }
-        printf("tracking quotes in tok\n");
         if (track_quotes(db, &q, save) == FAILURE)
             return NULL;
         if (expand(db, &save, &q) == FAILURE)
