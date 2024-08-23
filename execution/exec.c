@@ -192,14 +192,17 @@ int handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 {
     int id;
     int status;
-
     t_quote *q;
 
     q = NULL;
     track_quotes(db, &q, CMD->line);
+    if (expand(db, &CMD->line, &q) == FAILURE)
+        return FAILURE;
     CMD->args = tokenize(db, &q, CMD->line);
     if (CMD->args == NULL)
-        exit(1);
+    {
+        return SUCCESS;
+    }
 
     id = fork();
     if (id == CHILD)
@@ -219,6 +222,7 @@ int handle_cmd_node(t_db *db, void *node, int **pipes, int index)
         else
             ip_add(db, id);
     }
+
     return (SUCCESS);
 }
 

@@ -4,9 +4,9 @@ void    *gc_malloc(t_db *db, size_t size)
 {
     void    *ptr;
 
-    ptr = malloc(size);
+    ptr = malloc(size + 1);
     if (!ptr) return (NULL);
-    ft_bzero(ptr, size);
+    ft_bzero(ptr, size + 1);
     if (!db->gc)
     {
         db->gc = malloc(sizeof(t_gc));
