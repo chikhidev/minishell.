@@ -13,7 +13,7 @@ Minishell$
 
 
 sgouzi@c3r8p2:~/Desktop/minishell$ exit $HOLA HOLA
-exit
+exits
 bash: exit: HOLA: numeric argument required
 sgouzi@c3r8p2:~/Desktop/minishell$ bash
 sgouzi@c3r8p2:~/Desktop/minishell$ exit $HOLA $HOLA
@@ -34,3 +34,5 @@ args[0] -> echo
 args[1] -> $"$USER"
 inside quotes
 $USER
+
+(ls | wc) | (wc | wc)
