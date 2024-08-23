@@ -16,13 +16,16 @@ int parser(t_db *db, char *line)
     skip_spaces(line, &i);
     if (line[i] == '\0')
         return (SUCCESS);
+
     CATCH_ONFAILURE(
-        syntax_checker(db, line, &i),
-        FAILURE
-    )    CATCH_ONFAILURE(
         track_quotes(db, &quotes, line),
         FAILURE
     )
+    CATCH_ONFAILURE(
+        syntax_checker(db, line, &i),
+        FAILURE
+    )
+    
     CATCH_ONFAILURE(
         track_paranthesis(db, &paranthesis, line, quotes),
         FAILURE
@@ -31,6 +34,7 @@ int parser(t_db *db, char *line)
         track_operators(db, line, quotes),
         FAILURE
     )
+
     CATCH_ONFAILURE(
         smart_split(db, line, &db->root_node, NULL),
         FAILURE

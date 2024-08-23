@@ -9,10 +9,14 @@ void  skip_open_spaces(t_quote *quotes, char *line, int *i)
 
 char **append_word(t_db *db, char **result, char *save)
 {
+    char *tmp;
     int size;
+    t_quote *q;
 
     if (ft_strlen(save) == 0)
         return NULL;
+    
+    q = NULL;
 
     if (!*result)
     {
@@ -23,7 +27,15 @@ char **append_word(t_db *db, char **result, char *save)
             printf("Malloc failed\n");
             return (NULL);
         }
-        result[0] = save;
+        printf("tracking quotes in tok\n");
+        if (track_quotes(db, &q, save) == FAILURE)
+            return NULL;
+        if (expand(db, &save, &q) == FAILURE)
+            return NULL;
+        tmp = whithout_quotes(db, save);
+        if (!tmp)
+            return NULL;
+        result[0] = tmp;
         result[1] = NULL;
         return (result);
     }
@@ -36,7 +48,15 @@ char **append_word(t_db *db, char **result, char *save)
         db->error = true;
         return (NULL);
     }
-    result[size] = save;
+
+    if (track_quotes(db, &q, save) == FAILURE)
+        return NULL;
+    if (expand(db, &save, &q) == FAILURE)
+        return NULL;
+    tmp = whithout_quotes(db, save);
+    if (!tmp)
+        return NULL;
+    result[size] = tmp;
     result[size + 1] = NULL;
     return (result);
 }
@@ -132,29 +152,33 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                             if (!starts_with(entry->d_name, "."))
                             {
                                 result = append_word(db, result, entry->d_name);
+                                if (!result)
+                                {
+                                    printf("failed to append word 2\n");
+                                    db->error = true;
+                                    return (NULL);
+                                }
                             }
                             entry = readdir(curr_dir);
                         }
                     }
                 }
-                else if (!will_be_unused_arg(db, save))
-                {                    
-
-                    result = append_word(db, result, save);
-                    if (!result)
-                    {
-                        printf("failed to append word 2\n");
-                        db->error = true;
-                        return (NULL);
-                    }
+                 
+                result = append_word(db, result, save);
+                if (!result)
+                {
+                    printf("failed to append word 2\n");
+                    db->error = true;
+                    return (NULL);
                 }
+                
                 save = NULL;
             }
         }
         it.i++;
     }
 
-    if (ft_strlen(save) > 0 && !will_be_unused_arg(db, save))
+    if (ft_strlen(save) > 0)
     {
 
         result = append_word(db, result, save);

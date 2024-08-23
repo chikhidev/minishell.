@@ -14,6 +14,8 @@ int expand(t_db *db, char **line, t_quote **quotes)
     reminder.j = -1;
     env_var_name = NULL;
     i = 0;
+
+    printf("line: %s\n", *line);
     while (i < len)
     {
         if ((*line)[i] == '$' && !inside_single_quote(*quotes, i))
@@ -56,36 +58,12 @@ int expand(t_db *db, char **line, t_quote **quotes)
             reset_quotes(db, quotes);
             *quotes = NULL;
 
+            printf("line: %s\n", *line);
+
             if (!track_quotes(db, quotes, (*line)))
                 return (FAILURE);
         }
         i++;
     }
     return (SUCCESS);
-}
-
-
-int expanded(t_db *db, char **args)
-{
-    t_quote *head;
-    int i;
-
-    head = NULL;
-    i = 0;
-    while (args[i])
-    {
-        track_quotes(db, &head, args[i]);
-
-        if (expand(db, &args[i], &head) == FAILURE)
-            return FAILURE;
-
-        args[i] = whithout_quotes(db, args[i]);
-
-        if (args[i] == NULL)
-            return error(db, NULL, "Malloc failed");
-
-        i++;
-    }
-
-    return SUCCESS;
 }

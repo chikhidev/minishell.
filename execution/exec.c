@@ -21,6 +21,7 @@ int get_pipes_count(int **pipes)
         i++;
     return i;
 }
+
 char    *get_path(t_db  *db, char    **args)
 {
     char    *path;
@@ -194,33 +195,37 @@ int handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     int status;
     t_quote *q;
 
+    printf("reached execution\n");
     q = NULL;
     track_quotes(db, &q, CMD->line);
-    if (expand(db, &CMD->line, &q) == FAILURE)
-        return FAILURE;
     CMD->args = tokenize(db, &q, CMD->line);
     if (CMD->args == NULL)
     {
         return SUCCESS;
     }
 
-    id = fork();
-    if (id == CHILD)
-    {
-        if (exec_cmd(db, node, pipes, index) == FAILURE)
-        {
-            exit(1);
-        }
-    }
+    if (is_built_in(node))
+        run_builtin(db, node);
     else
     {
-        if (index == -1)
+        id = fork();
+        if (id == CHILD)
         {
-            waitpid(id, &status, 0);
-            catch_feedback(db, status);
+            if (exec_cmd(db, node, pipes, index) == FAILURE)
+            {
+                exit(1);
+            }
         }
         else
-            ip_add(db, id);
+        {
+            if (index == -1)
+            {
+                waitpid(id, &status, 0);
+                catch_feedback(db, status);
+            }
+            else
+                ip_add(db, id);
+        }
     }
 
     return (SUCCESS);

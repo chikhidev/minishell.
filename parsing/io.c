@@ -74,7 +74,8 @@ int open_file(t_db *db, char *file, int type)
     }
 
     track_quotes(db, &quotes, file);
-    expand(db, &file, &quotes);
+    if (expand(db, &file, &quotes) == FAILURE)
+        return FAILURE;
 
     tmp = whithout_quotes(db, file);
     if (type == APPENDFILE)
