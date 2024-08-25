@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:15:22 by abchikhi          #+#    #+#             */
-/*   Updated: 2023/11/08 22:59:58 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/08/13 18:36:46 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../includes/main.h"
 
 static int	count_words(const char *str, char c)
 {
@@ -41,7 +42,7 @@ static int	free_everything(char **array, int index)
 	return (0);
 }
 
-static char	*extract_word(char const *s, char c)
+static char	*extract_word(t_db *db, char const *s, char c)
 {
 	int			len;
 	char const	*starting;
@@ -56,7 +57,7 @@ static char	*extract_word(char const *s, char c)
 		len++;
 		s++;
 	}
-	word = (char *)malloc((len + 1) * sizeof(char));
+	word = gc_malloc(db, (len + 1) * sizeof(char));
 	if (word == NULL)
 		return (NULL);
 	while (i < len)
@@ -68,7 +69,7 @@ static char	*extract_word(char const *s, char c)
 	return (word);
 }
 
-static int	fill_and_test(char const *s, char c, char **result)
+static int	fill_and_test(t_db *db, char const *s, char c, char **result)
 {
 	int		i;
 	char	*word;
@@ -78,7 +79,7 @@ static int	fill_and_test(char const *s, char c, char **result)
 	{
 		if (*s != c)
 		{
-			word = extract_word(s, c);
+			word = extract_word(db, s, c);
 			if (word == NULL)
 				return (free_everything(result, i));
 			result[i++] = word;
@@ -92,7 +93,7 @@ static int	fill_and_test(char const *s, char c, char **result)
 	return (1);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(t_db *db, char const *s, char c)
 {
 	int		word_count;
 	char	**result;
@@ -100,10 +101,10 @@ char	**ft_split(char const *s, char c)
 	if (s == NULL)
 		return (NULL);
 	word_count = count_words(s, c);
-	result = (char **)malloc((word_count + 1) * sizeof(char *));
+	result = gc_malloc(db, (word_count + 1) * sizeof(char *));
 	if (result == NULL)
 		return (NULL);
-	if (fill_and_test(s, c, result) == 0)
+	if (fill_and_test(db, s, c, result) == 0)
 		return (NULL);
 	return (result);
 }

@@ -5,21 +5,16 @@ char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
 {
     char *new;
     int i;
-    int j;
 
-    new = gc_malloc(db, ft_strlen(line) - 1);
     i = 0;
-    j = 0;
+    new = NULL;
     while (line[i])
     {
-        if (!(i == local_paranths->open_ || i == local_paranths->close_))
-        {
-            new[j] = line[i];
-            j++;
-        }
+        if (i > local_paranths->open_ && i < local_paranths->close_)
+            new = concat(db, new, line[i]);
         i++;
     }
-    new[j] = '\0';
+
     return new;
 }
 
@@ -45,7 +40,7 @@ int strongest_operator(char *line, t_tracker *tracker)
         if (tmp.op_presentation != INVALID)
         {
             tmp.priority = priority_of_op(tmp.op_presentation);
-            if (!is_inside_quotes(tracker->quotes, i)
+            if (!is_inside_quotes_list(tracker->quotes, i)
                 && !is_inside_paranthesis(tracker->paranthesis, i)
                 && ((tmp.priority <= strongest.priority && tmp.priority != -1)
                 || strongest.priority == -1))
@@ -58,26 +53,26 @@ int strongest_operator(char *line, t_tracker *tracker)
 
 // int count_between_op(t_db *db, char *line, int op, t_tracker *tracker)
 // {
-//     BOOL    in_word;
+//     bool    in_word;
 //     int     i;
 //     int     counter;
 
 
 //     (void)db;
 //     i = 0;
-//     in_word = FALSE;
+//     in_word = false;
 //     counter = 0;
 //     while (line[i])
 //     {
 //         if (is_op(line, &i) == op
-//             && !is_inside_quotes(tracker->quotes, i)
+//             && !is_inside_quotes_list(tracker->quotes, i)
 //             && !is_inside_paranthesis(tracker->paranthesis, i))
 //         {
-//             in_word = FALSE;
+//             in_word = false;
 //         }
 //         else if (!is_whitespace(line[i]))
 //         {
-//             in_word = TRUE;
+//             in_word = true;
 //             counter++;
 //             while (line[i] && !is_whitespace(line[i]))
 //                 i++;
@@ -108,15 +103,15 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
     while (line[i])
     {
         if (is_op(line, &i) == op
-            && !is_inside_quotes(tracker->quotes, i)
+            && !is_inside_quotes_list(tracker->quotes, i)
             && !is_inside_paranthesis(tracker->paranthesis, i))
         {
             counter++;
             reminder = i;
         }
         i++;
-    }
-    if (reminder < i && !all_whitespaces(line, reminder, i) && !is_inside_quotes(tracker->quotes, i))
+    } 
+    if (reminder < i && !all_whitespaces(line, reminder, i) && !is_inside_quotes_list(tracker->quotes, i))
         counter++;
     return counter;
 }

@@ -126,7 +126,7 @@ int verify_double_scope(t_parnth    *parenth, char    *line)
     i = 0;
     while (line[i])
     {
-        if (line[i] == '(' && line[i + 1] == '(')
+        if (line[i] == '(' && line[i + 1] == '(' && !is_inside_quotes_line(line, i))
         {
             open_parenth1 = get_parenth(parenth, i);
             if (!open_parenth1)
@@ -265,10 +265,10 @@ int only_spaces(char *line, int start, int close)
     while (i < close)
     {
         if (!is_whitespace(line[i]))
-            return (FALSE);
+            return (false);
         i++;
     }
-    return (TRUE);
+    return (true);
 }
 // db->paranthesis
 int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
@@ -280,7 +280,7 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
     while (line[i])
     {
         last_opened = last_unclosed_paranth(*head);
-        if (line[i] == '(' && !is_inside_quotes(quotes, i))
+        if (line[i] == '(' && !is_inside_quotes_list(quotes, i))
         {
             CATCH_ONFAILURE(create_paranth(db, head, i), FAILURE);
             CATCH_ONFAILURE(verify_create_parenth(*head, line, i), 
@@ -288,27 +288,28 @@ int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes)
             );
         }
         else if (line[i] == ')'
-            && !is_inside_quotes(quotes, i)
+            && !is_inside_quotes_list(quotes, i)
             && last_opened
             && last_opened->open_ == i - 1)
             return error(db, NULL, "syntax error: near ')'");
         else if (line[i] == ')'
-            && !is_inside_quotes(quotes, i)
+            && !is_inside_quotes_list(quotes, i)
             && last_opened)
         {
             CATCH_ONNULL(last_opened, error(db, NULL, "syntax error: near ')'"));
             last_opened->close_ = i;
-            CATCH_ONFALSE((!only_spaces(line, last_opened->open_, last_opened->close_)),
+            CATCH_ONfalse((!only_spaces(line, last_opened->open_, last_opened->close_)),
                 // FAILURE); // instead of failure khasna error !
                 error(db, NULL, "syntax error: near ')'")); // salah lbatal forgot this <<<<<<
         }
-        else if (line[i] == ')' && !is_inside_quotes(quotes, i))
+        else if (line[i] == ')' && !is_inside_quotes_list(quotes, i))
             return error(db, NULL, "syntax error: near ')'");
         i++;
     }
-    CATCH_ONFALSE((!last_unclosed_paranth(*head)), error(db, NULL, "syntax error: near '('"));
-    CATCH_ONFAILURE(verify_double_scope(*head, line), FAILURE);
-    CATCH_ONFAILURE(verify_scope_surrounding(*head, line), FAILURE);
+    CATCH_ONfalse((!last_unclosed_paranth(*head)), error(db, NULL, "syntax error: near '('"));
+    if (verify_double_scope(*head, line) == FAILURE)
+        return error(db, NULL, "syntax error  : double scopes");
+    if (verify_scope_surrounding(*head, line) == FAILURE)
+        return error(db, NULL, "syntax error missing operator near scope");
     return (SUCCESS);
 }
-

@@ -1,10 +1,10 @@
 #include "main.h"
 
-void free_array(char **array)
+void free_array(t_db *db, char **array)
 {
     for (int i = 0; array[i]; i++)
-        free(array[i]);
-    free(array);
+        gc_free(db, array[i]);
+    gc_free(db, array);
 }
 
 char    *cmd_path(t_db *db, char *filename)
@@ -12,31 +12,53 @@ char    *cmd_path(t_db *db, char *filename)
     char **paths;
     char *path;
     char *tmp;
+    t_exp_list  *path_node;
 
     if (!filename)
         return NULL;
-    (void)db;
-    paths = ft_split(getenv("PATH"), ':');
-    if (!paths)
-        return NULL;
 
-    for (int i = 0; paths[i]; i++)
+    path_node = get_exp_node(db->exp_list, "PATH");
+    if (path_node)
     {
-        path = ft_strjoin(paths[i], "/");
-        if (!path)
+        paths = ft_split(db, path_node->val, ':');
+        if (!paths)
             return NULL;
-
-        tmp = ft_strjoin(path, filename);
-        if (!tmp)
-            return NULL;
-
-        free(path);
-        if (access(tmp, F_OK) == 0)
+        
+        for (int i = 0; paths[i]; i++)
         {
-            free_array(paths);
-            return tmp;
+            path = ft_strjoin(db, paths[i], "/");
+            if (!path)
+            {
+                error(db, NULL, "Malloc failed");
+                return NULL;
+            }
+            tmp = ft_strjoin(db, path, filename);
+            if (!tmp)
+            {
+                error(db, NULL, "Malloc failed");
+                return NULL;
+            }
+
+            if (access(tmp, F_OK) == 0)
+            {
+                free_array(db, paths);
+                if (access(tmp, X_OK) != 0)
+                {
+                    error(db, tmp, "Permission denied");
+                    return NULL;
+                }
+                return tmp;
+            }
         }
-        free(tmp);
+    }
+    else if (access(filename, F_OK) == 0)
+    {
+        if (access(filename, X_OK) != 0)
+        {
+            error(db, filename, "Permission denied");
+            return NULL;
+        } 
+        return filename;
     }
 
     return NULL;

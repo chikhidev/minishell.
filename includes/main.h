@@ -2,7 +2,6 @@
 # define MAIN_H
 
 # include "../libft/libft.h"
-# include "../get_next_line/get_next_line.h"
 # include <fcntl.h>
 # include <stdbool.h>
 # include <stdio.h>
@@ -11,23 +10,28 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
+#include <sys/wait.h>
+#include <signal.h>
+
 
 
 # define SIGNAL unsigned char
-# define BOOL unsigned char
-# define TRUE 1
-# define FALSE 0
 # define SUCCESS 1
 # define FAILURE 0
 # define NOT_FOUND -1
 # define INVALID -1
+# define MISSING_FILE -2
+# define PERMISSION_DENIED -3
 # define VALIDE 1
 # define PASS
+# define GOOD 1
+# define BAD 0
+# define CLOSED -2
 
 // triggers
 # define CATCH_MALLOC(x) \
 	if (!x)             \
-		return (error(db, NULL, "Malloc failed"));
+		return (error(db, NULL, "Malloc failed7"));
 # define CATCH(x, message) \
 	if (x == FAILURE)     \
 		return (error(db, NULL, message));
@@ -37,8 +41,8 @@
 # define CATCH_ONNULL(x, return_) \
 	if (x == NULL)               \
 		return (return_);
-# define CATCH_ONFALSE(x, return_) \
-	if (x == FALSE)               \
+# define CATCH_ONfalse(x, return_) \
+	if (x == false)               \
 		return (return_);
 # define CATCH_ONINVALID(x, return_) \
 	if (x == INVALID)               \
@@ -59,18 +63,23 @@
 # define OP ((t_op_node *)node)
 # define CMD ((t_cmd_node *)node)
 
+# define IS_CHILD (pid == 0)
+# define IS_PARENT (pid > 0)
+# define IS_ERROR (pid < 0)
+
 /**
  * @details This is the color codes for the shell
  */
-# define RED "\033[0;31m"
 # define ORANGE "\033[0;33m"
 # define MAGENTA "\033[0;35m"
-# define GREEN "\033[0;32m"
+# define GREEN "\033[1;32m"
+# define RED "\033[1;31m"
 # define BLUE "\033[0;34m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
 # define BOLD      "\033[1m"
 # define UNDERLINE "\033[4m"
+
 
 typedef struct s_iterators
 {
@@ -92,8 +101,20 @@ typedef struct s_op_node
 	void				**childs;
 	int					n_childs;
 
+	int input_fd;
+	int output_fd;
+
+	bool	is_scope;
+
 	// execution part ------ <<<<<<
 }						t_op_node;
+
+typedef struct s_ip_addrs
+{
+	pid_t				ip_addr;
+	struct s_ip_addrs	*next;
+}						t_ip_addrs;
+
 
 typedef struct s_here_doc /*here doc saver*/
 {
@@ -126,11 +147,20 @@ typedef struct s_gc
 	struct s_gc			*next;
 }						t_gc;
 
+
+
+typedef struct s_file_entry
+{
+	struct dirent				*entry;
+	struct s_file_entry			*next;
+}						t_file_entry;
+
+
 /**
  * @details The tree data structure of storing the commands
  * we will have two different types of nodes:
  * 1 - command node => (cmd, args)
- * 2 - operator node => (&&, ||, |, >, <, >>, <<)
+ * 2 - operator node => (&&, ||, |)
  */
 
 # define CMD_NODE 1
@@ -145,12 +175,18 @@ typedef struct s_gc
  */
 typedef struct s_cmd_node
 {
-	int type;     // the common thing between the two nodes
-	void *origin; // the original node
-	char				*cmd_path;
+	int 				type;     // the common thing between the two nodes
+	void 				*origin; // the original node
+	char				*line;
+
+
+	// this is gonna be only in the child proccess just when it gonna e executed!!!
 	char				**args;
 	int					input_fd;
 	int					output_fd;
+
+	bool 				is_scope;
+
 }						t_cmd_node;
 
 /**
@@ -201,27 +237,52 @@ typedef struct s_tracker
 	t_quote				*quotes;
 }						t_tracker;
 
+typedef struct s_str_lst
+{
+	char	*str;
+	struct s_str_lst	*next;
+}	t_str_lst;
 /**
  * @details The db structure is used to store all data needed
  */
 typedef struct s_db
 {
 	int					debug;
+    /*tree head*/
 	void				*root_node;
+    /*momory management*/
 	t_gc				*gc;
+	t_gc				*ec;
+    /*storing init data*/
 	char				**env;
-	int					op_counter[6];
+    /*storing in tracked signals*/
 	int					last_signal;
+
 	t_operators			*ops;
-	t_here_doc			*here_docs;
-	char				error;
+    /*error flag*/
+	bool				error;
+    /**process id(s) for childs*/
+	int					*pids;
 
 	/*io*/
 	int					heredoc_counter;
 	int					curr_type;
 	int					input_fd;
 	int					output_fd;
+	int					stdin_dup;
+	int					stdout_dup;
+	int					pipe[2];
+	int					read_fd;
+	bool				is_in_process;
+
+	// has the permission to run the line? by default yes.
+	bool				exec_line;
+
+	bool				scope;
+
+    /*local envirement variables*/
 	t_env_list			*env_list;
+	t_ip_addrs			*ip;
 	t_exp_list			*exp_list;
 }						t_db;
 
@@ -229,10 +290,15 @@ typedef struct s_db
 int						error(t_db *db, char *specifier, char *message);
 
 /*prototypes: memo.c*/
-void					*gc_malloc(t_db *db, size_t size);
-void					gc_void(t_db *db);
-void					gc_free(t_db *db, void *ptr);
-void					*gc_realloc(t_db *db, void *ptr, size_t size);
+
+void    *gc_malloc(t_db *db, size_t size);
+void    *ec_malloc(t_db *db, size_t size);
+void    gc_free(t_db *db, void *ptr);
+void    ec_free(t_db *db, void *ptr);
+void    gc_void(t_db *db);
+void    ec_void(t_db *db);
+void    *gc_realloc(t_db *db, void *ptr, size_t size);
+
 
 /*prototypes: string.c*/
 int						count(char *line, char c);
@@ -240,11 +306,14 @@ char					*concat(t_db *db, char *s, char single_char);
 char					*remove_paranthesis(t_db *db, char *line,
 							t_parnth *local_paranths);
 
+bool 					will_be_unused_arg(t_db *db, char *arg);
+
+
 int						is_op3(char *line, int *i);
 
-BOOL					contains_spaces_btwn(char *s);
+bool					contains_spaces_btwn(char *s);
 
-t_env_list				*new_env_node(t_db *db, char   *data);
+t_env_list				*new_env_node(t_db *db, char   *key, char	*val);
 void					add_env_front(t_env_list  **list,   t_env_list	*new);
 void					push_env_back(t_env_list  **list, t_env_list	*new);
 void					*push_sort(t_db *db, t_env_list  **list, char    *data);
@@ -254,6 +323,21 @@ void					add_exp_front(t_exp_list  **list,   t_exp_list	*new);
 void					push_exp_sort(t_exp_list  **list,  t_exp_list	*new);
 void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
 t_exp_list              *get_exp_node(t_exp_list    *list,  char    *key);
-void					free_environment(t_db  *db);
+// void					free_environment(t_db  *db);
 t_env_list              *get_env_node(t_env_list    *list,  char    *key);
+void					del_env_node(t_env_list    **list,  char    *key);
+void					del_exp_node(t_exp_list    **list,  char    *key);
+char					**env_list_to_env_arr(t_db	*db);
+
+
+void					catch_feedback(t_db *db, int process_res);
+
+
+/*signals*/
+void cmd_signals_handling(void);
+void parent_signals_handling(void);
+void heredoc_signals_handling(void);
+
+/* FUNCTIONS */
+
 #endif

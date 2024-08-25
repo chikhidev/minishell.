@@ -6,10 +6,10 @@
 
 t_exp_list *new_exp_node(t_db *db, char   *key, char    *val)
 {
-    (void)db;
     t_exp_list *new;
 
-    new = malloc(sizeof(t_exp_list));
+    new = ec_malloc(db, sizeof(t_exp_list));
+
     if (new == NULL)
         return (NULL);
     new->val = val;
@@ -52,7 +52,10 @@ void	push_exp_sort(t_exp_list  **list,  t_exp_list	*new)
                 prev = curr;
 				curr = curr->next;
             }
-            curr->next = new;
+            if (curr)
+				curr->next = new;
+			else
+				add_exp_front(list, new);
 		}
 	}
 }
@@ -64,7 +67,9 @@ void	push_exp_back(t_exp_list  **list,  t_exp_list	*new)
 	if (list)
 	{
 		if (*list == NULL)
-			add_exp_front(list, new);
+        {
+            add_exp_front(list, new);
+        }
         else if (ft_strncmp(new->key, (*list)->key, ft_strlen((*list)->key)) < 0)
 			add_exp_front(list, new);
 		else
@@ -89,4 +94,32 @@ t_exp_list  *get_exp_node(t_exp_list    *list,  char    *key)
         curr = curr->next;
     }
     return curr;
+}
+
+void  del_exp_node(t_exp_list    **list,  char    *key)
+{
+    t_exp_list  *curr;
+    t_exp_list  *prev;
+
+    prev = *list;
+	if (prev)
+	{
+		if (ft_strcmp(prev->key, key) == 0)
+		{
+			*list = (*list)->next;
+			return ;
+		}
+    	curr = prev->next;
+    	while (curr)
+		{
+			if (ft_strcmp(curr->key, key) == 0)
+			{
+				prev->next = curr->next;
+				return ;
+			}
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+    return;
 }

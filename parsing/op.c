@@ -4,11 +4,11 @@
 /*
     good = 1 means in good place (befor and after)
 */
- 
+
 /* flag is -2 if needs something after  op                 '>'    '<<'    '>>'     '<'    '|'          */
 /* flag is -1 if needs something befor & after op like    '&&'   '||'                                  */
 
- 
+
 void set_up_flag(int    *flag, char *op)
 {
     if (ft_strcmp(op, "&&") == 0)
@@ -55,8 +55,8 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag)
     return SUCCESS;
 }
 
-// && befor after 
-// < 
+// && befor after
+// <
 bool check_befor( char    *line,   char    *op_name,   int op_idx)
 {
     int i;
@@ -64,7 +64,9 @@ bool check_befor( char    *line,   char    *op_name,   int op_idx)
     i = op_idx - 1;
     while (i >= 0)
     {
-        if (is_op3(line, &i) != INVALID)
+        if (line[i] == '(')
+            return 0;
+        else if (is_op3(line, &i) != INVALID)
             return 0;
         else if (is_whitespace(line[i]))
             i--;
@@ -83,6 +85,8 @@ bool check_after( char    *line,   char    *op_name,   int op_idx)
     i = op_idx + ft_strlen(op_name);
     while (i < len)
     {
+        if (line[i] == ')')
+            return 0;
         if (is_op(line, &i) != INVALID)
             return 0;
         else if (is_whitespace(line[i]))
@@ -97,8 +101,8 @@ int good_place_for_op( char    *line,   char    *op_name,   int op_idx,  int fla
 {
     bool char_after;
     bool char_befor;
-    char_befor = FALSE;
-    char_after = FALSE;
+    char_befor = false;
+    char_after = false;
     if (check_befor(line, op_name, op_idx))
         char_befor = true;
     if (check_after(line, op_name, op_idx))
@@ -139,8 +143,25 @@ int create_operator(t_db *db, int i, char *name)
     }
     return (SUCCESS);
 }
+// int track_operators(t_db *db, char  *line, t_quote  *quotes)
+// {
+//     int i;
+//     (void) db;
+//     i = 0;
+//     while (line[i])
+//     {
+//         if (line[i] == '&' && line[i + 1] == '&' && is_inside_quotes_list(quotes, i))
+//             return (FAILURE);
+//         else if (line[i] == '|' && line[i + 1] == '|' && is_inside_quotes_list(quotes, i))
+//             return (FAILURE);
+//         else if (line[i] == '|'  && is_inside_quotes_list(quotes, i))
+//             return (FAILURE);
+//         i++;
+//     }
+//     return (SUCCESS);
+// }
 
-int track_operators(t_db *db, char  *line)
+int track_operators(t_db *db, char  *line, t_quote  *quotes)
 {
     t_operators *ops;
     int i;
@@ -149,13 +170,12 @@ int track_operators(t_db *db, char  *line)
     i = 0;
     while (line[i])
     {
-        if (line[i] == '&' && line[i + 1] == '&')
+        if (line[i] == '&' && line[i + 1] == '&' && !is_inside_quotes_list(quotes, i))
             (create_operator(db, i, "&&"), i++);
-        else if (line[i] == '|' && line[i + 1] == '|')
+        else if (line[i] == '|' && line[i + 1] == '|' && !is_inside_quotes_list(quotes, i))
             (create_operator(db, i, "||"), i++);
-        else if (line[i] == '|')
+        else if (line[i] == '|' && !is_inside_quotes_list(quotes, i))
             create_operator(db, i, "|");
-
         i++;
     }
     i = 0;
@@ -188,10 +208,10 @@ int track_operators(t_db *db, char  *line)
 int is_valid_op(char c, char next_c)
 {
     if (c == '&' && next_c && next_c == '&')
-        return (TRUE);
+        return (true);
     else if (c == '|' && next_c && next_c == '|')
-        return (TRUE);
+        return (true);
     else if (c == '|' || c == '>' || c == '<')
-        return (TRUE);
-    return (FALSE);
+        return (true);
+    return (false);
 }

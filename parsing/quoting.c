@@ -27,7 +27,8 @@ t_quote *last_quote(t_quote *head)
 {
     t_quote *tmp;
 
-    if (!head) return (NULL);
+    if (!head)
+        return (NULL);
     tmp = head;
     while (tmp->next)
         tmp = tmp->next;
@@ -43,15 +44,18 @@ int track_quotes(t_db *db, t_quote **head, char *line)
     while (line[i])
     {
         last = last_quote(*head);
-        if ((line[i] == 34 || line[i] == 39) && (!*head || !last))
+        if ((line[i] == SNGLQUOTE || line[i] == DOBLQUOTE) && !last)
         {
             CATCH_ONFAILURE(add_quote(db, head, line[i], i), FAILURE);
         }
-        else if ((line[i] == 34 || line[i] == 39)
+        else if (
+            (line[i] == SNGLQUOTE || line[i] == DOBLQUOTE)
             && last->ascii == line[i]
             && last->end == -1)
-            last->end = i;
-        else if ((line[i] == 34 || line[i] == 39)
+            {
+                last->end = i;
+            }
+        else if ((line[i] == SNGLQUOTE || line[i] == DOBLQUOTE)
             && last->end != -1)
         {
             CATCH_ONFAILURE(add_quote(db, head, line[i], i), FAILURE);
@@ -59,18 +63,26 @@ int track_quotes(t_db *db, t_quote **head, char *line)
         i++;
     }
     last = last_quote(*head);
-    CATCH_ONFALSE((!(*head) || last->end != -1), error(db, NULL, "Quotes are not closed"));
+    if (last && last->end == -1)
+    {
+        printf("Quotes are not closed expecting %c\n", last->ascii);
+        return error(db, NULL, NULL);
+    }
+
     return (SUCCESS);
 }
 
 void reset_quotes(t_db *db, t_quote **head)
 {
+    t_quote *curr;
     t_quote *tmp;
 
-    while (*head)
+    curr = *head;
+    while (curr)
     {
-        tmp = *head;
-        *head = (*head)->next;
+        tmp = curr;
+        curr = (curr)->next;
         gc_free(db, tmp);
     }
+    *head = NULL;
 }

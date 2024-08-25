@@ -3,34 +3,102 @@
 #include "exec.h"
 #include "builtens.h"
 
-int handle_prompt(t_db *db, char **line)
+void handle_sigint(int signum)
 {
-    (void) db;
-    printf(MAGENTA);
-    *line = readline(GREEN"$> "RESET);
-    printf(RESET);
-    // handle ctrl + c later 
-    if (!*line) return 0 ; // continue the loop
-    if (*line[0] != '\0') add_history(*line);
-    return SUCCESS ; // nothing
+    (void)signum;
+
+    write(STDOUT_FILENO, "\n", 1);
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 }
 
-t_env_list    *set_env_lst(t_db   *db, char   *env[])
-{
-    t_env_list      *env_list;
-    t_env_list      *new_node;
-    int             i;
 
-    env_list = NULL;
-    i = 0;
-    while (env[i])
+int handle_prompt(t_db *db, char **line)
+{    
+    (void)db;
+    struct sigaction sa;
+    char *tmp;
+
+    sa.sa_flags = 0;
+    sa.sa_handler = handle_sigint;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa, NULL);
+
+    tmp = NULL;
+    if (db->last_signal == 0)
     {
-        new_node = new_env_node(db, env[i]);
-        if (!new_node)
-        {
-            // free the stuff bruh of regular malloc
-            error(db, NULL, "Malloc failed");
+        tmp = ft_strjoin(db, "\001" GREEN "\002>_\001" RESET "\002", "$ ");
+    }
+    else
+    {
+        tmp = ft_strjoin(db, "\001" RED "\002>_\001" RESET "\002", "$ ");
+    }
+
+    *line = readline(tmp);
+    gc_free(db, tmp);
+    if (!*line) return FAILURE; /*stop the loop*/
+    if (*line[0] != '\0') add_history(*line);
+    return SUCCESS ; /*nothing*/
+}
+
+t_env_list *set_default_env(t_db *db)
+{
+    t_env_list  *new;
+
+    new = new_env_node(db, "PWD", getcwd(NULL, 0));
+    push_env_back(&db->env_list, new);
+    new = new_env_node(db, "OSH", getcwd(NULL, 0));
+    push_env_back(&db->env_list, new);
+    new = new_env_node(db, "SHLVL", "1");
+    push_env_back(&db->env_list, new);
+    new = new_env_node(db, "_", "/usr/bin/env");
+    push_env_back(&db->env_list, new);
+    return (db->env_list);
+}
+
+t_exp_list *set_default_exp(t_db *db)
+{
+    t_exp_list  *new;
+
+    new = new_exp_node(db, "PWD", getcwd(NULL, 0));
+    push_exp_back(&db->exp_list, new);
+    new = new_exp_node(db, "OSH", getcwd(NULL, 0));
+    push_exp_back(&db->exp_list, new);
+    new = new_exp_node(db, "SHLVL", "1");
+    push_exp_back(&db->exp_list, new);
+    new = new_exp_node(db, "_", "/usr/bin/exp");
+    push_exp_back(&db->exp_list, new);
+    return (db->exp_list);
+}
+
+t_env_list *set_env_lst(t_db *db, char *env[]) {
+    t_env_list *env_list = NULL;
+    t_env_list *new_node = NULL;
+    int i = 0;
+    char *key;
+    char *val;
+    bool good = false;
+
+    key = NULL;
+    val = NULL;
+    if (env == NULL || !env[0])
+       return (set_default_env(db));
+   
+    while (env && env[i])
+    {
+        good = fill_key_val(db, env[i], &key, &val);
+        if (!good)
+            return NULL ;
+        new_node = new_env_node(db, key, val);
+        if (!new_node) {
+            error(db, NULL, "Malloc failed6");
+            return NULL; // Ensure we return if malloc fails.
         }
+        // printf("%s[%s]", key, val);
         push_env_back(&env_list, new_node);
         i++;
     }
@@ -42,21 +110,20 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     t_exp_list      *exp_list;
     t_exp_list      *new_node;
     int             i;
-    int             len;
     char            *key;
     char            *val;
-
+    bool            good;
     exp_list = NULL;
+    key = NULL;
+    val = NULL;
     i = 0;
-    while (env[i])
+    if (env == NULL || !env[0])
+        return (set_default_exp(db));
+    while (env && env[i])
     {
-        // if (!new_node)
-        //     (gc_void(db), exit(1));
-        len = length_til(env[i], '=');
-        key = malloc(len + 1); // check malloc
-        ft_strlcpy(key, env[i], len + 1);
-        val = malloc(ft_strlen(env[i]) - len - 1 + 1); // check malloc
-        ft_strlcpy(val, env[i] + len + 1, ft_strlen(env[i]) - len - 1 + 1);
+        good = fill_key_val(db, env[i], &key, &val);
+        if (!good)
+            return (NULL);
         new_node = new_exp_node(db, key, val); // check malloc
         new_node->next = NULL;
         if (ft_strncmp(key, "_", ft_strlen(key)) == 0)
@@ -67,64 +134,38 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     return exp_list;
 }
 
-
 void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
-    int i;
-
     (void) ac;
     (void) av;
-    db->debug = FALSE;
+    db->last_signal = 0;
+    db->debug = false;
     db->gc = NULL;
-    db->here_docs = NULL;
-    db->error = FALSE;
+    db->ec = NULL;
+    db->error = false;
     db->env = env;
+    db->env_list = NULL;
+    db->exp_list = NULL;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
-    i = 0;
-    while (i < 6)
-    {
-        db->op_counter[i] = 0;
-        i++;
-    }
+    db->ip = NULL;
+    db->stdin_dup = -1;
+    db->stdout_dup = -1;
 }
 
 void db_reset(t_db *db)
 {
+    db->scope = false;
+    db->exec_line = true;
     db->heredoc_counter = 0;
     db->ops = NULL;
+    db->ops = NULL;
     db->root_node = NULL;
-    db->error = FALSE;
-    db->last_signal = 0;
+    db->error = false;
     db->curr_type = INVALID;
-    db->input_fd = INVALID;
-    db->output_fd = INVALID;
-}
-
-void free_environment(t_db  *db)
-{
-    t_env_list  *next_env;
-    t_env_list  *curr_env;
-    t_exp_list  *next_exp;
-    t_exp_list  *curr_exp;
-
-    curr_env = db->env_list;
-    while (curr_env)
-    {
-        next_env = curr_env->next;
-        free(curr_env);
-        curr_env = next_env;
-    }
-    curr_exp = db->exp_list;
-    printf("exp_list\n");
-    while (curr_exp)
-    {
-        next_exp = curr_exp->next;
-        free(curr_exp->key);
-        free(curr_exp->val);
-        free(curr_exp);
-        curr_exp = next_exp;
-    }
+    db->input_fd = STDIN_FILENO;
+    db->output_fd = STDOUT_FILENO;
+    db->is_in_process = false;
 }
 
 
@@ -189,22 +230,35 @@ int     main(int    ac, char    *av[],  char    *env[])
     char    *line;
     char    *tmp;
     int     ret;
+    struct sigaction sa;
 
+
+    ft_bzero(&sa, sizeof(struct sigaction));
     line = NULL;
     init_db(&db, ac, av, env);
-    while (TRUE)
+    while (true)
     {
         db_reset(&db);
         ret = handle_prompt(&db, &line);
-        if (ret == 0) continue ;
+
+        sa.sa_handler = SIG_IGN;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGQUIT, &sa, NULL);
+        
+        if (ret == FAILURE)
+            break ;
+        if (ret == 0)
+            continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
-        if (!tmp) 
+        if (!tmp)
         {
             free(line);
-            free_environment(&db);
+            ec_void(&db);
             return !error(&db, NULL, "malloc failed");
         }
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
+        // wildcard(&db, line);
+        // exit(1);
         free(line);
         line = tmp;
         if (parser(&db, line) == FAILURE)
@@ -215,8 +269,13 @@ int     main(int    ac, char    *av[],  char    *env[])
         // if (exec(&db, db.root_node) == FAILURE)
         //     continue ;
         gc_void(&db);
+        ip_void(&db);
     }
-    free_environment(&db);
+    ec_void(&db);
     gc_void(&db);
+    ip_void(&db);
+    close(0);
+    close(1);
+    close(2);
     return (SUCCESS);
 }

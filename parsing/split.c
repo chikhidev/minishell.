@@ -26,7 +26,7 @@ int is_op3(char *line, int *i)
 
 void skip_op(int *i, char *line)
 {
-    if (line[*i] == '&' && line[*i + 1] && line[++(*i)] == '&')
+    if (line[*i] == '&' && line[*i + 1] && line[(*i) + 1] == '&')
         ((*i) += 2);
     else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
         ((*i) += 2);
@@ -50,7 +50,7 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     while (line[i])
     {
         if (is_op2(line, &i) == op->op_presentation
-            && !is_inside_quotes(tracker->quotes, i)
+            && !is_inside_quotes_list(tracker->quotes, i)
             && !is_inside_paranthesis(tracker->paranthesis, i))
         {
             splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
@@ -71,98 +71,126 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     return splitted;
 }
 
+int process_op(t_db *db, char *line, t_holder *holder)
+{
+    void **current_node;
+    char        **splitted;
+    int i;
+
+    current_node = holder->current_node;
+    CATCH_ONFAILURE(create_op_node(db, holder->op,
+        holder->current_node, holder->parent), FAILURE);
+    CURR_OP->n_childs = count_between_op(db, line,
+        holder->op, holder->tracker);
+    splitted = split_line(db, line, CURR_OP, holder->tracker);
+    CATCH_MALLOC(splitted);
+    CURR_OP->childs = gc_malloc(db, sizeof(void *) *
+        CURR_OP->n_childs);
+    ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
+
+    CURR_OP->is_scope = db->scope;
+    db->scope = false;
+
+    i = 0;
+    while (i < CURR_OP->n_childs)
+    {
+        CATCH_ONFAILURE(
+            smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node),
+            FAILURE
+        )
+        i++;
+    }
+    return SUCCESS;
+}
+
+int process_cmd(t_db *db, char *line, t_holder *holder)
+{
+    void **current_node;
+
+    current_node = holder->current_node;
+    CATCH_ONFAILURE(
+        create_cmd_node(db, current_node, holder->parent, line) // create a command node -------<<<<<<<<
+    , FAILURE);
+
+    // CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
+    // if (db->error || !db->exec_line)
+    //     return error(db, NULL, NULL);
+
+    // CATCH_MALLOC((CURR_CMD)->args);
+    // (CURR_CMD)->input_fd = db->input_fd;
+    // (CURR_CMD)->output_fd = db->output_fd;
+    // db->input_fd = STDIN_FILENO;
+    // db->output_fd = STDOUT_FILENO;
+
+    return SUCCESS;
+}
+
+/**
+ * ---------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------
+ * -------------------------------------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------------------------
+ */
+
+
+
 int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
-    t_tracker   *tracker;
-    char        **splitted;
-    int         op;
-    int         i;
+    t_holder holder; // holder varibale so we make sure of that this data will be given to children if exists
 
-    if (ft_strlen(line) == 0)
+    if (db->error || !db->exec_line)
+        return FAILURE;
+    
+    if (ft_strlen(line) == 0
+        || all_whitespaces(line, 0, ft_strlen(line)))
         return SUCCESS;
-    if (all_whitespaces(line, 0, ft_strlen(line)))
-        return SUCCESS;
+    
+    ft_bzero(&holder, sizeof(holder));
+    holder.tracker = gc_malloc(db, sizeof(t_tracker));
+    CATCH_MALLOC(holder.tracker);
+    CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
+    CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
+        line, holder.tracker->quotes), FAILURE);
+    
+    holder.parent = parent;
+    holder.op = strongest_operator(line, holder.tracker); 
+    holder.current_node = current_node;
 
-    tracker = gc_malloc(db, sizeof(t_tracker));
-    CATCH_MALLOC(tracker);
-    ft_bzero(tracker, sizeof(t_tracker));
-
-    CATCH_ONFAILURE(track_quotes(db, &tracker->quotes, line), FAILURE);
-    CATCH_ONFAILURE(track_paranthesis(db, &tracker->paranthesis,
-        line, tracker->quotes), FAILURE);
-    op = strongest_operator(line, tracker);
-
-    if (tracker->paranthesis && op == NOT_FOUND)
+    /* this is the scope responsible of handling the scope paranthesis removing 
+        in this case it's obviouse that it is a scope so we assign the 'is_scope' variable to be true in this case and later we toggle it
+        THEN we continue our recursion with no sopes ...
+     */
+    if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
     {
-        return smart_split(db, remove_paranthesis(db, line, tracker->paranthesis), current_node, parent);
+        db->scope = true;
+        return smart_split(
+                db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent
+            );
     }
-    else if (op != NOT_FOUND)
+    /**
+     * this case means we have an operator
+     * take the most powerful operator and start splitting the line whenever that op is appeared
+     * and if the operator is inside scope we assign the 'is_scope' to true 
+     */
+    else if (holder.op != NOT_FOUND)
     {
-        CATCH_ONFAILURE(create_op_node(db, op, current_node, parent), FAILURE);
-        // create the childs of the operator node <<<<<<<<
-        CURR_OP->n_childs = count_between_op(db, line, op, tracker);
-        splitted = split_line(db, line, CURR_OP, tracker);
-        CATCH_MALLOC(splitted);
-
-        CURR_OP->childs = gc_malloc(db, sizeof(void *) * 
-            CURR_OP->n_childs);
-        ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
-
-        i = 0;
-        while (i < CURR_OP->n_childs)
-        {
-            CATCH_ONFAILURE(
-                smart_split(db, splitted[i], &CURR_OP->childs[i], *current_node),
-                FAILURE
-            )
-            i++;
-        }
+        if (process_op(db, line, &holder) == FAILURE)
+            return FAILURE;
     }
+    /**
+     *  in this case if we are left with no paranthesis and no operator this means that this must ne a COMMAND
+     *  so we use a TOKENIZER to identify each character and use for each a spicific action
+     */
     else
     {
-        // command scope <<<<<<<<
-        CATCH_ONFAILURE(
-            create_cmd_node(db, current_node, parent) // create a command node -------<<<<<<<<
-        , FAILURE);
-        
-        // ! THIS IS NULL tracker->quotes   -> SEGV
-        ((t_cmd_node *)*current_node)->args = tokenize(db, tracker->quotes, line);
-        if (db->error)
-            return error(db, NULL, NULL);
-        CATCH_MALLOC((CURR_CMD)->args);
+        // TODO: remove this tokinizer untill the last steps maybe...
+        if (process_cmd(db, line, &holder) == FAILURE)
+            return (db->error != true); // failure in case of error happened else just success
 
-        // set the redirections of the command node if any
-        if (db->input_fd != INVALID)
-            (CURR_CMD)->input_fd = db->input_fd;
-        if (db->output_fd != INVALID)
-            (CURR_CMD)->output_fd = db->output_fd;
-        db->input_fd = INVALID;
-        db->output_fd = INVALID;
 
-        // check for built-in(s)
-        if (ft_strcmp(CURR_CMD->args[0], "echo") == 0)
-            echo(CURR_CMD->args, 3);
-        else if (ft_strcmp(CURR_CMD->args[0], "export") == 0)
-            export(db, CURR_CMD->args);
-        else if (ft_strcmp(CURR_CMD->args[0], "pwd") == 0)
-            pwd(db);
-        else if (ft_strcmp(CURR_CMD->args[0], "env") == 0)
-            env(db);
-        else if (ft_strcmp(CURR_CMD->args[0], "cd") == 0)
-            cd(db, CURR_CMD->args);
-        else if (ft_strcmp(CURR_CMD->args[0], "exit") == 0)
-        {
-            error(db, NULL, NULL);
-            free_environment(db);
-            exit(0);
-        }
-
-        for (int i = 0; (CURR_CMD)->args[i]; i++)
-        {
-            (CURR_CMD)->args[i] = whithout_quotes((CURR_CMD)->args[i]);
-        }
-
+        CURR_CMD->is_scope = db->scope;
+        db->scope = false;
     }
-    gc_free(db, tracker);
-    return SUCCESS; 
+    return SUCCESS;
 }

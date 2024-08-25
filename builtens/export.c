@@ -2,8 +2,11 @@
 #include "parsing.h"
 #include "string.h"
 
-bool show_export(t_db *db)
+int show_export(t_db *db)
 {
+    int status;
+
+    status = 0;
     // show export here;
     t_exp_list  *vars;
     t_exp_list  *curr;
@@ -21,10 +24,10 @@ bool show_export(t_db *db)
         }
         curr = curr->next;
     }
-    return true;
+    return (status);
 }
 
-bool    has_special_char(char   *str)
+int    has_special_char(char   *str)
 {
     int i;
 
@@ -32,15 +35,14 @@ bool    has_special_char(char   *str)
     while (str[i])
     {
         if (!ft_isalnum(str[i]) && str[i] != '_' && str[i] != '+' && str[i] != '=')
-            return true;
+            return (true);
         i++;
     }
     return (false);
 }
 
-bool    good_export_var(char    *var)
+int    good_export_var(char    *var)
 {
-    // dont mind the $ cause we already expanded here
     if (var && (ft_isdigit(var[0])))
         return (false);
     else if (!ft_isalpha(var[0]) && var[0] != '_')
@@ -48,13 +50,10 @@ bool    good_export_var(char    *var)
     else if (has_special_char(var))
         return (false);
     else
-    {
-        printf("-> %s\n", var);
         return true;
-    }
     return true;
-    // no special caractwrs
 }
+
 
 int get_key_length(char *arg, bool  *append)
 {
@@ -65,7 +64,7 @@ int get_key_length(char *arg, bool  *append)
     {
         if (arg[i] == '+')
         {
-            *append = TRUE;
+            *append = true;
             return (i);
         }
         if (arg[i] == '=' || arg[i] == '\0')
@@ -92,19 +91,19 @@ int get_val_length(char *arg,   int start_idx)
     return (len);
 }
 
-char *get_key_from_arg(char *arg,int  *k_len, bool  *append)
+char *get_key_from_arg(t_db *db,    char *arg,int  *k_len, bool  *append)
 {
     char    *key;
 
     *k_len = get_key_length(arg, append);
-    key = malloc((*k_len + 1) * sizeof(char));
+    key = ec_malloc(db, (*k_len + 1) * sizeof(char));
     if (!key)
-        return FALSE;
+        return false;
     ft_strlcpy(key, arg, *k_len + 1);
     return (key);
 }
 
-char    *get_val_from_arg(char  *arg,   int *v_len, int k_len, bool append)
+char    *get_val_from_arg(t_db  *db,    char  *arg,   int *v_len, int k_len, bool append)
 {
     char    *val;
     int     offset;
@@ -113,13 +112,14 @@ char    *get_val_from_arg(char  *arg,   int *v_len, int k_len, bool append)
     if (append)
         offset = 1;
     *v_len = get_val_length(arg, k_len + 1 + offset);
-    val = malloc((*v_len + 1) * sizeof(char));
+    val = ec_malloc(db, (*v_len + 1) * sizeof(char));
+    if (!val)
+        return false;
     ft_strlcpy(val, &arg[k_len + offset + 1], *v_len + 1);
-    val = whithout_quotes(val); // frees old val
     return val;
 }
 
-void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
+int    affect_exp_node_val(t_db *db, t_exp_list  *node,  bool    append, char    *val)
 {
     char    *joined;
 
@@ -127,76 +127,124 @@ void    affect_node_val(t_exp_list  *node,  bool    append, char    *val)
     {
         if (append)
         {
-            joined = ft_strjoin(node->val, val);
-            free(node->val);
-            free(val);
+            joined = ft_strjoin_ec(db, node->val, val);
+            if (!joined)
+                return (false);
             node->val = joined;
         }
         else
         {
-            free(node->val);
             node->val = val;
         }
     }
+    return (SUCCESS);
 }
 
-bool handle_export_args(t_db    *db,    char    *args[])
+int    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char    *val)
+{
+    char    *joined;
+
+    if (node)
+    {
+        if (append)
+        {
+            joined = ft_strjoin_ec(db, node->val, val);
+            if (!joined)
+                return (false);
+            node->val = joined;
+        }
+        else
+            node->val = val;
+    }
+    return (SUCCESS);
+}
+
+bool    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
+{
+    bool    append;
+    int      k_len;
+    int      v_len;
+
+    v_len = 0;
+    k_len = 0;
+    append = false;
+    *key = get_key_from_arg(db, arg, &k_len, &append);
+    *val = get_val_from_arg(db, arg, &v_len, k_len, append);
+
+    if (key && val)
+        return true;
+    return false;
+}
+
+int handle_export_args(t_db    *db,    char    *args[])
 {
     int i;
     char    *key;
+    char    *token;
     char    *val;
     int      k_len;
     int      v_len;
     t_exp_list  *exp_node;
-    // t_env_list  *env_node;
-    bool    good;
+    t_env_list  *env_node;
+    bool    status;
     bool    append;
 
-    good = TRUE;
-    append = FALSE;
+    status = 0;
+    append = false;
     i = 1;
     while (args[i])
     {
-
+        token = args[i];
         val = NULL;
-        key = get_key_from_arg(args[i], &k_len, &append);
+        key = get_key_from_arg(db,  token, &k_len, &append);
         exp_node = get_exp_node(db->exp_list, key); 
-        // env_node = get_env_node(db->env_list)
-        if (!good_export_var(key) || k_len < 1)
+        env_node = get_env_node(db->env_list, key);
+        if ((!good_export_var(key) || k_len < 1) || (append && token[k_len + 1] != '='))
         {
-            printf("export: `%s': not a valid identifier", args[i]);
-            return FALSE;
+            printf("export: `%s': not a valid identifier\n", args[i]);
+            status = 1;
         }
-        else if (args[i][k_len] == '=' || args[i][k_len] == '+')
+        else if (token[k_len] == '=' || token[k_len] == '+')
         {
-            val = get_val_from_arg(args[i], &v_len, k_len, append);
+            val = get_val_from_arg(db,  token, &v_len, k_len, append);
             if (exp_node)
-                affect_node_val(exp_node, append, val);
+                affect_exp_node_val(db, exp_node, append, val);
             else
             {
+                key = ft_strdup_ec(db, key);
+                val = ft_strdup_ec(db, val);
                 exp_node = new_exp_node(db, key, val);
-                push_exp_back(&db->exp_list, exp_node);
+                push_exp_sort(&db->exp_list, exp_node);
+            }
+            if (env_node)
+                affect_env_node_val(db, env_node, append, val);
+            else
+            {
+                key = ft_strdup_ec(db, key);
+                val = ft_strdup_ec(db, val);
+                env_node = new_env_node(db, key, val);
+                push_env_back(&db->env_list, env_node);
             }
         }
-        else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
+        else if (token[k_len] == '\0' || token[k_len] == ' ')
         {
             if (!exp_node)
             {
                 exp_node = new_exp_node(db, key, val);
-                push_exp_back(&db->exp_list, exp_node);
+                push_exp_sort(&db->exp_list, exp_node);
             }
         }
         else
         {
-            printf("export: `%s': not a valid identifier", args[i]);
-            return FALSE;
+            printf("export: `%s': not a valid identifier\n", args[i]);
+            status = 1;
         }
         i++;
     }
-    return good;
+    return status;
 }
 
-bool export(t_db    *db, char   *args[])
+int export_(t_db    *db, char   *args[])
 {
     int n_args;
 

@@ -1,17 +1,27 @@
 #include "builtens.h"
+#include "parsing.h"
+#include "string.h"
 #include "main.h"
 
-void    env(t_db *db)
+int    env_(t_db *db, char  *av[])
 {
-    // show export here;
-    t_env_list  *vars;
+    char    *_key;
+    char    *_val;
+    (void)av;
     t_env_list  *curr;
 
-    vars = db->env_list;
-    curr = vars;
+    curr = db->env_list;
     while (curr)
     {
-        printf("%s=%s\n", curr->key, curr->val);
+        if (ft_strcmp(curr->key, "_") == 0)
+        {
+            _key = curr->key; 
+            _val = curr->val; 
+        }
+        else
+            printf("%s=%s\n", curr->key, curr->val);
         curr = curr->next;
     }
+    printf("%s=%s\n", _key, _val);
+    return (0);
 }

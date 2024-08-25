@@ -5,22 +5,28 @@ int create_redirection(t_db *db, int type, int fd)
 {
     if (type == INPUTFILE)
     {
+        if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
+        {
+            close(db->input_fd);
+        }
         db->input_fd = fd;
         db->curr_type = INPUTFILE;
     }
-    else if (type == OUTPUTFILE)
+    else if (type == APPENDFILE || type == OUTPUTFILE)
     {
+        if (db->output_fd != STDOUT_FILENO && db->output_fd != INVALID)
+        {
+            close(db->output_fd);
+        }
         db->output_fd = fd;
-        db->curr_type = OUTPUTFILE;
-    }
-    else if (type == APPENDFILE)
-    {
-        db->output_fd = fd;
-        db->curr_type = APPENDFILE;
+        db->curr_type = type;
     }
 
     return (SUCCESS);
 }
+
+
+
 
 int check_ambigious(t_db *db, char *file)
 {
@@ -32,51 +38,61 @@ int check_ambigious(t_db *db, char *file)
         if (!store)
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
         if (store && store->val && store->val[0] == '\0')
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
 
         if (store && contains_spaces_btwn(store->val))
         {
             printf("%s: ambiguous redirect\n", file);
-            return (TRUE);
+            return (true);
         }
     }
 
-    return (FALSE);
+    return (false);
 }
 
-int open_file(t_db *db, char *file, int type, t_quote *quotes)
+int open_file(t_db *db, char *file, int type)
 {
+    t_quote *quotes;
     int fd;
-    
+    char *tmp;
 
+    quotes = NULL;
     if (!file || ft_strlen(file) == 0)
         return (SUCCESS);
     fd = INVALID;
-    if (check_ambigious(db, file) == TRUE)
-        return (FAILURE);
-    expand(db, &file, quotes);
-    if (type == APPENDFILE)
-        fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    else if (type == INPUTFILE)
-        fd = open(file, O_RDONLY);
-    else if (type == OUTPUTFILE)
-        fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 
-    if (fd == INVALID)
+    if (check_ambigious(db, file) == true)
     {
-        perror(file);
-        db->error = TRUE;
+        create_redirection(db, type, INVALID);
         return FAILURE;
     }
 
+    track_quotes(db, &quotes, file);
+    if (expand(db, &file, &quotes) == FAILURE)
+        return FAILURE;
+
+    tmp = whithout_quotes(db, file);
+    if (type == APPENDFILE)
+        fd = open(tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    else if (type == INPUTFILE)
+        fd = open(tmp, O_RDONLY);
+    else if (type == OUTPUTFILE)
+        fd = open(tmp, O_WRONLY  | O_CREAT | O_TRUNC, 0644);
+
     if (create_redirection(db, type, fd) == FAILURE)
         return (FAILURE);
+
+    if (fd == INVALID)
+    {
+        perror(tmp);
+        return (FAILURE);
+    }
 
     return (SUCCESS);
 }
@@ -95,60 +111,87 @@ int validate_io(char *arg, int size)
     return (INVALID);
 }
 
+
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
+    int pid;
     char *line;
     char *tmp;
+    int child_status;
 
-    tmp = whithout_quotes(delim);
+    tmp = whithout_quotes(db, delim);
     if (!tmp)
         return error(db, NULL, "malloc failed");
     delim = tmp;
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
-    write(2, "hdc> ", 5);
-    while (1)
+
+    pid = fork(); /* we fork to handle signals inside the child */
+    if (pid == -1)
+        return error(db, "fork", NULL);
+    
+    if (IS_CHILD)
     {
-        line = get_next_line(0);
-        if (!line)
+        heredoc_signals_handling();
+
+        close(pipe_fd[0]);
+
+        while (1)
         {
-            write(2, "\n", 1);
-            close(pipe_fd[1]);
-            break;
+            line = readline("> ");
+            if (!line)
+            {
+                dprintf(2, "Warning: here-document delimited by end-of-file (wanted `%s')\n", delim);
+                close(pipe_fd[1]);
+                break;
+            }
+
+            if (ft_strcmp(delim, line) == 0)
+            {
+                close(pipe_fd[1]);
+                free(line);
+                break;
+            }
+
+            if (expand(db, &line, NULL) == FAILURE)
+                exit((error(db, NULL, "Malloc failed")) + 1);
+
+            write(pipe_fd[1], line, ft_strlen(line));
+            write(pipe_fd[1], "\n", 1);
+            free(line);
         }
-        tmp = gc_copy(db, line);
-        free(line);
-        if (!tmp)
-            return error(db, NULL, "malloc failed");
-        line = tmp;
-        if (is_newline_at_the_end(line))
+
+        if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
         {
-            tmp = ft_substr(line, 0, ft_strlen(line) - 1);
-            if (!tmp)
-                return error(db, NULL, "malloc failed");
-            line = gc_copy(db, tmp);
-            free(tmp);
+            close(db->input_fd);
         }
-        if (ft_strcmp(delim, line) == 0
-            && ft_strlen(delim) == ft_strlen(line))
-        {
-            write(2, "\n", 1);
-            close(pipe_fd[1]);
-            break;
-        }
-        CATCH_ONFAILURE(
-            expand(db, &line, NULL),
-            FAILURE
-        )
-        printf("line -> %s\n", line);
-        write(pipe_fd[1], line, ft_strlen(line));
-        write(2, "hdc> ", 5);
+
+        ec_void(db);
+        exit(0); /* Exit normally */
     }
+
+    /*-------------------------------Parent process------------------------------*/
+    // cancel SIGINT and SIGQUIT they sound be handled by the child
+
+    parent_signals_handling();
+
+    close(pipe_fd[1]);
+    wait(&child_status);
+
+    catch_feedback(db, child_status);
+    if (db->last_signal != 0)
+        return FAILURE;
+    
     db->input_fd = pipe_fd[0];
-    free(delim);
-    return (SUCCESS);
+    db->curr_type = HEREDOC;
+
+    return SUCCESS;
 }
+
+
+
+
 
 int is_op_redir(char *line, int i)
 {
@@ -169,6 +212,9 @@ int is_op_redir(char *line, int i)
     return (SUCCESS);
 }
 
+
+
+
 int syntax_checker(t_db *db, char *line, int *start)
 {
     int i;
@@ -176,20 +222,21 @@ int syntax_checker(t_db *db, char *line, int *start)
     i = *start;
     while (line[i])
     {
-
-        if (ft_strncmp(&line[i], ">>", 2) == 0
+        if (((ft_strncmp(&line[i], ">>", 2) == 0
             || ft_strncmp(&line[i], "<<", 2) == 0
             || ft_strncmp(&line[i], ">", 1) == 0
-            || ft_strncmp(&line[i], "<", 1) == 0)
+            || ft_strncmp(&line[i], "<", 1) == 0))
+            && !is_inside_quotes_line(line, i)
+            )
         {
             if (line[i] == '<' && line[i + 1] == '<')
             {
                 db->heredoc_counter++;
-                if (db->heredoc_counter > 16)
+                if (db->heredoc_counter > 15)
                     return error(db, "heredoc", "maximum here-document count exceeded");
                 i++;
             }
-            
+
             i += 1 + (line[i + 1] == '>' || line[i + 1] == '<');
             skip_spaces(line, &i);
             if (!line[i])
@@ -213,4 +260,3 @@ int syntax_checker(t_db *db, char *line, int *start)
     }
     return (SUCCESS);
 }
-

@@ -11,8 +11,10 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "../includes/main.h"
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+
+char	*ft_substr(t_db	*db,	char const *s, unsigned int start, size_t len)
 {
 	char	*substring;
 	size_t	str_len;
@@ -21,10 +23,10 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	str_len = ft_strlen(s);
 	if (start > str_len || *s == '\0')
-		return (ft_strdup(""));
+		return (ft_strdup(db, ""));
 	if (len > str_len - start)
 		len = str_len - start;
-	substring = malloc(sizeof(char) * (len + 1));
+	substring = gc_malloc(db,	sizeof(char) * (len + 1));
 	if (!substring)
 		return (NULL);
 	ft_memcpy(substring, s + start, len);

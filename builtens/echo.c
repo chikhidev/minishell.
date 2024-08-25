@@ -1,41 +1,62 @@
 #include "main.h"
+#include "parsing.h"
+#include "string.h"
 
-bool has_new_line(char   *arg)
+bool    is_new_line_op(char *arg)
 {
     int i;
 
-    if (!arg || arg[0] != '-')
-        return true;
     i = 1;
+    if (!arg[0] || arg[0] != '-')
+        return false;
+    if (!arg[1])
+        return false;
     while (arg[i])
     {
         if (arg[i] != 'n')
-            return true;
+            return false;
         i++;
     }
-    return false;
+    return true;
 }
 
-void echo(char *args[], int n_args)
+int get_start_idx(char   **args, bool    *new_line)
+{
+    int i;
+    int skip;
+    i = 1;
+    *new_line = true;
+    skip = 1;
+    while (args[i])
+    {
+        if (is_new_line_op(args[i]))
+        {
+            skip++;
+            *new_line = false;
+        }
+        if (!is_new_line_op(args[i]))
+            return skip;
+        i++;
+    }
+    return skip;
+}
+
+int echo_(t_db  *db, char *args[])
 {
     int i;
     bool new_line;
-
-    new_line = true;
-    if (n_args > 1 && !has_new_line(args[1]))
-    {
-        new_line = false;
-        i = 2;
-    }
-    else
-        i = 1;
-    while (args[i])
+    int n_args;
+    (void)db;
+    n_args = count_array_len(args);
+    i = get_start_idx(args, &new_line);
+    while (i < n_args)
     {
         printf("%s", args[i]);
         i++;
-        if (args[i])
+        if (i != n_args)
             printf(" ");
     }
     if (new_line)
         printf("\n");
+    return (0);
 }
