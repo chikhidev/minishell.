@@ -162,6 +162,7 @@ void db_reset(t_db *db)
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
+    db->last_signal = 0;
 }
 
 

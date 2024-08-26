@@ -46,7 +46,7 @@ long long ft_atoll(const char *str, bool *error)
     return res * sign;
 }
 
-int exit_(t_db  *db,    char    *av[])
+int exit_(t_db  *db,    char    *av[], int index)
 {
     unsigned    char    exit_code;
     int args_len;
@@ -57,7 +57,11 @@ int exit_(t_db  *db,    char    *av[])
     args_len = count_array_len(av);
 
     if (args_len == 1)
+    {
+        if (index == -1)
+            printf("exit\n");
         exit(0);
+    }
     exit_code = (unsigned char)ft_atoll(av[1], &err);
     if (err)
     {

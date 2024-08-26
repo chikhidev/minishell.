@@ -13,7 +13,7 @@ bool is_built_in(void *node)
     );
 }
 
-int run_builtin(t_db   *db,t_cmd_node *node)
+int run_builtin(t_db   *db,t_cmd_node *node, int index)
 {
     if (ft_strcmp(CMD->args[0], "echo") == 0)
         return echo_(db, CMD->args);
@@ -28,6 +28,6 @@ int run_builtin(t_db   *db,t_cmd_node *node)
     else if (ft_strcmp(CMD->args[0], "unset") == 0)
         return unset_(db, CMD->args);
     else if (ft_strcmp(CMD->args[0], "exit") == 0)
-        exit_(db,   CMD->args);
+        exit_(db,   CMD->args, index);
     return 127;
 }

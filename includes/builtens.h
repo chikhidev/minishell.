@@ -10,7 +10,7 @@ int		good_export_var(char    *var);
 int		export_(t_db    *db, char   *args[]);
 int		env_(t_db *db,   char    *args[]);
 int		pwd_(t_db   *db);
-int		exit_(t_db  *db,    char    *args[]);
+int		exit_(t_db  *db,    char    *args[], int index);
 int		cd_(t_db *db, char   *args[]);
 int		unset_(t_db *db,    char    *args[]);
 bool	is_built_in(void *node);

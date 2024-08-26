@@ -27,18 +27,7 @@ char    *cmd_path(t_db *db, char *filename)
         for (int i = 0; paths[i]; i++)
         {
             path = ft_strjoin(db, paths[i], "/");
-            if (!path)
-            {
-                error(db, NULL, "Malloc failed");
-                return NULL;
-            }
             tmp = ft_strjoin(db, path, filename);
-            if (!tmp)
-            {
-                error(db, NULL, "Malloc failed");
-                return NULL;
-            }
-
             if (access(tmp, F_OK) == 0)
             {
                 free_array(db, paths);
