@@ -6,12 +6,12 @@ int expand(t_db *db, char **line, t_quote **quotes)
 {
     char    *env_var_name;
     int     i;
-    t_iterators reminder;
+    t_iterators rem;
     int len;
 
     len = ft_strlen(*line);
-    reminder.i = -1;
-    reminder.j = -1;
+    rem.i = -1;
+    rem.j = -1;
     env_var_name = NULL;
     i = 0;
 
@@ -25,12 +25,12 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 return (SUCCESS);
             }
 
-            reminder.i = i - 1;
-            reminder.j = i;
+            rem.i = i - 1;
+            rem.j = i;
 
             if (is_quote_oppening(*quotes, i))
             {
-                if (update_index(db, line, NULL, &reminder) == FAILURE)
+                if (update_index(db, line, NULL, &rem) == FAILURE)
                     return FAILURE;
             }
             else
@@ -38,9 +38,9 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
                     return (FAILURE);
                 
-                reminder.j = i - 1;
+                rem.j = i - 1;
 
-                i = updated_line(db, line, env_var_name, &reminder);
+                i = updated_line(db, line, env_var_name, &rem);
                 if (i == INVALID)
                     return (FAILURE);
                 
@@ -55,7 +55,7 @@ int expand(t_db *db, char **line, t_quote **quotes)
             reset_quotes(db, quotes);
             *quotes = NULL;
 
-            if (!track_quotes(db, quotes, (*line)))
+            if (quotes && !track_quotes(db, quotes, (*line)))
                 return (FAILURE);
         }
         i++;

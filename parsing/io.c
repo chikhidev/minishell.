@@ -145,13 +145,23 @@ int open_heredoc(t_db *db, char *delim)
 
             if (ft_strcmp(delim, line) == 0)
             {
+                printf("found delim\n");
                 close(pipe_fd[1]);
                 free(line);
                 break;
             }
 
+            dprintf(2, "reached here\n");
+
             if (expand(db, &line, NULL) == FAILURE)
-                exit((error(db, NULL, "Malloc failed")) + 1);
+            {
+                close(pipe_fd[1]);
+                free(line);
+                ec_void(db);
+                (error(db, NULL, "Malloc failed"), exit(1));
+            }
+
+            printf("after expanding\n");
 
             write(pipe_fd[1], line, ft_strlen(line));
             write(pipe_fd[1], "\n", 1);
@@ -163,6 +173,7 @@ int open_heredoc(t_db *db, char *delim)
             close(db->input_fd);
         }
 
+        gc_void(db);
         ec_void(db);
         exit(0); /* Exit normally */
     }

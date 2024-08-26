@@ -1,10 +1,13 @@
 #include "main.h"
 #include "parsing.h"
 
-int inside_single_quote(t_quote *head, int   i)
+bool inside_single_quote(t_quote *head, int   i)
 {
     t_quote *q;
 
+    if (!head)
+        return false;
+    
     q = head;
     while (q)
     {
@@ -15,11 +18,13 @@ int inside_single_quote(t_quote *head, int   i)
     return (false);
 }
 
-int is_inside_quotes_list(t_quote *head, int i)
+bool is_inside_quotes_list(t_quote *head, int i)
 {
     t_quote *tmp;
 
-    if (!head) return false;
+    if (!head)
+        return false;
+    
     tmp = head;
     while (tmp)
     {
@@ -33,6 +38,9 @@ int is_inside_quotes_list(t_quote *head, int i)
 bool is_quote_oppening(t_quote *head, int i)
 {
     t_quote *q;
+
+    if (!head)
+        return false;
 
     q = head;
     while (q)

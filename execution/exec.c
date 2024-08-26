@@ -11,7 +11,6 @@ void ft_close(t_db *db, int    *fd)
     if (*fd != CLOSED)
         res = close(*fd);
     *fd = CLOSED;
-    res = INVALID;
     if (res != INVALID)
         return;
     gc_void(db);
