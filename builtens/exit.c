@@ -71,7 +71,7 @@ int exit_(t_db  *db,    char    *av[], int index)
     else if (args_len > 2)
     {
         dprintf(2, "exit: too many arguments\n");
-        exit_code = 1;
+        return 1;
     }
     error(db, NULL, NULL);
     ec_void(db);
