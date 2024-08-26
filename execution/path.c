@@ -21,9 +21,9 @@ char    *cmd_path(t_db *db, char *filename)
     if (path_node)
     {
         paths = ft_split(db, path_node->val, ':');
+        
         if (!paths)
             return NULL;
-        
         for (int i = 0; paths[i]; i++)
         {
             path = ft_strjoin(db, paths[i], "/");

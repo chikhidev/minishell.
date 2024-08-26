@@ -21,7 +21,6 @@ int get_pipes_count(int **pipes)
         i++;
     return i;
 }
-
 char    *get_path(t_db  *db, char    **args)
 {
     char    *path;
@@ -49,22 +48,6 @@ char    *get_path(t_db  *db, char    **args)
         }
     }
     return (path);
-}
-int dup_cmd_io(t_cmd_node *command)
-{
-    if (command->input_fd != INVALID && command->input_fd != STDIN_FILENO)
-    {
-        dup2(command->input_fd, STDIN_FILENO);
-        ft_close(&command->input_fd);
-    }
-
-    if (command->output_fd != INVALID && command->output_fd != STDOUT_FILENO)
-    {
-        dup2(command->output_fd, STDOUT_FILENO);
-        ft_close(&command->output_fd);
-    }
-
-    return (SUCCESS);
 }
 
 int    **prepare_pipes(t_db  *db,   int n_pipes)
@@ -99,30 +82,22 @@ void    waiter(t_db *db, int  *status)
 
 int dup_pipes(int **pipes, int   index) // index -> 2
 {
-    if (!pipes)
-        return SUCCESS;
     int n_pipes = get_pipes_count(pipes);
     if (index == 0)
     {
-        dprintf(2, "%d is standard output F index %d\n", pipes[0][1], index);
-        if (pipes[0][1] != CLOSED)
-            dup2(pipes[0][1], STDOUT_FILENO);
+        dup2(pipes[0][1], STDOUT_FILENO);
+        // ft_close(&pipes[0][1]);
     }
     else if (index == n_pipes) // 2 == 2
     {
-        dprintf(2, "%d is standard input L index %d\n", pipes[n_pipes - 1][0], index);
-        if (pipes[n_pipes - 1][0] != CLOSED)
-            dup2(pipes[n_pipes - 1][0], STDIN_FILENO);
+        dup2(pipes[n_pipes - 1][0], STDIN_FILENO);
+        // ft_close(&pipes[n_pipes - 1][0]);
     }
     else
     {
-        dprintf(2, "%d is standard input B, index %d\n", pipes[index - 1][0], index);
-        dprintf(2, "%d is standard output B , index %d\n", pipes[index][1], index);
-        if (pipes[index - 1][0] != CLOSED)
-            dup2(pipes[index - 1][0], STDIN_FILENO);
-        if (pipes[index][1] != CLOSED)
-            dup2(pipes[index][1], STDOUT_FILENO);
-        
+        dup2(pipes[index - 1][0], STDIN_FILENO);
+        dup2(pipes[index][1], STDOUT_FILENO);
+
     }
     return (SUCCESS);
 }
@@ -134,13 +109,13 @@ int close_all_pipes(t_db  *db, int    **pipes)
     int pipe_i;
     int n_pipes;
 
-    if (!pipes || !pipes[0])
-        return (SUCCESS);
     n_pipes = get_pipes_count(pipes);
     pipe_i = 0;
     int n;
 
     n = n_pipes - 1;
+    if (!pipes || !pipes[0])
+        return (SUCCESS);
     while (pipe_i < n_pipes)
     {
         (ft_close(&pipes[pipe_i][0]), ft_close(&pipes[pipe_i][1]));
@@ -149,62 +124,38 @@ int close_all_pipes(t_db  *db, int    **pipes)
     return (SUCCESS);
 }
 
-int handle_pipe_op(t_db *db,    void    *node,  int **parent_pipes,int  index)
+int handle_pipe_op(t_db *db, void *node)
 {
     int i;
-    int id;
     int status;
     int **pipes;
-
     i = 0;
     status = 0;
-    pipes = NULL;
-    if (OP->is_scope)
+    
+    pipes = prepare_pipes(db, OP->n_childs - 1);
+    while (i < OP->n_childs)
     {
-        id = fork();
-        if (id == CHILD)
-        {
-            // create pipes for the children
-            pipes = prepare_pipes(db, OP->n_childs - 1);
-            // close parent pipes we will not use them
-            dup_pipes(parent_pipes, index);
-            close_all_pipes(db, parent_pipes);
-
-            // reset the ip addresses to avoid any confusion
-            ip_void(db);
-
-            while (i < OP->n_childs)
-            {
-                exec(db, OP->childs[i], pipes, i);
-                i++;
-            }
-            close_all_pipes(db, pipes);
-            waiter(db, &status);
-            exit(db->last_signal);
-        }
-        else
-        {
-            waitpid(id, &status, 0);
-        }
+        handle_cmd_node(db, OP->childs[i], pipes, i);
+        i++;
     }
-    else // no scope
+    close_all_pipes(db, pipes);
+    waiter(db, &status);
+    return (SUCCESS);
+}
+
+int dup_cmd_io(t_cmd_node *command)
+{
+    if (command->input_fd != INVALID && command->input_fd != STDIN_FILENO)
     {
-        pipes = prepare_pipes(db, OP->n_childs - 1);
-        // close parent pipes we will not use them
-        dup_pipes(parent_pipes, index);
-        close_all_pipes(db, parent_pipes);
-
-        // reset the ip addresses to avoid any confusion
-        ip_void(db);
-        while (i < OP->n_childs)
-        {
-            exec(db, OP->childs[i], pipes, i);
-            i++;
-        }
-        close_all_pipes(db, pipes);
-        waiter(db, &status);
+        dup2(command->input_fd, STDIN_FILENO);
+        ft_close(&command->input_fd);
     }
-    catch_feedback(db, status);
+
+    if (command->output_fd != INVALID && command->output_fd != STDOUT_FILENO)
+    {
+        dup2(command->output_fd, STDOUT_FILENO);
+        ft_close(&command->output_fd);
+    }
     return (SUCCESS);
 }
 
@@ -220,6 +171,7 @@ int exec_cmd(t_db *db, void *node, int **pipes, int index)
         return FAILURE;
 
     signal_catcher = 0;
+
     path = get_path(db, CMD->args);
     env_arr = env_list_to_env_arr(db);
     
@@ -229,10 +181,8 @@ int exec_cmd(t_db *db, void *node, int **pipes, int index)
         dup_pipes(pipes, index);
         close_all_pipes(db, pipes);
     }
-    // dup_cmd_io(node);
+    dup_cmd_io(node);
     execve(path, CMD->args, env_arr);
-    gc_void(db);
-    ec_void(db);
     exit(127);
 }
 
@@ -240,21 +190,12 @@ int handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 {
     int id;
     int status;
-    t_quote *q;
-
-    q = NULL;
-    track_quotes(db, &q, CMD->line);
-    CMD->args = tokenize(db, &q, CMD->line);
-    if (CMD->args == NULL)
-        return SUCCESS;
 
     id = fork();
     if (id == CHILD)
     {
         if (exec_cmd(db, node, pipes, index) == FAILURE)
-        {
             exit(1);
-        }
     }
     else
     {
@@ -269,15 +210,13 @@ int handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     return (SUCCESS);
 }
 
-int exec(t_db   *db, void *node, int    **pipes,   int index)
+int exec(t_db   *db, void *node)
 {
-
     if (!node)
         return (SUCCESS);
-
     if (CMD->type == CMD_NODE)
-        return handle_cmd_node(db, node, pipes, index);
+        return handle_cmd_node(db, node, NULL, -1);
     else if (OP->op_presentation == PIPE)
-        return handle_pipe_op(db, node, pipes, index);
+        return handle_pipe_op(db, node);
     return (SUCCESS);
 }

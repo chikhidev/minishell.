@@ -25,9 +25,6 @@ int create_redirection(t_db *db, int type, int fd)
     return (SUCCESS);
 }
 
-
-
-
 int check_ambigious(t_db *db, char *file)
 {
     t_exp_list *store;
@@ -111,7 +108,6 @@ int validate_io(char *arg, int size)
     return (INVALID);
 }
 
-
 int open_heredoc(t_db *db, char *delim)
 {
     int pipe_fd[2];
@@ -189,10 +185,6 @@ int open_heredoc(t_db *db, char *delim)
     return SUCCESS;
 }
 
-
-
-
-
 int is_op_redir(char *line, int i)
 {
     if (ft_strncmp(&line[i], ">>", 2) == 0
@@ -215,11 +207,24 @@ int is_op_redir(char *line, int i)
 
 
 
-int syntax_checker(t_db *db, char *line, int *start)
+int syntax_checker(t_db *db, char *line, int *start, t_quote *quotes)
 {
     int i;
 
     i = *start;
+
+    skip_open_spaces(quotes, line, &i);
+    if (!line[i])
+    {
+        return (SUCCESS);
+    }
+
+    if (line[i] == '|')
+    {
+        printf("Syntax error near unexpected token `%c'\n", line[i]);
+        return (FAILURE);
+    }
+
     while (line[i])
     {
         if (((ft_strncmp(&line[i], ">>", 2) == 0
@@ -244,16 +249,29 @@ int syntax_checker(t_db *db, char *line, int *start)
                 return error(db, NULL, "Syntax error near unexpected token `newline'");
             }
 
-            if (line[i] == ')' || line[i] == '(' || line[i] == '|' || line[i] == '&')
+            if (line[i] == '|')
             {
-                printf("Syntax error near unexpected token `%c", line[i]);
-                if (line[i + 1] == '|' || line[i + 1] == '&')
-                    printf("%c", line[i + 1]);
-                printf("'\n");
+                printf("Syntax error near unexpected token `%c\n", line[i]);
                 return error(db, NULL, NULL);
             }
             if (is_op_redir(line, i) == FAILURE)
                 return (FAILURE);
+        }
+
+        if (line[i] == '|')
+        {
+            i++;
+            skip_spaces(line, &i);
+            if (!line[i])
+            {
+                printf("Syntax error near unexpected token `newline'\n");
+                return (FAILURE);
+            }
+            if (line[i] == '|')
+            {
+                printf("Syntax error near unexpected token `%c'\n", line[i]);
+                return (FAILURE);
+            }
         }
 
         i++;

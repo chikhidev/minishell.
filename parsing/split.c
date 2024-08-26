@@ -4,33 +4,21 @@
 
 int is_op2(char *line, int *i)
 {
-    if (line[*i] == '&' && line[*i + 1] && line[(*i) + 1] == '&')
-        return AND;
-    else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
-        return (OR);
-    else if (line[*i] == '|')
+    if (line[*i] == '|')
         return PIPE;
     return INVALID;
 }
 
 int is_op3(char *line, int *i)
 {
-    if (line[*i] == '&' && *i > 0 && line[(*i) - 1] == '&' && (*i)--)
-        return AND;
-    else if (line[*i] == '|' && *i > 0 && line[(*i) - 1] == '|' && (*i)--)
-        return (OR);
-    else if (line[*i] == '|')
+    if (line[*i] == '|')
         return PIPE;
     return INVALID;
 }
 
 void skip_op(int *i, char *line)
 {
-    if (line[*i] == '&' && line[*i + 1] && line[(*i) + 1] == '&')
-        ((*i) += 2);
-    else if (line[*i] == '|' && line[*i + 1] && line[(*i) + 1] == '|')
-        ((*i) += 2);
-    else if (line[*i] == '|')
+    if (line[*i] == '|')
         (*i)++;
     return;
 }
@@ -112,15 +100,15 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
         create_cmd_node(db, current_node, holder->parent, line) // create a command node -------<<<<<<<<
     , FAILURE);
 
-    // CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
-    // if (db->error || !db->exec_line)
-    //     return error(db, NULL, NULL);
+    CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
+    if (db->error || !db->exec_line)
+        return error(db, NULL, NULL);
 
-    // CATCH_MALLOC((CURR_CMD)->args);
-    // (CURR_CMD)->input_fd = db->input_fd;
-    // (CURR_CMD)->output_fd = db->output_fd;
-    // db->input_fd = STDIN_FILENO;
-    // db->output_fd = STDOUT_FILENO;
+    CATCH_MALLOC((CURR_CMD)->args);
+    (CURR_CMD)->input_fd = db->input_fd;
+    (CURR_CMD)->output_fd = db->output_fd;
+    db->input_fd = STDIN_FILENO;
+    db->output_fd = STDOUT_FILENO;
 
     return SUCCESS;
 }
@@ -157,23 +145,13 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     holder.op = strongest_operator(line, holder.tracker); 
     holder.current_node = current_node;
 
-    /* this is the scope responsible of handling the scope paranthesis removing 
-        in this case it's obviouse that it is a scope so we assign the 'is_scope' variable to be true in this case and later we toggle it
-        THEN we continue our recursion with no sopes ...
-     */
-    if (holder.tracker->paranthesis && holder.op == NOT_FOUND)
-    {
-        db->scope = true;
-        return smart_split(
-                db, remove_paranthesis(db, line, holder.tracker->paranthesis), current_node, parent
-            );
-    }
+
     /**
      * this case means we have an operator
      * take the most powerful operator and start splitting the line whenever that op is appeared
      * and if the operator is inside scope we assign the 'is_scope' to true 
      */
-    else if (holder.op != NOT_FOUND)
+    if (holder.op != NOT_FOUND)
     {
         if (process_op(db, line, &holder) == FAILURE)
             return FAILURE;

@@ -4,16 +4,15 @@
 
 int parser(t_db *db, char *line)
 {
-    t_parnth    *paranthesis;
     t_quote     *quotes;
     int         i;
 
-    paranthesis = NULL;
     quotes = NULL;
     i = 0;
     if (ft_strlen(line) == 0)
         return (SUCCESS);
     skip_spaces(line, &i);
+
     if (line[i] == '\0')
         return (SUCCESS);
 
@@ -21,17 +20,9 @@ int parser(t_db *db, char *line)
         track_quotes(db, &quotes, line),
         FAILURE
     )
+
     CATCH_ONFAILURE(
-        syntax_checker(db, line, &i),
-        FAILURE
-    )
-    
-    CATCH_ONFAILURE(
-        track_paranthesis(db, &paranthesis, line, quotes),
-        FAILURE
-    )
-    CATCH_ONFAILURE(
-        track_operators(db, line, quotes),
+        syntax_checker(db, line, &i, quotes),
         FAILURE
     )
 

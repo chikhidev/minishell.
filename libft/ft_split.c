@@ -100,6 +100,7 @@ char	**ft_split(t_db *db, char const *s, char c)
 
 	if (s == NULL)
 		return (NULL);
+
 	word_count = count_words(s, c);
 	result = gc_malloc(db, (word_count + 1) * sizeof(char *));
 	if (result == NULL)

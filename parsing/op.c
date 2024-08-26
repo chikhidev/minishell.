@@ -143,23 +143,6 @@ int create_operator(t_db *db, int i, char *name)
     }
     return (SUCCESS);
 }
-// int track_operators(t_db *db, char  *line, t_quote  *quotes)
-// {
-//     int i;
-//     (void) db;
-//     i = 0;
-//     while (line[i])
-//     {
-//         if (line[i] == '&' && line[i + 1] == '&' && is_inside_quotes_list(quotes, i))
-//             return (FAILURE);
-//         else if (line[i] == '|' && line[i + 1] == '|' && is_inside_quotes_list(quotes, i))
-//             return (FAILURE);
-//         else if (line[i] == '|'  && is_inside_quotes_list(quotes, i))
-//             return (FAILURE);
-//         i++;
-//     }
-//     return (SUCCESS);
-// }
 
 int track_operators(t_db *db, char  *line, t_quote  *quotes)
 {
@@ -170,11 +153,7 @@ int track_operators(t_db *db, char  *line, t_quote  *quotes)
     i = 0;
     while (line[i])
     {
-        if (line[i] == '&' && line[i + 1] == '&' && !is_inside_quotes_list(quotes, i))
-            (create_operator(db, i, "&&"), i++);
-        else if (line[i] == '|' && line[i + 1] == '|' && !is_inside_quotes_list(quotes, i))
-            (create_operator(db, i, "||"), i++);
-        else if (line[i] == '|' && !is_inside_quotes_list(quotes, i))
+        if (line[i] == '|' && !is_inside_quotes_list(quotes, i))
             create_operator(db, i, "|");
         i++;
     }
@@ -184,34 +163,13 @@ int track_operators(t_db *db, char  *line, t_quote  *quotes)
     {
         set_up_flag(&flag, ops->name);
         if (!good_place_for_op(line, ops->name, ops->i, flag))
-            return error(db, NULL, "bad place for operator");
+            return error(db, NULL, "Syntax error");
         ops = ops->next;
     }
     return (SUCCESS);
 }
 
-/* sould check if the op in within scopes */
-// int is_op_trackable(t_db    *db, char   *op_name, int   op_idx)
-// {
-//     int trackable;
-//     t_parnth    *scope;
-
-//     trackable = -1;
-//     scope = db->paranthesis;
-//     while (scope)
-//     {
-//         if (scope->open_ < op_idx && scope->close_ < op_idx)
-//             trackable++;
-//     }
-// }
-
 int is_valid_op(char c, char next_c)
 {
-    if (c == '&' && next_c && next_c == '&')
-        return (true);
-    else if (c == '|' && next_c && next_c == '|')
-        return (true);
-    else if (c == '|' || c == '>' || c == '<')
-        return (true);
-    return (false);
+    return ((c == '|' && next_c && next_c == '|'));
 }
