@@ -1,23 +1,6 @@
 #include "main.h"
 #include "parsing.h"
 
-char *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths)
-{
-    char *new;
-    int i;
-
-    i = 0;
-    new = NULL;
-    while (line[i])
-    {
-        if (i > local_paranths->open_ && i < local_paranths->close_)
-            new = concat(db, new, line[i]);
-        i++;
-    }
-
-    return new;
-}
-
 int is_whitespace(char c)
 {
     return (c == ' ' || c == '\t' || c == '\n');
@@ -32,8 +15,7 @@ int strongest_operator(char *line, t_tracker *tracker)
     while (line[i])
     {
         op = is_op(line, &i);
-        if (op != INVALID && !is_inside_quotes_list(tracker->quotes, i)
-                && !is_inside_paranthesis(tracker->paranthesis, i))
+        if (op != INVALID && !is_inside_quotes_list(tracker->quotes, i))
         {
             return op;
         }
@@ -59,8 +41,7 @@ int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
     while (line[i])
     {
         if (is_op(line, &i) == op
-            && !is_inside_quotes_list(tracker->quotes, i)
-            && !is_inside_paranthesis(tracker->paranthesis, i))
+            && !is_inside_quotes_list(tracker->quotes, i))
         {
             counter++;
             reminder = i;

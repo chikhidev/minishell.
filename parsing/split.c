@@ -24,8 +24,7 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     while (line[i])
     {
         if (is_op(line, &i) == op->op_presentation
-            && !is_inside_quotes_list(tracker->quotes, i)
-            && !is_inside_paranthesis(tracker->paranthesis, i))
+            && !is_inside_quotes_list(tracker->quotes, i))
         {
             splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
             ft_strlcpy(splitted[k], line + i - len, len + 1);
@@ -87,6 +86,8 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
         create_cmd_node(db, current_node) // create a command node -------<<<<<<<<
     , FAILURE);
 
+    expand(db, &line, &holder->tracker->quotes);
+
     CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
     if (db->error || !db->exec_line)
         return error(db, NULL, NULL);
@@ -125,9 +126,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     CATCH_MALLOC(holder.tracker);
 
     CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
-
-    CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
-        line, holder.tracker->quotes), FAILURE);
     
     holder.parent = parent;
     holder.op = strongest_operator(line, holder.tracker); 

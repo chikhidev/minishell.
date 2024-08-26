@@ -7,8 +7,6 @@ LIBFT = libft/libft.a
 PARSING_SRC = 	parsing/parser.c	\
 				parsing/quoting.c	\
 				parsing/quoting_utils.c	\
-				parsing/paranths.c	\
-				parsing/paranths2.c \
 				parsing/split.c		\
 				parsing/op.c		\
 				parsing/op2.c	\
