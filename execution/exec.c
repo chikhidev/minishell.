@@ -111,9 +111,7 @@ int close_all_pipes(t_db  *db, int    **pipes)
 
     n_pipes = get_pipes_count(pipes);
     pipe_i = 0;
-    int n;
 
-    n = n_pipes - 1;
     if (!pipes || !pipes[0])
         return (SUCCESS);
     while (pipe_i < n_pipes)
@@ -162,20 +160,16 @@ int dup_cmd_io(t_cmd_node *command)
 
 int exec_cmd(t_db *db, void *node, int **pipes, int index)
 {
-    char **args;
     char **env_arr;
     char *path;
-    int signal_catcher;
 
     if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
         return FAILURE;
 
-    signal_catcher = 0;
 
     path = get_path(db, CMD->args);
     env_arr = env_list_to_env_arr(db);
     
-    args = CMD->args;
     if (index != -1)
     {
         dup_pipes(pipes, index);

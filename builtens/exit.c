@@ -56,8 +56,6 @@ int exit_(t_db  *db,    char    *av[])
     exit_code = 0;
     args_len = count_array_len(av);
 
-    if (!db->is_in_process)
-        dprintf(2, "exit\n");
     if (args_len == 1)
         exit(0);
     exit_code = (unsigned char)ft_atoll(av[1], &err);

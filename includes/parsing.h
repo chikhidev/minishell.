@@ -87,10 +87,10 @@ int check_after_op( char    *line,   char    *op_name,   int op_idx,  int flag);
 /*op2.c*/
 int is_op(char *line, int *i);
 int priority_of_op(int op);
-int create_op_node(t_db *db, int op, void **current_node, void *parent);
+int create_op_node(t_db *db, int op, void **current_node);
 
 /*cmd.c*/
-int     create_cmd_node(t_db *db, void **current_node, void *parent, char *line);
+int     create_cmd_node(t_db *db, void **current_node);
 int     count_op(char *line, int op);
 
 /*customized*/

@@ -155,21 +155,17 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 
 void db_reset(t_db *db)
 {
-    db->scope = false;
     db->exec_line = true;
     db->heredoc_counter = 0;
-    db->ops = NULL;
-    db->ops = NULL;
     db->root_node = NULL;
     db->error = false;
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
-    db->is_in_process = false;
 }
 
 
-int     main(int    ac, char    *av[],  char    *env[])
+int main(int ac, char *av[],  char *env[])
 {
     t_db    db;
     char    *line;
@@ -201,25 +197,27 @@ int     main(int    ac, char    *av[],  char    *env[])
             ec_void(&db);
             return !error(&db, NULL, "malloc failed");
         }
+        
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
-        // wildcard(&db, line);
-        // exit(1);
         free(line);
         line = tmp;
         
-        if (parser(&db, line) == FAILURE)
-            continue ;
-
-        if (exec(&db, db.root_node) == FAILURE)
-            continue ;
+        if (parser(&db, line) == SUCCESS)
+        {
+            exec(&db, db.root_node);
+        }
+        
         gc_void(&db);
         ip_void(&db);
     }
+
     ec_void(&db);
     gc_void(&db);
     ip_void(&db);
+
     close(0);
     close(1);
     close(2);
-    return (SUCCESS);
+    
+    return (0);
 }

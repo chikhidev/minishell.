@@ -16,10 +16,9 @@ int parser(t_db *db, char *line)
     if (line[i] == '\0')
         return (SUCCESS);
 
-    CATCH_ONFAILURE(
-        track_quotes(db, &quotes, line),
-        FAILURE
-    )
+   
+    if (track_quotes(db, &quotes, line) == FAILURE)
+        return FAILURE;
 
     CATCH_ONFAILURE(
         syntax_checker(db, line, &i, quotes),

@@ -2,20 +2,6 @@
 #include "parsing.h"
 #include "builtens.h"
 
-int is_op2(char *line, int *i)
-{
-    if (line[*i] == '|')
-        return PIPE;
-    return INVALID;
-}
-
-int is_op3(char *line, int *i)
-{
-    if (line[*i] == '|')
-        return PIPE;
-    return INVALID;
-}
-
 void skip_op(int *i, char *line)
 {
     if (line[*i] == '|')
@@ -37,7 +23,7 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     splitted = gc_malloc(db, sizeof(char *) * op->n_childs);
     while (line[i])
     {
-        if (is_op2(line, &i) == op->op_presentation
+        if (is_op(line, &i) == op->op_presentation
             && !is_inside_quotes_list(tracker->quotes, i)
             && !is_inside_paranthesis(tracker->paranthesis, i))
         {
@@ -61,23 +47,24 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
 
 int process_op(t_db *db, char *line, t_holder *holder)
 {
-    void **current_node;
+    void        **current_node;
     char        **splitted;
     int i;
 
     current_node = holder->current_node;
     CATCH_ONFAILURE(create_op_node(db, holder->op,
-        holder->current_node, holder->parent), FAILURE);
+        holder->current_node), FAILURE);
+    
     CURR_OP->n_childs = count_between_op(db, line,
         holder->op, holder->tracker);
+    
     splitted = split_line(db, line, CURR_OP, holder->tracker);
     CATCH_MALLOC(splitted);
+
     CURR_OP->childs = gc_malloc(db, sizeof(void *) *
         CURR_OP->n_childs);
+    
     ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
-
-    CURR_OP->is_scope = db->scope;
-    db->scope = false;
 
     i = 0;
     while (i < CURR_OP->n_childs)
@@ -97,7 +84,7 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
 
     current_node = holder->current_node;
     CATCH_ONFAILURE(
-        create_cmd_node(db, current_node, holder->parent, line) // create a command node -------<<<<<<<<
+        create_cmd_node(db, current_node) // create a command node -------<<<<<<<<
     , FAILURE);
 
     CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
@@ -122,7 +109,6 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
  */
 
 
-
 int smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
     t_holder holder; // holder varibale so we make sure of that this data will be given to children if exists
@@ -137,15 +123,15 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     ft_bzero(&holder, sizeof(holder));
     holder.tracker = gc_malloc(db, sizeof(t_tracker));
     CATCH_MALLOC(holder.tracker);
+
     CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
+
     CATCH_ONFAILURE(track_paranthesis(db, &holder.tracker->paranthesis,
         line, holder.tracker->quotes), FAILURE);
     
     holder.parent = parent;
     holder.op = strongest_operator(line, holder.tracker); 
     holder.current_node = current_node;
-
-
     /**
      * this case means we have an operator
      * take the most powerful operator and start splitting the line whenever that op is appeared
@@ -162,13 +148,8 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
      */
     else
     {
-        // TODO: remove this tokinizer untill the last steps maybe...
         if (process_cmd(db, line, &holder) == FAILURE)
             return (db->error != true); // failure in case of error happened else just success
-
-
-        CURR_CMD->is_scope = db->scope;
-        db->scope = false;
     }
     return SUCCESS;
 }

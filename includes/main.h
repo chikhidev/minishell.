@@ -95,16 +95,12 @@ typedef struct s_iterators
 typedef struct s_op_node
 {
 	int type;     // the common thing between the two nodes
-	void *origin; // the original node
-	int					priority;
 	int					op_presentation;
 	void				**childs;
 	int					n_childs;
 
 	int input_fd;
 	int output_fd;
-
-	bool	is_scope;
 
 	// execution part ------ <<<<<<
 }						t_op_node;
@@ -176,16 +172,11 @@ typedef struct s_file_entry
 typedef struct s_cmd_node
 {
 	int 				type;     // the common thing between the two nodes
-	void 				*origin; // the original node
-	char				*line;
-
 
 	// this is gonna be only in the child proccess just when it gonna e executed!!!
 	char				**args;
 	int					input_fd;
 	int					output_fd;
-
-	bool 				is_scope;
 
 }						t_cmd_node;
 
@@ -257,8 +248,7 @@ typedef struct s_db
 	char				**env;
     /*storing in tracked signals*/
 	int					last_signal;
-
-	t_operators			*ops;
+	
     /*error flag*/
 	bool				error;
     /**process id(s) for childs*/
@@ -273,12 +263,9 @@ typedef struct s_db
 	int					stdout_dup;
 	int					pipe[2];
 	int					read_fd;
-	bool				is_in_process;
 
 	// has the permission to run the line? by default yes.
 	bool				exec_line;
-
-	bool				scope;
 
     /*local envirement variables*/
 	t_env_list			*env_list;

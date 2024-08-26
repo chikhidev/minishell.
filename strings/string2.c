@@ -26,66 +26,22 @@ int is_whitespace(char c)
 int strongest_operator(char *line, t_tracker *tracker)
 {
     int     i;
-    t_op_node   tmp;
-    t_op_node   strongest;
+    int     op;
 
     i = 0;
-    ft_bzero(&strongest, sizeof(t_op_node));
-    strongest.priority = -1;
-    strongest.op_presentation = NOT_FOUND;
-    strongest.type = NOT_FOUND;
     while (line[i])
     {
-        tmp.op_presentation = is_op(line, &i);
-        if (tmp.op_presentation != INVALID)
+        op = is_op(line, &i);
+        if (op != INVALID && !is_inside_quotes_list(tracker->quotes, i)
+                && !is_inside_paranthesis(tracker->paranthesis, i))
         {
-            tmp.priority = priority_of_op(tmp.op_presentation);
-            if (!is_inside_quotes_list(tracker->quotes, i)
-                && !is_inside_paranthesis(tracker->paranthesis, i)
-                && ((tmp.priority <= strongest.priority && tmp.priority != -1)
-                || strongest.priority == -1))
-                strongest = tmp;
+            return op;
         }
         i++;
     }
-    return strongest.op_presentation;
+
+    return NOT_FOUND;
 }
-
-// int count_between_op(t_db *db, char *line, int op, t_tracker *tracker)
-// {
-//     bool    in_word;
-//     int     i;
-//     int     counter;
-
-
-//     (void)db;
-//     i = 0;
-//     in_word = false;
-//     counter = 0;
-//     while (line[i])
-//     {
-//         if (is_op(line, &i) == op
-//             && !is_inside_quotes_list(tracker->quotes, i)
-//             && !is_inside_paranthesis(tracker->paranthesis, i))
-//         {
-//             in_word = false;
-//         }
-//         else if (!is_whitespace(line[i]))
-//         {
-//             in_word = true;
-//             counter++;
-//             while (line[i] && !is_whitespace(line[i]))
-//                 i++;
-//             i--;
-//         }
-//         i++;
-//     }
-
-//     (void)in_word;
-//     printf("count_between_op: %d\n", counter);
-
-//     return counter;
-// }
 
 // this one is not secure
 int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker)
