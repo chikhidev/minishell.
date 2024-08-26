@@ -10,6 +10,7 @@ int ft_close(int    *fd)
     *fd = CLOSED;
     return (SUCCESS);
 }
+
 int get_pipes_count(int **pipes)
 {
     int i;
@@ -43,7 +44,7 @@ char    *get_path(t_db  *db, char    **args)
             exit(126);
         if (!path)
         {
-            error(db, args[0], "command not found ya hamid");
+            error(db, args[0], "command not found");
             exit(127);
         }
     }

@@ -44,7 +44,6 @@ int     are_all(char *str, int (*f)(int));
 int     is_whitespace(char c);
 int     strongest_operator(char *line, t_tracker *tracker);
 int     count_between_op(t_db *db,  char *line, int op, t_tracker *tracker);
-char    *remove_paranthesis(t_db *db, char *line, t_parnth *local_paranths);
 
 /*string3*/
 int     count_line_args(char *line, t_quote *quotes, int len);
@@ -59,7 +58,6 @@ void    reset_quotes(t_db *db, t_quote **head);
 int     inside_single_quote(t_quote *head, int i);
 
 /*parsing/paranths.c && paranths2.c*/
-t_parnth    *last_unclosed_paranth(t_parnth *head);
 int is_operator_forward(char    *s, int  i);
 
 /*parsing/parser.c*/
@@ -73,10 +71,6 @@ int     expand(t_db *db, char **line, t_quote **quotes);
 int     expanded(t_db *db, char **line);
 char    *get_env(t_db *db, char *name);
 int     valid_char(char c, int  index);
-
-/*parsing/paranths.c and paranths2.c*/
-int track_paranthesis(t_db *db, t_parnth **head, char *line, t_quote *quotes);
-int is_inside_paranthesis(t_parnth *head, int i);
 
 /*op.c*/
 int is_valid_op(char c, char next_c);

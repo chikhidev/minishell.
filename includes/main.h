@@ -212,19 +212,8 @@ typedef struct s_quote
 	struct s_quote		*next;
 }						t_quote;
 
-/**
- * @details The parnth structure is used to store the paranthesis
- */
-typedef struct s_parnth
-{
-	int					open_;
-	int					close_;
-	struct s_parnth		*next;
-}						t_parnth;
-
 typedef struct s_tracker
 {
-	t_parnth			*paranthesis;
 	t_quote				*quotes;
 }						t_tracker;
 
@@ -233,6 +222,7 @@ typedef struct s_str_lst
 	char	*str;
 	struct s_str_lst	*next;
 }	t_str_lst;
+
 /**
  * @details The db structure is used to store all data needed
  */
@@ -290,11 +280,6 @@ void    *gc_realloc(t_db *db, void *ptr, size_t size);
 /*prototypes: string.c*/
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);
-char					*remove_paranthesis(t_db *db, char *line,
-							t_parnth *local_paranths);
-
-bool 					will_be_unused_arg(t_db *db, char *arg);
-
 
 int						is_op3(char *line, int *i);
 
@@ -316,9 +301,7 @@ void					del_env_node(t_env_list    **list,  char    *key);
 void					del_exp_node(t_exp_list    **list,  char    *key);
 char					**env_list_to_env_arr(t_db	*db);
 
-
 void					catch_feedback(t_db *db, int process_res);
-
 
 /*signals*/
 void cmd_signals_handling(void);
