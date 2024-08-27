@@ -185,7 +185,7 @@ int open_heredoc(t_db *db, char *delim)
     /*-------------------------------Parent process------------------------------*/
     // cancel SIGINT and SIGQUIT they sound be handled by the child
 
-    ignore_signals();
+    handle_parent_signals();
 
     close(pipe_fd[1]);
     wait(&child_status);

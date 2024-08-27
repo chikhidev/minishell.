@@ -274,7 +274,7 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
         id = fork();
         if (id == CHILD)
         {
-            cmd_signals_handling();
+            default_signals_behav();
             exec_cmd(db, node, pipes, index);
         }
         else
@@ -294,6 +294,8 @@ void exec(t_db *db, void *node)
 {
     if (!node)
         return;
+
+    handle_parent_signals();
     if (CMD->type == CMD_NODE)
         handle_cmd_node(db, node, NULL, -1);
     else if (OP->op_presentation == PIPE)

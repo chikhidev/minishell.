@@ -25,31 +25,14 @@ void heredoc_behave(int signal)
     exit(1);
 }
 
-void cmd_behave(int signal)
-{
-    write(2, "i am here\n", 10);
-    if (signal == SIGINT)
-    {
-        write(2, "\n", 2);
-        exit(130);
-    }
-    if (signal == SIGQUIT)
-    {
-        write(2, "^\\Quit (core dumped)\n", 22);
-        exit(131);
-    }
-    exit(1);
-}
-
-void cmd_signals_handling(void)
+void default_signals_behav()
 {
     struct sigaction sa;
 
-    // dprintf(2, "cmd in progress %d\n", getpid());
     ft_bzero(&sa, sizeof(struct sigaction));
-    sa.sa_handler = cmd_behave;
+    sa.sa_handler = SIG_DFL;
     sigaction(SIGINT, &sa, NULL);
-    sa.sa_handler = cmd_behave;
+    sa.sa_handler = SIG_DFL;
     sigaction(SIGQUIT, &sa, NULL);
 }
 
@@ -64,14 +47,25 @@ void heredoc_signals_handling(void)
     sigaction(SIGQUIT, &sa, NULL);
 }
 
-void ignore_signals(void)
+void parent_behav(int signal)
+{
+    if (signal == SIGINT)
+    {
+        write(2, "\n", 2);
+    }
+    if (signal == SIGQUIT)
+    {
+        write(2, "Quit (core dumped)\n", 20);
+    }
+}
+
+void handle_parent_signals(void)
 {
     struct sigaction sa;
 
-    // dprintf(2, "ignore in progress %d\n", getpid());
     ft_bzero(&sa, sizeof(struct sigaction));
-    sa.sa_handler = SIG_IGN;
+    sa.sa_handler = parent_behav;
     sigaction(SIGINT, &sa, NULL);
-    sa.sa_handler = SIG_IGN;
     sigaction(SIGQUIT, &sa, NULL);
 }
+
