@@ -25,8 +25,21 @@ int expand(t_db *db, char **line, t_quote **quotes, bool track_perm)
             rem.i = i - 1;
             rem.j = i;
 
-            if ((quotes && is_quote_oppening(*quotes, i)) && update_index(db, line, NULL, &rem) == FAILURE)
-                return FAILURE;
+            if ((quotes && is_quote_oppening(*quotes, i)))
+            {
+                if (update_index(db, line, NULL, &rem) == FAILURE)
+                    return FAILURE;
+
+                i++;
+                while ((*line)[i] && (*line)[i] != (*line)[rem.j])
+                    i++;
+
+                rem.j = i;
+                rem.i = rem.i - 1;
+
+                if (update_index(db, line, NULL, &rem) == FAILURE)
+                    return FAILURE;
+            }
             else
             {
                 if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
