@@ -19,9 +19,9 @@ char    *cmd_path(t_db *db, char *filename);
 bool    is_absolute_path(char *path);
 bool    is_relative_path(char *path);
 
-void    *ip_add(t_db *db, pid_t  new_ip);
-void    ip_free(t_db *db, pid_t  ip_to_free);
-void    ip_void(t_db *db);
+void    *pid_add(t_db *db, pid_t  new_ip);
+void    pid_free(t_db *db, pid_t  ip_to_free);
+void    pid_void(t_db *db);
 
 
 #endif

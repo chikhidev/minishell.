@@ -1,47 +1,47 @@
 #include "../includes/main.h"
 
-void    *ip_add(t_db *db, pid_t  new_ip)
+void    *pid_add(t_db *db, pid_t  new_ip)
 {
-    t_ip_addrs    *ip;
+    t_int    *ip;
 
-    if (!db->ip)
+    if (!db->pid)
     {
-        db->ip = gc_malloc(db, sizeof(t_ip_addrs));
-        if (!db->ip)
+        db->pid = gc_malloc(db, sizeof(t_int));
+        if (!db->pid)
             return (NULL);
-        db->ip->ip_addr = new_ip;
-        db->ip->next = NULL;
+        db->pid->n = new_ip;
+        db->pid->next = NULL;
     }
     else
     {
 
-        ip = db->ip;
+        ip = db->pid;
         while (ip->next)
             ip = ip->next;
-        ip->next = gc_malloc(db, sizeof(t_ip_addrs));
+        ip->next = gc_malloc(db, sizeof(t_int));
         if (!ip->next)
             return (NULL);
-        ip->next->ip_addr = new_ip;
+        ip->next->n = new_ip;
         ip->next->next = NULL;
     }
     return (NULL);
 }
 
-void    ip_free(t_db *db, pid_t  ip_to_free)
+void    pid_free(t_db *db, pid_t  ip_to_free)
 {
-    t_ip_addrs    *ip;
-    t_ip_addrs    *prev;
+    t_int    *ip;
+    t_int    *prev;
 
-    ip = db->ip;
+    ip = db->pid;
     prev = NULL;
     while (ip)
     {
-        if (ip->ip_addr == ip_to_free)
+        if (ip->n == ip_to_free)
         {
             if (prev)
                 prev->next = ip->next;
             else
-                db->ip = ip->next;
+                db->pid = ip->next;
             gc_free(db, ip);
             return ;
         }
@@ -50,16 +50,80 @@ void    ip_free(t_db *db, pid_t  ip_to_free)
     }
 }
 
-
-void    ip_void(t_db *db)
+void    pid_void(t_db *db)
 {
-    t_ip_addrs    *ip;
+    t_int    *ip;
 
-    while (db->ip)
+    while (db->pid)
     {
-        ip = db->ip;
-        db->ip = db->ip->next;
+        ip = db->pid;
+        db->pid = db->pid->next;
         gc_free(db, ip);
     }
-    db->ip = NULL;
+    db->pid = NULL;
 }
+
+void    *fd_add(t_db *db, pid_t  new_fd)
+{
+    t_int    *ip;
+
+    if (!db->fd)
+    {
+        db->fd = gc_malloc(db, sizeof(t_int));
+        if (!db->fd)
+            return (NULL);
+        db->fd->n = new_fd;
+        db->fd->next = NULL;
+    }
+    else
+    {
+        ip = db->fd;
+        while (ip->next)
+            ip = ip->next;
+        ip->next = gc_malloc(db, sizeof(t_int));
+        if (!ip->next)
+            return (NULL);
+        ip->next->n = new_fd;
+        ip->next->next = NULL;
+    }
+    return (NULL);
+}
+
+void    fd_free(t_db *db, pid_t  fd_to_free)
+{
+    t_int    *fd;
+    t_int    *prev;
+
+    fd = db->fd;
+    prev = NULL;
+    while (fd)
+    {
+        if (fd->n == fd_to_free)
+        {
+            if (prev)
+                prev->next = fd->next;
+            else
+                db->fd = fd->next;
+            gc_free(db, fd);
+            return ;
+        }
+        prev = fd;
+        fd = fd->next;
+    }
+}
+
+void    fd_void(t_db *db)
+{
+    t_int    *fd;
+
+    while (db->fd)
+    {
+        fd = db->fd;
+        if (fd->n > 2)
+            close(fd->n);
+        db->fd = db->fd->next;
+        gc_free(db, fd);
+    }
+    db->fd = NULL;
+}
+

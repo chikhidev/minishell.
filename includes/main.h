@@ -105,11 +105,12 @@ typedef struct s_op_node
 	// execution part ------ <<<<<<
 }						t_op_node;
 
-typedef struct s_ip_addrs
+typedef struct s_int
 {
-	pid_t				ip_addr;
-	struct s_ip_addrs	*next;
-}						t_ip_addrs;
+	int					n;
+	struct s_int	*next;
+}						t_int;
+
 
 
 typedef struct s_here_doc /*here doc saver*/
@@ -259,7 +260,8 @@ typedef struct s_db
 
     /*local envirement variables*/
 	t_env_list			*env_list;
-	t_ip_addrs			*ip;
+	t_int				*pid;
+	t_int				*fd;
 	t_exp_list			*exp_list;
 }						t_db;
 
@@ -275,7 +277,10 @@ void    ec_free(t_db *db, void *ptr);
 void    gc_void(t_db *db);
 void    ec_void(t_db *db);
 void    *gc_realloc(t_db *db, void *ptr, size_t size);
-
+void    *fd_add(t_db *db, pid_t  new_fd);
+void    fd_free(t_db *db, pid_t  fd_to_free);
+void    fd_void(t_db *db);
+int		ft_open(t_db *db, char *file, int flags, int type);
 
 /*prototypes: string.c*/
 int						count(char *line, char c);
