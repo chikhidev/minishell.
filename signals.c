@@ -45,7 +45,7 @@ void cmd_signals_handling(void)
 {
     struct sigaction sa;
 
-    dprintf(2, "cmd in progress %d\n", getpid());
+    // dprintf(2, "cmd in progress %d\n", getpid());
     ft_bzero(&sa, sizeof(struct sigaction));
     sa.sa_handler = cmd_behave;
     sigaction(SIGINT, &sa, NULL);
@@ -68,7 +68,7 @@ void ignore_signals(void)
 {
     struct sigaction sa;
 
-    dprintf(2, "ignore in progress %d\n", getpid());
+    // dprintf(2, "ignore in progress %d\n", getpid());
     ft_bzero(&sa, sizeof(struct sigaction));
     sa.sa_handler = SIG_IGN;
     sigaction(SIGINT, &sa, NULL);
