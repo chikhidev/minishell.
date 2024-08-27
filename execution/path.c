@@ -11,6 +11,7 @@ char    *cmd_path(t_db *db, char *filename)
 {
     char **paths;
     char *path;
+    char    *path_var;
     char *tmp;
     t_exp_list  *path_node;
 
@@ -18,9 +19,13 @@ char    *cmd_path(t_db *db, char *filename)
         return NULL;
 
     path_node = get_exp_node(db->exp_list, "PATH");
-    if (path_node)
+    if (path_node || db->static_path)
     {
-        paths = ft_split(db, path_node->val, ':');
+        if (!path_node)
+            path_var = db->static_path;
+        else
+            path_var = path_node->val;
+        paths = ft_split(db, path_var, ':');
         
         if (!paths)
             return NULL;

@@ -263,6 +263,7 @@ typedef struct s_db
 	t_int				*pid;
 	t_int				*fd;
 	t_exp_list			*exp_list;
+	char				*static_path;
 }						t_db;
 
 /*prototypes: error.c*/

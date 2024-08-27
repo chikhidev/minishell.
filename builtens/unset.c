@@ -14,6 +14,9 @@ int unset_(t_db *db,    char    *args[])
             del_env_node(&db->env_list, args[i]);
             del_exp_node(&db->exp_list, args[i]);
         }
+        if (ft_strcmp(args[i], "PATH") == 0)
+            db->static_path = NULL;
+
         i++;
     }
     return (0);
