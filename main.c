@@ -49,6 +49,7 @@ t_env_list *set_default_env(t_db *db)
 {
     t_env_list  *new;
 
+    db->static_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
     new = new_env_node(db, "PWD", getcwd(NULL, 0));
     push_env_back(&db->env_list, new);
     new = new_env_node(db, "OSH", getcwd(NULL, 0));
@@ -98,7 +99,6 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
             error(db, NULL, "Malloc failed6");
             return NULL; // Ensure we return if malloc fails.
         }
-        // printf("%s[%s]", key, val);
         push_env_back(&env_list, new_node);
         i++;
     }
@@ -146,6 +146,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->env = env;
     db->env_list = NULL;
     db->exp_list = NULL;
+    db->static_path = NULL;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
     db->pid = NULL;
@@ -175,7 +176,6 @@ int main(int ac, char *av[],  char *env[])
     char    *tmp;
     int     ret;
     struct sigaction sa;
-
 
     ft_bzero(&sa, sizeof(struct sigaction));
     line = NULL;
