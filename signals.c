@@ -3,9 +3,12 @@
 
 void catch_feedback(t_db *db, int process_res)
 {
-    if (WIFEXITED(process_res))
+    int status;
+
+    status = WEXITSTATUS(process_res);
+    if (status)
     {
-        db->last_signal = WEXITSTATUS(process_res);
+        db->last_signal = status;
         if (db->last_signal == FAIL)
         {
             gc_void(db);

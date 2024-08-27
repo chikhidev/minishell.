@@ -267,6 +267,7 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     if (!CMD->args || !CMD->args[0])
         return;
 
+    status = 0;
     if (is_built_in(node))
         handle_builtin(db, node, pipes, index);
     else
