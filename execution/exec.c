@@ -199,6 +199,23 @@ int dup_cmd_io(t_db *db, t_cmd_node *command)
     return (SUCCESS);
 }
 
+void handle_is_dir(t_db *db, char    *arg)
+{
+    (void)db;
+    DIR *dir;
+
+    if (ft_strcmp(arg, ".") == 0)
+        (printf("%s: command not found\n", arg), exit(2));
+    if (ft_strcmp(arg, "..") == 0)
+        (printf("%s: command not found\n", arg), exit(127));
+    dir = opendir(arg);
+    if (dir)
+    {
+        printf("%s Is a directory\n", arg);
+        closedir(dir);  
+        exit(126);
+    }
+}
 
 void exec_cmd(t_db *db, void *node, int **pipes, int index)
 {
@@ -208,13 +225,13 @@ void exec_cmd(t_db *db, void *node, int **pipes, int index)
     if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
         return ;
 
-
     path = get_path(db, CMD->args);
     env_arr = env_list_to_env_arr(db);
     
     dup_pipes(db, pipes, index);
     close_all_pipes(db, pipes);
     dup_cmd_io(db, node);
+    handle_is_dir(db, CMD->args[0]);
     execve(path, CMD->args, env_arr);
     exit(127);
 }

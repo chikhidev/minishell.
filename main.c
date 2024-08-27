@@ -40,8 +40,13 @@ int handle_prompt(t_db *db, char **line)
 
     *line = readline(tmp);
     gc_free(db, tmp);
-    if (!*line) return FAILURE; /*stop the loop*/
-    if (*line[0] != '\0') add_history(*line);
+    if (!*line)
+    {
+        dprintf(2, "exit\n");
+        return FAILURE; /*stop the loop*/
+    }
+    if (*line[0] != '\0')
+        add_history(*line);
     return SUCCESS ; /*nothing*/
 }
 

@@ -7,9 +7,13 @@ int    env_(t_db *db, char  *av[])
 {
     char    *_key;
     char    *_val;
-    (void)av;
     t_env_list  *curr;
 
+    if (count_array_len(av) > 1)
+    {
+        dprintf(2, "env: '%s': No such file or directory\n", av[1]);
+        return 127;
+    }
     curr = db->env_list;
     while (curr)
     {
