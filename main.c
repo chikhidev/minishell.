@@ -162,7 +162,6 @@ void db_reset(t_db *db)
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
-    db->last_signal = 0;
 }
 
 
@@ -198,7 +197,6 @@ int main(int ac, char *av[],  char *env[])
             ec_void(&db);
             return !error(&db, NULL, "malloc failed");
         }
-        
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         free(line);
         line = tmp;
@@ -207,14 +205,11 @@ int main(int ac, char *av[],  char *env[])
         {
             exec(&db, db.root_node);
         }
-        
         gc_void(&db);
         ip_void(&db);
     }
-
     ec_void(&db);
     gc_void(&db);
-    ip_void(&db);
 
     close(0);
     close(1);

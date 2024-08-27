@@ -67,8 +67,7 @@ int parser(t_db *db, char *line);
 int smart_split(t_db *db, char *line, void **current_node, void *parent);
 
 /*parsing/expanding.c*/
-int     expand(t_db *db, char **line, t_quote **quotes);
-int     expanded(t_db *db, char **line);
+int     expand(t_db *db, char **line, t_quote **quotes, bool track_perm);
 char    *get_env(t_db *db, char *name);
 int     valid_char(char c, int  index);
 

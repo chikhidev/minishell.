@@ -29,7 +29,7 @@ char **append_word(t_db *db, char **result, char *save)
         }
         if (track_quotes(db, &q, save) == FAILURE)
             return NULL;
-        if (expand(db, &save, &q) == FAILURE)
+        if (expand(db, &save, &q, true) == FAILURE)
             return NULL;
         tmp = whithout_quotes(db, save);
         if (!tmp)
@@ -50,7 +50,7 @@ char **append_word(t_db *db, char **result, char *save)
 
     if (track_quotes(db, &q, save) == FAILURE)
         return NULL;
-    if (expand(db, &save, &q) == FAILURE)
+    if (expand(db, &save, &q, true) == FAILURE)
         return NULL;
     tmp = whithout_quotes(db, save);
     if (!tmp)

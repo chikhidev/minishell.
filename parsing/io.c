@@ -71,7 +71,7 @@ int open_file(t_db *db, char *file, int type)
     }
 
     track_quotes(db, &quotes, file);
-    if (expand(db, &file, &quotes) == FAILURE)
+    if (expand(db, &file, &quotes, true) == FAILURE)
         return FAILURE;
 
     tmp = whithout_quotes(db, file);
@@ -143,29 +143,24 @@ int open_heredoc(t_db *db, char *delim)
                 break;
             }
 
-            if (ft_strcmp(delim, line) == 0)
+            tmp = ft_strdup(db, line);
+            free(line);
+
+            if (ft_strcmp(delim, tmp) == 0)
             {
-                printf("found delim\n");
                 close(pipe_fd[1]);
-                free(line);
                 break;
             }
 
-            dprintf(2, "reached here\n");
-
-            if (expand(db, &line, NULL) == FAILURE)
+            if (expand(db, &tmp, NULL, false) == FAILURE)
             {
                 close(pipe_fd[1]);
-                free(line);
                 ec_void(db);
                 (error(db, NULL, "Malloc failed"), exit(1));
             }
 
-            printf("after expanding\n");
-
-            write(pipe_fd[1], line, ft_strlen(line));
+            write(pipe_fd[1], tmp, ft_strlen(tmp));
             write(pipe_fd[1], "\n", 1);
-            free(line);
         }
 
         if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)

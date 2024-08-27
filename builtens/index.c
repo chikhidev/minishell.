@@ -28,6 +28,6 @@ int run_builtin(t_db   *db,t_cmd_node *node, int index)
     else if (ft_strcmp(CMD->args[0], "unset") == 0)
         return unset_(db, CMD->args);
     else if (ft_strcmp(CMD->args[0], "exit") == 0)
-        exit_(db,   CMD->args, index);
+        return exit_(db,   CMD->args, index);
     return 127;
 }

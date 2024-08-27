@@ -2,7 +2,7 @@
 #include "parsing.h"
 #include "./index.h"
 
-int expand(t_db *db, char **line, t_quote **quotes)
+int expand(t_db *db, char **line, t_quote **quotes, bool track_perm)
 {
     char    *env_var_name;
     int     i;
@@ -17,22 +17,16 @@ int expand(t_db *db, char **line, t_quote **quotes)
 
     while (i < len)
     {
-        if ((*line)[i] == '$' && !inside_single_quote(*quotes, i))
+        if ((*line)[i] == '$' && !(quotes && inside_single_quote(*quotes, i)))
         {
-
             if (!(*line)[++i])
-            {
                 return (SUCCESS);
-            }
 
             rem.i = i - 1;
             rem.j = i;
 
-            if (is_quote_oppening(*quotes, i))
-            {
-                if (update_index(db, line, NULL, &rem) == FAILURE)
-                    return FAILURE;
-            }
+            if ((quotes && is_quote_oppening(*quotes, i)) && update_index(db, line, NULL, &rem) == FAILURE)
+                return FAILURE;
             else
             {
                 if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
@@ -53,9 +47,10 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 return (SUCCESS);
 
             reset_quotes(db, quotes);
-            *quotes = NULL;
+            if (quotes)
+                *quotes = NULL;
 
-            if (quotes && !track_quotes(db, quotes, (*line)))
+            if (track_perm && quotes && !track_quotes(db, quotes, (*line)))
                 return (FAILURE);
         }
         i++;

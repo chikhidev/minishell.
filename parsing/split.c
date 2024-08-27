@@ -86,7 +86,7 @@ int process_cmd(t_db *db, char *line, t_holder *holder)
         create_cmd_node(db, current_node) // create a command node -------<<<<<<<<
     , FAILURE);
 
-    if (expand(db, &line, &holder->tracker->quotes) == FAILURE)
+    if (expand(db, &line, &holder->tracker->quotes, true) == FAILURE)
         return FAILURE;
 
     CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
