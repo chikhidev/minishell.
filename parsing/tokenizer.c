@@ -21,19 +21,9 @@ char **append_word(t_db *db, char **result, char *save)
     if (!*result)
     {
         result = (char **)gc_malloc(db, 2 * sizeof(char *));
-        if (!result)
-        {
-            db->error = true;
-            printf("Malloc failed\n");
-            return (NULL);
-        }
-        if (track_quotes(db, &q, save) == FAILURE)
-            return NULL;
-        if (expand(db, &save, &q, true) == FAILURE)
-            return NULL;
+
         tmp = whithout_quotes(db, save);
-        if (!tmp)
-            return NULL;
+        
         result[0] = tmp;
         result[1] = NULL;
         return (result);
@@ -42,16 +32,7 @@ char **append_word(t_db *db, char **result, char *save)
     while (result[size])
         size++;
     result = (char **)gc_realloc(db, result, (size + 2) * sizeof(char *));
-    if (!result)
-    {
-        db->error = true;
-        return (NULL);
-    }
-
-    if (track_quotes(db, &q, save) == FAILURE)
-        return NULL;
-    if (expand(db, &save, &q, true) == FAILURE)
-        return NULL;
+    
     tmp = whithout_quotes(db, save);
     if (!tmp)
         return NULL;
@@ -73,8 +54,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     read_write_perm = true;
     save = NULL;
 	CATCH_ONNULL(s, NULL);
+
 	result = (char **)gc_malloc(db, sizeof(char *));
-    CATCH_ONNULL(result, NULL);
+
     result[0] = NULL;
     ft_bzero(&it, sizeof(t_iterators));
     skip_open_spaces(*quotes, s, &it.i);
@@ -153,7 +135,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                                 result = append_word(db, result, entry->d_name);
                                 if (!result)
                                 {
-                                    printf("failed to append word 2\n");
                                     db->error = true;
                                     return (NULL);
                                 }
@@ -166,7 +147,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                 result = append_word(db, result, save);
                 if (!result)
                 {
-                    printf("failed to append word 2\n");
                     db->error = true;
                     return (NULL);
                 }
@@ -179,11 +159,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 
     if (ft_strlen(save) > 0)
     {
-
         result = append_word(db, result, save);
         if (!result)
         {
-            printf("failed to append word 2\n");
             db->error = true;
             return (NULL);
         }

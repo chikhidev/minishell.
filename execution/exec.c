@@ -3,7 +3,7 @@
 #include "exec.h"
 #include "builtens.h"
 
-void ft_close(t_db *db, int    *fd)
+void ft_close(t_db *db, int *fd)
 {
     int res;
 
@@ -66,9 +66,9 @@ int get_pipes_count(int **pipes)
         i++;
     return i;
 }
-char    *get_path(t_db  *db, char    **args)
+char *get_path(t_db *db, char **args)
 {
-    char    *path;
+    char *path;
 
     path = args[0];
     if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0 || is_str_empty(db, path))
@@ -95,7 +95,7 @@ char    *get_path(t_db  *db, char    **args)
     return (path);
 }
 
-int    **prepare_pipes(t_db  *db,   int n_pipes)
+int **prepare_pipes(t_db *db, int n_pipes)
 {
     int **pipes;
     int i;
@@ -111,9 +111,9 @@ int    **prepare_pipes(t_db  *db,   int n_pipes)
     pipes[n_pipes] = NULL;
     return pipes;
 }
-void    waiter(t_db *db, int  *status)
+void waiter(t_db *db, int *status)
 {
-    t_int  *pid;
+    t_int *pid;
 
     pid = db->pid;
     while (pid)
@@ -125,7 +125,7 @@ void    waiter(t_db *db, int  *status)
     catch_feedback(db, *status);
 }
 
-int dup_pipes(t_db *db, int **pipes, int   index) // index -> 2
+int dup_pipes(t_db *db, int **pipes, int index) // index -> 2
 {
     if (index == -1)
         return (SUCCESS);
@@ -144,8 +144,7 @@ int dup_pipes(t_db *db, int **pipes, int   index) // index -> 2
     return (SUCCESS);
 }
 
-
-int close_all_pipes(t_db  *db, int    **pipes)
+int close_all_pipes(t_db *db, int **pipes)
 {
     int pipe_i;
     int n_pipes;
@@ -171,7 +170,7 @@ void handle_pipe_op(t_db *db, void *node)
     int **pipes;
     i = 0;
     status = 0;
-    
+
     pipes = prepare_pipes(db, OP->n_childs - 1);
     while (i < OP->n_childs)
     {
@@ -180,7 +179,7 @@ void handle_pipe_op(t_db *db, void *node)
     }
     close_all_pipes(db, pipes);
     waiter(db, &status);
-    return ;
+    return;
 }
 
 int dup_cmd_io(t_db *db, t_cmd_node *command)
@@ -199,19 +198,17 @@ int dup_cmd_io(t_db *db, t_cmd_node *command)
     return (SUCCESS);
 }
 
-
 void exec_cmd(t_db *db, void *node, int **pipes, int index)
 {
     char **env_arr;
     char *path;
 
     if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
-        return ;
-
+        return;
 
     path = get_path(db, CMD->args);
     env_arr = env_list_to_env_arr(db);
-    
+
     dup_pipes(db, pipes, index);
     close_all_pipes(db, pipes);
     dup_cmd_io(db, node);
@@ -249,14 +246,18 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     int status;
 
     if (!CMD->args || !CMD->args[0])
-        return ;
+        return;
+
     if (is_built_in(node))
-        handle_builtin(db, node,pipes, index);
+        handle_builtin(db, node, pipes, index);
     else
     {
         id = fork();
         if (id == CHILD)
+        {
+            cmd_signals_handling();
             exec_cmd(db, node, pipes, index);
+        }
         else
         {
             if (index == -1)
@@ -270,10 +271,10 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     }
 }
 
-void exec(t_db   *db, void *node)
+void exec(t_db *db, void *node)
 {
     if (!node)
-        return ;
+        return;
     if (CMD->type == CMD_NODE)
         handle_cmd_node(db, node, NULL, -1);
     else if (OP->op_presentation == PIPE)

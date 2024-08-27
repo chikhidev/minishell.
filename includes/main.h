@@ -27,6 +27,7 @@
 # define GOOD 1
 # define BAD 0
 # define CLOSED -2
+# define FAIL 150
 
 // triggers
 # define CATCH_MALLOC(x) \
@@ -311,8 +312,9 @@ void					catch_feedback(t_db *db, int process_res);
 
 /*signals*/
 void cmd_signals_handling(void);
-void parent_signals_handling(void);
+void ignore_signals(void);
 void heredoc_signals_handling(void);
+
 
 /* FUNCTIONS */
 

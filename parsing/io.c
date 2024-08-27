@@ -83,10 +83,6 @@ int open_file(t_db *db, char *file, int type)
         return FAILURE;
     }
 
-    track_quotes(db, &quotes, file);
-    if (expand(db, &file, &quotes, true) == FAILURE)
-        return FAILURE;
-
     tmp = whithout_quotes(db, file);
     if (type == APPENDFILE)
         fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -165,12 +161,12 @@ int open_heredoc(t_db *db, char *delim)
                 break;
             }
 
-            if (expand(db, &tmp, NULL, false) == FAILURE)
-            {
-                close(pipe_fd[1]);
-                ec_void(db);
-                (error(db, NULL, "Malloc failed"), exit(1));
-            }
+            // if (expand(db, &tmp, NULL, false) == FAILURE)
+            // {
+            //     close(pipe_fd[1]);
+            //     ec_void(db);
+            //     (error(db, NULL, "Malloc failed"), exit(1));
+            // }
 
             write(pipe_fd[1], tmp, ft_strlen(tmp));
             write(pipe_fd[1], "\n", 1);
@@ -189,7 +185,7 @@ int open_heredoc(t_db *db, char *delim)
     /*-------------------------------Parent process------------------------------*/
     // cancel SIGINT and SIGQUIT they sound be handled by the child
 
-    parent_signals_handling();
+    ignore_signals();
 
     close(pipe_fd[1]);
     wait(&child_status);

@@ -66,7 +66,6 @@ int track_quotes(t_db *db, t_quote **head, char *line)
     if (last && last->end == -1)
     {
         printf("Quotes are not closed expecting %c\n", last->ascii);
-        printf("line: %s\n", line);
         return error(db, NULL, NULL);
     }
     return (SUCCESS);

@@ -80,15 +80,18 @@ int process_op(t_db *db, char *line, t_holder *holder)
 int process_cmd(t_db *db, char *line, t_holder *holder)
 {
     void **current_node;
+    char **splitted;
 
     current_node = holder->current_node;
     CATCH_ONFAILURE(
         create_cmd_node(db, current_node) // create a command node -------<<<<<<<<
     , FAILURE);
 
-    CURR_CMD->args = tokenize(db, &holder->tracker->quotes, line);
+    splitted = tokenize(db, &holder->tracker->quotes, line);
     if (db->error || !db->exec_line)
         return error(db, NULL, NULL);
+
+    CURR_CMD->args = splitted;
 
     CATCH_MALLOC((CURR_CMD)->args);
     (CURR_CMD)->input_fd = db->input_fd;

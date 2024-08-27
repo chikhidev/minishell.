@@ -42,6 +42,9 @@ int handle_prompt(t_db *db, char **line)
     gc_free(db, tmp);
     if (!*line) return FAILURE; /*stop the loop*/
     if (*line[0] != '\0') add_history(*line);
+
+    ignore_signals();
+
     return SUCCESS ; /*nothing*/
 }
 

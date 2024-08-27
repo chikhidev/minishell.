@@ -5,13 +5,23 @@ void    *gc_malloc(t_db *db, size_t size)
     void    *ptr;
 
     ptr = malloc(size + 1);
-    if (!ptr) return (NULL);
+    if (!ptr)
+    {
+        gc_void(db);
+        ec_void(db);
+        exit(FAIL);
+    }
     ft_bzero(ptr, size + 1);
+
     if (!db->gc)
     {
         db->gc = malloc(sizeof(t_gc));
         if (!db->gc)
-            return (NULL);
+        {
+            free(ptr);
+            ec_void(db);
+            exit(FAIL);
+        }
         db->gc->ptr = ptr;
         db->gc->next = NULL;
     }
@@ -24,7 +34,13 @@ void    *gc_malloc(t_db *db, size_t size)
             gc = gc->next;
         gc->next = malloc(sizeof(t_gc));
         if (!gc->next)
-            return (NULL);
+        {
+            gc->next = NULL;
+            free(ptr);
+            gc_void(db);
+            ec_void(db);
+            exit(FAIL);
+        }
         gc->next->ptr = ptr;
         gc->next->next = NULL;
     }
@@ -61,12 +77,20 @@ void    *ec_malloc(t_db *db, size_t size)
 
     ptr = malloc(size);
     if (!ptr)
-        return (NULL);
+    {
+        gc_void(db);
+        ec_void(db);
+        exit(FAIL);
+    }
     if (!db->ec)
     {
         db->ec = malloc(sizeof(t_gc));
         if (!db->ec)
-            return (NULL);
+        {
+            free(ptr);
+            gc_void(db);
+            exit(FAIL);
+        }
         db->ec->ptr = ptr;
         db->ec->next = NULL;
     }
@@ -79,7 +103,12 @@ void    *ec_malloc(t_db *db, size_t size)
             ec = ec->next;
         ec->next = malloc(sizeof(t_gc));
         if (!ec->next)
-            return (NULL);
+        {
+            ec->next = NULL;
+            free(ptr);
+            gc_void(db);
+            exit(FAIL);
+        }
         ec->next->ptr = ptr;
         ec->next->next = NULL;
     }
@@ -137,20 +166,6 @@ void    ec_void(t_db *db)
     }
     db->ec = NULL;
 }
-
-// void *ft_realloc(t_db    *db,    void    *old_ptr,   size_t  size,  bool free_)
-// {
-//     void    *new_ptr;
-
-//     new_ptr =   gc_malloc(db,   size + 1);
-//     ft_bzero(new_ptr, size);
-//     ft_memcpy(new_ptr,  old_ptr, size);
-//     if (free_)
-//         free(old_ptr);
-//     else
-//         gc_free(db, old_ptr);
-//     return new_ptr;
-// }
 
 void    *gc_realloc(t_db *db, void *ptr, size_t size)
 {

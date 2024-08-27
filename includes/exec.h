@@ -6,22 +6,19 @@
 
 #define CHILD 0
 // exec.c
-// int exec(t_db *db, void **current_node);
-void exec(t_db   *db, void *node);
-int exec_builtin(t_db   *db,t_cmd_node *node, int   index);
+void exec(t_db *db, void *node);
 void handle_pipe_op(t_db *db, void *node);
 void handle_cmd_node(t_db *db, void *node, int **pipes, int index);
 // path.c
-int run_builtin(t_db   *db,t_cmd_node *node, int index);
-char    *cmd_path(t_db *db, char *filename);
+int run_builtin(t_db *db, t_cmd_node *node, int index);
+char *cmd_path(t_db *db, char *filename);
 
 // path-checker.c
-bool    is_absolute_path(char *path);
-bool    is_relative_path(char *path);
+bool is_absolute_path(char *path);
+bool is_relative_path(char *path);
 
-void    *pid_add(t_db *db, pid_t  new_ip);
-void    pid_free(t_db *db, pid_t  ip_to_free);
-void    pid_void(t_db *db);
-
+void *pid_add(t_db *db, pid_t new_ip);
+void pid_free(t_db *db, pid_t ip_to_free);
+void pid_void(t_db *db);
 
 #endif
