@@ -148,7 +148,8 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->exp_list = NULL;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
-    db->ip = NULL;
+    db->pid = NULL;
+    db->fd = NULL;
     db->stdin_dup = -1;
     db->stdout_dup = -1;
 }
@@ -162,6 +163,8 @@ void db_reset(t_db *db)
     db->curr_type = INVALID;
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
+    db->fd = NULL;
+    pid_void(db);
 }
 
 
@@ -206,7 +209,7 @@ int main(int ac, char *av[],  char *env[])
             exec(&db, db.root_node);
         }
         gc_void(&db);
-        ip_void(&db);
+        pid_void(&db);
     }
     ec_void(&db);
     gc_void(&db);

@@ -1,6 +1,19 @@
 #include "main.h"
 #include "parsing.h"
 
+int ft_open(t_db *db, char *file, int flags, int type)
+{
+    int fd;
+
+    if (type == -1)
+        fd = open(file, flags);
+    else
+        fd = open(file, flags, type);
+    if (fd != -1)
+        fd_add(db, fd);
+    return fd;
+}
+
 int create_redirection(t_db *db, int type, int fd)
 {
     if (type == INPUTFILE)
@@ -76,11 +89,11 @@ int open_file(t_db *db, char *file, int type)
 
     tmp = whithout_quotes(db, file);
     if (type == APPENDFILE)
-        fd = open(tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)
-        fd = open(tmp, O_RDONLY);
+        fd = ft_open(db, tmp, O_RDONLY, -1);
     else if (type == OUTPUTFILE)
-        fd = open(tmp, O_WRONLY  | O_CREAT | O_TRUNC, 0644);
+        fd = ft_open(db, tmp, O_WRONLY  | O_CREAT | O_TRUNC, 0644);
 
     if (create_redirection(db, type, fd) == FAILURE)
         return (FAILURE);

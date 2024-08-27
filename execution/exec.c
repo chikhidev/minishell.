@@ -9,9 +9,13 @@ void ft_close(t_db *db, int    *fd)
 
     res = 0;
     if (*fd != CLOSED)
+    {
         res = close(*fd);
+        fd_free(db, *fd);
+    }
     if (res != INVALID)
         return;
+    fd_void(db);
     gc_void(db);
     ec_void(db);
     dprintf(2, "close failed\n");
@@ -23,8 +27,13 @@ void ft_pipe(t_db *db, int *pipe_fd)
     int res;
 
     res = pipe(pipe_fd);
+    if (res != INVALID && pipe_fd[0] != INVALID)
+        fd_add(db, pipe_fd[0]);
+    if (res != INVALID && pipe_fd[1] != INVALID)
+        fd_add(db, pipe_fd[1]);
     if (res != INVALID)
         return;
+    fd_void(db);
     gc_void(db);
     ec_void(db);
     dprintf(2, "pipe failed\n");
@@ -35,8 +44,11 @@ void ft_dup2(t_db *db, int old_fd, int new_fd)
 {
     int res;
     res = dup2(old_fd, new_fd);
+    if (old_fd != INVALID)
+        fd_add(db, old_fd);
     if (res != INVALID)
         return;
+    fd_void(db);
     gc_void(db);
     ec_void(db);
     dprintf(2, "dup2 failed\n");
@@ -101,15 +113,15 @@ int    **prepare_pipes(t_db  *db,   int n_pipes)
 }
 void    waiter(t_db *db, int  *status)
 {
-    t_ip_addrs  *ip;
+    t_int  *pid;
 
-    ip = db->ip;
-    while (ip)
+    pid = db->pid;
+    while (pid)
     {
-        waitpid(ip->ip_addr, status, 0);
-        ip = ip->next;
+        waitpid(pid->n, status, 0);
+        pid = pid->next;
     }
-    ip_void(db);
+    pid_void(db);
     catch_feedback(db, *status);
 }
 
@@ -226,7 +238,7 @@ int handle_builtin(t_db *db, void *node, int **pipes, int index)
     }
     else
     {
-        ip_add(db, id);
+        pid_add(db, id);
     }
     return db->last_signal;
 }
@@ -251,7 +263,7 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
                 catch_feedback(db, status);
             }
             else
-                ip_add(db, id);
+                pid_add(db, id);
         }
     }
 }

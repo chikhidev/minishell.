@@ -3,6 +3,7 @@
 #include "exec.h"
 #include "builtens.h"
 
+
 int handle_redirections(t_db    *db,    void    *node)
 {
     (void) db;
@@ -51,14 +52,14 @@ bool    node_in_scope(void  *node)
 }
 void    waiter(t_db *db, int  *status)
 {
-    t_ip_addrs  *ip;
+    t_int  *ip;
 
-    ip = db->ip;
+    ip = db->pid;
     while (ip)
     {
-        waitpid(ip->ip_addr, status, 0);
+        waitpid(ip->n, status, 0);
         ip = ip->next;
     }
-    ip_void(db);
+    pid_void(db);
     catch_feedback(db, *status);
 }
