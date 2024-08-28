@@ -200,12 +200,7 @@ int main(int ac, char *av[],  char *env[])
         if (ret == 0)
             continue ;
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
-        if (!tmp)
-        {
-            free(line);
-            ec_void(&db);
-            return !error(&db, NULL, "malloc failed");
-        }
+
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         free(line);
         line = tmp;
@@ -214,9 +209,11 @@ int main(int ac, char *av[],  char *env[])
         {
             exec(&db, db.root_node);
         }
+        fd_void(&db);
         gc_void(&db);
         pid_void(&db);
     }
+    fd_void(&db);
     ec_void(&db);
     gc_void(&db);
 

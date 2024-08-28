@@ -9,8 +9,7 @@ int ft_open(t_db *db, char *file, int flags, int type)
         fd = open(file, flags);
     else
         fd = open(file, flags, type);
-    if (fd != -1)
-        fd_add(db, fd);
+    fd_add(db, fd);
     return fd;
 }
 

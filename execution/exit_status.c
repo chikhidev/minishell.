@@ -114,15 +114,17 @@ void    fd_free(t_db *db, pid_t  fd_to_free)
 
 void    fd_void(t_db *db)
 {
-    t_int    *fd;
+    t_int    *fd_head;
+    t_int    *tmp;
 
+    fd_head = db->fd;
     while (db->fd)
     {
-        fd = db->fd;
-        if (fd->n > 2)
-            close(fd->n);
-        db->fd = db->fd->next;
-        gc_free(db, fd);
+        tmp = db->fd->next;
+        if (db->fd->n > 2)
+            close(db->fd->n);
+        gc_free(db, db->fd);
+        db->fd = tmp;
     }
     db->fd = NULL;
 }

@@ -3,6 +3,19 @@
 #include "exec.h"
 #include "builtens.h"
 
+void ft_exit(t_db *db, int status, short free_flag, char *msg)
+{
+    if (msg)
+        dprintf(2, "%s\n", msg);
+    if (free_flag > 2)
+        fd_void(db);
+    if (free_flag > 1)
+        ec_void(db);
+    if (free_flag > 0)
+        gc_void(db);
+    exit(status);
+}
+
 void ft_close(t_db *db, int *fd)
 {
     int res;
@@ -15,11 +28,8 @@ void ft_close(t_db *db, int *fd)
     }
     if (res != INVALID)
         return;
-    fd_void(db);
-    gc_void(db);
-    ec_void(db);
-    dprintf(2, "close failed\n");
-    exit(1);
+    printf("close -> %d\n", res);
+    ft_exit(db, 1, 3, "close failed");
 }
 
 void ft_pipe(t_db *db, int *pipe_fd)
@@ -33,11 +43,8 @@ void ft_pipe(t_db *db, int *pipe_fd)
         fd_add(db, pipe_fd[1]);
     if (res != INVALID)
         return;
-    fd_void(db);
-    gc_void(db);
-    ec_void(db);
-    dprintf(2, "pipe failed\n");
-    exit(1);
+    ft_exit(db, 1, 3, "pipe failed");
+
 }
 
 void ft_dup2(t_db *db, int old_fd, int new_fd)
@@ -48,11 +55,8 @@ void ft_dup2(t_db *db, int old_fd, int new_fd)
         fd_add(db, old_fd);
     if (res != INVALID)
         return;
-    fd_void(db);
-    gc_void(db);
-    ec_void(db);
-    dprintf(2, "dup2 failed\n");
-    exit(1);
+    ft_exit(db, 1, 3, "dup2 failed");
+
 }
 
 int get_pipes_count(int **pipes)
@@ -71,13 +75,17 @@ char *get_path(t_db *db, char **args)
     char *path;
 
     path = args[0];
-    if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0 || is_str_empty(db, path))
+    if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
         return ft_strdup(db, path);
+    if (is_str_empty(db, args[0]))
+        ft_exit(db, 127, 3, ft_strjoin(db, args[0], ": command not found"));
     if (is_relative_path(path) || is_absolute_path(path))
     {
         if (access(path, F_OK) + access(path, X_OK) != 0)
         {
             perror(path);
+            fd_void(db);
+            ec_void(db);
             exit(error(db, NULL, NULL) + 127 - (access(path, X_OK) != 0));
         }
     }
@@ -85,12 +93,12 @@ char *get_path(t_db *db, char **args)
     {
         path = cmd_path(db, args[0]);
         if (db->error)
-            exit(126);
-        if (!path)
         {
-            error(db, args[0], "command not found");
-            exit(127);
+            fd_void(db);
+            exit(126);
         }
+        if (!path)
+            ft_exit(db, 127, 3, ft_strjoin(db, args[0], ": command not found"));
     }
     return (path);
 }
@@ -204,15 +212,16 @@ void handle_is_dir(t_db *db, char    *arg)
     DIR *dir;
 
     if (ft_strcmp(arg, ".") == 0)
-        (printf("%s: command not found\n", arg), exit(2));
+        ft_exit(db, 2, 3, ft_strjoin(db, arg, ": command not found"));
     if (ft_strcmp(arg, "..") == 0)
-        (printf("%s: command not found\n", arg), exit(127));
+    {
+        ft_exit(db, 127, 3, ft_strjoin(db, arg, ": command not found"));
+    }
     dir = opendir(arg);
     if (dir)
     {
-        printf("%s Is a directory\n", arg);
-        closedir(dir);  
-        exit(126);
+        closedir(dir);
+        ft_exit(db, 126, 3, ft_strjoin(db, arg, ": Is a directory"));
     }
 }
 
@@ -222,7 +231,7 @@ void exec_cmd(t_db *db, void *node, int **pipes, int index)
     char *path;
 
     if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
-        return ;
+        ft_exit(db, 127, 3, NULL);
 
     path = get_path(db, CMD->args);
     env_arr = env_list_to_env_arr(db);
@@ -232,7 +241,7 @@ void exec_cmd(t_db *db, void *node, int **pipes, int index)
     dup_cmd_io(db, node);
     handle_is_dir(db, CMD->args[0]);
     execve(path, CMD->args, env_arr);
-    exit(127);
+    ft_exit(db, 127, 3, ft_strjoin(db, path, ": failed"));
 }
 
 int handle_builtin(t_db *db, void *node, int **pipes, int index)
@@ -250,7 +259,7 @@ int handle_builtin(t_db *db, void *node, int **pipes, int index)
         close_all_pipes(db, pipes);
         db->last_signal = run_builtin(db, node, index);
         db->last_signal = db->last_signal << 8;
-        exit(db->last_signal);
+        ft_exit(db, db->last_signal, 3, NULL);
     }
     else
     {

@@ -1,4 +1,4 @@
-echo 'alias vl="valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all" ' >> ~/.bashrc
+echo 'alias vl="valgrind --suppressions=readline.supp --track-fds=yes --leak-check=full --show-leak-kinds=all" ' >> ~/.bashrc
 
 # create readline.supp if it doesn't exist
 if [ ! -f readline.supp ]; then
