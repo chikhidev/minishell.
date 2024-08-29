@@ -29,8 +29,6 @@ char *get_env(t_db *db, char *name)
 
 	if (!name)
         return (NULL);
-    if (db->debug)
-        printf("name -> %s\n", name);
     if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
         return (ft_itoa(db, db->last_signal));
     if (are_all(name, ft_isdigit))

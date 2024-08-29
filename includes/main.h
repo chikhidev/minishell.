@@ -283,7 +283,10 @@ void    *fd_add(t_db *db, pid_t  new_fd);
 void    fd_free(t_db *db, pid_t  fd_to_free);
 void    fd_void(t_db *db);
 int		ft_open(t_db *db, char *file, int flags, int type);
-
+void	ft_exit(t_db *db, int status, short free_flag, char *msg);
+void	ft_close(t_db *db, int *fd);
+void	ft_pipe(t_db *db, int *pipe_fd);
+void	ft_dup2(t_db *db, int old_fd, int new_fd);
 /*prototypes: string.c*/
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);

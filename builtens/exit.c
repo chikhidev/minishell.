@@ -1,6 +1,7 @@
 #include "main.h"
 #include "builtens.h"
 #include "string.h"
+#include "exec.h"
 
 static int	is_space(char c)
 {
@@ -60,7 +61,7 @@ int exit_(t_db  *db,    char    *av[], int index)
     {
         if (index == -1)
             printf("exit\n");
-        exit(0);
+        ft_exit(db, 0, 3, NULL);
     }
     exit_code = (unsigned char)ft_atoll(av[1], &err);
     if (err)
@@ -73,12 +74,10 @@ int exit_(t_db  *db,    char    *av[], int index)
         dprintf(2, "exit: too many arguments\n");
         return 1;
     }
-    error(db, NULL, NULL);
-    ec_void(db);
-    gc_void(db);
     if (db->stdin_dup != -1)
         close(db->stdin_dup);
     if (db->stdout_dup != -1)
         close(db->stdout_dup);
-    exit(exit_code);
+    ft_exit(db, exit_code, 3, NULL);
+    return (1);
 }

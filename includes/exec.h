@@ -10,6 +10,7 @@ void exec(t_db *db, void *node);
 void handle_pipe_op(t_db *db, void *node);
 void handle_cmd_node(t_db *db, void *node, int **pipes, int index);
 // path.c
+
 int run_builtin(t_db *db, t_cmd_node *node, int index);
 char *cmd_path(t_db *db, char *filename);
 

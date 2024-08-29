@@ -9,6 +9,7 @@ int error(t_db *db, char *specifier, char *msg)
         else
             dprintf(2, "%s: %s\n", specifier, msg);
     }
+    fd_void(db);
     gc_void(db);
     db->error = true;
     return (FAILURE);
