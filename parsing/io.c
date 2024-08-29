@@ -137,7 +137,7 @@ int open_heredoc(t_db *db, char *delim)
     
     if (IS_CHILD)
     {
-        heredoc_signals_handling();
+        default_signals_behav(true);
 
         close(pipe_fd[0]);
 
@@ -146,7 +146,7 @@ int open_heredoc(t_db *db, char *delim)
             line = readline("> ");
             if (!line)
             {
-                dprintf(2, "Warning: here-document delimited by end-of-file (wanted `%s')\n", delim);
+                printf("Warning: here-document delimited by end-of-file\n");
                 close(pipe_fd[1]);
                 break;
             }
@@ -191,7 +191,10 @@ int open_heredoc(t_db *db, char *delim)
 
     catch_feedback(db, child_status);
     if (db->last_signal != 0)
+    {
+        printf("Error: here-document terminated by signal %d\n", db->last_signal);
         return FAILURE;
+    }
     
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;
@@ -199,96 +202,3 @@ int open_heredoc(t_db *db, char *delim)
     return SUCCESS;
 }
 
-int is_op_redir(char *line, int i)
-{
-    if (ft_strncmp(&line[i], ">>", 2) == 0
-        || ft_strncmp(&line[i], "<<", 2) == 0)
-    {
-        printf("Syntax error near unexpected token `%c%c'\n", line[i], line[i + 1]);
-        return (FAILURE);
-    }
-
-    if (ft_strncmp(&line[i], ">", 1) == 0
-        || ft_strncmp(&line[i], "<", 1) == 0)
-    {
-        printf("Syntax error near unexpected token `%c'\n", line[i]);
-        return (FAILURE);
-    }
-
-    return (SUCCESS);
-}
-
-
-
-
-int syntax_checker(t_db *db, char *line, int *start, t_quote *quotes)
-{
-    int i;
-
-    i = *start;
-
-    skip_open_spaces(quotes, line, &i);
-    if (!line[i])
-    {
-        return (SUCCESS);
-    }
-
-    if (line[i] == '|')
-    {
-        printf("Syntax error near unexpected token `%c'\n", line[i]);
-        return (FAILURE);
-    }
-
-    while (line[i])
-    {
-        if (((ft_strncmp(&line[i], ">>", 2) == 0
-            || ft_strncmp(&line[i], "<<", 2) == 0
-            || ft_strncmp(&line[i], ">", 1) == 0
-            || ft_strncmp(&line[i], "<", 1) == 0))
-            && !is_inside_quotes_line(line, i)
-            )
-        {
-            if (line[i] == '<' && line[i + 1] == '<')
-            {
-                db->heredoc_counter++;
-                if (db->heredoc_counter > 15)
-                    return error(db, "heredoc", "maximum here-document count exceeded");
-                i++;
-            }
-
-            i += 1 + (line[i + 1] == '>' || line[i + 1] == '<');
-            skip_spaces(line, &i);
-            if (!line[i])
-            {
-                return error(db, NULL, "Syntax error near unexpected token `newline'");
-            }
-
-            if (line[i] == '|')
-            {
-                printf("Syntax error near unexpected token `%c\n", line[i]);
-                return error(db, NULL, NULL);
-            }
-            if (is_op_redir(line, i) == FAILURE)
-                return (FAILURE);
-        }
-
-        if (line[i] == '|')
-        {
-            i++;
-            skip_spaces(line, &i);
-            if (!line[i])
-            {
-                printf("Syntax error near unexpected token `newline'\n");
-                return (FAILURE);
-            }
-            if (line[i] == '|')
-            {
-                printf("Syntax error near unexpected token `%c'\n", line[i]);
-                return (FAILURE);
-            }
-        }
-
-        i++;
-    }
-    return (SUCCESS);
-}

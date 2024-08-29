@@ -299,7 +299,7 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     int id;
     int status;
 
-    if (!CMD->args || !CMD->args[0])
+    if (!node || !CMD->args || !CMD->args[0])
         return;
 
     status = 0;
@@ -310,7 +310,7 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
         id = fork();
         if (id == CHILD)
         {
-            default_signals_behav();
+            default_signals_behav(false);
             exec_cmd(db, node, pipes, index);
         }
         else

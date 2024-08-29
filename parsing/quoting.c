@@ -71,19 +71,22 @@ int track_quotes(t_db *db, t_quote **head, char *line)
     return (SUCCESS);
 }
 
-void reset_quotes(t_db *db, t_quote **head)
+void update_quotes(t_quote *head, int start, int old_len, int new_len)
 {
-    t_quote *curr;
-    t_quote *tmp;
+    t_quote *q;
 
     if (!head)
         return ;
-    curr = *head;
-    while (curr)
+    q = head;
+    while (q)
     {
-        tmp = curr;
-        curr = (curr)->next;
-        gc_free(db, tmp);
+        if (start > q->start && start < q->end)
+        {
+            printf("updated {%d, %d} to ", q->start, q->end);
+            q->end += new_len - old_len;
+            printf("{%d, %d}\n", q->start, q->end);
+            return ;
+        }
+        q = q->next;
     }
-    *head = NULL;
 }

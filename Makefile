@@ -1,5 +1,5 @@
 NAME = minishell
-CARGS = -Wall -Wextra -Werror -I includes -g3 #-fsanitize=address 
+CARGS = -Wall -Wextra -Werror -I includes -g3 -fsanitize=address 
 
 
 LIBFT = libft/libft.a
@@ -16,12 +16,13 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/wildcard.c \
 				parsing/str_list.c \
 				parsing/file_entry.c \
+				parsing/syntax.c \
 
 EXPANDING = parsing/expanding/index.c \
 			parsing/expanding/utils1.c \
 			parsing/expanding/utils2.c \
 
-PARSING_SRC += $(EXPANDING)
+PARSING_SRC += $(EXPANDING)	
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path-checker.c \

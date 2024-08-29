@@ -21,7 +21,12 @@ int parser(t_db *db, char *line)
         return FAILURE;
 
     CATCH_ONFAILURE(
-        syntax_checker(db, line, &i, quotes),
+        syntax_checker(db, line, quotes),
+        FAILURE
+    )
+
+    CATCH_ONFAILURE(
+        expand(db, &line, &quotes),
         FAILURE
     )
 
