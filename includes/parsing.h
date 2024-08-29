@@ -28,6 +28,7 @@
 #define HEREDOC 7
 
 #define W_SPACE 8
+#define WORD 9
 
 typedef struct s_holder
 {
@@ -52,7 +53,7 @@ int count_line_args(char *line, t_quote *quotes, int len);
 int append_split(char **splitted, char *string);
 char *sub(t_db *db, char *line, int i, int j);
 int all_whitespaces(char *line, int start, int end);
-int is_special(t_db *db, char *s, int *i, t_quote *quotes);
+int get_tok(t_db *db, char *s, int *i, t_quote *quotes);
 
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int track_quotes(t_db *db, t_quote **head, char *line);
