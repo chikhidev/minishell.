@@ -16,7 +16,6 @@ int unset_(t_db *db,    char    *args[])
         }
         if (ft_strcmp(args[i], "PATH") == 0)
             db->static_path = NULL;
-
         i++;
     }
     return (0);

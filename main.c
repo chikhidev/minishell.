@@ -2,6 +2,7 @@
 #include "parsing.h"
 #include "exec.h"
 #include "builtens.h"
+#include "string.h"
 
 void handle_sigint(int signum)
 {
@@ -60,7 +61,7 @@ t_env_list *set_default_env(t_db *db)
     push_env_back(&db->env_list, new);
     new = new_env_node(db, "OSH", getcwd(NULL, 0));
     push_env_back(&db->env_list, new);
-    new = new_env_node(db, "SHLVL", "1");
+    new = new_env_node(db, "SHLVL", "0");
     push_env_back(&db->env_list, new);
     new = new_env_node(db, "_", "/usr/bin/env");
     push_env_back(&db->env_list, new);
@@ -75,7 +76,7 @@ t_exp_list *set_default_exp(t_db *db)
     push_exp_back(&db->exp_list, new);
     new = new_exp_node(db, "OSH", getcwd(NULL, 0));
     push_exp_back(&db->exp_list, new);
-    new = new_exp_node(db, "SHLVL", "1");
+    new = new_exp_node(db, "SHLVL", "0");
     push_exp_back(&db->exp_list, new);
     new = new_exp_node(db, "_", "/usr/bin/exp");
     push_exp_back(&db->exp_list, new);
@@ -88,6 +89,7 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
     int i = 0;
     char *key;
     char *val;
+    int shlvl;
     bool good = false;
 
     key = NULL;
@@ -100,11 +102,14 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
         good = fill_key_val(db, env[i], &key, &val);
         if (!good)
             return NULL ;
-        new_node = new_env_node(db, key, val);
-        if (!new_node) {
-            error(db, NULL, "Malloc failed6");
-            return NULL; // Ensure we return if malloc fails.
+        if (ft_strcmp(key, "SHLVL") == 0)
+        {
+            shlvl = ft_atoi(val) + 1;
+            if (shlvl >= 1000)
+                shlvl = 1;
+            val = ft_itoa_ec(db, shlvl);
         }
+        new_node = new_env_node(db, key, val);
         push_env_back(&env_list, new_node);
         i++;
     }
@@ -117,6 +122,7 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     t_exp_list      *new_node;
     int             i;
     char            *key;
+    int             shlvl;
     char            *val;
     bool            good;
     exp_list = NULL;
@@ -130,6 +136,13 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
         good = fill_key_val(db, env[i], &key, &val);
         if (!good)
             return (NULL);
+        if (ft_strcmp(key, "SHLVL") == 0)
+        {
+            shlvl = ft_atoi(val) + 1;
+            if (shlvl >= 1000)
+                shlvl = 1;
+            val = ft_itoa_ec(db, shlvl);
+        }
         new_node = new_exp_node(db, key, val); // check malloc
         new_node->next = NULL;
         if (ft_strncmp(key, "_", ft_strlen(key)) == 0)

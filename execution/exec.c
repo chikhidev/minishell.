@@ -16,6 +16,13 @@ void ft_exit(t_db *db, int status, short free_flag, char *msg)
     exit(status);
 }
 
+void ft_write(t_db *db, int fd, char *msg, int len)
+{
+    int res = write(fd, msg, len);
+    if (res == -1)
+        ft_exit(db, 1, 3, "write failed");
+}
+
 void ft_close(t_db *db, int *fd)
 {
     int res;
@@ -57,6 +64,18 @@ void ft_dup2(t_db *db, int old_fd, int new_fd)
         return;
     ft_exit(db, 1, 3, "dup2 failed");
 
+}
+
+int ft_dup(t_db *db, int fd)
+{
+    int new_fd;
+    new_fd = dup(fd);
+    if (fd != INVALID)
+        fd_add(db, new_fd);
+    if (new_fd != INVALID)
+        return new_fd;
+    ft_exit(db, 1, 3, "dup failed");
+    return (new_fd);
 }
 
 int get_pipes_count(int **pipes)
@@ -246,9 +265,16 @@ void exec_cmd(t_db *db, void *node, int **pipes, int index)
 
 int handle_builtin(t_db *db, void *node, int **pipes, int index)
 {
+    int in;
+    int out;
     if (index == -1)
     {
+        in = ft_dup(db, STDIN_FILENO);
+        out = ft_dup(db, STDOUT_FILENO);
+        dup_cmd_io(db, node);
         db->last_signal = run_builtin(db, node, index);
+        dup2(in, STDIN_FILENO);
+        dup2(out, STDOUT_FILENO);
         return db->last_signal;
     }
     int id = fork();

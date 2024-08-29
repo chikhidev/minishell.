@@ -78,8 +78,6 @@ int	go_dir(t_db    *db, char    *args[])
 	char *token;
 
 	token = whithout_quotes_ec(db, args[1]);
-	if (!token)
-		return (perror("malloc"), 1);
 	to = opendir(token);
 	if (to == NULL)
 		return (dprintf(2, "cd: "), perror(args[1]), 1);

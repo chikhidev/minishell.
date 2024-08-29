@@ -23,9 +23,17 @@ int    env_(t_db *db, char  *av[])
             _val = curr->val; 
         }
         else
-            printf("%s=%s\n", curr->key, curr->val);
+        {
+            ft_write(db, STDOUT_FILENO, curr->key, ft_strlen(curr->key));
+            ft_write(db, STDOUT_FILENO, "=", 1);
+            ft_write(db, STDOUT_FILENO, curr->val, ft_strlen(curr->val));
+            ft_write(db, STDOUT_FILENO, "\n", 1);
+        }
         curr = curr->next;
     }
-    printf("%s=%s\n", _key, _val);
+    ft_write(db, STDOUT_FILENO, _key, ft_strlen(_key));
+    ft_write(db, STDOUT_FILENO, "=", 1);
+    ft_write(db, STDOUT_FILENO, _val, ft_strlen(_val));
+    ft_write(db, STDOUT_FILENO, "\n", 1);
     return (0);
 }

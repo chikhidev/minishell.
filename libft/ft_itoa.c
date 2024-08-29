@@ -13,6 +13,7 @@
 #include "libft.h"
 #include <stdlib.h>
 #include "../includes/main.h"
+#include "../includes/string.h"
 
 static int	ft_intlen(int n)
 {
@@ -69,8 +70,41 @@ char	*ft_itoa(t_db *db, int n)
 	neg = 0;
 	number = (long long)n;
 	if (number == 0)
-		return ((char *)ft_strdup(db, "0"));
+		return ((char *)ft_strdup_ec(db, "0"));
 	res = allocate_buffer(db, &number, &len, &neg);
+	if (!res)
+		return (NULL);
+	fill_string(number, len, neg, res);
+	return (res);
+}
+
+static char	*allocate_buffer_ec(t_db *db, long long *number, int *len, int *neg)
+{
+	char	*res;
+
+	if (*number < 0)
+	{
+		*neg = 1;
+		(*len) += 1;
+		*number *= -1;
+	}
+	res = ec_malloc(db, sizeof(char) * (*len + 1));
+	return (res);
+}
+
+char	*ft_itoa_ec(t_db *db, int n)
+{
+	int			len;
+	char		*res;
+	int			neg;
+	long long	number;
+
+	len = ft_intlen(n);
+	neg = 0;
+	number = (long long)n;
+	if (number == 0)
+		return ((char *)ft_strdup(db, "0"));
+	res = allocate_buffer_ec(db, &number, &len, &neg);
 	if (!res)
 		return (NULL);
 	fill_string(number, len, neg, res);
