@@ -2,12 +2,13 @@
 #include "parsing.h"
 #include "./index.h"
 
-int expand(t_db *db, char **line, t_quote **quotes, bool track_perm)
+int expand(t_db *db, char **line, t_quote **quotes)
 {
     char    *env_var_name;
     int     i;
     t_iterators rem;
     int len;
+    char *value;
 
     len = ft_strlen(*line);
     rem.i = -1;
@@ -47,24 +48,27 @@ int expand(t_db *db, char **line, t_quote **quotes, bool track_perm)
                 
                 rem.j = i - 1;
 
+                
                 i = updated_line(db, line, env_var_name, &rem);
                 if (i == INVALID)
                     return (FAILURE);
                 
-                gc_free(db, env_var_name);
-                env_var_name = NULL;
             }
 
             len = ft_strlen(*line);
             if (i >= len)
                 return (SUCCESS);
 
-            reset_quotes(db, quotes);
-            if (quotes)
-                *quotes = NULL;
+            value = get_environment_var(db, env_var_name, db->env);
 
-            if (track_perm && quotes && !track_quotes(db, quotes, (*line)))
-                return (FAILURE);
+            printf("dollar found at: %d\n", rem.i);     
+            printf("env_var_name: %s\n", env_var_name);
+            printf("new len: %zu\n", ft_strlen(value));
+
+            update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
+
+            gc_free(db, env_var_name);
+            env_var_name = NULL;
         }
         i++;
     }

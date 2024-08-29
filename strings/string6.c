@@ -1,34 +1,51 @@
 #include "main.h"
 #include "parsing.h"
 
-/**
- * unused_arg - Check if an argument is unused
- * @db: The database
- * @arg: The argument to check
- * Return: true if the argument will be unsed later, false otherwise
-*/
-// bool will_be_unused_arg(t_db *db, char *arg)
-// {
-//     char *tmp;
-//     char *final_form;
-//     t_quote *quote;
+int is_special(t_db *db, char *s, int *i, t_quote *quotes)
+{
+    if (is_inside_quotes_list(quotes, *i))
+        return INVALID;
 
-//     tmp = ft_strdup(arg);
-//     if (!tmp)
-//         return false;
+    if (is_whitespace(s[*i]))
+    {
+        printf("is w space\n");
+        return W_SPACE;
+    }
 
-//     quote = NULL;
-//     track_quotes(db, &quote, tmp);
+    if (s[*i] == '|')
+    {
+        printf("is pipe\n");
+        return PIPE;
+    }
 
-//     final_form = ft_strdup(db, tmp);
-//     expand(db, &final_form, &quote);
+    if (s[*i] == '<')
+    {
+        if (s[*i + 1] == '<')
+        {
+            (*i)++;
+            db->heredoc_counter++;
+            printf("is hrdc\n");
 
-//     if (!quote && is_str_empty(db, final_form))
-//     {
-//         gc_free(db, final_form);
-//         return true;
-//     }
+            return HEREDOC;
+        }
+        printf("is input\n");
 
-//     gc_free(db, final_form);
-//     return false;
-// }
+        return INPUT;
+    }
+
+    if (s[*i] == '>')
+    {
+        if (s[*i + 1] == '>')
+        {
+            (*i)++;
+            printf("is append\n");
+
+            return APPEND;
+        }
+        printf("is redir\n");
+
+        return REDIR;
+    }
+
+    return INVALID;
+}

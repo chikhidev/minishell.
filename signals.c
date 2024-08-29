@@ -28,26 +28,19 @@ void heredoc_behave(int signal)
     exit(1);
 }
 
-void default_signals_behav()
+void default_signals_behav(bool ignore_quit)
 {
-    struct sigaction sa;
-
-    ft_bzero(&sa, sizeof(struct sigaction));
-    sa.sa_handler = SIG_DFL;
-    sigaction(SIGINT, &sa, NULL);
-    sa.sa_handler = SIG_DFL;
-    sigaction(SIGQUIT, &sa, NULL);
+    signal(SIGINT, SIG_DFL);
+    if (!ignore_quit)
+        signal(SIGQUIT, SIG_DFL);
+    else
+        signal(SIGQUIT, SIG_IGN);
 }
 
 void heredoc_signals_handling(void)
 {
-    struct sigaction sa;
-
-    ft_bzero(&sa, sizeof(struct sigaction));
-    sa.sa_handler = heredoc_behave;
-    sigaction(SIGINT, &sa, NULL);
-    sa.sa_handler = SIG_IGN;
-    sigaction(SIGQUIT, &sa, NULL);
+    signal(SIGINT, heredoc_behave);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void parent_behav(int signal)
@@ -64,11 +57,7 @@ void parent_behav(int signal)
 
 void handle_parent_signals(void)
 {
-    struct sigaction sa;
-
-    ft_bzero(&sa, sizeof(struct sigaction));
-    sa.sa_handler = parent_behav;
-    sigaction(SIGINT, &sa, NULL);
-    sigaction(SIGQUIT, &sa, NULL);
+    signal(SIGINT, parent_behav);
+    signal(SIGQUIT, parent_behav);
 }
 
