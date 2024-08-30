@@ -82,7 +82,14 @@ int open_file(t_db *db, char *file, int type)
         return FAILURE;
     }
 
+    printf("file: %s|\n", file);
     tmp = whithout_quotes(db, file);
+    printf("tmp: %s|\n", tmp);
+    if (expand(db, &tmp, &quotes) == FAILURE)
+            return FAILURE;
+    printf("tmp: %s|\n", tmp);
+        
+    
     if (type == APPENDFILE)
         fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)

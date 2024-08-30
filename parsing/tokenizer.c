@@ -23,6 +23,8 @@ char **append_word(t_db *db, char **result, char *save)
         result = (char **)gc_malloc(db, 2 * sizeof(char *));
 
         tmp = whithout_quotes(db, save);
+        if (expand(db, &save, &q) == FAILURE)
+            return NULL;
         
         result[0] = tmp;
         result[1] = NULL;
@@ -34,6 +36,8 @@ char **append_word(t_db *db, char **result, char *save)
     result = (char **)gc_realloc(db, result, (size + 2) * sizeof(char *));
     
     tmp = whithout_quotes(db, save);
+    if (expand(db, &save, &q) == FAILURE)
+            return NULL;
     if (!tmp)
         return NULL;
     result[size] = tmp;
@@ -122,27 +126,27 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             }
             if (ft_strlen(save) > 0)
             {
-                if (ft_strcmp(save, "*") == 0)
-                {
-                    curr_dir = opendir(".");
-                    if (curr_dir)
-                    {
-                        entry = readdir(curr_dir);
-                        while (entry)
-                        {
-                            if (!starts_with(entry->d_name, "."))
-                            {
-                                result = append_word(db, result, entry->d_name);
-                                if (!result)
-                                {
-                                    db->error = true;
-                                    return (NULL);
-                                }
-                            }
-                            entry = readdir(curr_dir);
-                        }
-                    }
-                }
+                // if (ft_strcmp(save, "*") == 0)
+                // {
+                //     curr_dir = opendir(".");
+                //     if (curr_dir)
+                //     {
+                //         entry = readdir(curr_dir);
+                //         while (entry)
+                //         {
+                //             if (!starts_with(entry->d_name, "."))
+                //             {
+                //                 result = append_word(db, result, entry->d_name);
+                //                 if (!result)
+                //                 {
+                //                     db->error = true;
+                //                     return (NULL);
+                //                 }
+                //             }
+                //             entry = readdir(curr_dir);
+                //         }
+                //     }
+                // }
                  
                 result = append_word(db, result, save);
                 if (!result)

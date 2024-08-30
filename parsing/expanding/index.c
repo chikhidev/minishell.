@@ -59,11 +59,7 @@ int expand(t_db *db, char **line, t_quote **quotes)
             if (i >= len)
                 return (SUCCESS);
 
-            value = get_environment_var(db, env_var_name, db->env);
-
-            printf("dollar found at: %d\n", rem.i);     
-            printf("env_var_name: %s\n", env_var_name);
-            printf("new len: %zu\n", ft_strlen(value));
+            value = get_env(db, env_var_name);
 
             update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
 

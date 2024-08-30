@@ -126,8 +126,6 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     holder.tracker = gc_malloc(db, sizeof(t_tracker));
     CATCH_MALLOC(holder.tracker);
 
-    CATCH_ONFAILURE(track_quotes(db, &holder.tracker->quotes, line), FAILURE);
-    
     holder.parent = parent;
     holder.op = strongest_operator(line, holder.tracker); 
     holder.current_node = current_node;

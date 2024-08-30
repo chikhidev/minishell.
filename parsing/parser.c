@@ -20,13 +20,13 @@ int parser(t_db *db, char *line)
     if (track_quotes(db, &quotes, line) == FAILURE)
         return FAILURE;
 
-    CATCH_ONFAILURE(
-        syntax_checker(db, line, quotes),
-        FAILURE
-    )
+    for (t_quote *q = quotes; q; q = q->next)
+    {
+        printf("quote: %c, start: %d, end: %d\n", q->ascii, q->start, q->end);
+    }
 
     CATCH_ONFAILURE(
-        expand(db, &line, &quotes),
+        syntax_checker(db, line, quotes),
         FAILURE
     )
 
