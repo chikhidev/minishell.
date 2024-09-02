@@ -45,7 +45,6 @@ int are_all(char *str, int (*f)(int));
 
 /*string2.c*/
 int is_whitespace(char c);
-int strongest_operator(char *line, t_tracker *tracker);
 int count_between_op(t_db *db, char *line, int op, t_tracker *tracker);
 
 /*string3*/
@@ -54,6 +53,9 @@ int append_split(char **splitted, char *string);
 char *sub(t_db *db, char *line, int i, int j);
 int all_whitespaces(char *line, int start, int end);
 int get_tok(t_db *db, char *s, int *i, t_quote *quotes);
+
+bool is_open_whitespace(char *line, int i, t_quote *quotes);
+bool is_open_io(char *line, int i, t_quote *quotes);
 
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int track_quotes(t_db *db, t_quote **head, char *line);

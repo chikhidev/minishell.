@@ -9,24 +9,25 @@ void  skip_open_spaces(t_quote *quotes, char *line, int *i)
 
 char **append_word(t_db *db, char **result, char *save)
 {
-    char *tmp;
+    // char *tmp;
     int size;
-    t_quote *q;
+    // t_quote *q;
 
     if (ft_strlen(save) == 0)
         return NULL;
     
-    q = NULL;
+    // q = NULL;
 
     if (!*result)
     {
         result = (char **)gc_malloc(db, 2 * sizeof(char *));
 
-        tmp = whithout_quotes(db, save);
-        if (expand(db, &save, &q) == FAILURE)
-            return NULL;
+        // if (expand(db, &save, &q) == FAILURE)
+        //     return NULL;
+        // tmp = whithout_quotes(db, save);
         
-        result[0] = tmp;
+        // result[0] = tmp;
+        result[0] = save;
         result[1] = NULL;
         return (result);
     }
@@ -35,12 +36,12 @@ char **append_word(t_db *db, char **result, char *save)
         size++;
     result = (char **)gc_realloc(db, result, (size + 2) * sizeof(char *));
     
-    tmp = whithout_quotes(db, save);
-    if (expand(db, &save, &q) == FAILURE)
-            return NULL;
-    if (!tmp)
-        return NULL;
-    result[size] = tmp;
+    // if (expand(db, &save, &q) == FAILURE)
+    //         return NULL;
+    // tmp = whithout_quotes(db, save);
+
+    // result[size] = tmp;
+    result[size] = save;
     result[size + 1] = NULL;
     return (result);
 }
@@ -51,8 +52,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     t_iterators it;
     char    *save;
     int len;
-    DIR *curr_dir;
-    struct dirent *entry;
     bool    read_write_perm;
 
     read_write_perm = true;
@@ -67,22 +66,15 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
     len = ft_strlen(s);
     while (it.i < len)
     {
-        if (!(
-                is_whitespace(s[it.i])
-                && !is_inside_quotes_list(*quotes, it.i)
-            )
-            && !(
-                (
-                    validate_io(&s[it.i], 1) != INVALID
-                    || validate_io(&s[it.i], 2) != INVALID
-                ) && !is_inside_quotes_list(*quotes, it.i)
-            )
-            &&
-            read_write_perm
+        bool is_open_whitespace_ = is_open_whitespace(s, it.i, *quotes);
+        bool is_open_io_ = is_open_io(s, it.i, *quotes);
+
+
+        if (!is_open_whitespace_ && !is_open_io_
+            && read_write_perm // if we have read_write_perm we can read and write
         )
         {
             save = concat(db, save, s[it.i]);
-            CATCH_ONNULL(save, NULL);
         }
         else if (read_write_perm)
         {

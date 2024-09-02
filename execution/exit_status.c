@@ -114,10 +114,8 @@ void    fd_free(t_db *db, pid_t  fd_to_free)
 
 void    fd_void(t_db *db)
 {
-    t_int    *fd_head;
     t_int    *tmp;
 
-    fd_head = db->fd;
     while (db->fd)
     {
         tmp = db->fd->next;

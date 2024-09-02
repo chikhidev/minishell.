@@ -6,7 +6,7 @@ int is_whitespace(char c)
     return (c == ' ' || c == '\t' || c == '\n');
 }
 
-int strongest_operator(char *line, t_tracker *tracker)
+int strongest_operator(char *line, t_quote *q)
 {
     int     i;
     int     op;
@@ -15,7 +15,7 @@ int strongest_operator(char *line, t_tracker *tracker)
     while (line[i])
     {
         op = is_op(line, &i);
-        if (op != INVALID && !is_inside_quotes_list(tracker->quotes, i))
+        if (op != INVALID && !is_inside_quotes_list(q, i))
         {
             return op;
         }

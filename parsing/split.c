@@ -77,23 +77,35 @@ int process_op(t_db *db, char *line, t_holder *holder)
     return SUCCESS;
 }
 
+
+/**
+ * ---------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------
+ * -------------------------------------------------------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------------------------------
+ */
 int process_cmd(t_db *db, char *line, t_holder *holder)
 {
     void **current_node;
     char **splitted;
+    t_quote *quotes;
 
     current_node = holder->current_node;
     CATCH_ONFAILURE(
         create_cmd_node(db, current_node) // create a command node -------<<<<<<<<
     , FAILURE);
 
-    splitted = tokenize(db, &holder->tracker->quotes, line);
+    quotes = NULL;
+    if (track_quotes(db, &quotes, line) == FAILURE)
+        return FAILURE;
+
+    splitted = tokenize(db, &quotes, line);
     if (db->error || !db->exec_line)
         return error(db, NULL, NULL);
 
     CURR_CMD->args = splitted;
 
-    CATCH_MALLOC((CURR_CMD)->args);
     (CURR_CMD)->input_fd = db->input_fd;
     (CURR_CMD)->output_fd = db->output_fd;
     db->input_fd = STDIN_FILENO;
@@ -118,16 +130,23 @@ int smart_split(t_db *db, char *line, void **current_node, void *parent)
     if (db->error || !db->exec_line)
         return FAILURE;
     
+    /**
+     * if the line is empty or all whitespaces we just return SUCCESS
+     */
     if (ft_strlen(line) == 0
         || all_whitespaces(line, 0, ft_strlen(line)))
         return SUCCESS;
     
+    /**
+     * we allocate a tracker->quotes to keep track of the quotes
+     */
     ft_bzero(&holder, sizeof(holder));
     holder.tracker = gc_malloc(db, sizeof(t_tracker));
-    CATCH_MALLOC(holder.tracker);
+    holder.tracker->quotes = NULL;
 
     holder.parent = parent;
-    holder.op = strongest_operator(line, holder.tracker); 
+    track_quotes(db, &holder.tracker->quotes, line);
+    holder.op = strongest_operator(line, holder.tracker->quotes);
     holder.current_node = current_node;
     /**
      * this case means we have an operator

@@ -11,7 +11,7 @@ bool inside_single_quote(t_quote *head, int   i)
     q = head;
     while (q)
     {
-        if (q->ascii == SNGLQUOTE && i >= q->start && i <= q->end)
+        if (q->ascii == SNGLQUOTE && i > q->start && i < q->end)
             return (true);
         q = q->next;
     }
@@ -29,7 +29,9 @@ bool is_inside_quotes_list(t_quote *head, int i)
     while (tmp)
     {
         if (i > tmp->start && i < tmp->end)
+        {
             return (true);
+        }
         tmp = tmp->next;
     }
     return (false);

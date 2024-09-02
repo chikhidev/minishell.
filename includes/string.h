@@ -9,7 +9,7 @@ int count(char *line, char c);
 int are_all(char *str, int (*f)(int));
 int all_whitespaces(char *line, int start, int end);
 int is_whitespace(char c);
-int strongest_operator(char *line, t_tracker *tracker);
+int strongest_operator(char *line, t_quote *q);
 int count_between_op(t_db *db,  char *line, int op, t_tracker *tracker);
 int count_array_len(char    **args);
 int count_line_args(char *line, t_quote *quotes, int len);
