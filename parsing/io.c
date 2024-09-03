@@ -205,9 +205,9 @@ int open_heredoc(t_db *db, char *delim)
     wait(&child_status);
 
     catch_feedback(db, child_status);
-    if (db->last_signal != 0)
+    if (db->last_status != 0)
     {
-        printf("Error: here-document terminated by signal %d\n", db->last_signal);
+        printf("Error: here-document terminated by signal %d\n", db->last_status);
         return FAILURE;
     }
     

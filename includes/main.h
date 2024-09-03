@@ -239,7 +239,7 @@ typedef struct s_db
     /*storing init data*/
 	char				**env;
     /*storing in tracked signals*/
-	int					last_signal;
+	int					last_status;
 	
     /*error flag*/
 	bool				error;

@@ -1,38 +1,10 @@
 
-echo $\"HOLA\"
-
-
-
-Minishell$ export b=""
-Minishell$ echo $b Hola
-Minishell$ export b="h"
-Minishell$ echo $b Hola
-h Hola
-Minishell$ 
-
-
-
-sgouzi@c3r8p2:~/Desktop/minishell$ exit $HOLA HOLA
-exits
-bash: exit: HOLA: numeric argument required
-sgouzi@c3r8p2:~/Desktop/minishell$ bash
-sgouzi@c3r8p2:~/Desktop/minishell$ exit $HOLA $HOLA
-exit
-
-
-problem in giving me args (i get 3 args even tho $HOLA isnt supposed to be an arg)
-
-
-Minishell$ echo $HOMEEEE $HOMEEEE
- $HOMEEEE
-Minishell$ 
-
-
->_$ echo $"$USER"
-inside quotes
-args[0] -> echo
-args[1] -> $"$USER"
-inside quotes
-$USER
-
-(ls | wc) | (wc | wc)
+>_ $ export ls="ls -la"
+>_ $ $ls
+"ls: command not found
+exit status: 127
+>_ $ 
+>_ $ 
+>_ $ export | grep ls
+declare -x ls=""ls -la""
+>_ $ 

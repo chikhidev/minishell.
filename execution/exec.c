@@ -140,18 +140,22 @@ int **prepare_pipes(t_db *db, int n_pipes)
     pipes[n_pipes] = NULL;
     return pipes;
 }
-void waiter(t_db *db, int *status)
+
+void waiter(t_db *db)
 {
+    int status;
     t_int *pid;
+
+    status = 0;
 
     pid = db->pid;
     while (pid)
     {
-        waitpid(pid->n, status, 0);
+        waitpid(pid->n, &status, 0);
         pid = pid->next;
     }
+    catch_feedback(db, status);
     pid_void(db);
-    catch_feedback(db, *status);
 }
 
 int dup_pipes(t_db *db, int **pipes, int index) // index -> 2
@@ -195,10 +199,8 @@ int close_all_pipes(t_db *db, int **pipes)
 void handle_pipe_op(t_db *db, void *node)
 {
     int i;
-    int status;
     int **pipes;
     i = 0;
-    status = 0;
 
     pipes = prepare_pipes(db, OP->n_childs - 1);
     while (i < OP->n_childs)
@@ -207,7 +209,7 @@ void handle_pipe_op(t_db *db, void *node)
         i++;
     }
     close_all_pipes(db, pipes);
-    waiter(db, &status);
+    waiter(db);
     return;
 }
 
@@ -274,10 +276,10 @@ int handle_builtin(t_db *db, void *node, int **pipes, int index)
         in = ft_dup(db, STDIN_FILENO);
         out = ft_dup(db, STDOUT_FILENO);
         dup_cmd_io(db, node);
-        db->last_signal = run_builtin(db, node, index);
+        db->last_status = run_builtin(db, node, index);
         dup2(in, STDIN_FILENO);
         dup2(out, STDOUT_FILENO);
-        return db->last_signal;
+        return db->last_status;
     }
     int id = fork();
     if (id == CHILD)
@@ -285,15 +287,15 @@ int handle_builtin(t_db *db, void *node, int **pipes, int index)
         dup_pipes(db, pipes, index);
         dup_cmd_io(db, node);
         close_all_pipes(db, pipes);
-        db->last_signal = run_builtin(db, node, index);
-        db->last_signal = db->last_signal << 8;
-        ft_exit(db, db->last_signal, 3, NULL);
+        db->last_status = run_builtin(db, node, index);
+        db->last_status = db->last_status << 8;
+        ft_exit(db, db->last_status, 3, NULL);
     }
     else
     {
         pid_add(db, id);
     }
-    return db->last_signal;
+    return db->last_status;
 }
 
 void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
@@ -305,12 +307,10 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
         return;
 
     status = 0;
-
     if (is_built_in(node))
         handle_builtin(db, node, pipes, index);
     else
     {
-	    printf("here inside handle_cmd function\n");
         id = fork();
         if (id == CHILD)
         {

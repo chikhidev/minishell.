@@ -30,7 +30,7 @@ int handle_prompt(t_db *db, char **line)
     sigaction(SIGQUIT, &sa, NULL);
 
     tmp = NULL;
-    if (db->last_signal == 0)
+    if (db->last_status == 0)
     {
         tmp = ft_strjoin(db, "\001" GREEN "\002>_ \001" RESET "\002", "$ ");
     }
@@ -40,15 +40,19 @@ int handle_prompt(t_db *db, char **line)
     }
 
     *line = readline(tmp);
-    gc_free(db, tmp);
-
     if (!*line)
     {
         dprintf(2, "exit\n");
         return FAILURE;
     }
-    if (*line[0] != '\0')
+
+    tmp = ft_strdup(db, *line);
+    free(*line);
+    *line = tmp;
+
+    if (ft_strlen(*line) > 0)
         add_history(*line);
+
     return SUCCESS ; /*nothing*/
 }
 
@@ -157,7 +161,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
 {
     (void) ac;
     (void) av;
-    db->last_signal = 0;
+    db->last_status = 0;
     db->debug = false;
     db->gc = NULL;
     db->ec = NULL;
@@ -204,7 +208,6 @@ int main(int ac, char *av[],  char *env[])
         db_reset(&db);
         ret = handle_prompt(&db, &line);
 
-
         sa.sa_handler = SIG_IGN;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGQUIT, &sa, NULL);
@@ -216,8 +219,6 @@ int main(int ac, char *av[],  char *env[])
         tmp = gc_malloc(&db, ft_strlen(line) + 1);
 
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
-        free(line);
-        line = tmp;
         
         if (parser(&db, line) == SUCCESS)
         {

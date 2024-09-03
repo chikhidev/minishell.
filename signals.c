@@ -8,8 +8,9 @@ void catch_feedback(t_db *db, int process_res)
     status = WEXITSTATUS(process_res);
     if (status)
     {
-        db->last_signal = status;
-        if (db->last_signal == FAIL)
+        printf("exit status: %d\n", status);
+        db->last_status = status;
+        if (db->last_status == FAIL)
         {
             gc_void(db);
             ec_void(db);
@@ -51,7 +52,7 @@ void parent_behav(int signal)
     }
     if (signal == SIGQUIT)
     {
-        write(2, "Quit (core dumped)\n", 20);
+        write(2, "Quit\n", 5);
     }
 }
 

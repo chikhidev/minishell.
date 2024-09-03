@@ -47,23 +47,26 @@ int expand(t_db *db, char **line, t_quote **quotes)
                     return (FAILURE);
                 
                 rem.j = i - 1;
-
-                
                 i = updated_line(db, line, env_var_name, &rem);
-                
                 if (i == INVALID)
                 {
                     printf("invalid\n");
                     return (FAILURE);
                 }
-                
             }
 
+            value = get_env(db, env_var_name);
+
+            // /*
+            // ** If the value of the environment variable is not empty means that the line was expanded at least once
+            // */
+            // if (expanded && ft_strlen(value) > 0)
+            //     *expanded = true;
+            
             len = ft_strlen(*line);
             if (i >= len)
                 return (SUCCESS);
 
-            value = get_env(db, env_var_name);
             update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
             gc_free(db, env_var_name);
             env_var_name = NULL;

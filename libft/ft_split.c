@@ -13,7 +13,22 @@
 #include "libft.h"
 #include "../includes/main.h"
 
-static int	count_words(const char *str, char c)
+static bool is_separator(char c, char *c2)
+{
+	int i;
+
+	i = 0;
+	while (c2[i])
+	{
+		if (c == c2[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+
+static int	count_words(const char *str, char *c)
 {
 	int				i;
 	unsigned int	in_word;
@@ -22,12 +37,18 @@ static int	count_words(const char *str, char c)
 	in_word = 0;
 	while (*str)
 	{
-		if (*str != c && in_word == 0)
+		if (
+			!is_separator(*str, c)
+			// *str != c
+			&& in_word == 0)
 		{
 			in_word = 1;
 			i++;
 		}
-		else if (*str == c)
+		else if (
+			is_separator(*str, c)
+			// *str == c
+		)
 			in_word = 0;
 		str++;
 	}
@@ -42,7 +63,7 @@ static int	free_everything(char **array, int index)
 	return (0);
 }
 
-static char	*extract_word(t_db *db, char const *s, char c)
+static char	*extract_word(t_db *db, char const *s, char *c)
 {
 	int			len;
 	char const	*starting;
@@ -52,7 +73,10 @@ static char	*extract_word(t_db *db, char const *s, char c)
 	len = 0;
 	starting = s;
 	i = 0;
-	while (*s && *s != c)
+	while (*s &&
+		// *s != c
+		!is_separator(*s, c)
+		)
 	{
 		len++;
 		s++;
@@ -69,7 +93,7 @@ static char	*extract_word(t_db *db, char const *s, char c)
 	return (word);
 }
 
-static int	fill_and_test(t_db *db, char const *s, char c, char **result)
+static int	fill_and_test(t_db *db, char const *s, char *c, char **result)
 {
 	int		i;
 	char	*word;
@@ -77,13 +101,13 @@ static int	fill_and_test(t_db *db, char const *s, char c, char **result)
 	i = 0;
 	while (*s)
 	{
-		if (*s != c)
+		if (!is_separator(*s, c))
 		{
 			word = extract_word(db, s, c);
 			if (word == NULL)
 				return (free_everything(result, i));
 			result[i++] = word;
-			while (*s && *s != c)
+			while (*s && !is_separator(*s, c))
 				s++;
 		}
 		else
@@ -93,7 +117,7 @@ static int	fill_and_test(t_db *db, char const *s, char c, char **result)
 	return (1);
 }
 
-char	**ft_split(t_db *db, char const *s, char c)
+char	**ft_split(t_db *db, char const *s, char *c)
 {
 	int		word_count;
 	char	**result;

@@ -46,7 +46,7 @@ char	*ft_strdup(t_db	*db,	const char *s1);
 char	*ft_substr(t_db	*db, char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(t_db *db, char const *s1, char const *s2);
 char    *ft_strtrim(t_db *db, const char *s1, const char *set);
-char	**ft_split(t_db *db, char const *s, char c);
+char	**ft_split(t_db *db, char const *s, char *c);
 char	*ft_itoa(t_db *db, int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char*));

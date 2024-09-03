@@ -23,7 +23,7 @@ int handle_wildcard(t_db *db, char  **result)
         while (entry)
         {
             if (!starts_with(entry->d_name, "."))
-                result = append_word(db, result, entry->d_name);
+                result = append_word(db, result, entry->d_name, false);
             entry = readdir(curr_dir);
         }
     }

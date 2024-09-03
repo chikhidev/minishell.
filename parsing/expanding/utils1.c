@@ -30,7 +30,7 @@ char *get_env(t_db *db, char *name)
 	if (!name)
         return (NULL);
     if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
-        return (ft_itoa(db, db->last_signal));
+        return (ft_itoa(db, db->last_status));
     if (are_all(name, ft_isdigit))
         return (ft_strdup(db, name + 1));
     object = get_exp_node(db->exp_list, name);

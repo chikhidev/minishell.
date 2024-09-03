@@ -25,8 +25,7 @@ char    *cmd_path(t_db *db, char *filename)
             path_var = db->static_path;
         else
             path_var = path_node->val;
-        paths = ft_split(db, path_var, ':');
-        
+        paths = ft_split(db, path_var, ":");
         if (!paths)
             return NULL;
         for (int i = 0; paths[i]; i++)
