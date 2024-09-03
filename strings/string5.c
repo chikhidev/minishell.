@@ -95,8 +95,9 @@ int is_str_empty(t_db   *db,    char    *str)
 {
     char    *unquoted;
 
-    unquoted = whithout_quotes(db, str);
-    if (ft_strcmp(unquoted, "") == 0)
+    // unquoted = whithout_quotes(db, str);
+    unquoted = without_quotes(db, str, NULL);
+    if (ft_strlen(unquoted) == 0)
         return 1;
 
     return 0;

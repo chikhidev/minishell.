@@ -9,25 +9,29 @@ void  skip_open_spaces(t_quote *quotes, char *line, int *i)
 
 char **append_word(t_db *db, char **result, char *save)
 {
-    // char *tmp;
+    char *tmp;
     int size;
-    // t_quote *q;
+    t_quote *q;
 
     if (ft_strlen(save) == 0)
         return NULL;
-    
-    // q = NULL;
 
+    q = NULL;
+    if (track_quotes(db, &q, save) == FAILURE)
+    {
+        return NULL;
+    }
+
+    if (expand(db, &save, &q) == FAILURE)
+    {
+        return NULL;
+    }
+
+    tmp = without_quotes(db, save, NULL);
     if (!*result)
     {
         result = (char **)gc_malloc(db, 2 * sizeof(char *));
-
-        // if (expand(db, &save, &q) == FAILURE)
-        //     return NULL;
-        // tmp = whithout_quotes(db, save);
-        
-        // result[0] = tmp;
-        result[0] = save;
+        result[0] = tmp;
         result[1] = NULL;
         return (result);
     }
@@ -35,13 +39,7 @@ char **append_word(t_db *db, char **result, char *save)
     while (result[size])
         size++;
     result = (char **)gc_realloc(db, result, (size + 2) * sizeof(char *));
-    
-    // if (expand(db, &save, &q) == FAILURE)
-    //         return NULL;
-    // tmp = whithout_quotes(db, save);
-
-    // result[size] = tmp;
-    result[size] = save;
+    result[size] = tmp;
     result[size + 1] = NULL;
     return (result);
 }
@@ -69,9 +67,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
         bool is_open_whitespace_ = is_open_whitespace(s, it.i, *quotes);
         bool is_open_io_ = is_open_io(s, it.i, *quotes);
 
-
-        if (!is_open_whitespace_ && !is_open_io_
-            && read_write_perm // if we have read_write_perm we can read and write
+        if (!is_open_whitespace_ && !is_open_io_ && read_write_perm // if we have read_write_perm we can read and write
         )
         {
             save = concat(db, save, s[it.i]);
@@ -118,28 +114,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             }
             if (ft_strlen(save) > 0)
             {
-                // if (ft_strcmp(save, "*") == 0)
-                // {
-                //     curr_dir = opendir(".");
-                //     if (curr_dir)
-                //     {
-                //         entry = readdir(curr_dir);
-                //         while (entry)
-                //         {
-                //             if (!starts_with(entry->d_name, "."))
-                //             {
-                //                 result = append_word(db, result, entry->d_name);
-                //                 if (!result)
-                //                 {
-                //                     db->error = true;
-                //                     return (NULL);
-                //                 }
-                //             }
-                //             entry = readdir(curr_dir);
-                //         }
-                //     }
-                // }
-                 
                 result = append_word(db, result, save);
                 if (!result)
                 {

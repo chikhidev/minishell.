@@ -93,11 +93,13 @@ char *get_path(t_db *db, char **args)
 {
     char *path;
 
+
     path = args[0];
     if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
         return ft_strdup(db, path);
     if (is_str_empty(db, args[0]))
         ft_exit(db, 127, 3, ft_strjoin(db, args[0], ": command not found"));
+
     if (is_relative_path(path) || is_absolute_path(path))
     {
         if (access(path, F_OK) + access(path, X_OK) != 0)
@@ -161,7 +163,7 @@ int dup_pipes(t_db *db, int **pipes, int index) // index -> 2
         ft_dup2(db, pipes[0][1], STDOUT_FILENO);
     else if (index == n_pipes) // 2 == 2
     {
-        ft_dup2(db, pipes[n_pipes - 1][0], STDIN_FILENO);
+       ft_dup2(db, pipes[n_pipes - 1][0], STDIN_FILENO);
     }
     else
     {
@@ -303,10 +305,12 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
         return;
 
     status = 0;
+
     if (is_built_in(node))
         handle_builtin(db, node, pipes, index);
     else
     {
+	    printf("here inside handle_cmd function\n");
         id = fork();
         if (id == CHILD)
         {

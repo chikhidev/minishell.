@@ -204,6 +204,7 @@ int main(int ac, char *av[],  char *env[])
         db_reset(&db);
         ret = handle_prompt(&db, &line);
 
+
         sa.sa_handler = SIG_IGN;
         sigaction(SIGINT, &sa, NULL);
         sigaction(SIGQUIT, &sa, NULL);

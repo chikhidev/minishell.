@@ -139,38 +139,65 @@ bool is_inside_quotes_line(char *line, int index)
     return (in_single_quote || in_double_quote);
 }
 
-char *whithout_quotes(t_db *db, char *str)
+char *without_quotes(t_db *db, char *str, t_quote *q)
 {
-    int i;
-    char *res;
-    // int size;
-    bool   single_opened;
-    bool   double_opened;
+    int start;
+    int end;
+    int increment;
 
-    single_opened = false;
-    double_opened = false;
-    res = ft_strdup(db, "");
-    i = 0;
-    while (str[i])
+    start = 0;
+    if (!q)
     {
-        // toggling
-        if (str[i] == SGL_QUOTE && !double_opened)
-        {
-            single_opened = !single_opened;
-            i++;
-            continue;
-        }
-        if (str[i] == DBL_QUOTE && !single_opened)
-        {
-            double_opened = !double_opened;
-            i++;
-            continue;
-        }
-        res = ft_strjoin_char(db, res, str[i]);
-        i++;
+        increment = ((
+            (str[0] == SGL_QUOTE || str[0] == DBL_QUOTE)
+        ) && (
+            str[ft_strlen(str) - 1] == SGL_QUOTE || str[ft_strlen(str) - 1] == DBL_QUOTE
+        ));
+        start += increment;
+        end = ft_strlen(str) - increment;
+        return ft_substr(db, str, start, end - start);
     }
+    while (str[start] && !is_inside_quotes_list(q, start))
+        start++;
+    end = start;
+    while (str[end] && is_inside_quotes_list(q, end))
+        end++;
+    char *res = ft_substr(db, str, start, end - start);
     return res;
 }
+
+// char *whithout_quotes(t_db *db, char *str)
+// {
+//     int i;
+//     char *res;
+//     // int size;
+//     bool   single_opened;
+//     bool   double_opened;
+
+//     single_opened = false;
+//     double_opened = false;
+//     res = ft_strdup(db, "");
+//     i = 0;
+//     while (str[i])
+//     {
+//         // toggling
+//         if (str[i] == SGL_QUOTE && !double_opened)
+//         {
+//             single_opened = !single_opened;
+//             i++;
+//             continue;
+//         }
+//         if (str[i] == DBL_QUOTE && !single_opened)
+//         {
+//             double_opened = !double_opened;
+//             i++;
+//             continue;
+//         }
+//         res = ft_strjoin_char(db, res, str[i]);
+//         i++;
+//     }
+//     return res;
+// }
 
 char *whithout_quotes_ec(t_db  *db,  char *str)
 {

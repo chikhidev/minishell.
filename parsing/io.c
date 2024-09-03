@@ -82,14 +82,17 @@ int open_file(t_db *db, char *file, int type)
         return FAILURE;
     }
 
-    printf("file: %s|\n", file);
-    tmp = whithout_quotes(db, file);
-    printf("tmp: %s|\n", tmp);
-    if (expand(db, &tmp, &quotes) == FAILURE)
+    // printf("file: %s|\n", file);
+    // tmp = whithout_quotes(db, file);
+    // printf("tmp: %s|\n", tmp);
+    if (track_quotes(db, &quotes, file) == FAILURE)
+        return FAILURE;
+
+    if (expand(db, &file, &quotes) == FAILURE)
             return FAILURE;
-    printf("tmp: %s|\n", tmp);
-        
-    
+
+    tmp = without_quotes(db, file, quotes);
+
     if (type == APPENDFILE)
         fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else if (type == INPUTFILE)
@@ -130,10 +133,15 @@ int open_heredoc(t_db *db, char *delim)
     char *line;
     char *tmp;
     int child_status;
+    t_quote *q;
 
-    tmp = whithout_quotes(db, delim);
-    if (!tmp)
-        return error(db, NULL, "malloc failed");
+    q = NULL;
+
+    if (track_quotes(db, &q, delim) == FAILURE)
+        return FAILURE;
+
+    tmp = without_quotes(db, delim, q);
+
     delim = tmp;
     if (pipe(pipe_fd) == -1)
         return error(db, "pipe", NULL);
