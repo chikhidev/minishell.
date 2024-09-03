@@ -28,6 +28,12 @@ char **append_word(t_db *db, char **result, char *save)
     }
 
     tmp = without_quotes(db, save, NULL);
+
+    if (ft_strlen(tmp) == 0)
+    {
+        return result;
+    }
+
     if (!*result)
     {
         result = (char **)gc_malloc(db, 2 * sizeof(char *));

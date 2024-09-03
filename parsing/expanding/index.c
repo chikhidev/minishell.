@@ -50,8 +50,12 @@ int expand(t_db *db, char **line, t_quote **quotes)
 
                 
                 i = updated_line(db, line, env_var_name, &rem);
+                
                 if (i == INVALID)
+                {
+                    printf("invalid\n");
                     return (FAILURE);
+                }
                 
             }
 
@@ -60,9 +64,7 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 return (SUCCESS);
 
             value = get_env(db, env_var_name);
-
             update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
-
             gc_free(db, env_var_name);
             env_var_name = NULL;
         }
