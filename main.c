@@ -126,13 +126,14 @@ void handle_pwd(t_db *db)
 {
     t_exp_list *exp;
     t_exp_list *pwd_exp;
+    t_env_list *pwd_env;
     bool    pwd_exist;
 
     pwd_exist = false;
     exp = db->exp_list;
     while (exp)
     {
-        if (ft_strcmp(exp->key, "PWD"))
+        if (ft_strcmp(exp->key, "PWD") == 0)
         {
             pwd_exist = true;
             break;
@@ -143,6 +144,9 @@ void handle_pwd(t_db *db)
     {
         pwd_exp = new_exp_node(db, "PWD", getcwd(NULL, 0));
         push_exp_sort(&db->exp_list, pwd_exp);
+        pwd_env = new_env_node(db, "PWD", getcwd(NULL, 0));
+        push_env_back(&db->env_list, pwd_env);
+
     }
 }
 
@@ -188,6 +192,7 @@ void    init_db(t_db *db, int ac, char *av[], char *env[])
     db->static_path = NULL;
     db->env_list = set_env_lst(db, env);
     db->exp_list = set_exp_lst(db, env);
+    handle_pwd(db);
     db->pid = NULL;
     db->fd = NULL;
     db->stdin_dup = -1;
