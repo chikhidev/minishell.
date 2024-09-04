@@ -17,6 +17,7 @@ void catch_feedback(t_db *db, int process_res)
             exit(FAIL);
         }
     }
+    db->last_status = status;
 }
 
 void heredoc_behave(int signal)

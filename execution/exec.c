@@ -271,6 +271,8 @@ int handle_builtin(t_db *db, void *node, int **pipes, int index)
 {
     int in;
     int out;
+    if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
+        return (db->last_status = 1, 1);
     if (index == -1)
     {
         in = ft_dup(db, STDIN_FILENO);
