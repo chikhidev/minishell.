@@ -54,3 +54,20 @@ bool is_quote_oppening(t_quote *head, int i)
     }
     return false;
 }
+
+bool is_quote(t_quote *head, int i)
+{
+    t_quote *q;
+
+    if (!head)
+        return false;
+
+    q = head;
+    while (q)
+    {
+        if (i == q->start || i == q->end)
+            return true;
+        q = q->next;
+    }
+    return false;
+}

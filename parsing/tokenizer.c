@@ -11,6 +11,9 @@ void add(t_db *db, char ***result, char *tmp)
 {
     int size;
 
+    if (ft_strlen(tmp) == 0)
+        return ;
+
     if (!**result)
     {
         *result = (char **)gc_malloc(db, 2 * sizeof(char *));
@@ -33,36 +36,33 @@ char **append_word(t_db *db, char **result, char *save, bool is_sub_call)
     char **splitted;
     int i = 0;
 
+    (void)is_sub_call;
+
     if (ft_strlen(save) == 0)
         return NULL;
 
     q = NULL;
-    if (!is_sub_call)
+    if (track_quotes(db, &q, save) == FAILURE)
+        return NULL;
+
+    if (expand(db, &save, &q) == FAILURE)
+        return NULL;
+    
+    if (!q)
     {
-        if (track_quotes(db, &q, save) == FAILURE)
-            return NULL;
-
-        if (expand(db, &save, &q) == FAILURE)
-            return NULL;
-
-        if (!q)
+        // split by spaces
+        splitted = ft_split(db, save, " \t\n\r\v\f");
+        i = 0;
+        while (splitted && splitted[i])
         {
-            // split by spaces
-            splitted = ft_split(db, save, " \t\n\r\v\f");
-            i = 0;
-            while (splitted && splitted[i])
-            {
-                add(db, &result, splitted[i]);
-                i++;
-            }
-            return result;
+            add(db, &result, splitted[i]);
+            i++;
         }
-    }
-
-    tmp = without_quotes(db, save, NULL);
-
-    if (ft_strlen(tmp) == 0)
         return result;
+    }
+    
+    tmp = without_quotes(db, save, q);
+
     add(db, &result, tmp);
     return (result);
 }
@@ -77,10 +77,8 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 
     read_write_perm = true;
     save = NULL;
-	CATCH_ONNULL(s, NULL);
 
 	result = (char **)gc_malloc(db, sizeof(char *));
-
     result[0] = NULL;
     ft_bzero(&it, sizeof(t_iterators));
     skip_open_spaces(*quotes, s, &it.i);
@@ -129,7 +127,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     if (open_file(db, save, db->curr_type) == FAILURE)
                         read_write_perm = false;
                 }
-                gc_free(db, save);
                 save = NULL;
                 it.i = it.j - 1;
             }

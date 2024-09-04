@@ -68,7 +68,6 @@ int expand(t_db *db, char **line, t_quote **quotes)
                 return (SUCCESS);
 
             update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
-            gc_free(db, env_var_name);
             env_var_name = NULL;
         }
         i++;
