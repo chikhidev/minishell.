@@ -6,10 +6,10 @@ void catch_feedback(t_db *db, int process_res)
     int status;
 
     status = WEXITSTATUS(process_res);
+    db->last_status = status;
     if (status)
     {
         printf("exit status: %d\n", status);
-        db->last_status = status;
         if (db->last_status == FAIL)
         {
             gc_void(db);
@@ -17,7 +17,6 @@ void catch_feedback(t_db *db, int process_res)
             exit(FAIL);
         }
     }
-    db->last_status = status;
 }
 
 void heredoc_behave(int signal)
