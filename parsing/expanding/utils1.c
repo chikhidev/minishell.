@@ -31,6 +31,8 @@ char *get_env(t_db *db, char *name)
         return (NULL);
     if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
         return (ft_itoa(db, db->last_status));
+    if (ft_strncmp(name, "_", ft_strlen(name)) == 0)
+        return (ft_strdup(db, get_env_node(db->env_list, "_")->val));
     if (are_all(name, ft_isdigit))
         return (ft_strdup(db, name + 1));
     object = get_exp_node(db->exp_list, name);

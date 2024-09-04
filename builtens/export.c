@@ -97,8 +97,6 @@ char *get_key_from_arg(t_db *db,    char *arg,int  *k_len, bool  *append)
 
     *k_len = get_key_length(arg, append);
     key = ec_malloc(db, (*k_len + 1) * sizeof(char));
-    if (!key)
-        return false;
     ft_strlcpy(key, arg, *k_len + 1);
     return (key);
 }
@@ -113,8 +111,6 @@ char    *get_val_from_arg(t_db  *db,    char  *arg,   int *v_len, int k_len, boo
         offset = 1;
     *v_len = get_val_length(arg, k_len + 1 + offset);
     val = ec_malloc(db, (*v_len + 1) * sizeof(char));
-    if (!val)
-        return false;
     ft_strlcpy(val, &arg[k_len + offset + 1], *v_len + 1);
     return val;
 }
@@ -159,7 +155,7 @@ int    affect_env_node_val(t_db *db, t_env_list  *node,  bool    append, char   
     return (SUCCESS);
 }
 
-bool    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
+void    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
 {
     bool    append;
     int      k_len;
@@ -170,10 +166,6 @@ bool    fill_key_val(t_db   *db,    char  *arg,   char  **key,   char    **val)
     append = false;
     *key = get_key_from_arg(db, arg, &k_len, &append);
     *val = get_val_from_arg(db, arg, &v_len, k_len, append);
-
-    if (key && val)
-        return true;
-    return false;
 }
 
 int handle_export_args(t_db    *db,    char    *args[])

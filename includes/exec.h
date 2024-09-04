@@ -21,5 +21,5 @@ bool is_relative_path(char *path);
 void *pid_add(t_db *db, pid_t new_ip);
 void pid_free(t_db *db, pid_t ip_to_free);
 void pid_void(t_db *db);
-
+void handle_underscore(t_db *db, void *node);
 #endif

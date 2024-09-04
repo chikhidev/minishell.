@@ -87,14 +87,24 @@ t_exp_list *set_default_exp(t_db *db)
     return (db->exp_list);
 }
 
+void handle_shell_level(t_db *db, char *key, char **val)
+{
+    int shlvl;
+    if (ft_strcmp(key, "SHLVL") == 0)
+    {
+        shlvl = ft_atoi((*val)) + 1;
+        if (shlvl >= 1000)
+            shlvl = 1;
+        (*val) = ft_itoa_ec(db, shlvl);
+    }
+}
+
 t_env_list *set_env_lst(t_db *db, char *env[]) {
     t_env_list *env_list = NULL;
     t_env_list *new_node = NULL;
     int i = 0;
     char *key;
     char *val;
-    int shlvl;
-    bool good = false;
 
     key = NULL;
     val = NULL;
@@ -103,21 +113,37 @@ t_env_list *set_env_lst(t_db *db, char *env[]) {
    
     while (env && env[i])
     {
-        good = fill_key_val(db, env[i], &key, &val);
-        if (!good)
-            return NULL ;
-        if (ft_strcmp(key, "SHLVL") == 0)
-        {
-            shlvl = ft_atoi(val) + 1;
-            if (shlvl >= 1000)
-                shlvl = 1;
-            val = ft_itoa_ec(db, shlvl);
-        }
+        fill_key_val(db, env[i], &key, &val);
+        handle_shell_level(db, key, &val);
         new_node = new_env_node(db, key, val);
         push_env_back(&env_list, new_node);
         i++;
     }
     return env_list;
+}
+
+void handle_pwd(t_db *db)
+{
+    t_exp_list *exp;
+    t_exp_list *pwd_exp;
+    bool    pwd_exist;
+
+    pwd_exist = false;
+    exp = db->exp_list;
+    while (exp)
+    {
+        if (ft_strcmp(exp->key, "PWD"))
+        {
+            pwd_exist = true;
+            break;
+        }
+        exp = exp->next;
+    }
+    if (!pwd_exist)
+    {
+        pwd_exp = new_exp_node(db, "PWD", getcwd(NULL, 0));
+        push_exp_sort(&db->exp_list, pwd_exp);
+    }
 }
 
 t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
@@ -126,9 +152,7 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
     t_exp_list      *new_node;
     int             i;
     char            *key;
-    int             shlvl;
     char            *val;
-    bool            good;
     exp_list = NULL;
     key = NULL;
     val = NULL;
@@ -137,17 +161,9 @@ t_exp_list    *set_exp_lst(t_db   *db, char   *env[])
         return (set_default_exp(db));
     while (env && env[i])
     {
-        good = fill_key_val(db, env[i], &key, &val);
-        if (!good)
-            return (NULL);
-        if (ft_strcmp(key, "SHLVL") == 0)
-        {
-            shlvl = ft_atoi(val) + 1;
-            if (shlvl >= 1000)
-                shlvl = 1;
-            val = ft_itoa_ec(db, shlvl);
-        }
-        new_node = new_exp_node(db, key, val); // check malloc
+        fill_key_val(db, env[i], &key, &val);
+        handle_shell_level(db, key, &val);
+        new_node = new_exp_node(db, key, val);
         new_node->next = NULL;
         if (ft_strncmp(key, "_", ft_strlen(key)) == 0)
             new_node->visible = false;
@@ -190,7 +206,6 @@ void db_reset(t_db *db)
     db->fd = NULL;
     pid_void(db);
 }
-
 
 int main(int ac, char *av[],  char *env[])
 {

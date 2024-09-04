@@ -306,6 +306,7 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
     if (!node || !CMD->args || !CMD->args[0])
         return;
 
+    handle_underscore(db, node);
     status = 0;
     if (is_built_in(node))
         handle_builtin(db, node, pipes, index);
@@ -328,6 +329,17 @@ void handle_cmd_node(t_db *db, void *node, int **pipes, int index)
                 pid_add(db, id);
         }
     }
+}
+
+void handle_underscore(t_db *db, void *node)
+{
+    t_env_list  *_;
+    char *last_arg;
+
+    _ = get_env_node(db->env_list, "_");
+    ec_free(db, _->val);
+    last_arg = CMD->args[count_array_len(CMD->args) - 1];
+    _->val = ft_strdup_ec(db, last_arg);
 }
 
 void exec(t_db *db, void *node)
