@@ -32,3 +32,4 @@ bool    starts_with(char    *str,   char    *sub);
 
 
 char *without_quotes(t_db *db, char *line, t_quote *q);
+bool is_quote(t_quote *head, int i);

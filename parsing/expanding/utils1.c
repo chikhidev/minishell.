@@ -14,12 +14,10 @@ char    *get_environment_var(t_db *db, char   *var, char *env[])
     {
         if (ft_strncmp(temp, env[i], ft_strlen(temp)) == 0)
         {
-            gc_free(db, temp);
             return env[i] + ft_strlen(var) + 1;
         }
         i++;
     }
-    gc_free(db, temp);
     return NULL;
 }
 
@@ -66,7 +64,6 @@ int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
         if (!tmp)
             return (error(db, NULL, "Malloc failed7"));
-        gc_free(db, *env_var_name);
         *env_var_name = tmp;
 
         (*i)++;

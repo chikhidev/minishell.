@@ -72,7 +72,6 @@ char *whithout_quotes_free_db(t_db *db, char *line)
     if (!res)
         return NULL;
     ft_strlcpy(res, line + i, size + 1);
-    gc_free(db, line);
     return res;
 }
 
@@ -141,28 +140,22 @@ bool is_inside_quotes_line(char *line, int index)
 
 char *without_quotes(t_db *db, char *str, t_quote *q)
 {
-    int start;
-    int end;
-    int increment;
+    char *res;
+    int i;
 
-    start = 0;
     if (!q)
+        return str;
+    res = NULL;
+    i = 0;
+    while (str[i])
     {
-        increment = ((
-            (str[0] == SGL_QUOTE || str[0] == DBL_QUOTE)
-        ) && (
-            str[ft_strlen(str) - 1] == SGL_QUOTE || str[ft_strlen(str) - 1] == DBL_QUOTE
-        ));
-        start += increment;
-        end = ft_strlen(str) - increment;
-        return ft_substr(db, str, start, end - start);
+        if (!is_quote(q, i))
+        {
+            res = concat(db, res, str[i]);
+        }
+        i++;
     }
-    while (str[start] && !is_inside_quotes_list(q, start))
-        start++;
-    end = start;
-    while (str[end] && is_inside_quotes_list(q, end))
-        end++;
-    char *res = ft_substr(db, str, start, end - start);
+
     return res;
 }
 
@@ -286,7 +279,6 @@ char	*ft_strjoin_char(t_db *db, char *s1, char c)
 		return (NULL);
 	ft_memcpy(res, s1, len1);
 	ft_memcpy(res + len1, &c, len2);
-    gc_free(db, s1);
 	res[len1 + len2] = '\0';
 	return (res);
 }
@@ -321,7 +313,6 @@ char	*ft_strjoin_char_ec(t_db    *db,    char *s1, char c)
 		return (NULL);
 	ft_memcpy(res, s1, len1);
 	ft_memcpy(res + len1, &c, len2);
-    gc_free(db, s1);
 	res[len1 + len2] = '\0';
 	return (res);
 }
