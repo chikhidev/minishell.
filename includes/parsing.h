@@ -60,8 +60,10 @@ bool is_open_io(char *line, int i, t_quote *quotes);
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int track_quotes(t_db *db, t_quote **head, char *line);
 bool is_inside_quotes_list(t_quote *head, int i);
-void update_quotes(t_quote *head, int start, int old_len, int new_len);
 bool inside_single_quote(t_quote *head, int i);
+void update_quotes(t_quote *head, int start, int old_len, int new_len);
+void delete_quotes_in_range(t_quote **head, int start, int end);
+t_quote *quote_at(t_quote *head, int index);
 
 /*parsing/paranths.c && paranths2.c*/
 int is_operator_forward(char *s, int i);
@@ -114,7 +116,7 @@ char *gc_copy(t_db *db, char *s);
 void skip_open_spaces(t_quote *quotes, char *line, int *i);
 bool is_quote_oppening(t_quote *head, int i);
 
-char **append_word(t_db *db, char **result, char *save, bool is_sub_call);
+char **append_word(t_db *db, char **result, char *save);
 void handle_wildcard(t_db *db, char  ***result, const char *pattern);
 
 t_file_entry *new_ent_node(t_db *db, struct dirent *ent);

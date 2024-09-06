@@ -6,69 +6,57 @@ int expand(t_db *db, char **line, t_quote **quotes)
 {
     char    *env_var_name;
     int     i;
-    t_iterators rem;
+    t_str_cut cut;
     int len;
     char *value;
 
     len = ft_strlen(*line);
-    rem.i = -1;
-    rem.j = -1;
     env_var_name = NULL;
+    ft_bzero(&cut, sizeof(t_str_cut));
     i = 0;
 
     while (i < len)
     {
+        // printf("i: %d\n", i);
         if ((*line)[i] == '$' && !(quotes && inside_single_quote(*quotes, i)))
         {
             if (!(*line)[++i])
                 return (SUCCESS);
 
-            rem.i = i - 1;
-            rem.j = i;
+            cut.start_ignore = i - 1;
+            cut.end_ignore = i;
 
-            if ((quotes && is_quote_oppening(*quotes, i)))
+            if ((quotes && is_quote(*quotes, i))
+                && !is_inside_quotes_list(*quotes, i - 1))
             {
-                if (update_index(db, line, NULL, &rem) == FAILURE)
-                    return FAILURE;
-
-                i++;
-                while ((*line)[i] && (*line)[i] != (*line)[rem.j])
-                    i++;
-
-                rem.j = i;
-                rem.i = rem.i - 1;
-
-                if (update_index(db, line, NULL, &rem) == FAILURE)
-                    return FAILURE;
+                cut.start_include = quote_at(*quotes, i)->start + 1;
+                cut.end_include = quote_at(*quotes, i)->end - 1;
+                cut.end_ignore = cut.end_include + 2;
+                i = update_index(db, line, NULL, &cut);
+                delete_quotes_in_range(quotes, cut.start_ignore, cut.end_ignore);
             }
             else
             {
-                if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
+                db->split = !is_inside_quotes_list(*quotes, i);
+                cut.start_include = -1;
+                if (concat_env_name(line, &env_var_name, &i, *quotes) == FAILURE)
                     return (FAILURE);
-                
-                rem.j = i - 1;
-                i = updated_line(db, line, env_var_name, &rem);
-                if (i == INVALID)
-                {
-                    printf("invalid\n");
-                    return (FAILURE);
-                }
+                i = updated_line(db, line, env_var_name, &cut);
+                db->split *= (ft_strlen(env_var_name) > 0);
             }
 
-            value = get_env(db, env_var_name);
-
-            // /*
-            // ** If the value of the environment variable is not empty means that the line was expanded at least once
-            // */
-            // if (expanded && ft_strlen(value) > 0)
-            //     *expanded = true;
+            if (env_var_name)
+            {
+                value = get_env(db, env_var_name);
+                env_var_name = NULL;
+                update_quotes(*quotes, cut.start_ignore, ft_strlen(env_var_name), ft_strlen(value));
+            }
             
-            len = ft_strlen(*line);
+            if (i == INVALID)
+                return (FAILURE);
             if (i >= len)
                 return (SUCCESS);
-
-            update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
-            env_var_name = NULL;
+            len = ft_strlen(*line);
         }
         i++;
     }

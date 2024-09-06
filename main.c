@@ -31,13 +31,9 @@ int handle_prompt(t_db *db, char **line)
 
     tmp = NULL;
     if (db->last_status == 0)
-    {
-        tmp = ft_strjoin(db, "\001" GREEN "\002>_ \001" RESET "\002", "$ ");
-    }
+        tmp = ft_strjoin(db, "\001" GREEN "\002>_\001" RESET "\002", "$ ");
     else
-    {
-        tmp = ft_strjoin(db, "\001" RED "\002>_ \001" RESET "\002", "$ ");
-    }
+        tmp = ft_strjoin(db, "\001" RED "\002>_\001" RESET "\002", "$ ");
 
     *line = readline(tmp);
     if (!*line)
@@ -215,117 +211,59 @@ void db_reset(t_db *db)
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
     db->fd = NULL;
+    db->split = false;
     pid_void(db);
 }
 
-bool match(const char *string, const char *pattern)
+t_db *this()
 {
-    // If both pattern and string are empty, they match
-    if (*pattern == '\0')
-        return *string == '\0';
+    static t_db db;
 
-    // If pattern is empty but string is not, they don't match
-    if (*string == '\0')
-    {
-        // Skip remaining '*' in the pattern
-        while (*pattern == '*')
-            pattern++;
-        return *pattern == '\0';
-    }
-
-    // If pattern starts with '*'
-    if (*pattern == '*')
-    {
-        // Move past the '*' and try matching the rest of the pattern
-        while (*pattern == '*')
-            pattern++;
-        if (*pattern == '\0')
-            return true;  // If '*' was the last character, it matches
-        while (*string != '\0')
-        {
-            if (match(string, pattern))
-                return true;
-            string++;
-        }
-        return false;
-    }
-
-    // If pattern and string characters match
-    if (*pattern == *string)
-        return match(string + 1, pattern + 1);
-
-    return false;
+    return &db;
 }
 
-void handle_wildcard(t_db *db, char ***result, const char *pattern) {
-    DIR *curr_dir;
-    struct dirent *entry;
-    (void) pattern;
-    curr_dir = opendir("abc");
-    if (curr_dir)
-    {
-        entry = readdir(curr_dir);
-        while (entry)
-        {
-            if (match(entry->d_name, "a*")) {
-                *result = append_word(db, *result, entry->d_name, false);
-            }
-            entry = readdir(curr_dir);
-        }
-        closedir(curr_dir);
-    }
-}
-
-char **wildcard(t_db *db, const char *pattern)
-{
-    char **files;
-    files = gc_malloc(db, sizeof(char *));
-    files[0] = NULL;
-    handle_wildcard(db, &files, pattern);
-    int i = 0;
-    while (files[i])
-        printf("-> %s\n", files[i++]);
-    return files;
-}
 int main(int ac, char *av[],  char *env[])
 {
-    t_db    db;
+    t_db    *db;
     char    *line;
     char    *tmp;
     int     ret;
+
     struct sigaction sa;
 
+    db = this();
     ft_bzero(&sa, sizeof(struct sigaction));
     line = NULL;
-    init_db(&db, ac, av, env);
+    init_db(db, ac, av, env);
     while (true)
     {
-        db_reset(&db);
-        ret = handle_prompt(&db, &line);
+        db_reset(db);
+        ret = handle_prompt(db, &line);
 
-        sa.sa_handler = SIG_IGN;
-        sigaction(SIGINT, &sa, NULL);
-        sigaction(SIGQUIT, &sa, NULL);
-        
         if (ret == FAILURE)
             break ;
         if (ret == 0)
             continue ;
-        tmp = gc_malloc(&db, ft_strlen(line) + 1);
+        
+        sa.sa_handler = SIG_IGN;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGQUIT, &sa, NULL);
+        
+        tmp = gc_malloc(db, ft_strlen(line) + 1);
 
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         
-        if (parser(&db, line) == SUCCESS)
+        if (parser(db, line) == SUCCESS)
         {
-            exec(&db, db.root_node);
+            exec(db, db->root_node);
         }
-        fd_void(&db);
-        gc_void(&db);
-        pid_void(&db);
+        fd_void(db);
+        gc_void(db);
+        pid_void(db);
     }
-    fd_void(&db);
-    ec_void(&db);
-    gc_void(&db);
+    fd_void(db);
+    ec_void(db);
+    gc_void(db);
 
     close(0);
     close(1);

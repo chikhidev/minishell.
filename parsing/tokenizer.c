@@ -29,14 +29,13 @@ void add(t_db *db, char ***result, char *tmp)
     (*result)[size + 1] = NULL;
 }
 
-char **append_word(t_db *db, char **result, char *save, bool is_sub_call)
+char **append_word(t_db *db, char **result, char *save)
 {
     char *tmp;
     t_quote *q;
     char **splitted;
-    int i = 0;
-
-    (void)is_sub_call;
+    int i;
+    bool value_starts_with_dollar;
 
     if (ft_strlen(save) == 0)
         return NULL;
@@ -45,15 +44,24 @@ char **append_word(t_db *db, char **result, char *save, bool is_sub_call)
     if (track_quotes(db, &q, save) == FAILURE)
         return NULL;
 
+    value_starts_with_dollar = (
+        ft_strsearch(save, '=') != NULL
+        && (ft_strsearch(save, '=') + 1) != NULL
+        && *(ft_strsearch(save, '=') + 1) == '$'
+    );
+
     if (expand(db, &save, &q) == FAILURE)
         return NULL;
     
-    if (!q)
+    if (db->split
+        && !(
+            result && result[0] && ft_strcmp(result[0], "export") == 0)
+            && !value_starts_with_dollar
+        )
     {
-        // split by spaces
         splitted = ft_split(db, save, " \t\n\r\v\f");
         i = 0;
-        while (splitted && splitted[i])
+        while (splitted[i])
         {
             add(db, &result, splitted[i]);
             i++;
@@ -128,7 +136,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
             }
             if (ft_strlen(save) > 0)
             {
-                result = append_word(db, result, save, false);
+                result = append_word(db, result, save);
                 if (!result)
                 {
                     db->error = true;
@@ -143,7 +151,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 
     if (ft_strlen(save) > 0)
     {
-        result = append_word(db, result, save, false);
+        result = append_word(db, result, save);
         if (!result)
         {
             db->error = true;

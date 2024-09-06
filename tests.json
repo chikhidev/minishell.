@@ -1,0 +1,4082 @@
+[
+  {
+    "input": "$> \\n (touche entr\u00e9e)",
+    "expected": "\\n (touche entr\u00e9e)",
+    "output": "$>",
+    "handled": ""
+  },
+  {
+    "input": "$> \\n (touche entr\u00e9e)",
+    "expected": "\\n (touche entr\u00e9e)",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> [que des tabulations]",
+    "expected": "[que des tabulations]",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> :",
+    "expected": ":",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> !",
+    "expected": "!",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >",
+    "expected": ">",
+    "output": "bash: syntax error near\nunexpected token `newline'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> <",
+    "expected": "<",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >>",
+    "expected": ">>",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> <<",
+    "expected": "<<",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> <>",
+    "expected": "<>",
+    "output": "",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >>>>>",
+    "expected": ">>>>>",
+    "output": "bash: syntax error near\nunexpected token `>>'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >>>>>>>>>>>>>>>",
+    "expected": ">>>>>>>>>>>>>>>",
+    "output": "bash: syntax error near\nunexpected token `>>'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> <<<<<",
+    "expected": "<<<<<",
+    "output": "bash: syntax error near\nunexpected token `<<'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> <<<<<<<<<<<<<<<<",
+    "expected": "<<<<<<<<<<<<<<<<",
+    "output": "bash: syntax error near\nunexpected token `<<'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> > > > >",
+    "expected": "> > > >",
+    "output": "bash: syntax error near\nunexpected token `>'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >> >> >> >>",
+    "expected": ">> >> >> >>",
+    "output": "bash: syntax error near\nunexpected token `>>'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >>>> >> >> >>",
+    "expected": ">>>> >> >> >>",
+    "output": "bash: syntax error near\nunexpected token `>>'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> /",
+    "expected": "/",
+    "output": "bash: /: Is a directory\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> //",
+    "expected": "//",
+    "output": "bash: //: Is a directory\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> /.",
+    "expected": "/.",
+    "output": "bash: /.: Is a directory\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> /./../../../../..",
+    "expected": "/./../../../../..",
+    "output": "bash: /./../../../../..: Is a directory\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ///////",
+    "expected": "///////",
+    "output": "bash: ///////: Is a directory\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> \\\\",
+    "expected": "\\\\",
+    "output": "bash: \\: command not found",
+    "handled": "ok"
+  },
+  {
+    "input": "$> \\\\\\\\",
+    "expected": "\\\\\\\\",
+    "output": "bash: \\\\: command not found",
+    "handled": "ok"
+  },
+  {
+    "input": "$> \\\\\\\\\\\\\\\\",
+    "expected": "\\\\\\\\\\\\\\\\",
+    "output": "bash: \\\\\\\\: command not found",
+    "handled": "ok"
+  },
+  {
+    "input": "$> -",
+    "expected": "-",
+    "output": "bash: -: command not found\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> |",
+    "expected": "|",
+    "output": "bash: syntax error near\nunexpected token `|'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> | hola",
+    "expected": "| hola",
+    "output": "bash: syntax error near\nunexpected token `|'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> | | |",
+    "expected": "| | |",
+    "output": "bash: syntax error near\nunexpected token `|'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ||",
+    "expected": "||",
+    "output": "bash: syntax error near\nunexpected token `||'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> |||||",
+    "expected": "|||||",
+    "output": "bash: syntax error near\nunexpected token `||'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> |||||||||||||",
+    "expected": "|||||||||||||",
+    "output": "bash: syntax error near\nunexpected token `||'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> >>|><",
+    "expected": ">>|><",
+    "output": "bash: syntax error near\nunexpected token `|'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> &&",
+    "expected": "&&",
+    "output": "bash: syntax error near\nunexpected token `&&'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> &&&&&",
+    "expected": "&&&&&",
+    "output": "bash: syntax error near\nunexpected token `&&'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> &&&&&&&&&&&&&&",
+    "expected": "&&&&&&&&&&&&&&",
+    "output": "bash: syntax error near\nunexpected token `&&'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ;;",
+    "expected": ";;",
+    "output": "bash: syntax error near\nunexpected token `;;'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ;;;;;",
+    "expected": ";;;;;",
+    "output": "bash: syntax error near\nunexpected token `;;'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ;;;;;;;;;;;;;;;",
+    "expected": ";;;;;;;;;;;;;;;",
+    "output": "bash: syntax error near\nunexpected token `;;'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ()",
+    "expected": "()",
+    "output": "bash: syntax error near\nunexpected token `)'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ( ( ) )",
+    "expected": "( ( ) )",
+    "output": "bash: syntax error near\nunexpected token `)'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> ( ( ( ( ) ) ) )",
+    "expected": "( ( ( ( ) ) ) )",
+    "output": "bash: syntax error near\nunexpected token `)'\n$>",
+    "handled": "ok"
+  },
+  {
+    "input": "$> \"\"",
+    "expected": "\"\"",
+    "output": "bash: : command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> \"hola\"",
+    "expected": "\"hola\"",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> 'hola'",
+    "expected": "'hola'",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ''",
+    "expected": "''",
+    "output": "bash: : command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> *",
+    "expected": "*",
+    "output": "bash: crashtest.c: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> */*",
+    "expected": "*/*",
+    "output": "bash: Docs/attest.cation: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> */*",
+    "expected": "*/*",
+    "output": "bash: */*: No such file or directory",
+    "handled": "ko"
+  },
+  {
+    "input": "$> .",
+    "expected": ".",
+    "output": "bash: .: filename argument required\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ..",
+    "expected": "..",
+    "output": "bash: ..: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ~",
+    "expected": "~",
+    "output": "bash: /home/vietdu91: Is a directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ABC=hola",
+    "expected": "ABC=hola",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> 4ABC=hola",
+    "expected": "4ABC=hola",
+    "output": "bash: 4ABC=hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "hola",
+    "expected": "a",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> hola que tal",
+    "expected": "hola que tal",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> Makefile",
+    "expected": "Makefile",
+    "output": "bash: Makefile: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo",
+    "expected": "echo",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n",
+    "expected": "echo -n",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo Hola",
+    "expected": "echo Hola",
+    "output": "Hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echoHola",
+    "expected": "echoHola",
+    "output": "bash: echoHola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo-nHola",
+    "expected": "echo-nHola",
+    "output": "bash: echo-nHola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n Hola",
+    "expected": "echo -n Hola",
+    "output": "Hola$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"-n\" Hola",
+    "expected": "echo \"-n\" Hola",
+    "output": "Hola$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -nHola",
+    "expected": "echo -nHola",
+    "output": "-nHola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo Hola -n",
+    "expected": "echo Hola -n",
+    "output": "Hola -n\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo Hola Que Tal",
+    "expected": "echo Hola Que Tal",
+    "output": "Hola Que Tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo         Hola",
+    "expected": "echo         Hola",
+    "output": "Hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo    Hola     Que    Tal",
+    "expected": "echo    Hola     Que    Tal",
+    "output": "Hola Que Tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo      \\n hola",
+    "expected": "echo      \\n hola",
+    "output": "n hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"         \" | cat -e",
+    "expected": "echo \"         \" | cat -e",
+    "output": "         $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo           | cat -e",
+    "expected": "echo           | cat -e",
+    "output": "$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> \"\"''echo hola\"\"'''' que\"\"'' tal\"\"''",
+    "expected": "\"\"''echo hola\"\"'''' que\"\"'' tal\"\"''",
+    "output": "hola que tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n -n",
+    "expected": "echo -n -n",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n -n Hola Que",
+    "expected": "echo -n -n Hola Que",
+    "output": "Hola Que$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -p",
+    "expected": "echo -p",
+    "output": "-p\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -nnnnn",
+    "expected": "echo -nnnnn",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n -nnn -nnnn",
+    "expected": "echo -n -nnn -nnnn",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n-nnn -nnnn",
+    "expected": "echo -n-nnn -nnnn",
+    "output": "-n-nnn -nnnn\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n -nnn hola -nnnn",
+    "expected": "echo -n -nnn hola -nnnn",
+    "output": "hola -nnnn$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -n -nnn-nnnn",
+    "expected": "echo -n -nnn-nnnn",
+    "output": "-nnn-nnnn$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo --------n",
+    "expected": "echo --------n",
+    "output": "--------n\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -nnn --------n",
+    "expected": "echo -nnn --------n",
+    "output": "--------n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -nnn -----nn---nnnn",
+    "expected": "echo -nnn -----nn---nnnn",
+    "output": "-----nn---nnnn$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -nnn --------nnnn",
+    "expected": "echo -nnn --------nnnn",
+    "output": "--------nnnn$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $",
+    "expected": "echo $",
+    "output": "$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $?",
+    "expected": "echo $?",
+    "output": "0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $?$",
+    "expected": "echo $?$",
+    "output": "0$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $? | echo $? | echo $?",
+    "expected": "echo $? | echo $? | echo $?",
+    "output": "0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $:$= | cat -e",
+    "expected": "echo $:$= | cat -e",
+    "output": "$:$=$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \" $ \" | cat -e",
+    "expected": "echo \" $ \" | cat -e",
+    "output": " $ $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo ' $ ' | cat -e",
+    "expected": "echo ' $ ' | cat -e",
+    "output": " $ $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $HOME",
+    "expected": "echo $HOME",
+    "output": "/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \\$HOME",
+    "expected": "echo \\$HOME",
+    "output": "$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo my shit terminal is [$TERM]",
+    "expected": "echo my shit terminal is [$TERM]",
+    "output": "my shit terminal is [xterm-256color]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo my shit terminal is [$TERM4",
+    "expected": "echo my shit terminal is [$TERM4",
+    "output": "my shit terminal is [\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo my shit terminal is [$TERM4]",
+    "expected": "echo my shit terminal is [$TERM4]",
+    "output": "my shit terminal is []\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $UID",
+    "expected": "echo $UID",
+    "output": "1000\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $HOME9",
+    "expected": "echo $HOME9",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $9HOME",
+    "expected": "echo $9HOME",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $HOME%",
+    "expected": "echo $HOME%",
+    "output": "/home/vietdu91%\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $UID$HOME",
+    "expected": "echo $UID$HOME",
+    "output": "1000/home/vietdu91%\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo Le path de mon HOME est $HOME",
+    "expected": "echo Le path de mon HOME est $HOME",
+    "output": "Le path de mon HOME est /home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $USER$var\\$USER$USER\\$USERtest$USER",
+    "expected": "echo $USER$var\\$USER$USER\\$USERtest$USER",
+    "output": "vietdu91$USERvietdu91$USERtestvietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $hola*",
+    "expected": "echo $hola*",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo -nnnn $hola",
+    "expected": "echo -nnnn $hola",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo > <",
+    "expected": "echo > <",
+    "output": "bash: syntax error near unexpected token `<'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo | |",
+    "expected": "echo | |",
+    "output": "bash: syntax error near unexpected token `|'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> EechoE",
+    "expected": "EechoE",
+    "output": "bash: EechoE: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> .echo.",
+    "expected": ".echo.",
+    "output": "bash: .echo.: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >echo>",
+    "expected": ">echo>",
+    "output": "bash: syntax error near unexpected token `newline'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> <echo<",
+    "expected": "<echo<",
+    "output": "bash: syntax error near unexpected token `newline'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >>echo>>",
+    "expected": ">>echo>>",
+    "output": "bash: syntax error near unexpected token `newline'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> |echo|",
+    "expected": "|echo|",
+    "output": "bash: syntax error near unexpected token `|'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> |echo -n hola",
+    "expected": "|echo -n hola",
+    "output": "bash: syntax error near unexpected token `|'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo *",
+    "expected": "echo *",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '*'",
+    "expected": "echo '*'",
+    "output": "*\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo D*",
+    "expected": "echo D*",
+    "output": "Docs Dockers Drawings\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo *Z",
+    "expected": "echo *Z",
+    "output": "*Z\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo *t hola",
+    "expected": "echo *t hola",
+    "output": "crashtest.c test.c hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo *t",
+    "expected": "echo *t",
+    "output": "crashtest.c test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $*",
+    "expected": "echo $*",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola*hola *",
+    "expected": "echo hola*hola *",
+    "output": "hola*hola crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $hola*",
+    "expected": "echo $hola*",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $HOME*",
+    "expected": "echo $HOME*",
+    "output": "/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $\"\"",
+    "expected": "echo $\"\"",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$\"\"\"",
+    "expected": "echo \"$\"\"\"",
+    "output": "$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '$'''",
+    "expected": "echo '$'''",
+    "output": "$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $\"HOME\"",
+    "expected": "echo $\"HOME\"",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $''HOME",
+    "expected": "echo $''HOME",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $\"\"HOME",
+    "expected": "echo $\"\"HOME",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$HO\"ME",
+    "expected": "echo \"$HO\"ME",
+    "output": "ME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '$HO'ME",
+    "expected": "echo '$HO'ME",
+    "output": "$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$HO\"\"ME\"",
+    "expected": "echo \"$HO\"\"ME\"",
+    "output": "ME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '$HO''ME'",
+    "expected": "echo '$HO''ME'",
+    "output": "$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"'$HO''ME'\"",
+    "expected": "echo \"'$HO''ME'\"",
+    "output": "''ME'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\"$HOME",
+    "expected": "echo \"\"$HOME",
+    "output": "/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\" $HOME",
+    "expected": "echo \"\" $HOME",
+    "output": " /home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo ''$HOME",
+    "expected": "echo ''$HOME",
+    "output": "/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '' $HOME",
+    "expected": "echo '' $HOME",
+    "output": " /home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $\"HO\"\"ME\"",
+    "expected": "echo $\"HO\"\"ME\"",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $'HO''ME'",
+    "expected": "echo $'HO''ME'",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $'HOME'",
+    "expected": "echo $'HOME'",
+    "output": "HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$\"HOME",
+    "expected": "echo \"$\"HOME",
+    "output": "$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $=HOME",
+    "expected": "echo $=HOME",
+    "output": "$=HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $\"HOLA\"",
+    "expected": "echo $\"HOLA\"",
+    "output": "HOLA\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $'HOLA'",
+    "expected": "echo $'HOLA'",
+    "output": "HOLA\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo $DONTEXIST Hola",
+    "expected": "echo $DONTEXIST Hola",
+    "output": "Hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"hola\"",
+    "expected": "echo \"hola\"",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo 'hola'",
+    "expected": "echo 'hola'",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo ''hola''",
+    "expected": "echo ''hola''",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo ''h'o'la''",
+    "expected": "echo ''h'o'la''",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"''h'o'la''\"",
+    "expected": "echo \"''h'o'la''\"",
+    "output": "'h'o'la''\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"'\"h'o'la\"'\"",
+    "expected": "echo \"'\"h'o'la\"'\"",
+    "output": "hola'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo\"'hola'\"",
+    "expected": "echo\"'hola'\"",
+    "output": "bash: echo'hola': command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"'hola'\"",
+    "expected": "echo \"'hola'\"",
+    "output": "'hola'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '\"hola\"'",
+    "expected": "echo '\"hola\"'",
+    "output": "\"hola\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo '''ho\"''''l\"a'''",
+    "expected": "echo '''ho\"''''l\"a'''",
+    "output": "ho\"l\"a\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola\"\"\"\"\"\"\"\"\"\"\"\"",
+    "expected": "echo hola\"\"\"\"\"\"\"\"\"\"\"\"",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola\"''''''''''\"",
+    "expected": "echo hola\"''''''''''\"",
+    "output": "hola''''''''''\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola''''''''''''",
+    "expected": "echo hola''''''''''''",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola'\"\"\"\"\"\"\"\"\"\"'",
+    "expected": "echo hola'\"\"\"\"\"\"\"\"\"\"'",
+    "output": "hola\"\"\"\"\"\"\"\"\"\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> e\"cho hola\"",
+    "expected": "e\"cho hola\"",
+    "output": "bash: echo hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> e'cho hola'",
+    "expected": "e'cho hola'",
+    "output": "bash: echo hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"hola     \" | cat -e",
+    "expected": "echo \"hola     \" | cat -e",
+    "output": "hola     $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\"hola",
+    "expected": "echo \"\"hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\" hola",
+    "expected": "echo \"\" hola",
+    "output": " hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\"             hola",
+    "expected": "echo \"\"             hola",
+    "output": " hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\"hola",
+    "expected": "echo \"\"hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"\" hola",
+    "expected": "echo \"\" hola",
+    "output": " hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola\"\"bonjour",
+    "expected": "echo hola\"\"bonjour",
+    "output": "holabonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> \"e\"'c'ho 'b'\"o\"nj\"o\"'u'r",
+    "expected": "\"e\"'c'ho 'b'\"o\"nj\"o\"'u'r",
+    "output": "bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> \"\"e\"'c'ho 'b'\"o\"nj\"o\"'u'r\"",
+    "expected": "\"\"e\"'c'ho 'b'\"o\"nj\"o\"'u'r\"",
+    "output": "bash: e'c'ho 'b'onjo'u'r: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$DONTEXIST\"Makefile",
+    "expected": "echo \"$DONTEXIST\"Makefile",
+    "output": "Makefile\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$DONTEXIST\"\"Makefile\"",
+    "expected": "echo \"$DONTEXIST\"\"Makefile\"",
+    "output": "Makefile\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo \"$DONTEXIST\" \"Makefile\"",
+    "expected": "echo \"$DONTEXIST\" \"Makefile\"",
+    "output": " Makefile\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $?",
+    "expected": "$?",
+    "output": "bash: 0: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $?$?",
+    "expected": "$?$?",
+    "output": "bash: 00: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ?$HOME",
+    "expected": "?$HOME",
+    "output": "bash: ?/home/vietdu91: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $",
+    "expected": "$",
+    "output": "bash: $: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $HOME",
+    "expected": "$HOME",
+    "output": "bash: /home/vietdu91: Is a directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $HOMEdskjhfkdshfsd",
+    "expected": "$HOMEdskjhfkdshfsd",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> \"$HOMEdskjhfkdshfsd\"",
+    "expected": "\"$HOMEdskjhfkdshfsd\"",
+    "output": "bash: : command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> '$HOMEdskjhfkdshfsd'",
+    "expected": "'$HOMEdskjhfkdshfsd'",
+    "output": "bash: $HOMEsddfddfssfdfs: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $DONTEXIST",
+    "expected": "$DONTEXIST",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> $LESS$VAR",
+    "expected": "$LESS$VAR",
+    "output": "bash: -R: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> Ctlr-C",
+    "expected": "Ctlr-C",
+    "output": "$> ^C\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> holaCtlr-C",
+    "expected": "holaCtlr-C",
+    "output": "$> hola^C\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat (faire Ctlr-C apres avoir fait plusieurs fois [ENTREE])",
+    "expected": "cat (faire Ctlr-C apres avoir fait plusieurs fois [ENTREE])",
+    "output": "\n\n\n^C\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat | rev(faire Ctlr-C apres avoir fait plusieurs fois [ENTREE])",
+    "expected": "cat | rev(faire Ctlr-C apres avoir fait plusieurs fois [ENTREE])",
+    "output": "\n\n\n^C\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> Ctlr-D",
+    "expected": "Ctlr-D",
+    "output": "$> exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> hola Ctlr-D",
+    "expected": "hola Ctlr-D",
+    "output": "$> hola",
+    "handled": "ko"
+  },
+  {
+    "input": "$> Ctlr-\\",
+    "expected": "Ctlr-\\",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> hola Ctlr-\\",
+    "expected": "hola Ctlr-\\",
+    "output": "$> hola",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat (faire Ctlr-\\ apres avoir fait plusieurs fois [ENTREE])",
+    "expected": "cat (faire Ctlr-\\ apres avoir fait plusieurs fois [ENTREE])",
+    "output": "\n\n\n^\\Quit (core dumped)\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> Ctlr-Z",
+    "expected": "Ctlr-Z",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> sleep 3 | sleep 3 | sleep 3 (faire Ctlr-C une seconde apres)",
+    "expected": "sleep 3 | sleep 3 | sleep 3 (faire Ctlr-C une seconde apres)",
+    "output": "^C\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> sleep 3 | sleep 3 | sleep 3 (faire Ctlr-D une seconde apres)",
+    "expected": "sleep 3 | sleep 3 | sleep 3 (faire Ctlr-D une seconde apres)",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> sleep 3 | sleep 3 | sleep 3 (faire Ctlr-\\ une seconde apres)",
+    "expected": "sleep 3 | sleep 3 | sleep 3 (faire Ctlr-\\ une seconde apres)",
+    "output": "^\\Quit (core dumped)\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env",
+    "expected": "env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env hola",
+    "expected": "env hola",
+    "output": "env: \u02bbhola\u2019: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env hola que tal",
+    "expected": "env hola que tal",
+    "output": "env: \u02bbhola\u2019: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env env",
+    "expected": "env env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env env env env env",
+    "expected": "env env env env env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env ls",
+    "expected": "env ls",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env ./Makefile",
+    "expected": "env ./Makefile",
+    "output": "env: \u2018./Makefile\u2019: Permission denied\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> env",
+    "expected": "export HOLA=bonjour\n$> env",
+    "output": "...\nHOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export       HOLA=bonjour\n$> env",
+    "expected": "export       HOLA=bonjour\n$> env",
+    "output": "...\nHOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export",
+    "expected": "export",
+    "output": "...\nexport PATH=\"...\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export Hola\n$> export",
+    "expected": "export Hola\n$> export",
+    "output": "...\nexport HOME=\"/home/vietdu91\"\nexport Hola\nexport PATH=\"...\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export Hola9hey\n$> export",
+    "expected": "export Hola9hey\n$> export",
+    "output": "...\nexport HOME=\"/home/vietdu91\"\nexport Hola9hey\nexport PATH=\"...\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export $DONTEXIST",
+    "expected": "export $DONTEXIST",
+    "output": "...\nexport HOME=\"/home/vietdu91\"\nexport PATH=\"...\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export | grep \"HOME\"",
+    "expected": "export | grep \"HOME\"",
+    "output": "export HOME=\"/home/vietdu91\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export \"\"",
+    "expected": "export \"\"",
+    "output": "bash: export: `': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export =",
+    "expected": "export =",
+    "output": "bash: export: \u02bb=': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export %",
+    "expected": "export %",
+    "output": "bash: export: \u02bb%': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export $?",
+    "expected": "export $?",
+    "output": "bash: export: `0': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export ?=2",
+    "expected": "export ?=2",
+    "output": "bash: export: \u02bb?=2': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export 9HOLA=",
+    "expected": "export 9HOLA=",
+    "output": "bash: export: \u02bb9HOLA=': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA9=bonjour\n$> env",
+    "expected": "export HOLA9=bonjour\n$> env",
+    "output": "...\nHOLA9=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export _HOLA=bonjour\n$> env",
+    "expected": "export _HOLA=bonjour\n$> env",
+    "output": "...\n_HOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export ___HOLA=bonjour\n$> env",
+    "expected": "export ___HOLA=bonjour\n$> env",
+    "output": "...\n___HOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export _HO_LA_=bonjour\n$> env",
+    "expected": "export _HO_LA_=bonjour\n$> env",
+    "output": "...\n_HO_LA_=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL@=bonjour",
+    "expected": "export HOL@=bonjour",
+    "output": "bash: export: \u02bbHOL@=bonjour\u2019: not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL\\~A=bonjour",
+    "expected": "export HOL\\~A=bonjour",
+    "output": "bash: export: `HOL~A=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export -HOLA=bonjour",
+    "expected": "export -HOLA=bonjour",
+    "output": "bash: export: -H: invalid option",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export --HOLA=bonjour",
+    "expected": "export --HOLA=bonjour",
+    "output": "bash: export: --: invalid option",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA-=bonjour",
+    "expected": "export HOLA-=bonjour",
+    "output": "bash: export: `HOLA-=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO-LA=bonjour",
+    "expected": "export HO-LA=bonjour",
+    "output": "bash: export: `HO-LA=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL.A=bonjour",
+    "expected": "export HOL.A=bonjour",
+    "output": "bash: export: `HOL.A=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL\\\\\\$A=bonjour",
+    "expected": "export HOL\\\\\\$A=bonjour",
+    "output": "bash: export: `HOL\\$A=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO\\\\\\\\LA=bonjour",
+    "expected": "export HO\\\\\\\\LA=bonjour",
+    "output": "bash: export: `HO\\\\LA=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL}A=bonjour",
+    "expected": "export HOL}A=bonjour",
+    "output": "bash: export: `HOL}A=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL{A=bonjour",
+    "expected": "export HOL{A=bonjour",
+    "output": "bash: export: `HOL{A=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO*LA=bonjour",
+    "expected": "export HO*LA=bonjour",
+    "output": "bash: export: `HO*LA=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO#LA=bonjour",
+    "expected": "export HO#LA=bonjour",
+    "output": "bash: export: `HO#LA=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO@LA=bonjour",
+    "expected": "export HO@LA=bonjour",
+    "output": "bash: export: `HO@LA=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO!LA=bonjour",
+    "expected": "export HO!LA=bonjour",
+    "output": "bash: !LA=bonjour: event not found",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HO$?LA=bonjour\n$> env",
+    "expected": "export HO$?LA=bonjour\n$> env",
+    "output": "...\nHO0LA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export +HOLA=bonjour",
+    "expected": "export +HOLA=bonjour",
+    "output": "bash: export: `+HOLA=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL+A=bonjour",
+    "expected": "export HOL+A=bonjour",
+    "output": "bash: export: `HOL+A=bonjour': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA+=bonjour\n$> env",
+    "expected": "export HOLA+=bonjour\n$> env",
+    "output": "...\nHOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> export HOLA+=bonjour\n$> env",
+    "expected": "export HOLA=bonjour\n$> export HOLA+=bonjour\n$> env",
+    "output": "...\nHOLA=bonjourbonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exportHOLA=bonjour\n$> env",
+    "expected": "exportHOLA=bonjour\n$> env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA =bonjour",
+    "expected": "export HOLA =bonjour",
+    "output": "bash: export: \u02bb=bonjour\u2019: not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA = bonjour",
+    "expected": "export HOLA = bonjour",
+    "output": "bash: export: \u02bb=': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon jour\n$> env",
+    "expected": "export HOLA=bon jour\n$> env",
+    "output": "...\nHOLA=bon\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA= bonjour\n$> env",
+    "expected": "export HOLA= bonjour\n$> env",
+    "output": "...\nHOLA=\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonsoir\n$> export HOLA=bonretour\n$> export HOLA=bonjour\n$> env",
+    "expected": "export HOLA=bonsoir\n$> export HOLA=bonretour\n$> export HOLA=bonjour\n$> env",
+    "output": "...\nHOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=$HOME\n$> env",
+    "expected": "export HOLA=$HOME\n$> env",
+    "output": "...\nHOLA=/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour$HOME\n$> env",
+    "expected": "export HOLA=bonjour$HOME\n$> env",
+    "output": "...\nHOLA=bonjour/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=$HOMEbonjour\n$> env",
+    "expected": "export HOLA=$HOMEbonjour\n$> env",
+    "output": "...\nHOLA=\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon$jour\n$> env",
+    "expected": "export HOLA=bon$jour\n$> env",
+    "output": "...\nHOLA=bon\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon\\jour\n$> env",
+    "expected": "export HOLA=bon\\jour\n$> env",
+    "output": "...\nHOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon\\\\jour\n$> env",
+    "expected": "export HOLA=bon\\\\jour\n$> env",
+    "output": "...\nHOLA=bon\\jour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon(jour",
+    "expected": "export HOLA=bon(jour",
+    "output": "bash: syntax error near\nunexpected token `('\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon()jour",
+    "expected": "export HOLA=bon()jour",
+    "output": "bash: syntax error near\nunexpected token `('\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon&jour",
+    "expected": "export HOLA=bon&jour",
+    "output": "bash: jour: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon@jour\n$> env",
+    "expected": "export HOLA=bon@jour\n$> env",
+    "output": "$> env\n...\nHOLA=bon@jour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon;jour\n$> env",
+    "expected": "export HOLA=bon;jour\n$> env",
+    "output": "bash: jour: command not found\n$> env\n...\nHOLA=bon\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon!jour",
+    "expected": "export HOLA=bon!jour",
+    "output": "bash: !jour: event not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bon\"jour\"\n$> env",
+    "expected": "export HOLA=bon\"jour\"\n$> env",
+    "output": "...\nHOLA=bonjour\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA$USER=bonjour\n$> env",
+    "expected": "export HOLA$USER=bonjour\n$> env",
+    "output": "...\nHOLAvietdu91=bonjour\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour=casse-toi\n$> echo $HOLA",
+    "expected": "export HOLA=bonjour=casse-toi\n$> echo $HOLA",
+    "output": "HOLA=bonjour=casse-toi\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export \"HOLA=bonjour\"=casse-toi\n$> echo $HOLA",
+    "expected": "export \"HOLA=bonjour\"=casse-toi\n$> echo $HOLA",
+    "output": "HOLA=bonjour=casse-toi\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> export BYE=casse-toi\n$> echo $HOLA et $BYE",
+    "expected": "export HOLA=bonjour\n$> export BYE=casse-toi\n$> echo $HOLA et $BYE",
+    "output": "bonjour et casse-toi\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour BYE=casse-toi\n$> echo $HOLA et $BYE",
+    "expected": "export HOLA=bonjour BYE=casse-toi\n$> echo $HOLA et $BYE",
+    "output": "bonjour et casse-toi\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export $HOLA=bonjour\n$> env",
+    "expected": "export $HOLA=bonjour\n$> env",
+    "output": "...\nbonjour=bonjour\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour      \"  \n$> echo $HOLA | cat -e",
+    "expected": "export HOLA=\"bonjour      \"  \n$> echo $HOLA | cat -e",
+    "output": "bonjour$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"   -n bonjour   \"  \n$> echo $HOLA",
+    "expected": "export HOLA=\"   -n bonjour   \"  \n$> echo $HOLA",
+    "output": "bonjour$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour   \"/\n$> echo $HOLA",
+    "expected": "export HOLA=\"bonjour   \"/\n$> echo $HOLA",
+    "output": "bonjour /\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA='\"'\n$> echo \" $HOLA \" | cat -e",
+    "expected": "export HOLA='\"'\n$> echo \" $HOLA \" | cat -e",
+    "output": " \" $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=at\n$> c$HOLA Makefile",
+    "expected": "export HOLA=at\n$> c$HOLA Makefile",
+    "output": "[cela affiche le Makefile]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export \"\" HOLA=bonjour\n$> env",
+    "expected": "export \"\" HOLA=bonjour\n$> env",
+    "output": "bash: export: `\": not a valid identifier\n$> env\n...\nHOLA=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"cat Makefile | grep NAME\"  \n$> echo $HOLA",
+    "expected": "export HOLA=\"cat Makefile | grep NAME\"  \n$> echo $HOLA",
+    "output": "cat Makefile | grep NAME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=hey \n$> echo $HOLA$HOLA$HOLA=hey$HOLA",
+    "expected": "export HOLA=hey \n$> echo $HOLA$HOLA$HOLA=hey$HOLA",
+    "output": "heyheyhey=heyhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"  bonjour  hey  \"  \n$> echo $HOLA | cat -e",
+    "expected": "export HOLA=\"  bonjour  hey  \"  \n$> echo $HOLA | cat -e",
+    "output": "bonjour hey$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"  bonjour  hey  \"  \n$> echo \"\"\"$HOLA\"\"\" | cat -e",
+    "expected": "export HOLA=\"  bonjour  hey  \"  \n$> echo \"\"\"$HOLA\"\"\" | cat -e",
+    "output": "   bonjour    hey    $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"  bonjour  hey  \"  \n$> echo wesh\"$HOLA\" | cat -e",
+    "expected": "export HOLA=\"  bonjour  hey  \"  \n$> echo wesh\"$HOLA\" | cat -e",
+    "output": "wesh   bonjour    hey    $\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"  bonjour  hey  \"  \n$> echo wesh\"\"$HOLA.",
+    "expected": "export HOLA=\"  bonjour  hey  \"  \n$> echo wesh\"\"$HOLA.",
+    "output": "wesh bonjour hey .\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"  bonjour  hey  \"  \n$> echo wesh$\"\"HOLA.",
+    "expected": "export HOLA=\"  bonjour  hey  \"  \n$> echo wesh$\"\"HOLA.",
+    "output": "weshHOLA.\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"  bonjour  hey  \"  \n$> echo wesh$\"HOLA HOLA\".",
+    "expected": "export HOLA=\"  bonjour  hey  \"  \n$> echo wesh$\"HOLA HOLA\".",
+    "output": "weshHOLA HOLA.\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> export HOLA=\" hola et $HOLA\"\n$> echo $HOLA",
+    "expected": "export HOLA=bonjour\n$> export HOLA=\" hola et $HOLA\"\n$> echo $HOLA",
+    "output": "hola et bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> export HOLA=' hola et $HOLA'\n$> echo $HOLA",
+    "expected": "export HOLA=bonjour\n$> export HOLA=' hola et $HOLA'\n$> echo $HOLA",
+    "output": "hola et $HOLA\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> export HOLA=\" hola et $HOLA\"$HOLA\n$> echo $HOLA",
+    "expected": "export HOLA=bonjour\n$> export HOLA=\" hola et $HOLA\"$HOLA\n$> echo $HOLA",
+    "output": "hola et bonjourbonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"ls        -l    - a\"\n$> echo $HOLA",
+    "expected": "export HOLA=\"ls        -l    - a\"\n$> echo $HOLA",
+    "output": "ls -l - a\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"s -la\" \n$> l$HOLA",
+    "expected": "export HOLA=\"s -la\" \n$> l$HOLA",
+    "output": "total 16\ndrwx------  2 vietdu91 [...] .\ndrwxrwxewt 51 root     [...] ..\n-rwxr-xr-x  8 vietdu91 [...] crashtest.c\n[...]\n$> ",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"s -la\" \n$> l\"$HOLA\"",
+    "expected": "export HOLA=\"s -la\" \n$> l\"$HOLA\"",
+    "output": "bash: ls -la: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"s -la\" \n$> l'$HOLA'",
+    "expected": "export HOLA=\"s -la\" \n$> l'$HOLA'",
+    "output": "bash: l$HOLA: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"l\" \n$> $HOLAs",
+    "expected": "export HOLA=\"l\" \n$> $HOLAs",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"l\" \n$> \"$HOLA\"s",
+    "expected": "export HOLA=\"l\" \n$> \"$HOLA\"s",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL=A=bonjour\n$> env",
+    "expected": "export HOL=A=bonjour\n$> env",
+    "output": "...\nHOL=A=bonjour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"l\" \n$> '$HOLA's",
+    "expected": "export HOLA=\"l\" \n$> '$HOLA's",
+    "output": "bash: $HOLAs: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOL=A=\"\"\n$> env",
+    "expected": "export HOL=A=\"\"\n$> env",
+    "output": "...\nHOL=A=\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export TE+S=T\n$> env",
+    "expected": "export TE+S=T\n$> env",
+    "output": "bash: export: `TE+S=T': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export \"\"=\"\"",
+    "expected": "export \"\"=\"\"",
+    "output": "bash: export: `=': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export ''=''",
+    "expected": "export ''=''",
+    "output": "bash: export: `=': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export \"=\"=\"=\"",
+    "expected": "export \"=\"=\"=\"",
+    "output": "bash: export: `===': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export '='='='",
+    "expected": "export '='='='",
+    "output": "bash: export: `===': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=p\n$> export BYE=w\n$> $HOLA\"BYE\"d",
+    "expected": "export HOLA=p\n$> export BYE=w\n$> $HOLA\"BYE\"d",
+    "output": "bash: pBYEd: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=p\n$> export BYE=w\n$> \"$HOLA\"'$BYE'd",
+    "expected": "export HOLA=p\n$> export BYE=w\n$> \"$HOLA\"'$BYE'd",
+    "output": "bash: p$BYEd: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=p\n$> export BYE=w\n$> \"$HOLA\"\"$BYE\"d",
+    "expected": "export HOLA=p\n$> export BYE=w\n$> \"$HOLA\"\"$BYE\"d",
+    "output": "/home/vietdu91/42_works/minishell",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=p\n$> export BYE=w\n$> $\"HOLA\"$\"BYE\"d",
+    "expected": "export HOLA=p\n$> export BYE=w\n$> $\"HOLA\"$\"BYE\"d",
+    "output": "bash: HOLABYEd: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=p\n$> export BYE=w\n$> $'HOLA'$'BYE'd",
+    "expected": "export HOLA=p\n$> export BYE=w\n$> $'HOLA'$'BYE'd",
+    "output": "bash: HOLABYEd: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=-n\n$> \"echo $HOLA\" hey",
+    "expected": "export HOLA=-n\n$> \"echo $HOLA\" hey",
+    "output": "bash: echo -n: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export A=1 B=2 C=3 D=4 E=5 F=6 G=7 H=8\n$> echo \"$A'$B\"'$C\"$D'$E'\"$F'\"'$G'$H\"",
+    "expected": "export A=1 B=2 C=3 D=4 E=5 F=6 G=7 H=8\n$> echo \"$A'$B\"'$C\"$D'$E'\"$F'\"'$G'$H\"",
+    "output": "1'2$C\"$D5\"$F'7'8\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> env\n$> unset HOLA\n$> env",
+    "expected": "export HOLA=bonjour\n$> env\n$> unset HOLA\n$> env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour\n$> env\n$> unset HOLA\n$> unset HOLA\n$> env",
+    "expected": "export HOLA=bonjour\n$> env\n$> unset HOLA\n$> unset HOLA\n$> env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset PATH\n$> echo $PATH",
+    "expected": "unset PATH\n$> echo $PATH",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset PATH\n$> ls",
+    "expected": "unset PATH\n$> ls",
+    "output": "bash: ls: No such file or directory",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset \"\"",
+    "expected": "unset \"\"",
+    "output": "bash: unset: `': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset INEXISTANT",
+    "expected": "unset INEXISTANT",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset PWD\n$> env | grep PWD\n$> pwd",
+    "expected": "unset PWD\n$> env | grep PWD\n$> pwd",
+    "output": "$>\n$>\n/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd\n$> unset PWD\n$> env | grep PWD\n$> cd $PWD\n$> pwd",
+    "expected": "pwd\n$> unset PWD\n$> env | grep PWD\n$> cd $PWD\n$> pwd",
+    "output": "/home/vietdu91/42_works/minishell\n$>\n$>\n$>\n/home/vietdu91",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset OLDPWD\n$> env | grep OLDPWD",
+    "expected": "unset OLDPWD\n$> env | grep OLDPWD",
+    "output": "$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset 9HOLA",
+    "expected": "unset 9HOLA",
+    "output": "bash: unset: `9HOLA': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOLA9",
+    "expected": "unset HOLA9",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL?A",
+    "expected": "unset HOL?A",
+    "output": "bash: unset: `HOL?A': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOLA HOL?A",
+    "expected": "unset HOLA HOL?A",
+    "output": "bash: unset: `HOL?A': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL?A HOLA",
+    "expected": "unset HOL?A HOLA",
+    "output": "bash: unset: `HOL?A': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL?A HOL.A",
+    "expected": "unset HOL?A HOL.A",
+    "output": "bash: unset: `HOL?A': not a valid identifier\nbash: unset: `HOL.A': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOLA=",
+    "expected": "unset HOLA=",
+    "output": "bash: unset: `HOLA=': not a valid identifier\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL\\\\\\\\A",
+    "expected": "unset HOL\\\\\\\\A",
+    "output": "bash: unset: `HOL\\\\A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL;A",
+    "expected": "unset HOL;A",
+    "output": "bash: A: command not found",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL.A",
+    "expected": "unset HOL.A",
+    "output": "bash: unset: `HOL.A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL+A",
+    "expected": "unset HOL+A",
+    "output": "bash: unset: `HOL+A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL=A",
+    "expected": "unset HOL=A",
+    "output": "bash: unset: `HOL=A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL{A",
+    "expected": "unset HOL{A",
+    "output": "bash: unset: `HOL{A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL}A",
+    "expected": "unset HOL}A",
+    "output": "bash: unset: `HOL}A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL-A",
+    "expected": "unset HOL-A",
+    "output": "bash: unset: `HOL-A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset -HOLA",
+    "expected": "unset -HOLA",
+    "output": "bash: unset: -H: invalid option",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset _HOLA",
+    "expected": "unset _HOLA",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL_A",
+    "expected": "unset HOL_A",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOLA_",
+    "expected": "unset HOLA_",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL*A",
+    "expected": "unset HOL*A",
+    "output": "bash: unset: `HOL*A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL#A",
+    "expected": "unset HOL#A",
+    "output": "bash: unset: `HOL#A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset $HOLA",
+    "expected": "unset $HOLA",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset $PWD",
+    "expected": "unset $PWD",
+    "output": "bash: unset: `/home/vietdu91/42_works/minishell': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL@",
+    "expected": "unset HOL@",
+    "output": "bash: unset: `HOL@': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL!A",
+    "expected": "unset HOL!A",
+    "output": "bash: !A: event not found",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL^A",
+    "expected": "unset HOL^A",
+    "output": "bash: unset: `HOL^A': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL$?A",
+    "expected": "unset HOL$?A",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOL\\~A",
+    "expected": "unset HOL\\~A",
+    "output": "bash: unset: `HOL~': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset \"\" HOLA\n$> env | grep HOLA",
+    "expected": "unset \"\" HOLA\n$> env | grep HOLA",
+    "output": "bash: unset: `': not a valid identifier\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset PATH\n$> echo $PATH",
+    "expected": "unset PATH\n$> echo $PATH",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset PATH\n$> cat Makefile",
+    "expected": "unset PATH\n$> cat Makefile",
+    "output": "bash: cat: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset =",
+    "expected": "unset =",
+    "output": "bash: unset: `=': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset ======",
+    "expected": "unset ======",
+    "output": "bash: unset: `======': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset ++++++",
+    "expected": "unset ++++++",
+    "output": "bash: unset: `++++++': not a valid identifier",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset _______",
+    "expected": "unset _______",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset export",
+    "expected": "unset export",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset echo",
+    "expected": "unset echo",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset pwd",
+    "expected": "unset pwd",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset cd",
+    "expected": "unset cd",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset unset",
+    "expected": "unset unset",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset sudo",
+    "expected": "unset sudo",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export hola | unset hola | echo $?",
+    "expected": "export hola | unset hola | echo $?",
+    "output": "0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> /bin/echo",
+    "expected": "/bin/echo",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> /bin/echo Hola Que Tal",
+    "expected": "/bin/echo Hola Que Tal",
+    "output": "Hola Que Tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> /bin/env",
+    "expected": "/bin/env",
+    "output": "...\nPATH=...\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> /bin/cd Desktop",
+    "expected": "/bin/cd Desktop",
+    "output": "bash: /bin/cd: No such file or directory",
+    "handled": "ko"
+  },
+  {
+    "input": "$> history",
+    "expected": "history",
+    "output": "...\n  558 echo $?\n  559 clear\n  560 history\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> [touche du haut]",
+    "expected": "[touche du haut]",
+    "output": "$> clear",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd",
+    "expected": "pwd",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd hola",
+    "expected": "pwd hola",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd ./hola",
+    "expected": "pwd ./hola",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd hola que tal",
+    "expected": "pwd hola que tal",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd -p",
+    "expected": "pwd -p",
+    "output": "bash: pwd: -p: invalid option\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd --p",
+    "expected": "pwd --p",
+    "output": "bash: pwd: --: invalid option\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd ---p",
+    "expected": "pwd ---p",
+    "output": "bash: pwd: --: invalid option\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd -- p",
+    "expected": "pwd -- p",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd pwd pwd",
+    "expected": "pwd pwd pwd",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd ls",
+    "expected": "pwd ls",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd ls env",
+    "expected": "pwd ls env",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd",
+    "expected": "cd",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd .",
+    "expected": "cd .",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ./",
+    "expected": "cd ./",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ./././.",
+    "expected": "cd ./././.",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ././././",
+    "expected": "cd ././././",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ..",
+    "expected": "cd ..",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ../",
+    "expected": "cd ../",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ../..",
+    "expected": "cd ../..",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ../.",
+    "expected": "cd ../.",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd .././././.",
+    "expected": "cd .././././.",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd srcs",
+    "expected": "cd srcs",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd srcs objs",
+    "expected": "cd srcs objs",
+    "output": "bash: cd: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd 'srcs'",
+    "expected": "cd 'srcs'",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd \"srcs\"",
+    "expected": "cd \"srcs\"",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd '/etc'",
+    "expected": "cd '/etc'",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd /e'tc'",
+    "expected": "cd /e'tc'",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd /e\"tc\"",
+    "expected": "cd /e\"tc\"",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd sr",
+    "expected": "cd sr",
+    "output": "bash: cd: sr: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd Makefile",
+    "expected": "cd Makefile",
+    "output": "bash: cd: Makefile: Not a directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ../minishell",
+    "expected": "cd ../minishell",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ../../../../../../..",
+    "expected": "cd ../../../../../../..",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd .././../.././../bin/ls",
+    "expected": "cd .././../.././../bin/ls",
+    "output": "bash: cd: .././../.././../bin/ls: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd /",
+    "expected": "cd /",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd '/'",
+    "expected": "cd '/'",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd //\n$> pwd",
+    "expected": "cd //\n$> pwd",
+    "output": "//\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd '//'\n$> pwd",
+    "expected": "cd '//'\n$> pwd",
+    "output": "//\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ///\n$> pwd",
+    "expected": "cd ///\n$> pwd",
+    "output": "/\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ////////\n$> pwd",
+    "expected": "cd ////////\n$> pwd",
+    "output": "/\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd '////////'\n$> pwd",
+    "expected": "cd '////////'\n$> pwd",
+    "output": "/\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd /minishell",
+    "expected": "cd /minishell",
+    "output": "bash: cd: /minishell: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd /\n$> cd ..",
+    "expected": "cd /\n$> cd ..",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd _",
+    "expected": "cd _",
+    "output": "bash: cd: _: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd -",
+    "expected": "cd -",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd --",
+    "expected": "cd --",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ---",
+    "expected": "cd ---",
+    "output": "bash: cd: --: invalid option\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd $HOME",
+    "expected": "cd $HOME",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd $HOME $HOME",
+    "expected": "cd $HOME $HOME",
+    "output": "bash: cd: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd $HOME/42_works",
+    "expected": "cd $HOME/42_works",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd \"$PWD/srcs\"",
+    "expected": "cd \"$PWD/srcs\"",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd '$PWD/srcs'",
+    "expected": "cd '$PWD/srcs'",
+    "output": "bash: cd: $PWD/srcs: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOME\n$> cd $HOME",
+    "expected": "unset HOME\n$> cd $HOME",
+    "output": "bash: cd: HOME not set\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOME\n$> export HOME=\n$> cd",
+    "expected": "unset HOME\n$> export HOME=\n$> cd",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOME\n$> export HOME\n$> cd",
+    "expected": "unset HOME\n$> export HOME\n$> cd",
+    "output": "bash: cd: HOME not set\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd minishell Docs crashtest.c",
+    "expected": "cd minishell Docs crashtest.c",
+    "output": "bash: cd: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$>    cd / | echo $?\n$> pwd",
+    "expected": "   cd / | echo $?\n$> pwd",
+    "output": "0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ~",
+    "expected": "cd ~",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ~/",
+    "expected": "cd ~/",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd ~/ | echo $?\n$> pwd",
+    "expected": "cd ~/ | echo $?\n$> pwd",
+    "output": "0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd *",
+    "expected": "cd *",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd *",
+    "expected": "cd *",
+    "output": "bash: cd: minishell: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd *",
+    "expected": "cd *",
+    "output": "bash: cd: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> cd ..",
+    "expected": "mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> cd ..",
+    "output": "chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> pwd",
+    "expected": "mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> pwd",
+    "output": "pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> echo $PWD\n$> echo $OLDPWD",
+    "expected": "mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> echo $PWD\n$> echo $OLDPWD",
+    "output": "/home/vietdu91/42_works/minishell/a/b\n$>\n/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> cd\n$> echo $PWD\n$> echo $OLDPWD",
+    "expected": "mkdir a\n$> mkdir a/b\n$> cd a/b\n$> rm -r ../../a\n$> cd\n$> echo $PWD\n$> echo $OLDPWD",
+    "output": "/home\n$>\n/home/vietdu91/42_works/minishell/a/b\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> mkdir a\n$> cd a\n$> rm -r ../a\n$> echo $PWD\n$> echo $OLDPWD",
+    "expected": "mkdir a\n$> cd a\n$> rm -r ../a\n$> echo $PWD\n$> echo $OLDPWD",
+    "output": "../../../home/vietdu91/42_works/minishell/a\n$>\n../../../home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export CDPATH=/\n$> cd $HOME/..",
+    "expected": "export CDPATH=/\n$> cd $HOME/..",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export CDPATH=/\n$> cd home/vietdu91",
+    "expected": "export CDPATH=/\n$> cd home/vietdu91",
+    "output": "/home/vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export CDPATH=./\n$> cd .",
+    "expected": "export CDPATH=./\n$> cd .",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export CDPATH=./\n$> cd ..",
+    "expected": "export CDPATH=./\n$> cd ..",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> chmod 000 minishell\n$> ./minishell",
+    "expected": "chmod 000 minishell\n$> ./minishell",
+    "output": "bash: ./minishell : Permission denied\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls hola",
+    "expected": "ls hola",
+    "output": "ls: cannot access 'hola': No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ./Makefile",
+    "expected": "./Makefile",
+    "output": "bash: ./Makefile: Permission denied\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ./minishell",
+    "expected": "./minishell",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env | grep SHLVL\n$> ./minishell\n$> env | grep SHLVL\n$> exit\n$> env | grep SHLVL",
+    "expected": "env | grep SHLVL\n$> ./minishell\n$> env | grep SHLVL\n$> exit\n$> env | grep SHLVL",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> touch hola\n$> ./hola",
+    "expected": "touch hola\n$> ./hola",
+    "output": "bash: ./hola: Permission denied\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env|\"wc\" -l",
+    "expected": "env|\"wc\" -l",
+    "output": "66\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env|\"wc \"-l",
+    "expected": "env|\"wc \"-l",
+    "output": "bash: wc -l: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> expr 1 + 1",
+    "expected": "expr 1 + 1",
+    "output": "2\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> expr $? + $?",
+    "expected": "expr $? + $?",
+    "output": "0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env -i ./minishell\n$> env",
+    "expected": "env -i ./minishell\n$> env",
+    "output": "PWD=/mnt/nfs/homes/emtran/Desktop/42_minishell\nSHLVL=1\n_=/usr/bin/env\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env -i ./minishell\n$> export",
+    "expected": "env -i ./minishell\n$> export",
+    "output": "export OLDPWD\nexport PWD=\"/mnt/nfs/homes/emtran/Desktop/42_minishell\"\nexport SHLVL=\"1\"\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env -i ./minishell\n$> cd",
+    "expected": "env -i ./minishell\n$> cd",
+    "output": "bash: cd: HOME not set\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env -i ./minishell\n$> cd ~",
+    "expected": "env -i ./minishell\n$> cd ~",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit",
+    "expected": "exit",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit exit",
+    "expected": "exit exit",
+    "output": "exit\nbash: exit: exit: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit hola",
+    "expected": "exit hola",
+    "output": "exit\nbash: exit: hola: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit hola que tal",
+    "expected": "exit hola que tal",
+    "output": "exit\nbash: exit: hola: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 42",
+    "expected": "exit 42",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 000042",
+    "expected": "exit 000042",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 666",
+    "expected": "exit 666",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 666 666",
+    "expected": "exit 666 666",
+    "output": "exit\nbash: exit: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -666 666",
+    "expected": "exit -666 666",
+    "output": "exit\nbash: exit: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit hola 666",
+    "expected": "exit hola 666",
+    "output": "exit\nbash: exit: hola: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 666 666 666 666",
+    "expected": "exit 666 666 666 666",
+    "output": "exit\nbash: exit: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 666 hola 666",
+    "expected": "exit 666 hola 666",
+    "output": "exit\nbash: exit: too many arguments",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit hola 666 666",
+    "expected": "exit hola 666 666",
+    "output": "exit\nbash: exit: hola: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 259",
+    "expected": "exit 259",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -4",
+    "expected": "exit -4",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -42",
+    "expected": "exit -42",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -0000042",
+    "expected": "exit -0000042",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -259",
+    "expected": "exit -259",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -666",
+    "expected": "exit -666",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit +666",
+    "expected": "exit +666",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 0",
+    "expected": "exit 0",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit +0",
+    "expected": "exit +0",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -0",
+    "expected": "exit -0",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit +42",
+    "expected": "exit +42",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -69 -96",
+    "expected": "exit -69 -96",
+    "output": "exit\nbash: exit: too many arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit --666",
+    "expected": "exit --666",
+    "output": "exit\nbash: exit: --666: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit ++++666",
+    "expected": "exit ++++666",
+    "output": "exit\nbash: exit: ++++666: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit ++++++0",
+    "expected": "exit ++++++0",
+    "output": "exit\nbash: exit: ++++++0: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit ------0",
+    "expected": "exit ------0",
+    "output": "exit\nbash: exit: ------0: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit \"666\"",
+    "expected": "exit \"666\"",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '666'",
+    "expected": "exit '666'",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '-666'",
+    "expected": "exit '-666'",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '+666'",
+    "expected": "exit '+666'",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '----666'",
+    "expected": "exit '----666'",
+    "output": "exit\nbash: exit: ----666: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '++++666'",
+    "expected": "exit '++++666'",
+    "output": "exit\nbash: exit: ++++666: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '6'66",
+    "expected": "exit '6'66",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '2'66'32'",
+    "expected": "exit '2'66'32'",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit \"'666'\"",
+    "expected": "exit \"'666'\"",
+    "output": "exit\nbash: exit: '666': numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '\"666\"'",
+    "expected": "exit '\"666\"'",
+    "output": "exit\nbash: exit: \"666\": numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit '666'\"666\"666",
+    "expected": "exit '666'\"666\"666",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit +'666'\"666\"666",
+    "expected": "exit +'666'\"666\"666",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -'666'\"666\"666",
+    "expected": "exit -'666'\"666\"666",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 9223372036854775807",
+    "expected": "exit 9223372036854775807",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit 9223372036854775808",
+    "expected": "exit 9223372036854775808",
+    "output": "exit\nbash: exit: 9223372036854775808: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -9223372036854775808",
+    "expected": "exit -9223372036854775808",
+    "output": "exit\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit -9223372036854775809",
+    "expected": "exit -9223372036854775809",
+    "output": "exit\nbash: exit: -9223372036854775809: numeric argument required\n~/minishell $>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat | cat | cat | ls",
+    "expected": "cat | cat | cat | ls",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n\n\n\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | exit",
+    "expected": "ls | exit",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | exit 42",
+    "expected": "ls | exit 42",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit | ls",
+    "expected": "exit | ls",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> exit | cat -e bonjour",
+    "expected": "echo hola > bonjour\n$> exit | cat -e bonjour",
+    "output": "hola$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> cat -e bonjour | exit",
+    "expected": "echo hola > bonjour\n$> cat -e bonjour | exit",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo | echo",
+    "expected": "echo | echo",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola | echo que tal",
+    "expected": "echo hola | echo que tal",
+    "output": "que tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd | echo hola",
+    "expected": "pwd | echo hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> env | echo hola",
+    "expected": "env | echo hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo oui | cat -e",
+    "expected": "echo oui | cat -e",
+    "output": "oui$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo oui | echo non | echo hola | grep oui",
+    "expected": "echo oui | echo non | echo hola | grep oui",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo oui | echo non | echo hola | grep non",
+    "expected": "echo oui | echo non | echo hola | grep non",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo oui | echo non | echo hola | grep hola",
+    "expected": "echo oui | echo non | echo hola | grep hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola | cat -e | cat -e | cat -e",
+    "expected": "echo hola | cat -e | cat -e | cat -e",
+    "output": "hola$$$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd .. | echo \"hola\"",
+    "expected": "cd .. | echo \"hola\"",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd / | echo \"hola\"",
+    "expected": "cd / | echo \"hola\"",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cd .. | pwd",
+    "expected": "cd .. | pwd",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ifconfig | grep \":\"",
+    "expected": "ifconfig | grep \":\"",
+    "output": "docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500\n   ether 02:42:27:cf:95:49  txqueuelen 0  (Ethernet)\n[...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ifconfig | grep hola",
+    "expected": "ifconfig | grep hola",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> whoami | grep $USER",
+    "expected": "whoami | grep $USER",
+    "output": "vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> whoami | grep $USER > /tmp/bonjour\n$> cat /tmp/bonjour",
+    "expected": "whoami | grep $USER > /tmp/bonjour\n$> cat /tmp/bonjour",
+    "output": "vietdu91\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> whoami | cat -e | cat -e > /tmp/bonjour\n$> cat /tmp/bonjour",
+    "expected": "whoami | cat -e | cat -e > /tmp/bonjour\n$> cat /tmp/bonjour",
+    "output": "vietdu91$$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> whereis ls | cat -e | cat -e > /tmp/bonjour\n$> cat /tmp/bonjour",
+    "expected": "whereis ls | cat -e | cat -e > /tmp/bonjour\n$> cat /tmp/bonjour",
+    "output": "ls: /usr/bin/ls /usr/share/man/man1/ls.1posix.gz /usr/share/man/man1/ls.1.gz$$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | hola",
+    "expected": "ls | hola",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | ls hola",
+    "expected": "ls | hola",
+    "output": "ls: cannot access 'hola': No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | ls | hola",
+    "expected": "ls | ls | hola",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | hola | ls",
+    "expected": "ls | hola | ls",
+    "output": "bash: hola: command not found\ncrashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  srcs  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | ls | hola | rev",
+    "expected": "ls | ls | hola | rev",
+    "output": "bash: hola: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls | ls | echo hola | rev",
+    "expected": "ls | ls | echo hola | rev",
+    "output": "aloh\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls -la | grep \".\"",
+    "expected": "ls -la | grep \".\"",
+    "output": "total 16\ndrwx------  2 vietdu91 [...] .\ndrwxrwxewt 51 root     [...] ..\n-rwxr-xr-x  8 vietdu91 [...] crashtest.c\n[...]\n$> ",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls -la | grep \"'.'\"",
+    "expected": "ls -la | grep \"'.'\"",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo test.c | cat -e| cat -e| cat -e| cat -e| cat -e| cat -e| cat -e| cat -e|cat -e|cat -e|cat -e",
+    "expected": "echo test.c | cat -e| cat -e| cat -e| cat -e| cat -e| cat -e| cat -e| cat -e|cat -e|cat -e|cat -e",
+    "output": "test.c$$$$$$$$$$$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls\n|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls",
+    "expected": "ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls\n|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls|ls",
+    "output": "crashtest.c Docs Dockers Drawings Makefile minishell philosophers srcs test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola | cat | cat | cat | cat | cat | grep hola",
+    "expected": "echo hola | cat | cat | cat | cat | cat | grep hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola | cat",
+    "expected": "echo hola | cat",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola| cat",
+    "expected": "echo hola| cat",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola |cat",
+    "expected": "echo hola |cat",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola|cat",
+    "expected": "echo hola|cat",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola || cat",
+    "expected": "echo hola || cat",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola ||| cat",
+    "expected": "echo hola ||| cat",
+    "output": "bash: syntax error near\nunexpected token `|'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ech|o hola | cat",
+    "expected": "ech|o hola | cat",
+    "output": "bash: ech: command not found\nbash: o: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat Makefile | cat -e | cat -e",
+    "expected": "cat Makefile | cat -e | cat -e",
+    "output": "[...]\n$$\n.PHONY:    all clean fclean re$$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat Makefile | grep srcs | cat -e",
+    "expected": "cat Makefile | grep srcs | cat -e",
+    "output": "objs/%.o:                srcs/%.c$\n                        @norminette srcs/*$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat Makefile | grep srcs | grep srcs | cat -e",
+    "expected": "cat Makefile | grep srcs | grep srcs | cat -e",
+    "output": "objs/%.o:                srcs/%.c$\n                        @norminette srcs/*$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat Makefile | grep pr | head -n 5 | cd file_not_exist",
+    "expected": "cat Makefile | grep pr | head -n 5 | cd file_not_exist",
+    "output": "bash: cd: file_not_exist: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat Makefile | grep pr | head -n 5 | hello",
+    "expected": "cat Makefile | grep pr | head -n 5 | hello",
+    "output": "bash: hello: command not found\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=bonjour | cat -e | cat -e",
+    "expected": "export HOLA=bonjour | cat -e | cat -e",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> unset HOLA | cat -e",
+    "expected": "unset HOLA | cat -e",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA | echo hola\n$> env | grep PROUT",
+    "expected": "export HOLA | echo hola\n$> env | grep PROUT",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export | echo hola",
+    "expected": "export | echo hola",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> sleep 3 | sleep 3",
+    "expected": "sleep 3 | sleep 3",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> time sleep 3 | sleep 3",
+    "expected": "time sleep 3 | sleep 3",
+    "output": "real\t0m3.002s\nuser\t0m0.003s\nsys\t0m0.001s\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> sleep 3 | exit",
+    "expected": "sleep 3 | exit",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> exit | sleep 3",
+    "expected": "exit | sleep 3",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > a\n$> >>b echo que tal\n$> cat a | <b cat | cat > c | cat",
+    "expected": "echo hola > a\n$> >>b echo que tal\n$> cat a | <b cat | cat > c | cat",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> cat bonjour",
+    "expected": "echo hola > bonjour\n$> cat bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo que tal >> bonjour\n$> cat bonjour",
+    "expected": "echo que tal >> bonjour\n$> cat bonjour",
+    "output": "hola\nque tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "expected": "echo hola > bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "output": "$>\n$>\nhola\nque tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> rm bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "expected": "echo hola > bonjour\n$> rm bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "output": "que tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola que tal > bonjour\n$> cat bonjour",
+    "expected": "echo hola que tal > bonjour\n$> cat bonjour",
+    "output": "hola que tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola que tal > /tmp/bonjour\n$> cat -e /tmp/bonjour",
+    "expected": "echo hola que tal > /tmp/bonjour\n$> cat -e /tmp/bonjour",
+    "output": "hola que tal$\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=hey\n$> echo bonjour > $HOLA\n$> echo $HOLA",
+    "expected": "export HOLA=hey\n$> echo bonjour > $HOLA\n$> echo $HOLA",
+    "output": "$>\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> whereis grep > Docs/bonjour\n$> cat Docs/bonjour",
+    "expected": "whereis grep > Docs/bonjour\n$> cat Docs/bonjour",
+    "output": "grep: /usr/bin/grep /usr/share/man/man1/grep.1.gz /usr/share/man/man1/grep.1posix.gz /usr/share/info/grep.info.gz\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls -la > Docs/bonjour\n$> cat Docs/bonjour",
+    "expected": "ls -la > Docs/bonjour\n$> cat Docs/bonjour",
+    "output": "total 16\ndrwx------  2 vietdu91 [...] .\ndrwxrwxewt 51 root     [...] ..\n-rwxr-xr-x  8 vietdu91 [...] crashtest.c\n[...]\n$> ",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd>bonjour\n$> cat bonjour",
+    "expected": "pwd>bonjour\n$> cat bonjour",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> pwd >                     bonjour\n$> cat bonjour",
+    "expected": "pwd >                     bonjour\n$> cat bonjour",
+    "output": "/home/vietdu91/42_works/minishell\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > > bonjour",
+    "expected": "echo hola > > bonjour",
+    "output": "bash: syntax error near unexpected token `>'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola < < bonjour",
+    "expected": "echo hola < < bonjour",
+    "output": "bash: syntax error near unexpected token `<'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola >>> bonjour",
+    "expected": "echo hola >>> bonjour",
+    "output": "bash: syntax error near unexpected token `>'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> > bonjour echo hola\n$> cat bonjour",
+    "expected": "> bonjour echo hola\n$> cat bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> > bonjour | echo hola\n$> cat bonjour",
+    "expected": "> bonjour | echo hola\n$> cat bonjour",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> prout hola > bonjour\n$> ls",
+    "expected": "prout hola > bonjour\n$> ls",
+    "output": "bash: prout: command not found\n$>\nbonjour [...]",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > hello >> hello >> hello\n$> ls\n$> cat hello",
+    "expected": "echo hola > hello >> hello >> hello\n$> ls\n$> cat hello",
+    "output": "$>\nhello\n$>\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > hello >> hello >> hello\n$> echo hola >> hello\n$> cat < hello",
+    "expected": "echo hola > hello >> hello >> hello\n$> echo hola >> hello\n$> cat < hello",
+    "output": "hola\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > hello >> hello >> hello\n$> echo hola >> hello\n$> echo hola > hello >> hello >> hello\n$> cat < hello",
+    "expected": "echo hola > hello >> hello >> hello\n$> echo hola >> hello\n$> echo hola > hello >> hello >> hello\n$> cat < hello",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola >> hello >> hello > hello\n$> echo hola >> hello\n$> cat < hello",
+    "expected": "echo hola >> hello >> hello > hello\n$> echo hola >> hello\n$> cat < hello",
+    "output": "hola\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola >> hello >> hello > hello\n$> echo hola >> hello\n$> echo hola >> hello >> hello > hello\n$> cat < hello",
+    "expected": "echo hola >> hello >> hello > hello\n$> echo hola >> hello\n$> echo hola >> hello >> hello > hello\n$> cat < hello",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > hello\n$> echo hola >> hello >> hello >> hello\n$> echo hola >> hello\n$> cat < hello",
+    "expected": "echo hola > hello\n$> echo hola >> hello >> hello >> hello\n$> echo hola >> hello\n$> cat < hello",
+    "output": "hola\nhola\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > hello\n$> echo hey > bonjour\n$> echo <bonjour <hello",
+    "expected": "echo hola > hello\n$> echo hey > bonjour\n$> echo <bonjour <hello",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > hello\n$> echo hey > bonjour\n$> echo <hello <bonjour",
+    "expected": "echo hola > hello\n$> echo hey > bonjour\n$> echo <hello <bonjour",
+    "output": "\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola > bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola > bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> echo hola > bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> echo hola > bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola > bonjour >> hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola > bonjour >> hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> echo hola > bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> echo hola > bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola > bonjour > hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola > bonjour > hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> echo hola > bonjour > hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> echo hola > bonjour > hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola >> bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola >> bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> echo hola >> bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> echo hola >> bonjour > hello > bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola >> bonjour >> hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> echo hola >> bonjour >> hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> echo hola >> bonjour >> hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> echo hola >> bonjour >> hello >> bonjour\n$> cat bonjour\n$> cat hello",
+    "output": "hola\nhola\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> > bonjour echo hola bonjour\n$> cat bonjour",
+    "expected": "> bonjour echo hola bonjour\n$> cat bonjour",
+    "output": "bonjour hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >bonjour echo > hola>bonjour>hola>>bonjour>hola hey >bonjour hola >hola\n$> cat bonjour\n$> cat hola",
+    "expected": ">bonjour echo > hola>bonjour>hola>>bonjour>hola hey >bonjour hola >hola\n$> cat bonjour\n$> cat hola",
+    "output": "$>\n$>\nhey hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo bonjour > hola1\n$> echo hello > hola2\n$> echo 2 >hola1 >> hola2\n$> ls\n$> cat hola1\n$> cat hola2",
+    "expected": "echo bonjour > hola1\n$> echo hello > hola2\n$> echo 2 >hola1 >> hola2\n$> ls\n$> cat hola1\n$> cat hola2",
+    "output": "hola1  hola2  [...]\n$>\n$>\nhello\n2\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo bonjour > hola1\n$> echo hello > hola2\n$> echo 2 >>hola1 > hola2\n$> ls\n$> cat hola1\n$> cat hola2",
+    "expected": "echo bonjour > hola1\n$> echo hello > hola2\n$> echo 2 >>hola1 > hola2\n$> ls\n$> cat hola1\n$> cat hola2",
+    "output": "hola1  hola2  [...]\n$>\nbonjour\n$>\n2\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> > pwd\n$> ls",
+    "expected": "> pwd\n$> ls",
+    "output": "pwd\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> < pwd",
+    "expected": "< pwd",
+    "output": "bash: pwd: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> < Makefile .",
+    "expected": "< Makefile .",
+    "output": ".: not enough arguments\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat <pwd",
+    "expected": "cat <pwd",
+    "output": "bash: pwd: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat <srcs/pwd",
+    "expected": "cat <srcs/pwd",
+    "output": "bash: srcs/pwd: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat <../pwd",
+    "expected": "cat <../pwd",
+    "output": "bash: ../pwd: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat >>",
+    "expected": "cat >>",
+    "output": "bash: syntax error near unexpected token `newline' \n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat >>>",
+    "expected": "cat >>>",
+    "output": "bash: syntax error near unexpected token `>' \n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat >> <<",
+    "expected": "cat >> <<",
+    "output": "bash: syntax error near unexpected token `<<' \n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat >> > >> << >>",
+    "expected": "cat >> > >> << >>",
+    "output": "bash: syntax error near unexpected token `>' \n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat < ls",
+    "expected": "cat < ls",
+    "output": "bash: ls: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat < ls > ls",
+    "expected": "cat < ls > ls",
+    "output": "bash: ls: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat > ls1 < ls2\n$> ls",
+    "expected": "cat > ls1 < ls2\n$> ls",
+    "output": "bash: ls2: No such file or directory\n$>\nls1  [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >>hola\n$> cat hola",
+    "expected": ">>hola\n$> cat hola",
+    "output": "$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> cat < bonjour",
+    "expected": "echo hola > bonjour\n$> cat < bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola >bonjour\n$> cat <bonjour",
+    "expected": "echo hola >bonjour\n$> cat <bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola>bonjour\n$> cat<bonjour",
+    "expected": "echo hola>bonjour\n$> cat<bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola> bonjour\n$> cat< bonjour",
+    "expected": "echo hola> bonjour\n$> cat< bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola               >bonjour\n$> cat<                     bonjour",
+    "expected": "echo hola               >bonjour\n$> cat<                     bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola          >     bonjour\n$> cat            <         bonjour",
+    "expected": "echo hola          >     bonjour\n$> cat            <         bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> cat < srcs/bonjour",
+    "expected": "echo hola > srcs/bonjour\n$> cat < srcs/bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola >srcs/bonjour\n$> cat <srcs/bonjour",
+    "expected": "echo hola >srcs/bonjour\n$> cat <srcs/bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "expected": "echo hola > bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "output": "hola\nque tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> rm bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "expected": "echo hola > bonjour\n$> rm bonjour\n$> echo que tal >> bonjour\n$> cat < bonjour",
+    "output": "que tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> e'c'\"h\"o hola > bonjour\n$> cat 'bo'\"n\"jour",
+    "expected": "e'c'\"h\"o hola > bonjour\n$> cat 'bo'\"n\"jour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\\ 1\n$> ls\n$> cat bonjour\\ 1",
+    "expected": "echo hola > bonjour\\ 1\n$> ls\n$> cat bonjour\\ 1",
+    "output": "bonjour 1' [...]\n$>\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour hey\n$> ls\n$> cat bonjour\n$> cat hey",
+    "expected": "echo hola > bonjour hey\n$> ls\n$> cat bonjour\n$> cat hey",
+    "output": "bonjour [...]\n$>\nhola hey\n$>\ncat: hey: No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour >srcs/hello <prout\n$> cat srcs/bonjour srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour >srcs/hello <prout\n$> cat srcs/bonjour srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> rm srcs/bonjour srcs/hello\n$> >srcs/bonjour >srcs/hello <prout\n$> ls srcs\n$> cat srcs/bonjour srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> rm srcs/bonjour srcs/hello\n$> >srcs/bonjour >srcs/hello <prout\n$> ls srcs\n$> cat srcs/bonjour srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour  hello\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour <prout >srcs/hello \n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour <prout >srcs/hello \n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> rm srcs/bonjour srcs/hello\n$> >srcs/bonjour <prout >srcs/hello \n$> ls srcs\n$> cat srcs/bonjour",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> rm srcs/bonjour srcs/hello\n$> >srcs/bonjour <prout >srcs/hello \n$> ls srcs\n$> cat srcs/bonjour",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > ../bonjour\n$> echo hey > ../hello\n$> >../bonjour >../hello <prout\n$> cat ../bonjour ../hello",
+    "expected": "echo hola > ../bonjour\n$> echo hey > ../hello\n$> >../bonjour >../hello <prout\n$> cat ../bonjour ../hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > ../bonjour\n$> echo hey > ../hello\n$> rm ../bonjour ../hello\n$> >../bonjour >../hello <prout\n$> ls ..\n$> cat ../bonjour ../hello",
+    "expected": "echo hola > ../bonjour\n$> echo hey > ../hello\n$> rm ../bonjour ../hello\n$> >../bonjour >../hello <prout\n$> ls ..\n$> cat ../bonjour ../hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour  hello\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > ../bonjour\n$> echo hey > ../hello\n$> >../bonjour <prout >../hello \n$> cat ../bonjour \n$> cat ../hello",
+    "expected": "echo hola > ../bonjour\n$> echo hey > ../hello\n$> >../bonjour <prout >../hello \n$> cat ../bonjour \n$> cat ../hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > ../bonjour\n$> echo hey > ../hello\n$> rm ../bonjour ../hello\n$> >../bonjour <prout >../hello \n$> ls ..\n$> cat ../bonjour",
+    "expected": "echo hola > ../bonjour\n$> echo hey > ../hello\n$> rm ../bonjour ../hello\n$> >../bonjour <prout >../hello \n$> ls ..\n$> cat ../bonjour",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour >>srcs/hello <prout\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour >>srcs/hello <prout\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour >srcs/hello <prout\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour >srcs/hello <prout\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour >>srcs/hello <prout\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour >>srcs/hello <prout\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour <prout >>srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >srcs/bonjour <prout >>srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour <prout >srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour <prout >srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour <prout >>srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> >>srcs/bonjour <prout >>srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> <prout >>srcs/bonjour >>srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "expected": "echo hola > srcs/bonjour\n$> echo hey > srcs/hello\n$> <prout >>srcs/bonjour >>srcs/hello\n$> cat srcs/bonjour \n$> cat srcs/hello",
+    "output": "bash: prout: No such file or directory\n$>\nbonjour\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> <bonjour >hello\n$> cat bonjour \n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> <bonjour >hello\n$> cat bonjour \n$> cat hello",
+    "output": "hola\n$>\n>>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> >bonjour >hello < prout\n$> cat bonjour \n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> >bonjour >hello < prout\n$> cat bonjour \n$> cat hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> >bonjour >hello < prout\n$> cat bonjour \n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> >bonjour >hello < prout\n$> cat bonjour \n$> cat hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> >bonjour <prout hello\n$> cat bonjour \n$> cat hello",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> >bonjour <prout hello\n$> cat bonjour \n$> cat hello",
+    "output": "bash: prout: No such file or directory\n$>\n$>\nhey\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> >bonjour <prout hello\n$> cat bonjour ",
+    "expected": "echo hola > bonjour\n$> echo hey > hello\n$> rm bonjour hello\n$> >bonjour <prout hello\n$> cat bonjour ",
+    "output": "bash: prout: No such file or directory\n$>\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > bonjour\n$> <bonjour cat | wc > bonjour\n$> cat bonjour",
+    "expected": "echo hola > bonjour\n$> <bonjour cat | wc > bonjour\n$> cat bonjour",
+    "output": "      0       0       0\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> rm -f bonjour\n$> rm bonjour > bonjour\n$> ls -l bonjour",
+    "expected": "rm -f bonjour\n$> rm bonjour > bonjour\n$> ls -l bonjour",
+    "output": "ls: cannot access 'bonjour': No such file or directory",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour hello\"\n$> >$HOLA\n$> ls",
+    "expected": "export HOLA=\"bonjour hello\"\n$> >$HOLA\n$> ls",
+    "output": "'bonjour hello' [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour hello\"\n$> >\"$HOLA\"\n$> ls",
+    "expected": "export HOLA=\"bonjour hello\"\n$> >\"$HOLA\"\n$> ls",
+    "output": "'bonjour hello' [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour hello\"\n$> >$\"HOLA\"\n$> ls",
+    "expected": "export HOLA=\"bonjour hello\"\n$> >$\"HOLA\"\n$> ls",
+    "output": "HOLA [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour hello\"\n$> >$HOLA>hey\n$> ls",
+    "expected": "export HOLA=\"bonjour hello\"\n$> >$HOLA>hey\n$> ls",
+    "output": "'bonjour hello' hey [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour hello\"\n$> >hey>$HOLA\n$> ls",
+    "expected": "export HOLA=\"bonjour hello\"\n$> >hey>$HOLA\n$> ls",
+    "output": "'bonjour hello' hey [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export HOLA=\"bonjour hello\"\n$> >hey>$HOLA>hey>hey\n$> ls",
+    "expected": "export HOLA=\"bonjour hello\"\n$> >hey>$HOLA>hey>hey\n$> ls",
+    "output": "'bonjour hello' hey [...]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> export A=hey\n$> export A B=Hola D E C=\"Que Tal\"\n$> echo $PROUT$B$C > /tmp/a > /tmp/b > /tmp/c\n$> cat /tmp/a\n$> cat /tmp/b\n$> cat /tmp/c",
+    "expected": "export A=hey\n$> export A B=Hola D E C=\"Que Tal\"\n$> echo $PROUT$B$C > /tmp/a > /tmp/b > /tmp/c\n$> cat /tmp/a\n$> cat /tmp/b\n$> cat /tmp/c",
+    "output": "$>\n$>\n$>\nHolaQue Tal\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "                                           !!!!! Contenu du fichier a : \"Amour Tu es Horrible\"\n                                           !!!!! Contenu du fichier b : \"0123456789\"\n                                           !!!!! Contenu du fichier c : \"Prout\"",
+    "expected": "                                        !!!!! Contenu du fichier a : \"Amour Tu es Horrible\"\n                                           !!!!! Contenu du fichier b : \"0123456789\"\n                                           !!!!! Contenu du fichier c : \"Prout\"",
+    "output": "",
+    "handled": "ko"
+  },
+  {
+    "input": "$> <a cat <b <c",
+    "expected": "<a cat <b <c",
+    "output": "Prout\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> <a cat <b <c\n$> cat a\n$> cat b\n$> cat c",
+    "expected": "<a cat <b <c\n$> cat a\n$> cat b\n$> cat c",
+    "output": "$>\n$>\n$>\nAmour Tu es Horrible\n0123456789\nProut\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >a ls >b >>c >d\n$> cat a\n$> cat b\n$> cat c\n$> cat d",
+    "expected": ">a ls >b >>c >d\n$> cat a\n$> cat b\n$> cat c\n$> cat d",
+    "output": "$>\n$>\n$>\nProut\n$>\ncrashtest.c\nDocs\n[...]\ntest.c\n$> ",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >a ls >b >>c >d\n$> cat a\n$> cat b\n$> cat c\n$> cat d",
+    "expected": ">a ls >b >>c >d\n$> cat a\n$> cat b\n$> cat c\n$> cat d",
+    "output": "$>\n$>\n$>\nProut\n$>\ncrashtest.c\nDocs\n[...]\ntest.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola > a > b > c\n$> cat a\n$> cat b\n$> cat c",
+    "expected": "echo hola > a > b > c\n$> cat a\n$> cat b\n$> cat c",
+    "output": "$>\n$>\nhola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> mkdir dir\n$> ls -la > dir/bonjour\n$> cat dir/bonjour",
+    "expected": "mkdir dir\n$> ls -la > dir/bonjour\n$> cat dir/bonjour",
+    "output": "total 16\ndrwx------  2 vietdu91 [...] .\ndrwxrwxewt 51 root     [...] ..\n[...]\n$> ",
+    "handled": "ko"
+  },
+  {
+    "input": "$> <a\n$> cat a",
+    "expected": "<a\n$> cat a",
+    "output": "Amour Tu es Horrible\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> >d cat <a >>e\n$> cat a\n$> cat d\n$> cat e",
+    "expected": ">d cat <a >>e\n$> cat a\n$> cat d\n$> cat e",
+    "output": "$>\nAmour\n$>\nAmour\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> < a > b cat > hey >> d\n$> cat d\n$> ls",
+    "expected": "< a > b cat > hey >> d\n$> cat d\n$> ls",
+    "output": "Amour Tu Es Horrible\n$>\n[...] a b hey d",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << hola",
+    "expected": "cat << hola",
+    "output": "> $HOME\n> hola\n/home/vietdu91\n$> ",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << 'hola'",
+    "expected": "cat << 'hola'",
+    "output": "> $HOME\n> hola\n$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << \"hola\"",
+    "expected": "cat << \"hola\"",
+    "output": "> $HOME\n> hola\n$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << ho\"la\"",
+    "expected": "cat << ho\"la\"",
+    "output": "> $HOME\n> hola\n$HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << $HOME",
+    "expected": "cat << $HOME",
+    "output": "> prout\n> /home/vietdu91\n> $HO\n> $HOME\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << hola > bonjour\n$> cat bonjour",
+    "expected": "cat << hola > bonjour\n$> cat bonjour",
+    "output": "> prout\n> croutte\n> antoine pue\n> hola\n$>\nprout\ncroutte\nantoine pue",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << hola | rev",
+    "expected": "cat << hola | rev",
+    "output": "> prout\n> croutte\n> antoine pue\n> hola\ntuorp\nettuorc\neup eniotna\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> << hola",
+    "expected": "<< hola",
+    "output": "> chola\n> holache\n>      hola\n> \"hola\"\n> 'hola'\n> hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> <<hola",
+    "expected": "<<hola",
+    "output": ">\n>\n> hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat <<",
+    "expected": "cat <<",
+    "output": "bash: syntax error near unexpected token `newline'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat << prout << lol << koala",
+    "expected": "cat << prout << lol << koala",
+    "output": "> prout\n> lol\n> koala\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> prout << lol << cat << koala",
+    "expected": "prout << lol << cat << koala",
+    "output": "> prout\n> lol\n> cat\n> koala\nbash: prout: command not found",
+    "handled": "ko"
+  },
+  {
+    "input": "$> << $hola",
+    "expected": "<< $hola",
+    "output": "> $hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> << $\"hola\"$\"b\"",
+    "expected": "<< $\"hola\"$\"b\"",
+    "output": "> holab\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> << $\"$hola\"$$\"b\"",
+    "expected": "<< $\"$hola\"$$\"b\"",
+    "output": "> $hola$$b\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> << ho$la$\"$a\"$$\"b\"",
+    "expected": "<< ho$la$\"$a\"$$\"b\"",
+    "output": "> hola$a$$b\n> ho$la$a$$nb\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola <<< bonjour",
+    "expected": "echo hola <<< bonjour",
+    "output": "hola\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola <<<< bonjour",
+    "expected": "echo hola <<<< bonjour",
+    "output": "bash: syntax error near unexpected token `<'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> echo hola <<<<< bonjour",
+    "expected": "echo hola <<<<< bonjour",
+    "output": "bash: syntax error near unexpected token `<<'\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls *",
+    "expected": "ls *",
+    "output": "crashtest.c  Docs  Dockers  Drawings  Makefile  minishell  philosophers  test.c\n\nDocs:\nidentite.pdf  loyer.pdf\nsrcs:\nmain.c  utils.c  sort.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls *.*",
+    "expected": "ls *.*",
+    "output": "crashtest.c  test.c\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> ls *.hola",
+    "expected": "ls *.hola",
+    "output": "ls: cannot access '*.hola' : No such file or directory\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "$> cat M*le",
+    "expected": "cat M*le",
+    "output": "[affiche le Makefile]\n$>",
+    "handled": "ko"
+  },
+  {
+    "input": "cat M*le",
+    "expected": " M*le",
+    "output": "cat: 'M*ee': No such file or directory",
+    "handled": "ko"
+  },
+  {
+    "input": " M*le",
+    "expected": "le",
+    "output": "[affiche le Makefile]\n$>",
+    "handled": "ko"
+  }
+]
