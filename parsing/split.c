@@ -38,7 +38,6 @@ char **split_line(t_db * db, char *line, t_op_node *op, t_tracker *tracker)
     if (len > 0 && k < op->n_childs)
     {
         splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
-        CATCH_ONNULL(splitted[k], NULL);
         ft_strlcpy(splitted[k], line + i - len, len + 1);
     }
     return splitted;

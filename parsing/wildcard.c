@@ -4,102 +4,73 @@
 #include "../includes/string.h"
 
 
-#define FILE_ 8
-#define DIR_ 4
+// bool match(const char *pattern, const char *string) {
+//     while (*pattern != '\0' && *string != '\0')
+//     {
+//         if (*pattern == '*')
+//         {
+//             // Skip consecutive '*'
+//             while (*pattern == '*')
+//                 pattern++;
+//             // If '*' is the last character in the pattern, it's a match
+//             if (*pattern == '\0')
+//                 return true;
+//             // Try matching the rest of the pattern with every substring
+//             while (*string != '\0')
+//             {
+//                 if (match(pattern, string)) 
+//                     return true;
+//                 string++;
+//             }
+//             return false;
+//         }
+//         else if (*pattern != *string)
+//             return false;
+//         pattern++;
+//         string++;
+//     }
+//     // Skip any remaining '*' in the pattern
+//     while (*pattern == '*')
+//         pattern++;
+//     // If we've reached the end of both strings, it's a match
+//     return *pattern == '\0' && *string == '\0';
+// }
 
+// int handle_wildcard(t_db *db, char  **result, char *pattern)
+// {
+//     DIR *curr_dir;
+//     struct dirent *entry;
+//     curr_dir = opendir(".");
+//     if (curr_dir)
+//     {
+//         entry = readdir(curr_dir);
+//         while (entry)
+//         {
+//             if (!starts_with(entry->d_name, ".") && 
+//                 !starts_with(entry->d_name, "..") && 
+//                 match(entry->d_name, pattern))
 
-/*
-    * recursively read the curr dir
-*/
+//                 result = append_word(db, result, entry->d_name, false);
+//             entry = readdir(curr_dir);
+//         }
+//     }
+//     return (SUCCESS);
 
-int handle_wildcard(t_db *db, char  **result)
-{
-    DIR *curr_dir;
-    struct dirent *entry;
-    curr_dir = opendir(".");
-    if (curr_dir)
-    {
-        entry = readdir(curr_dir);
-        while (entry)
-        {
-            if (!starts_with(entry->d_name, "."))
-                result = append_word(db, result, entry->d_name, false);
-            entry = readdir(curr_dir);
-        }
-    }
-    return (SUCCESS);
+// }
 
-}
-
-
-char    *wrap_with_signle_quote(t_db *db, char    *name)
-{
-    char    *new_name;
-
-    new_name = NULL;
-    new_name = ft_strjoin(db, new_name, "'");
-    new_name = ft_strjoin(db, new_name, name);
-    new_name = ft_strjoin(db, new_name, "'");
-
-    return (new_name);
-}
-
-char    *get_dir_files(t_db *db, char    *path)
-{
-    char    *files;
-    (void)db;
-    DIR *curr_dir;
-    struct dirent *entry;
-    t_str_lst    *str_lst;
-    t_str_lst    *new_str;
-
-    files = NULL;
-    str_lst = NULL;
-    curr_dir = opendir(path);
-
-    entry = readdir(curr_dir);
-    if (entry)
-    {
-        files = ft_strjoin(db, files, entry->d_name);
-        new_str = new_str_node(db, files);
-        push_str_back(&str_lst, new_str);
-    }
-    while (entry)
-    {
-        entry = readdir(curr_dir);
-        if (!entry)
-            break;
-        files = ft_strjoin(db, files, " ");
-        files = ft_strjoin(db, files, entry->d_name);
-        new_str = new_str_node(db, files);
-        push_str_back(&str_lst, new_str);
-    }
-    return files;
-}
-
-char    *wildcard(t_db *db, char *line)
-{
-    (void)db;
-    int i;
-    char    *before_astress;
-    char    *afterr_astress;
-    char    *files;
-    char    *new_line;
-    char   *cwd = ".";
-    i = 0;
-    while (line[i])
-    {
-        if (line[i] == '*' && !is_inside_quotes_line(line, i))
-        {
-            before_astress = ft_substr(db, line, 0, i);
-            files = get_dir_files(db, cwd);
-            afterr_astress = ft_substr(db, line, i + 2, ft_strlen(line + i));
-            new_line = ft_strjoin(db, before_astress, files);
-            new_line = ft_strjoin(db, new_line, afterr_astress);
-            printf("%s\n", new_line);
-        }
-        i++;
-    }
-    return NULL;
-}
+// char    *wildcard(t_db *db, char *pattern)
+// {
+//     (void)db;
+//     int i;
+//     char    *files;
+//     char   *cwd = ".";
+//     i = 0;
+//     while (pattern[i])
+//     {
+//         if (pattern[i] == '*' && !is_inside_quotes_line(pattern, i))
+//             files = get_dir_files(db, cwd);
+//         i++;
+//     }
+//     return NULL;
+// }
 

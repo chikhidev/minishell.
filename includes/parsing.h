@@ -115,7 +115,7 @@ void skip_open_spaces(t_quote *quotes, char *line, int *i);
 bool is_quote_oppening(t_quote *head, int i);
 
 char **append_word(t_db *db, char **result, char *save, bool is_sub_call);
-int handle_wildcard(t_db *db, char **result);
+void handle_wildcard(t_db *db, char  ***result, const char *pattern);
 
 t_file_entry *new_ent_node(t_db *db, struct dirent *ent);
 void add_ent_front(t_file_entry **list, t_file_entry *new);

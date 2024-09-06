@@ -126,27 +126,33 @@ void handle_pwd(t_db *db)
 {
     t_exp_list *exp;
     t_exp_list *pwd_exp;
+    t_exp_list *old_pwd_exp;
     t_env_list *pwd_env;
     bool    pwd_exist;
+    bool    old_pwd_exist;
 
     pwd_exist = false;
+    old_pwd_exist = false;
     exp = db->exp_list;
     while (exp)
     {
         if (ft_strcmp(exp->key, "PWD") == 0)
-        {
             pwd_exist = true;
-            break;
-        }
+        if (ft_strcmp(exp->key, "OLDPWD") == 0)
+            old_pwd_exist = true;
         exp = exp->next;
     }
     if (!pwd_exist)
     {
-        pwd_exp = new_exp_node(db, "PWD", getcwd(NULL, 0));
+        pwd_exp = new_exp_node(db, ft_strdup_ec(db, "PWD"), ft_strdup_ec(db, getcwd(NULL, 0)));
         push_exp_sort(&db->exp_list, pwd_exp);
-        pwd_env = new_env_node(db, "PWD", getcwd(NULL, 0));
+        pwd_env = new_env_node(db, ft_strdup_ec(db, "PWD"), ft_strdup_ec(db, getcwd(NULL, 0)));
         push_env_back(&db->env_list, pwd_env);
-
+    }
+    if (!old_pwd_exist)
+    {
+        old_pwd_exp = new_exp_node(db, ft_strdup_ec(db, "OLDPWD"), NULL);
+        push_exp_sort(&db->exp_list, old_pwd_exp);
     }
 }
 
@@ -212,6 +218,75 @@ void db_reset(t_db *db)
     pid_void(db);
 }
 
+bool match(const char *string, const char *pattern)
+{
+    // If both pattern and string are empty, they match
+    if (*pattern == '\0')
+        return *string == '\0';
+
+    // If pattern is empty but string is not, they don't match
+    if (*string == '\0')
+    {
+        // Skip remaining '*' in the pattern
+        while (*pattern == '*')
+            pattern++;
+        return *pattern == '\0';
+    }
+
+    // If pattern starts with '*'
+    if (*pattern == '*')
+    {
+        // Move past the '*' and try matching the rest of the pattern
+        while (*pattern == '*')
+            pattern++;
+        if (*pattern == '\0')
+            return true;  // If '*' was the last character, it matches
+        while (*string != '\0')
+        {
+            if (match(string, pattern))
+                return true;
+            string++;
+        }
+        return false;
+    }
+
+    // If pattern and string characters match
+    if (*pattern == *string)
+        return match(string + 1, pattern + 1);
+
+    return false;
+}
+
+void handle_wildcard(t_db *db, char ***result, const char *pattern) {
+    DIR *curr_dir;
+    struct dirent *entry;
+    (void) pattern;
+    curr_dir = opendir("abc");
+    if (curr_dir)
+    {
+        entry = readdir(curr_dir);
+        while (entry)
+        {
+            if (match(entry->d_name, "a*")) {
+                *result = append_word(db, *result, entry->d_name, false);
+            }
+            entry = readdir(curr_dir);
+        }
+        closedir(curr_dir);
+    }
+}
+
+char **wildcard(t_db *db, const char *pattern)
+{
+    char **files;
+    files = gc_malloc(db, sizeof(char *));
+    files[0] = NULL;
+    handle_wildcard(db, &files, pattern);
+    int i = 0;
+    while (files[i])
+        printf("-> %s\n", files[i++]);
+    return files;
+}
 int main(int ac, char *av[],  char *env[])
 {
     t_db    db;

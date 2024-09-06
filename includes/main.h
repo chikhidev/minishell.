@@ -39,9 +39,6 @@
 # define CATCH_ONFAILURE(x, return_) \
 	if (x == FAILURE)               \
 		return (return_);
-# define CATCH_ONNULL(x, return_) \
-	if (x == NULL)               \
-		return (return_);
 # define CATCH_ONfalse(x, return_) \
 	if (x == false)               \
 		return (return_);

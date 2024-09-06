@@ -6,7 +6,6 @@ int add_quote(t_db *db, t_quote **head, int ascii, int start)
     t_quote *tmp;
 
     new = gc_malloc(db, sizeof(t_quote));
-    CATCH_ONNULL(new, error(db, NULL, "Malloc failed"));
     new->ascii = ascii;
     new->start = start;
     new->end = -1;
@@ -45,9 +44,7 @@ int track_quotes(t_db *db, t_quote **head, char *line)
     {
         last = last_quote(*head);
         if ((line[i] == SNGLQUOTE || line[i] == DOBLQUOTE) && !last)
-        {
-            CATCH_ONFAILURE(add_quote(db, head, line[i], i), FAILURE);
-        }
+            add_quote(db, head, line[i], i);
         else if (
             (line[i] == SNGLQUOTE || line[i] == DOBLQUOTE)
             && last->ascii == line[i]
@@ -57,9 +54,7 @@ int track_quotes(t_db *db, t_quote **head, char *line)
             }
         else if ((line[i] == SNGLQUOTE || line[i] == DOBLQUOTE)
             && last->end != -1)
-        {
-            CATCH_ONFAILURE(add_quote(db, head, line[i], i), FAILURE);
-        }
+            add_quote(db, head, line[i], i);
         i++;
     }
     last = last_quote(*head);
@@ -82,9 +77,7 @@ void update_quotes(t_quote *head, int start, int old_len, int new_len)
     {
         if (start > q->start && start < q->end)
         {
-            printf("updated {%d, %d} to ", q->start, q->end);
             q->end += new_len - old_len - 1;
-            printf("{%d, %d}\n", q->start, q->end);
             return ;
         }
         q = q->next;

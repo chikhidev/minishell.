@@ -88,11 +88,9 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
         bool is_open_whitespace_ = is_open_whitespace(s, it.i, *quotes);
         bool is_open_io_ = is_open_io(s, it.i, *quotes);
 
-        if (!is_open_whitespace_ && !is_open_io_ && read_write_perm // if we have read_write_perm we can read and write
-        )
-        {
+        // if we have read_write_perm we can read and write
+        if (!is_open_whitespace_ && !is_open_io_ && read_write_perm)
             save = concat(db, save, s[it.i]);
-        }
         else if (read_write_perm)
         {
             db->curr_type = validate_io(&s[it.i], 2);
@@ -112,8 +110,6 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
                     it.j++;
 
                 save = ft_substr(db, s, it.i, it.j - it.i);
-                CATCH_ONNULL(save, NULL);
-
                 if (db->curr_type == HEREDOC)
                 {
                     if (open_heredoc(db, save) == FAILURE)
