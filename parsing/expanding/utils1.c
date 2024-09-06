@@ -53,20 +53,25 @@ int valid_char(char c, int  index)
     return (false);
 }
 
-int concat_env_name(t_db *db, char **line, char **env_var_name, int *i)
+int concat_env_name(char **line, char **env_var_name, int *i, t_quote *q)
 {
     char    *tmp;
+    t_db   *db;
+
+    db = this();
+
+    // printf("last status: %d\n", db->last_status);
 
     tmp = NULL;
-    while ((*line)[(*i)] && valid_char((*line)[*i], *i))
+    while ((*line)[(*i)] && valid_char((*line)[*i], *i) && !is_quote(q, *i))
     {
-
         tmp = concat(db, *env_var_name, (*line)[(*i)]);
-        if (!tmp)
-            return (error(db, NULL, "Malloc failed7"));
         *env_var_name = tmp;
 
         (*i)++;
     }
+
+    // printf("len: %d\n", len);
+
     return (SUCCESS);
 }

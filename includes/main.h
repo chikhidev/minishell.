@@ -88,6 +88,16 @@ typedef struct s_iterators
 	int					j;
 }						t_iterators;
 
+typedef struct str_cut
+{
+	int					start_ignore;
+	int					end_ignore;
+
+	int					start_include;
+	int					end_include;
+	
+}						t_str_cut;
+
 /*file types*/
 # define INPUTFILE 0
 # define OUTPUTFILE 1
@@ -266,6 +276,12 @@ typedef struct s_db
 	t_exp_list			*exp_list;
 	char				*static_path;
 }						t_db;
+
+/*prototypes*/
+/**
+ * @details This function is used to initialize the db structure and call be called whenever needed to set or read the data
+ */
+t_db *this();
 
 /*prototypes: error.c*/
 int						error(t_db *db, char *specifier, char *message);

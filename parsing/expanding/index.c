@@ -6,69 +6,67 @@ int expand(t_db *db, char **line, t_quote **quotes)
 {
     char    *env_var_name;
     int     i;
-    t_iterators rem;
+    t_str_cut cut;
     int len;
     char *value;
 
     len = ft_strlen(*line);
-    rem.i = -1;
-    rem.j = -1;
     env_var_name = NULL;
+    ft_bzero(&cut, sizeof(t_str_cut));
     i = 0;
 
     while (i < len)
     {
+        // printf("i: %d\n", i);
         if ((*line)[i] == '$' && !(quotes && inside_single_quote(*quotes, i)))
         {
             if (!(*line)[++i])
                 return (SUCCESS);
 
-            rem.i = i - 1;
-            rem.j = i;
+            cut.start_ignore = i - 1;
+            cut.end_ignore = i;
 
-            if ((quotes && is_quote_oppening(*quotes, i)))
+            if ((quotes && is_quote(*quotes, i))
+                && !is_inside_quotes_list(*quotes, i - 1))
             {
-                if (update_index(db, line, NULL, &rem) == FAILURE)
-                    return FAILURE;
-
                 i++;
-                while ((*line)[i] && (*line)[i] != (*line)[rem.j])
+                while ((*line)[i] && (*line)[i] != (*line)[cut.end_ignore])
                     i++;
-
-                rem.j = i;
-                rem.i = rem.i - 1;
-
-                if (update_index(db, line, NULL, &rem) == FAILURE)
-                    return FAILURE;
+                cut.start_include = cut.start_ignore + 2;
+                cut.end_include = i - 1;
+                cut.end_ignore = i + 1;
+                // printf("--------------------\n");
+                // printf("cut.start_include: %d\n", cut.start_include);
+                // printf("cut.end_include: %d\n", cut.end_include);
+                // printf("cut.end_ignore: %d\n", cut.end_ignore);
+                // printf("cut.start_ignore: %d\n", cut.start_ignore);
+                // printf("--------------------\n");
+                i = update_index(db, line, NULL, &cut);
+                delete_quotes_in_range(quotes, cut.start_ignore, cut.end_ignore);
+                // printf("updated line: %s\n", *line);
             }
             else
             {
-                if (concat_env_name(db, line, &env_var_name, &i) == FAILURE)
+                cut.start_include = -1;
+                if (concat_env_name(line, &env_var_name, &i, *quotes) == FAILURE)
                     return (FAILURE);
-                
-                rem.j = i - 1;
-                i = updated_line(db, line, env_var_name, &rem);
-                if (i == INVALID)
-                {
-                    printf("invalid\n");
-                    return (FAILURE);
-                }
+
+                // printf("env_var_name: %s\n", env_var_name);
+                i = updated_line(db, line, env_var_name, &cut);
+                // printf("updated line: %s\n", *line);
             }
-
-            value = get_env(db, env_var_name);
-
-            // /*
-            // ** If the value of the environment variable is not empty means that the line was expanded at least once
-            // */
-            // if (expanded && ft_strlen(value) > 0)
-            //     *expanded = true;
-            
-            len = ft_strlen(*line);
+            if (i == INVALID)
+                return (FAILURE);
             if (i >= len)
                 return (SUCCESS);
-
-            update_quotes(*quotes, rem.i, ft_strlen(env_var_name), ft_strlen(value));
-            env_var_name = NULL;
+            if (env_var_name)
+            {
+                value = get_env(db, env_var_name);
+                update_quotes(*quotes, cut.start_ignore, ft_strlen(env_var_name), ft_strlen(value));
+                env_var_name = NULL;
+            }
+            
+            len = ft_strlen(*line);
         }
         i++;
     }

@@ -31,13 +31,9 @@ int handle_prompt(t_db *db, char **line)
 
     tmp = NULL;
     if (db->last_status == 0)
-    {
-        tmp = ft_strjoin(db, "\001" GREEN "\002>_ \001" RESET "\002", "$ ");
-    }
+        tmp = ft_strjoin(db, "\001" GREEN "\002>_\001" RESET "\002", "$ ");
     else
-    {
-        tmp = ft_strjoin(db, "\001" RED "\002>_ \001" RESET "\002", "$ ");
-    }
+        tmp = ft_strjoin(db, "\001" RED "\002>_\001" RESET "\002", "$ ");
 
     *line = readline(tmp);
     if (!*line)
@@ -212,45 +208,55 @@ void db_reset(t_db *db)
     pid_void(db);
 }
 
+t_db *this()
+{
+    static t_db db;
+
+    return &db;
+}
+
 int main(int ac, char *av[],  char *env[])
 {
-    t_db    db;
+    t_db    *db;
     char    *line;
     char    *tmp;
     int     ret;
+
     struct sigaction sa;
 
+    db = this();
     ft_bzero(&sa, sizeof(struct sigaction));
     line = NULL;
-    init_db(&db, ac, av, env);
+    init_db(db, ac, av, env);
     while (true)
     {
-        db_reset(&db);
-        ret = handle_prompt(&db, &line);
+        db_reset(db);
+        ret = handle_prompt(db, &line);
 
-        sa.sa_handler = SIG_IGN;
-        sigaction(SIGINT, &sa, NULL);
-        sigaction(SIGQUIT, &sa, NULL);
-        
         if (ret == FAILURE)
             break ;
         if (ret == 0)
             continue ;
-        tmp = gc_malloc(&db, ft_strlen(line) + 1);
+        
+        sa.sa_handler = SIG_IGN;
+        sigaction(SIGINT, &sa, NULL);
+        sigaction(SIGQUIT, &sa, NULL);
+        
+        tmp = gc_malloc(db, ft_strlen(line) + 1);
 
         ft_strlcpy(tmp, line, ft_strlen(line) + 1);
         
-        if (parser(&db, line) == SUCCESS)
+        if (parser(db, line) == SUCCESS)
         {
-            exec(&db, db.root_node);
+            exec(db, db->root_node);
         }
-        fd_void(&db);
-        gc_void(&db);
-        pid_void(&db);
+        fd_void(db);
+        gc_void(db);
+        pid_void(db);
     }
-    fd_void(&db);
-    ec_void(&db);
-    gc_void(&db);
+    fd_void(db);
+    ec_void(db);
+    gc_void(db);
 
     close(0);
     close(1);

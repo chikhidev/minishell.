@@ -159,39 +159,6 @@ char *without_quotes(t_db *db, char *str, t_quote *q)
     return res;
 }
 
-// char *whithout_quotes(t_db *db, char *str)
-// {
-//     int i;
-//     char *res;
-//     // int size;
-//     bool   single_opened;
-//     bool   double_opened;
-
-//     single_opened = false;
-//     double_opened = false;
-//     res = ft_strdup(db, "");
-//     i = 0;
-//     while (str[i])
-//     {
-//         // toggling
-//         if (str[i] == SGL_QUOTE && !double_opened)
-//         {
-//             single_opened = !single_opened;
-//             i++;
-//             continue;
-//         }
-//         if (str[i] == DBL_QUOTE && !single_opened)
-//         {
-//             double_opened = !double_opened;
-//             i++;
-//             continue;
-//         }
-//         res = ft_strjoin_char(db, res, str[i]);
-//         i++;
-//     }
-//     return res;
-// }
-
 char *whithout_quotes_ec(t_db  *db,  char *str)
 {
     int i;

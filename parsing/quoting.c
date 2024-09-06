@@ -90,3 +90,35 @@ void update_quotes(t_quote *head, int start, int old_len, int new_len)
         q = q->next;
     }
 }
+
+
+void delete_quotes_in_range(t_quote **head, int start, int end)
+{
+    t_quote *q;
+    t_quote *prev;
+
+    if (!*head)
+        return ;
+    q = *head;
+    prev = NULL;
+    while (q)
+    {
+        if (q->start >= start && q->end <= end)
+        {
+            if (prev)
+                prev->next = q->next;
+            else
+                *head = q->next;
+            // q = prev ? prev->next : *head;
+            if (prev)
+                q = prev->next;
+            else
+                q = *head;
+        }
+        else
+        {
+            prev = q;
+            q = q->next;
+        }
+    }
+}

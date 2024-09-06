@@ -60,8 +60,9 @@ bool is_open_io(char *line, int i, t_quote *quotes);
 /*parsing/quoting.c and parsing/quoting_utils.c*/
 int track_quotes(t_db *db, t_quote **head, char *line);
 bool is_inside_quotes_list(t_quote *head, int i);
-void update_quotes(t_quote *head, int start, int old_len, int new_len);
 bool inside_single_quote(t_quote *head, int i);
+void update_quotes(t_quote *head, int start, int old_len, int new_len);
+void delete_quotes_in_range(t_quote **head, int start, int end);
 
 /*parsing/paranths.c && paranths2.c*/
 int is_operator_forward(char *s, int i);
