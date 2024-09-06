@@ -24,7 +24,6 @@ int update_index(t_db *db, char **line, char *value, t_str_cut *cut)
     }
 
     tmp2 = ft_substr(db, *line, cut->end_ignore, ft_strlen(*line) - cut->end_ignore);
-    printf("tmp2 %s\n", tmp2);
     *line = ft_strjoin(db, tmp, tmp2);
     return SUCCESS;
 }

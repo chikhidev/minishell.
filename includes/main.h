@@ -256,6 +256,10 @@ typedef struct s_db
     /**process id(s) for childs*/
 	int					*pids;
 
+
+	/*expand tells wither to expand or not*/
+	bool 				split;
+
 	/*io*/
 	int					heredoc_counter;
 	int					curr_type;

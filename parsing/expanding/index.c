@@ -29,27 +29,20 @@ int expand(t_db *db, char **line, t_quote **quotes)
             if ((quotes && is_quote(*quotes, i))
                 && !is_inside_quotes_list(*quotes, i - 1))
             {
-                printf("$\"\" found\n");
-                i++;
-                while ((*line)[i] && (*line)[i] != (*line)[cut.end_ignore])
-                    i++;
-                cut.start_include = cut.start_ignore + 2;
-                cut.end_include = i - 1;
-                cut.end_ignore = i + 1;
+                cut.start_include = quote_at(*quotes, i)->start + 1;
+                cut.end_include = quote_at(*quotes, i)->end - 1;
+                cut.end_ignore = cut.end_include + 2;
                 i = update_index(db, line, NULL, &cut);
                 delete_quotes_in_range(quotes, cut.start_ignore, cut.end_ignore);
             }
             else
             {
-                printf("$ found\n");
+                db->split = !is_inside_quotes_list(*quotes, i);
                 cut.start_include = -1;
                 if (concat_env_name(line, &env_var_name, &i, *quotes) == FAILURE)
                     return (FAILURE);
-                printf("env_var_name: %s\n", env_var_name);
-                printf("i: %d\n", i);
-                // export a="a b c"
-                // echo "$a"
                 i = updated_line(db, line, env_var_name, &cut);
+                db->split *= (ft_strlen(env_var_name) > 0);
             }
 
             if (env_var_name)

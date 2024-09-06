@@ -205,6 +205,7 @@ void db_reset(t_db *db)
     db->input_fd = STDIN_FILENO;
     db->output_fd = STDOUT_FILENO;
     db->fd = NULL;
+    db->split = false;
     pid_void(db);
 }
 

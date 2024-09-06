@@ -122,3 +122,20 @@ void delete_quotes_in_range(t_quote **head, int start, int end)
         }
     }
 }
+
+
+t_quote *quote_at(t_quote *head, int index)
+{
+    t_quote *q;
+
+    if (!head)
+        return (NULL);
+    q = head;
+    while (q)
+    {
+        if (index == q->start || index == q->end)
+            return (q);
+        q = q->next;
+    }
+    return (NULL);
+}
