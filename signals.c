@@ -7,14 +7,11 @@ void catch_feedback(t_db *db, int process_res)
 
     status = WEXITSTATUS(process_res);
     db->last_status = status;
-    if (status)
+    if (status && db->last_status == FAIL)
     {
-        if (db->last_status == FAIL)
-        {
-            gc_void(db);
-            ec_void(db);
-            exit(FAIL);
-        }
+        gc_void(db);
+        ec_void(db);
+        exit(FAIL);
     }
 }
 
@@ -30,13 +27,9 @@ void default_signals_behav(bool ignore_quit)
 void parent_behav(int signal)
 {
     if (signal == SIGINT)
-    {
         write(2, "\n", 2);
-    }
     if (signal == SIGQUIT)
-    {
         write(2, "Quit\n", 5);
-    }
 }
 
 void handle_parent_signals(void)
