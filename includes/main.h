@@ -334,6 +334,7 @@ void					catch_feedback(t_db *db, int process_res);
 void default_signals_behav(bool ignore_quit);
 void handle_parent_signals(void);
 void heredoc_signals_handling(void);
+void handle_here_doc_signals(void);
 
 
 /* FUNCTIONS */

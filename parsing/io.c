@@ -152,7 +152,8 @@ int open_heredoc(t_db *db, char *delim)
     
     if (IS_CHILD)
     {
-        default_signals_behav(true);
+        // default_signals_behav(true);
+        handle_here_doc_signals();
 
         close(pipe_fd[0]);
 
@@ -199,17 +200,12 @@ int open_heredoc(t_db *db, char *delim)
     /*-------------------------------Parent process------------------------------*/
     // cancel SIGINT and SIGQUIT they sound be handled by the child
 
-    handle_parent_signals();
-
     close(pipe_fd[1]);
     wait(&child_status);
 
     catch_feedback(db, child_status);
     if (db->last_status != 0)
-    {
-        printf("Error: here-document terminated by signal %d\n", db->last_status);
         return FAILURE;
-    }
     
     db->input_fd = pipe_fd[0];
     db->curr_type = HEREDOC;

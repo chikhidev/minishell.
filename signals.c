@@ -19,16 +19,6 @@ void catch_feedback(t_db *db, int process_res)
     }
 }
 
-void heredoc_behave(int signal)
-{
-    if (signal == SIGINT)
-    {
-        write(2, "\n", 1);
-        exit(130);
-    }
-    exit(1);
-}
-
 void default_signals_behav(bool ignore_quit)
 {
     signal(SIGINT, SIG_DFL);
@@ -36,12 +26,6 @@ void default_signals_behav(bool ignore_quit)
         signal(SIGQUIT, SIG_DFL);
     else
         signal(SIGQUIT, SIG_IGN);
-}
-
-void heredoc_signals_handling(void)
-{
-    signal(SIGINT, heredoc_behave);
-    signal(SIGQUIT, SIG_IGN);
 }
 
 void parent_behav(int signal)
@@ -62,3 +46,22 @@ void handle_parent_signals(void)
     signal(SIGQUIT, parent_behav);
 }
 
+void heredoc_behave(int signal)
+{
+    t_db *db;
+
+    db = this();
+    if (signal == SIGINT)
+    {
+        write(2, "\n", 2);
+        gc_void(db);
+        ec_void(db);
+        exit(130);
+    }
+}
+
+void handle_here_doc_signals(void)
+{
+    signal(SIGINT, heredoc_behave);
+    signal(SIGQUIT, SIG_IGN);
+}
