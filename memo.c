@@ -167,6 +167,16 @@ void    ec_void(t_db *db)
     db->ec = NULL;
 }
 
+void *ft_realloc(void *ptr, size_t size)
+{
+    void *new_ptr;
+
+    new_ptr = malloc(size);
+    ft_bzero(new_ptr, size);
+    ft_memcpy(new_ptr, ptr, size);
+    return (new_ptr);
+}
+
 void    *gc_realloc(t_db *db, void *ptr, size_t size)
 {
     t_gc    *gc;
@@ -178,7 +188,7 @@ void    *gc_realloc(t_db *db, void *ptr, size_t size)
         {
             void    *new_ptr;
 
-            new_ptr = realloc(ptr, size);
+            new_ptr = ft_realloc(ptr, size);
             if (!new_ptr) return (NULL);
             gc->ptr = new_ptr;
             return (new_ptr);
@@ -187,3 +197,4 @@ void    *gc_realloc(t_db *db, void *ptr, size_t size)
     }
     return (NULL);
 }
+

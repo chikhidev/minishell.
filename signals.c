@@ -9,7 +9,6 @@ void catch_feedback(t_db *db, int process_res)
     db->last_status = status;
     if (status)
     {
-        printf("exit status: %d\n", status);
         if (db->last_status == FAIL)
         {
             gc_void(db);

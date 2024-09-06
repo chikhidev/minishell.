@@ -82,9 +82,9 @@ void update_quotes(t_quote *head, int start, int old_len, int new_len)
     {
         if (start > q->start && start < q->end)
         {
-            printf("updated {%d, %d} to ", q->start, q->end);
+            // printf("updated {%d, %d} to ", q->start, q->end);
             q->end += new_len - old_len - 1;
-            printf("{%d, %d}\n", q->start, q->end);
+            // printf("{%d, %d}\n", q->start, q->end);
             return ;
         }
         q = q->next;
