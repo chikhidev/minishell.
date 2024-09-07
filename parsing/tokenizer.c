@@ -44,7 +44,6 @@ char	**append_word(t_db *db, char **result, char *save)
 	value_starts_with_dollar = (ft_strsearch(save, '=') != NULL
 			&& (ft_strsearch(save, '=') + 1) != NULL && *(ft_strsearch(save,
 					'=') + 1) == '$');
-	printf("save: %s\n", save);
 	expand(db, &save, &q);
 	save = without_quotes(db, save, q);
 	if (db->split && !(result && result[0] && ft_strcmp(result[0],

@@ -7,7 +7,7 @@
 //         || ft_strncmp(&line[i], "<<", 2) == 0)
 //     {
 //         printf("Syntax error near unexpected token `%c%c'\n", line[i], line[i
-	+ 1]);
+	// + 1]);
 //         return (FAILURE);
 //     }
 

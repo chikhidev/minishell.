@@ -37,7 +37,6 @@ void	ft_close(t_db *db, int *fd)
 	}
 	if (res != INVALID)
 		return ;
-	printf("close -> %d\n", res);
 	ft_exit(db, 1, 3, "close failed");
 }
 
