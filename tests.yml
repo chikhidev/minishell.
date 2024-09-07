@@ -8,3 +8,11 @@ exit status: 127
 >_ $ export | grep ls
 declare -x ls=""ls -la""
 >_ $ 
+
+
+export a="$HOME"
+export: `/nfs/homes/abchikhi': not a valid identifier
+
+export a='$HOME'
+export: `$HOME': not a valid identifier
+

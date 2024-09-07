@@ -48,15 +48,15 @@ int expand(t_db *db, char **line, t_quote **quotes)
             if (env_var_name)
             {
                 value = get_env(db, env_var_name);
-                env_var_name = NULL;
                 update_quotes(*quotes, cut.start_ignore, ft_strlen(env_var_name), ft_strlen(value));
+                env_var_name = NULL;
             }
             
             if (i == INVALID)
                 return (FAILURE);
+            len = ft_strlen(*line);
             if (i >= len)
                 return (SUCCESS);
-            len = ft_strlen(*line);
         }
         i++;
     }
