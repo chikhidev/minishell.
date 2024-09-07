@@ -1,20 +1,21 @@
-#include "main.h"
-#include "string.h"
-#include "parsing.h"
 #include "builtens.h"
+#include "main.h"
+#include "parsing.h"
+#include "string.h"
 
-t_env_list *new_env_node(t_db *db, char   *key, char    *val)
+t_env_list	*new_env_node(t_db *db, char *key, char *val)
 {
-    t_env_list *new;
-    new = ec_malloc(db,  sizeof(t_env_list));
-    if (new == NULL)
-        return (NULL);
-    new->next = NULL;
-    new->key = key;
-    new->val = val;
-    return (new);
+	t_env_list	*new;
+
+	new = ec_malloc(db, sizeof(t_env_list));
+	if (new == NULL)
+		return (NULL);
+	new->next = NULL;
+	new->key = key;
+	new->val = val;
+	return (new);
 }
-void    add_env_front(t_env_list  **list,   t_env_list	*new)
+void	add_env_front(t_env_list **list, t_env_list *new)
 {
 	if (list && new)
 	{
@@ -22,7 +23,7 @@ void    add_env_front(t_env_list  **list,   t_env_list	*new)
 		*list = new;
 	}
 }
-void	push_env_back(t_env_list  **list,  t_env_list	*new)
+void	push_env_back(t_env_list **list, t_env_list *new)
 {
 	t_env_list	*last;
 
@@ -39,26 +40,26 @@ void	push_env_back(t_env_list  **list,  t_env_list	*new)
 		}
 	}
 }
-t_env_list  *get_env_node(t_env_list    *list,  char    *key)
+t_env_list	*get_env_node(t_env_list *list, char *key)
 {
-    t_env_list  *curr;
+	t_env_list	*curr;
 
-    curr = list;
-    while (curr)
-    {
-        if (ft_strcmp(curr->key, key) == 0)
-            return curr;
-        curr = curr->next;
-    }
-    return curr;
+	curr = list;
+	while (curr)
+	{
+		if (ft_strcmp(curr->key, key) == 0)
+			return (curr);
+		curr = curr->next;
+	}
+	return (curr);
 }
 
-void  del_env_node(t_env_list    **list,  char    *key)
+void	del_env_node(t_env_list **list, char *key)
 {
-    t_env_list  *curr;
-    t_env_list  *prev;
+	t_env_list	*curr;
+	t_env_list	*prev;
 
-    prev = *list;
+	prev = *list;
 	if (prev)
 	{
 		if (ft_strcmp(prev->key, key) == 0)
@@ -66,8 +67,8 @@ void  del_env_node(t_env_list    **list,  char    *key)
 			*list = (*list)->next;
 			return ;
 		}
-    	curr = prev->next;
-    	while (curr)
+		curr = prev->next;
+		while (curr)
 		{
 			if (ft_strcmp(curr->key, key) == 0)
 			{
@@ -78,16 +79,16 @@ void  del_env_node(t_env_list    **list,  char    *key)
 			curr = curr->next;
 		}
 	}
-    return;
+	return ;
 }
 
-char	**env_list_to_env_arr(t_db	*db)
+char	**env_list_to_env_arr(t_db *db)
 {
-	t_env_list	*env_list;
-	char	**env_arr;
-	int	env_len;
+	t_env_list *env_list;
+	char **env_arr;
+	int env_len;
 	env_len = 0;
-	char	*temp;
+	char *temp;
 
 	env_arr = NULL;
 	env_list = db->env_list;
@@ -96,14 +97,15 @@ char	**env_list_to_env_arr(t_db	*db)
 		env_list = env_list->next;
 		env_len++;
 	}
-	env_arr = ec_malloc(db, sizeof(char	*) * (env_len + 1));
+	env_arr = ec_malloc(db, sizeof(char *) * (env_len + 1));
 	if (!env_arr)
 		return (NULL);
 	env_list = db->env_list;
 	env_len = 0;
 	while (env_list)
 	{
-		env_arr[env_len] = ec_malloc(db, ft_strlen(env_list->key) + 1 + ft_strlen(env_list->val) + 1);
+		env_arr[env_len] = ec_malloc(db, ft_strlen(env_list->key) + 1
+				+ ft_strlen(env_list->val) + 1);
 		if (!env_arr[env_len])
 			return (NULL);
 		temp = ft_strjoin(db, env_list->key, "=");
@@ -117,5 +119,5 @@ char	**env_list_to_env_arr(t_db	*db)
 	}
 
 	env_arr[env_len] = NULL;
-	return env_arr;
+	return (env_arr);
 }

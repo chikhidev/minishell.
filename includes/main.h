@@ -2,18 +2,16 @@
 # define MAIN_H
 
 # include "../libft/libft.h"
+# include <dirent.h>
+# include <errno.h>
 # include <fcntl.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <errno.h>
-#include <sys/wait.h>
-#include <signal.h>
-
-
 
 # define SIGNAL unsigned char
 # define SUCCESS 1
@@ -75,9 +73,8 @@
 # define BLUE "\033[0;34m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
-# define BOLD      "\033[1m"
+# define BOLD "\033[1m"
 # define UNDERLINE "\033[4m"
-
 
 typedef struct s_iterators
 {
@@ -92,7 +89,7 @@ typedef struct str_cut
 
 	int					start_include;
 	int					end_include;
-	
+
 }						t_str_cut;
 
 /*file types*/
@@ -102,13 +99,13 @@ typedef struct str_cut
 
 typedef struct s_op_node
 {
-	int type;     // the common thing between the two nodes
+	int type; // the common thing between the two nodes
 	int					op_presentation;
 	void				**childs;
 	int					n_childs;
 
-	int input_fd;
-	int output_fd;
+	int					input_fd;
+	int					output_fd;
 
 	// execution part ------ <<<<<<
 }						t_op_node;
@@ -116,10 +113,8 @@ typedef struct s_op_node
 typedef struct s_int
 {
 	int					n;
-	struct s_int	*next;
+	struct s_int		*next;
 }						t_int;
-
-
 
 typedef struct s_here_doc /*here doc saver*/
 {
@@ -129,19 +124,19 @@ typedef struct s_here_doc /*here doc saver*/
 
 typedef struct s_env_list
 {
-	char					*key;
-	char					*val;
-	bool					has_val;
-	struct s_env_list		*next;
-}   t_env_list;
+	char				*key;
+	char				*val;
+	bool				has_val;
+	struct s_env_list	*next;
+}						t_env_list;
 
 typedef struct s_exp_list
 {
-	char					*key;
-	char					*val;
-    bool                    visible;
-	struct s_exp_list		*next;
-}   t_exp_list;
+	char				*key;
+	char				*val;
+	bool				visible;
+	struct s_exp_list	*next;
+}						t_exp_list;
 
 /**
  * @details This structure is used to store the pointer to free
@@ -152,14 +147,11 @@ typedef struct s_gc
 	struct s_gc			*next;
 }						t_gc;
 
-
-
 typedef struct s_file_entry
 {
-	struct dirent				*entry;
-	struct s_file_entry			*next;
+	struct dirent		*entry;
+	struct s_file_entry	*next;
 }						t_file_entry;
-
 
 /**
  * @details The tree data structure of storing the commands
@@ -180,7 +172,7 @@ typedef struct s_file_entry
  */
 typedef struct s_cmd_node
 {
-	int 				type;     // the common thing between the two nodes
+	int type; // the common thing between the two nodes
 
 	// this is gonna be only in the child proccess just when it gonna e executed!!!
 	char				**args;
@@ -228,9 +220,9 @@ typedef struct s_tracker
 
 typedef struct s_str_lst
 {
-	char	*str;
+	char				*str;
 	struct s_str_lst	*next;
-}	t_str_lst;
+}						t_str_lst;
 
 /**
  * @details The db structure is used to store all data needed
@@ -238,24 +230,23 @@ typedef struct s_str_lst
 typedef struct s_db
 {
 	int					debug;
-    /*tree head*/
+	/*tree head*/
 	void				*root_node;
-    /*momory management*/
+	/*momory management*/
 	t_gc				*gc;
 	t_gc				*ec;
-    /*storing init data*/
+	/*storing init data*/
 	char				**env;
-    /*storing in tracked signals*/
+	/*storing in tracked signals*/
 	int					last_status;
-	
-    /*error flag*/
+
+	/*error flag*/
 	bool				error;
-    /**process id(s) for childs*/
+	/**process id(s) for childs*/
 	int					*pids;
 
-
 	/*expand tells wither to expand or not*/
-	bool 				split;
+	bool				split;
 
 	/*io*/
 	int					heredoc_counter;
@@ -270,7 +261,7 @@ typedef struct s_db
 	// has the permission to run the line? by default yes.
 	bool				exec_line;
 
-    /*local envirement variables*/
+	/*local envirement variables*/
 	t_env_list			*env_list;
 	t_int				*pid;
 	t_int				*fd;
@@ -280,31 +271,33 @@ typedef struct s_db
 
 /*prototypes*/
 /**
- * @details This function is used to initialize the db structure and call be called whenever needed to set or read the data
+
+	* @details This function is used to initialize the db structure and call be called whenever needed to set or read the data
  */
-t_db *this();
+t_db					*this(void);
 
 /*prototypes: error.c*/
 int						error(t_db *db, char *specifier, char *message);
 
 /*prototypes: memo.c*/
 
-void    *gc_malloc(t_db *db, size_t size);
-void    *ec_malloc(t_db *db, size_t size);
-void    gc_free(t_db *db, void *ptr);
-void    ec_free(t_db *db, void *ptr);
-void    gc_void(t_db *db);
-void    ec_void(t_db *db);
-void    *gc_realloc(t_db *db, void *ptr, size_t size);
-void    *fd_add(t_db *db, pid_t  new_fd);
-void    fd_free(t_db *db, pid_t  fd_to_free);
-void    fd_void(t_db *db);
-int		ft_open(t_db *db, char *file, int flags, int type);
-void	ft_exit(t_db *db, int status, short free_flag, char *msg);
-void	ft_close(t_db *db, int *fd);
-void	ft_pipe(t_db *db, int *pipe_fd);
-void	ft_dup2(t_db *db, int old_fd, int new_fd);
-void	ft_write(t_db *db, int fd, char *msg, int len);
+void					*gc_malloc(t_db *db, size_t size);
+void					*ec_malloc(t_db *db, size_t size);
+void					gc_free(t_db *db, void *ptr);
+void					ec_free(t_db *db, void *ptr);
+void					gc_void(t_db *db);
+void					ec_void(t_db *db);
+void					*gc_realloc(t_db *db, void *ptr, size_t size);
+void					*fd_add(t_db *db, pid_t new_fd);
+void					fd_free(t_db *db, pid_t fd_to_free);
+void					fd_void(t_db *db);
+int						ft_open(t_db *db, char *file, int flags, int type);
+void					ft_exit(t_db *db, int status, short free_flag,
+							char *msg);
+void					ft_close(t_db *db, int *fd);
+void					ft_pipe(t_db *db, int *pipe_fd);
+void					ft_dup2(t_db *db, int old_fd, int new_fd);
+void					ft_write(t_db *db, int fd, char *msg, int len);
 /*prototypes: string.c*/
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);
@@ -313,30 +306,29 @@ int						is_op3(char *line, int *i);
 
 bool					contains_spaces_btwn(char *s);
 
-t_env_list				*new_env_node(t_db *db, char   *key, char	*val);
-void					add_env_front(t_env_list  **list,   t_env_list	*new);
-void					push_env_back(t_env_list  **list, t_env_list	*new);
-void					*push_sort(t_db *db, t_env_list  **list, char    *data);
+t_env_list				*new_env_node(t_db *db, char *key, char *val);
+void					add_env_front(t_env_list **list, t_env_list *new);
+void					push_env_back(t_env_list **list, t_env_list *new);
+void					*push_sort(t_db *db, t_env_list **list, char *data);
 
-t_exp_list				*new_exp_node(t_db *db, char   *key, char    *val);
-void					add_exp_front(t_exp_list  **list,   t_exp_list	*new);
-void					push_exp_sort(t_exp_list  **list,  t_exp_list	*new);
-void                    push_exp_back(t_exp_list  **list,  t_exp_list	*new);
-t_exp_list              *get_exp_node(t_exp_list    *list,  char    *key);
+t_exp_list				*new_exp_node(t_db *db, char *key, char *val);
+void					add_exp_front(t_exp_list **list, t_exp_list *new);
+void					push_exp_sort(t_exp_list **list, t_exp_list *new);
+void					push_exp_back(t_exp_list **list, t_exp_list *new);
+t_exp_list				*get_exp_node(t_exp_list *list, char *key);
 // void					free_environment(t_db  *db);
-t_env_list              *get_env_node(t_env_list    *list,  char    *key);
-void					del_env_node(t_env_list    **list,  char    *key);
-void					del_exp_node(t_exp_list    **list,  char    *key);
-char					**env_list_to_env_arr(t_db	*db);
+t_env_list				*get_env_node(t_env_list *list, char *key);
+void					del_env_node(t_env_list **list, char *key);
+void					del_exp_node(t_exp_list **list, char *key);
+char					**env_list_to_env_arr(t_db *db);
 
 void					catch_feedback(t_db *db, int process_res);
 
 /*signals*/
-void default_signals_behav(bool ignore_quit);
-void handle_parent_signals(void);
-void heredoc_signals_handling(void);
-void handle_here_doc_signals(void);
-
+void					default_signals_behav(bool ignore_quit);
+void					handle_parent_signals(void);
+void					heredoc_signals_handling(void);
+void					handle_here_doc_signals(void);
 
 /* FUNCTIONS */
 
