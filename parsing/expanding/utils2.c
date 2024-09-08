@@ -36,7 +36,6 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 	right_section = ft_substr(db, *line, cut->end_ignore, ft_strlen(*line)
 			- cut->end_ignore);
 	*line = ft_strjoin(db, tmp, right_section);
-	// printf(RED"will return in: %d->%c\n"RESET, updated_index, (*line)[updated_index]);
 	return (updated_index);
 }
 
@@ -53,4 +52,27 @@ int	updated_line(t_db *db, char **line, char *var, t_str_cut *cut)
 	if (ft_strlen(var) == 0)
 		return (cut->end_ignore);
 	return (update_index(db, line, var, cut));
+}
+
+
+bool split_factor(char *value, char *line, int pos)
+{
+	t_db *db;
+
+	db = this();
+
+	printf("before: [%s]\n", 
+			ft_substr(db, line, 0, pos));
+
+	if (ft_strlen(value) == 0)
+		return (false);
+
+	if (ft_strlen(
+		ft_substr(db, line, 0, pos)) > 0
+	)
+	{
+		return (false);
+	}
+
+	return (true);
 }
