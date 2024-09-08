@@ -41,9 +41,16 @@ char	**append_word(t_db *db, char **result, char *save)
 	q = NULL;
 	if (track_quotes(db, &q, save) == FAILURE)
 		return (NULL);
+
+	for (t_quote *Q_ = q; Q_; Q_ = Q_->next)
+	{
+		printf(BLUE"quote {ascii: %d, start: %d, end: %d}\n"RESET, Q_->ascii, Q_->start, Q_->end);
+	}
+
 	value_starts_with_dollar = (ft_strsearch(save, '=') != NULL
 			&& (ft_strsearch(save, '=') + 1) != NULL && *(ft_strsearch(save,
 					'=') + 1) == '$');
+	// printf("expanding [%s]\n", save);
 	expand(db, &save, &q);
 	save = without_quotes(db, save, q);
 	if (db->split && !(result && result[0] && ft_strcmp(result[0],
@@ -51,7 +58,7 @@ char	**append_word(t_db *db, char **result, char *save)
 	{
 		splitted = ft_split(db, save, " \t\n\r\v\f");
 		i = 0;
-		while (splitted[i])
+		while (splitted && splitted[i])
 		{
 			add(db, &result, splitted[i]);
 			i++;
@@ -103,6 +110,8 @@ int	saver(t_db *db, t_tokenizer *self)
 		self->it.i = self->it.j - 1;
 	}
 	self->result = append_word(db, self->result, self->save);
+	if (!self->result)
+		return FAILURE;
 	self->save = NULL;
 	return (SUCCESS);
 }
@@ -131,22 +140,31 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 		is_quote_ = is_quote_oppening(*self.quotes, self.it.i)
 			&& (self.it.i > 0) && (self.line[self.it.i - 1] != '=')
 			&& (self.line[self.it.i - 1] != '$');
-		if (!is_open_whitespace_ && !is_open_io_ && !is_quote_
+		if (!is_open_whitespace_ && !is_open_io_
 			&& self.read_write_perm)
-			self.save = concat(db, self.save, self.line[self.it.i]);
-		else if (is_quote_ && self.read_write_perm && self.save == NULL)
 		{
-			self.it.j = quote_at(*self.quotes, self.it.i)->end;
-			self.save = ft_substr(db, self.line, self.it.i, self.it.j
-					- self.it.i + 1);
-			self.result = append_word(db, self.result, self.save);
-			self.save = NULL;
-			self.it.i = self.it.j;
+			if (is_quote_ && self.read_write_perm)
+			{
+				if (saver(db, &self) == FAILURE)
+					return (NULL);
+				self.it.j = quote_at(*self.quotes, self.it.i)->end;
+				self.save = ft_substr(db, self.line, self.it.i, self.it.j
+						- self.it.i + 1);
+				self.result = append_word(db, self.result, self.save);
+				self.save = NULL;
+				self.it.i = self.it.j;
+				if (saver(db, &self) == FAILURE)
+						return (NULL);
+			}
+			else
+				self.save = concat(db, self.save, self.line[self.it.i]);
 		}
 		else if (self.read_write_perm && saver(db, &self) == FAILURE)
 			return (NULL);
 		self.it.i++;
 	}
 	self.result = append_word(db, self.result, self.save);
+	if (!self.result)
+		return NULL;
 	return (self.result);
 }
