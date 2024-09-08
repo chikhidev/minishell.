@@ -140,6 +140,11 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 		is_quote_ = is_quote_oppening(*self.quotes, self.it.i)
 			&& (self.it.i > 0) && (self.line[self.it.i - 1] != '=')
 			&& (self.line[self.it.i - 1] != '$');
+		// if (*)
+		// {
+		// 	// algo -> [] foreach one add()
+		// }
+		// else ...
 		if (!is_open_whitespace_ && !is_open_io_
 			&& self.read_write_perm)
 		{
@@ -155,7 +160,7 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 				self.it.i = self.it.j;
 				if (saver(db, &self) == FAILURE)
 						return (NULL);
-			}
+			} 
 			else
 				self.save = concat(db, self.save, self.line[self.it.i]);
 		}
