@@ -30,10 +30,11 @@ void add(t_db *db, char ***result, char *save)
 
 char **append_word(t_db *db, char **result, char *save)
 {
-	t_quote *q;
-	char **splitted;
-	int i;
-	bool value_starts_with_dollar;
+	t_quote	*q;
+	char	**splitted;
+	int		i;
+	bool	value_starts_with_dollar;
+	bool 	empty_quotes;
 
 	if (ft_strlen(save) == 0)
 	{
@@ -54,17 +55,23 @@ char **append_word(t_db *db, char **result, char *save)
 
 	printf("expanded: [%s]\n", save);
 
+	empty_quotes = (q && q->start == 0 && q->end == ((int)ft_strlen(save) - 1));
+
 	save = without_quotes(db, save, q);
 
-	printf("without quotes: [%s]\n", save);
+	empty_quotes *= (ft_strlen(save) == 0);
 
-	if (!save)
+	if (empty_quotes)
 	{
 		add(db, &result, ft_strdup(db, ""));
 		return (result);
 	}
 
-	if (db->split && !(result && result[0] && ft_strcmp(result[0], "export") == 0) && !value_starts_with_dollar)
+	if (ft_strlen(save) == 0)
+		return (result);
+
+	printf("without quotes: [%s]\n", save);
+
 	printf("split permission: %d\n", db->split);
 
 	if (db->split && !(result && result[0] && ft_strcmp(result[0],

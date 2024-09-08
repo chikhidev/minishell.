@@ -59,20 +59,22 @@ bool split_factor(char *value, char *line, int pos)
 {
 	t_db *db;
 
+	(void)pos;
+	(void)line;
 	db = this();
 
-	printf("before: [%s]\n", 
-			ft_substr(db, line, 0, pos));
+	// printf("before: [%s]\n", 
+	// 		ft_substr(db, line, 0, pos));
 
 	if (ft_strlen(value) == 0)
 		return (false);
 
-	if (ft_strlen(
-		ft_substr(db, line, 0, pos)) > 0
-	)
-	{
-		return (false);
-	}
+	// if (ft_strlen(
+	// 	ft_substr(db, line, 0, pos)) > 0
+	// )
+	// {
+	// 	return (false);
+	// }
 
 	return (true);
 }
