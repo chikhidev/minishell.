@@ -12,8 +12,8 @@ void	add(t_db *db, char ***result, char *save)
 {
 	int	size;
 
-	if (ft_strlen(save) == 0)
-		return ;
+	// if (ft_strlen(save) == 0)
+	// 	return ;
 	if (!**result)
 	{
 		*result = (char **)gc_malloc(db, 2 * sizeof(char *));
@@ -37,7 +37,10 @@ char	**append_word(t_db *db, char **result, char *save)
 	bool	value_starts_with_dollar;
 
 	if (ft_strlen(save) == 0)
-		return (result);
+	{
+		return result;
+	}
+
 	q = NULL;
 	if (track_quotes(db, &q, save) == FAILURE)
 		return (NULL);
@@ -140,33 +143,38 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 		is_quote_ = is_quote_oppening(*self.quotes, self.it.i)
 			&& (self.it.i > 0) && (self.line[self.it.i - 1] != '=')
 			&& (self.line[self.it.i - 1] != '$');
-		// if (*)
-		// {
-		// 	// algo -> [] foreach one add()
-		// }
-		// else ...
-		if (!is_open_whitespace_ && !is_open_io_
-			&& self.read_write_perm)
+		
+		if (!inside_single_quote(*quotes, self.it.i) && contains(self.save, "*"))
 		{
-			// if (is_quote_ && self.read_write_perm)
-			// {
-			// 	if (saver(db, &self) == FAILURE)
-			// 		return (NULL);
-			// 	self.it.j = quote_at(*self.quotes, self.it.i)->end;
-			// 	self.save = ft_substr(db, self.line, self.it.i, self.it.j
-			// 			- self.it.i + 1);
-			// 	self.result = append_word(db, self.result, self.save);
-			// 	self.save = NULL;
-			// 	self.it.i = self.it.j;
-			// 	if (saver(db, &self) == FAILURE)
-			// 			return (NULL);
-			// }
-			// else
-			self.save = concat(db, self.save, self.line[self.it.i]);
+		// 	// algo -> [] foreach one add()
+			add(db, &self.result, self.save);
+			printf("STAR\n");
 		}
-		else if (self.read_write_perm && saver(db, &self) == FAILURE)
-			return (NULL);
-		self.it.i++;
+		else
+		{
+			if (!is_open_whitespace_ && !is_open_io_
+				&& self.read_write_perm)
+			{
+				// if (is_quote_ && self.read_write_perm)
+				// {
+				// 	if (saver(db, &self) == FAILURE)
+				// 		return (NULL);
+				// 	self.it.j = quote_at(*self.quotes, self.it.i)->end;
+				// 	self.save = ft_substr(db, self.line, self.it.i, self.it.j
+				// 			- self.it.i + 1);
+				// 	self.result = append_word(db, self.result, self.save);
+				// 	self.save = NULL;
+				// 	self.it.i = self.it.j;
+				// 	if (saver(db, &self) == FAILURE)
+				// 			return (NULL);
+				// }
+				// else
+				self.save = concat(db, self.save, self.line[self.it.i]);
+			}
+			else if (self.read_write_perm && saver(db, &self) == FAILURE)
+				return (NULL);
+			self.it.i++;
+		}
 	}
 	self.result = append_word(db, self.result, self.save);
 	if (!self.result)
