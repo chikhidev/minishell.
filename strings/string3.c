@@ -1,219 +1,218 @@
 #include "main.h"
 #include "parsing.h"
 
-int count_line_args(char *line, t_quote *quotes, int len)
+int	count_line_args(char *line, t_quote *quotes, int len)
 {
-    int i;
-    int reminder;
-    int count;
+	int	i;
+	int	reminder;
+	int	count;
 
-    i = 0;
-    count = 0;
-    skip_spaces(line, &i);
-    while (i < len)
-    {
-        reminder = i;
-        while (line[i] && !is_whitespace(line[i]) && !is_inside_quotes_list(quotes, i))
-            i++;
-        if (reminder != i)
-            count++;
-        skip_spaces(line, &i);
-    }
-    return count;
+	i = 0;
+	count = 0;
+	skip_spaces(line, &i);
+	while (i < len)
+	{
+		reminder = i;
+		while (line[i] && !is_whitespace(line[i])
+			&& !is_inside_quotes_list(quotes, i))
+			i++;
+		if (reminder != i)
+			count++;
+		skip_spaces(line, &i);
+	}
+	return (count);
 }
 
-int append_split(char **splitted, char *string)
+int	append_split(char **splitted, char *string)
 {
-    int i;
+	int	i;
 
-    if (!string)
-        return FAILURE;
-
-    i = 0;
-    while (splitted[i])
-        i++;
-    splitted[i] = string;
-
-    return SUCCESS;
+	if (!string)
+		return (FAILURE);
+	i = 0;
+	while (splitted[i])
+		i++;
+	splitted[i] = string;
+	return (SUCCESS);
 }
 
-char *sub(t_db *db, char *line, int i, int j)
+char	*sub(t_db *db, char *line, int i, int j)
 {
-    char *res;
+	char	*res;
 
-    res = gc_malloc(db, sizeof(char) * (j - i + 1));
-    if (!res)
-        return NULL;
-    ft_strlcpy(res, line + i, j - i + 1);
-
-    return res;
+	res = gc_malloc(db, sizeof(char) * (j - i + 1));
+	if (!res)
+		return (NULL);
+	ft_strlcpy(res, line + i, j - i + 1);
+	return (res);
 }
 
 /**
- * @details This function checks if the string is all whitespaces, pay attention that it frees the original string
+ * @details This function checks if the string is all whitespaces,
+	pay attention that it frees the original string
  */
-char *whithout_quotes_free_db(t_db *db, char *line)
+char	*whithout_quotes_free_db(t_db *db, char *line)
 {
-    int i;
-    char *res;
-    int size;
+	int		i;
+	char	*res;
+	int		size;
 
-    i = 1;
-    size = ft_strlen(line);
-
-    if (!(
-        (line[0] == SGL_QUOTE && line[size - 1] == SGL_QUOTE)
-        || (line[0] == DBL_QUOTE && line[size - 1] == DBL_QUOTE)
-    ))
-        return line;
-
-    size -= 2;
-    res = gc_malloc(db, sizeof(char) * (size + 1));
-    if (!res)
-        return NULL;
-    ft_strlcpy(res, line + i, size + 1);
-    return res;
+	i = 1;
+	size = ft_strlen(line);
+	if (!((line[0] == SGL_QUOTE && line[size - 1] == SGL_QUOTE)
+			|| (line[0] == DBL_QUOTE && line[size - 1] == DBL_QUOTE)))
+		return (line);
+	size -= 2;
+	res = gc_malloc(db, sizeof(char) * (size + 1));
+	if (!res)
+		return (NULL);
+	ft_strlcpy(res, line + i, size + 1);
+	return (res);
 }
 
-short inside_quot_v2(short single_opened, short  double_opened)
+short	inside_quot_v2(short single_opened, short double_opened)
 {
-    if (single_opened && !double_opened)
-        return true;
-    else if (double_opened && !single_opened)
-        return true;
-    else 
-        return false;
+	if (single_opened && !double_opened)
+		return (true);
+	else if (double_opened && !single_opened)
+		return (true);
+	else
+		return (false);
 }
 
-int get_str_size_unquoted( char  *str)
+int	get_str_size_unquoted(char *str)
 {
-    int i;
-    bool   single_opened;
-    bool   double_opened;
-    int len;
-    single_opened = false;
-    double_opened = false;
-    len = 0;
-    i = 0;
-    while (str[i])
-    {
-        // toggling
-        if (str[i] == SGL_QUOTE && !double_opened)
-        {
-            if (single_opened)
-                single_opened = false;
-            else
-                single_opened = true;
-            i++;
-            continue;
-        }
-        if (str[i] == DBL_QUOTE && !single_opened)
-        {
-            if (double_opened)
-                double_opened = false;
-            else
-                double_opened = true;
-            i++;
-            continue;
-        }
-        len++;
-        i++;
-    }
-    return len;
+	int		i;
+	bool	single_opened;
+	bool	double_opened;
+	int		len;
+
+	single_opened = false;
+	double_opened = false;
+	len = 0;
+	i = 0;
+	while (str[i])
+	{
+		// toggling
+		if (str[i] == SGL_QUOTE && !double_opened)
+		{
+			if (single_opened)
+				single_opened = false;
+			else
+				single_opened = true;
+			i++;
+			continue ;
+		}
+		if (str[i] == DBL_QUOTE && !single_opened)
+		{
+			if (double_opened)
+				double_opened = false;
+			else
+				double_opened = true;
+			i++;
+			continue ;
+		}
+		len++;
+		i++;
+	}
+	return (len);
 }
 
-bool is_inside_quotes_line(char *line, int index)
+bool	is_inside_quotes_line(char *line, int index)
 {
-    bool in_single_quote = false;
-    bool in_double_quote = false;
-    int i = 0;
-    while(i <= index)
-    {
-        if (line[i] == SGL_QUOTE)
-            in_single_quote = !in_single_quote;
-        else if (line[i] == DOBLQUOTE)
-            in_double_quote = !in_double_quote;
-        i++;
-    }
-    return (in_single_quote || in_double_quote);
+	bool	in_single_quote;
+	bool	in_double_quote;
+	int		i;
+
+	in_single_quote = false;
+	in_double_quote = false;
+	i = 0;
+	while (i <= index)
+	{
+		if (line[i] == SGL_QUOTE)
+			in_single_quote = !in_single_quote;
+		else if (line[i] == DOBLQUOTE)
+			in_double_quote = !in_double_quote;
+		i++;
+	}
+	return (in_single_quote || in_double_quote);
 }
 
-char *without_quotes(t_db *db, char *str, t_quote *q)
+char	*without_quotes(t_db *db, char *str, t_quote *q)
 {
-    char *res;
-    int i;
+	char	*res;
+	int		i;
 
-    if (!q)
-        return str;
-    res = NULL;
-    i = 0;
-    while (str[i])
-    {
-        if (!is_quote(q, i))
-        {
-            res = concat(db, res, str[i]);
-        }
-        i++;
-    }
-
-    return res;
+	if (!q)
+		return (str);
+	res = NULL;
+	i = 0;
+	while (str[i])
+	{
+		if (!is_quote(q, i))
+		{
+			res = concat(db, res, str[i]);
+		}
+		i++;
+	}
+	return (res);
 }
 
-char *whithout_quotes_ec(t_db  *db,  char *str)
+char	*whithout_quotes_ec(t_db *db, char *str)
 {
-    int i;
-    char *res;
-    // int size;
-    bool   single_opened;
-    bool   double_opened;
+	int		i;
+	char	*res;
+	bool	single_opened;
+	bool	double_opened;
 
-    single_opened = false;
-    double_opened = false;
-    res = ft_strdup_ec(db, "");
-    i = 0;
-    while (str[i])
-    {
-        // toggling
-        if (str[i] == SGL_QUOTE && !double_opened)
-        {
-            if (single_opened)
-                single_opened = false;
-            else
-                single_opened = true;
-            i++;
-            continue;
-        }
-        if (str[i] == DBL_QUOTE && !single_opened)
-        {
-            if (double_opened)
-                double_opened = false;
-            else
-                double_opened = true;
-            i++;
-            continue;
-        }
-        res = ft_strjoin_char_ec(db,    res, str[i]);
-        i++;
-    }
-    return res;
+	// int size;
+	single_opened = false;
+	double_opened = false;
+	res = ft_strdup_ec(db, "");
+	i = 0;
+	while (str[i])
+	{
+		// toggling
+		if (str[i] == SGL_QUOTE && !double_opened)
+		{
+			if (single_opened)
+				single_opened = false;
+			else
+				single_opened = true;
+			i++;
+			continue ;
+		}
+		if (str[i] == DBL_QUOTE && !single_opened)
+		{
+			if (double_opened)
+				double_opened = false;
+			else
+				double_opened = true;
+			i++;
+			continue ;
+		}
+		res = ft_strjoin_char_ec(db, res, str[i]);
+		i++;
+	}
+	return (res);
 }
 
-bool contains(char  *str, char    *sub)
+bool	contains(char *str, char *sub)
 {
-    int i;
-    int j;
+	int	i;
+	int	j;
 
-    i = 0;
-    while (str[i])
-    {
-        j = 0;
-        while (str[i + j] == sub[j] && str[i + j] && sub[j])
-            j++;
-        if (!sub[j])
-            return true;
-        i++;
-    }
-    return false;
+	i = 0;
+	while (str[i])
+	{
+		j = 0;
+		while (str[i + j] == sub[j] && str[i + j] && sub[j])
+			j++;
+		if (!sub[j])
+			return (true);
+		i++;
+	}
+	return (false);
 }
 
 char	*ft_strjoin_char(t_db *db, char *s1, char c)
@@ -223,24 +222,24 @@ char	*ft_strjoin_char(t_db *db, char *s1, char c)
 	char	*res;
 
 	if (!s1)
-    {
-        if (c == '\0')
-        {
-            res = gc_malloc(db, 1 * sizeof(char));
-            res[0] = '\0';
-        }    
-        else
-        {
-            res = gc_malloc(db, 2 * sizeof(char));
-            res[0] = c;
-            res[1] = '\0';
-        }
-        return (res);
-    }
+	{
+		if (c == '\0')
+		{
+			res = gc_malloc(db, 1 * sizeof(char));
+			res[0] = '\0';
+		}
+		else
+		{
+			res = gc_malloc(db, 2 * sizeof(char));
+			res[0] = c;
+			res[1] = '\0';
+		}
+		return (res);
+	}
 	len1 = ft_strlen(s1);
-    len2 = 1;
+	len2 = 1;
 	if (c == '\0')
-        len2 = 0;
+		len2 = 0;
 	res = gc_malloc(db, sizeof(char) * (len1 + len2 + 1));
 	if (!res)
 		return (NULL);
@@ -250,31 +249,31 @@ char	*ft_strjoin_char(t_db *db, char *s1, char c)
 	return (res);
 }
 
-char	*ft_strjoin_char_ec(t_db    *db,    char *s1, char c)
+char	*ft_strjoin_char_ec(t_db *db, char *s1, char c)
 {
-	int		len1;
-	int		len2;
-	char	*res;
+	int len1;
+	int len2;
+	char *res;
 
 	if (!s1)
-    {
-        if (c == '\0')
-        {
-            res = ec_malloc(db, 1 * sizeof(char));
-            res[0] = '\0';
-        }    
-        else
-        {
-            res = ec_malloc(db, 2 * sizeof(char));
-            res[0] = c;
-            res[1] = '\0';
-        }
-        return (res);
-    }
+	{
+		if (c == '\0')
+		{
+			res = ec_malloc(db, 1 * sizeof(char));
+			res[0] = '\0';
+		}
+		else
+		{
+			res = ec_malloc(db, 2 * sizeof(char));
+			res[0] = c;
+			res[1] = '\0';
+		}
+		return (res);
+	}
 	len1 = ft_strlen(s1);
-    len2 = 1;
+	len2 = 1;
 	if (c == '\0')
-        len2 = 0;
+		len2 = 0;
 	res = ec_malloc(db, sizeof(char) * (len1 + len2 + 1));
 	if (!res)
 		return (NULL);
