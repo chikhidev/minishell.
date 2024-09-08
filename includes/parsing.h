@@ -66,6 +66,7 @@ void			update_quotes(t_quote *head, int start, int old_len,
 					int new_len);
 void			delete_quotes_in_range(t_quote **head, int start, int end);
 t_quote			*quote_at(t_quote *head, int index);
+t_quote 		*quotes_of_range(t_quote *head, int pos);
 
 /*parsing/paranths.c && paranths2.c*/
 int				is_operator_forward(char *s, int i);
@@ -141,12 +142,13 @@ char			*get_env(t_db *db, char *name);
 int				valid_char(char c, int index);
 int				concat_env_name(char **line, char **env_var_name, int *i,
 					t_quote *q);
-// int updated_line(t_db *db, char **line, char *variable_name,
-// t_iterators *reminder);
+
 int				updated_line(t_db *db, char **line, char *variable_name,
 					t_str_cut *cut);
 // int update_index(t_db *db, char **line, char *value, t_iterators *edges);
 int				update_index(t_db *db, char **line, char *value,
 					t_str_cut *cut);
+
+bool 			split_factor(char *value, char *line, int pos);
 
 #endif

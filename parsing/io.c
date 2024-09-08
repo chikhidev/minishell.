@@ -48,12 +48,18 @@ int	check_ambigious(t_db *db, char *file)
 			printf("%s: ambiguous redirect\n", file);
 			return (true);
 		}
-		if (store && store->val && store->val[0] == '\0')
+		if (store->val && store->val[0] == '\0')
 		{
 			printf("%s: ambiguous redirect\n", file);
 			return (true);
 		}
-		if (store && contains_spaces_btwn(store->val))
+		if (contains_spaces_btwn(store->val))
+		{
+			printf("%s: ambiguous redirect\n", file);
+			return (true);
+		}
+		if (count_array_len(
+				ft_split(db, store->val, " \t\n\r\v\f")) > 1)
 		{
 			printf("%s: ambiguous redirect\n", file);
 			return (true);
@@ -85,6 +91,10 @@ int	open_file(t_db *db, char *file, int type)
 	if (expand(db, &file, &quotes) == FAILURE)
 		return (FAILURE);
 	tmp = without_quotes(db, file, quotes);
+
+	if (db->split)
+		tmp = ft_split(db, tmp, " \t\n\r\v\f")[0];
+	
 	if (type == APPENDFILE)
 		fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == INPUTFILE)

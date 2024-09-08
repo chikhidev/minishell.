@@ -16,20 +16,22 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 
 	// echo " $FO  $HOME $ROOT "
 	left_section = ft_substr(db, *line, 0, cut->start_ignore);
-	updated_index = cut->start_ignore;
+	updated_index = 0;
 	if (var != NULL)
 	{
 		cut->end_ignore += ft_strlen(var);
 		value = get_env(db, var);
 		if (value != NULL)
+		{
 			tmp = ft_strjoin(db, left_section, value);
-		updated_index = cut->start_ignore + ft_strlen(value) - 1;
+		}
 	}
 	else if (cut->start_include != -1)
 	{
 		insert = ft_substr(db, *line, cut->start_include, cut->end_include
 				- cut->start_include + 1);
 		tmp = ft_strjoin(db, left_section, insert);
+		updated_index = cut->end_include - 2;
 	}
 	right_section = ft_substr(db, *line, cut->end_ignore, ft_strlen(*line)
 			- cut->end_ignore);
@@ -39,7 +41,38 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 
 int	updated_line(t_db *db, char **line, char *var, t_str_cut *cut)
 {
+
+	// printf(GREEN"----------------------\n");
+	// printf("line: [%s]\n", *line);
+	// printf("var: [%s]\n", var);
+	// printf("cut: [%d, %d, %d, %d]\n", cut->start_ignore, cut->end_ignore,
+	// 	cut->start_include, cut->end_include);
+	// printf("----------------------\n"RESET);
+
 	if (ft_strlen(var) == 0)
 		return (cut->end_ignore);
 	return (update_index(db, line, var, cut));
+}
+
+
+bool split_factor(char *value, char *line, int pos)
+{
+	t_db *db;
+
+	db = this();
+
+	printf("before: [%s]\n", 
+			ft_substr(db, line, 0, pos));
+
+	if (ft_strlen(value) == 0)
+		return (false);
+
+	if (ft_strlen(
+		ft_substr(db, line, 0, pos)) > 0
+	)
+	{
+		return (false);
+	}
+
+	return (true);
 }

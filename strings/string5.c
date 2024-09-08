@@ -36,18 +36,9 @@ bool	contains_spaces_btwn(char *s)
 	int	i;
 
 	i = 0;
-	while (s[i])
-	{
-		if (is_whitespace(s[i]))
-		{
-			skip_spaces(s, &i);
-			if (!s[i])
-				return (false);
-			if (s[i] && !is_whitespace(s[i]))
-				return (true);
-		}
-		i++;
-	}
+	skip_spaces(s, &i);
+	if (s[i] == '\0')
+		return (true);
 	return (false);
 }
 
