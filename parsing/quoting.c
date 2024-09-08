@@ -72,22 +72,22 @@ void	update_quotes(t_quote *head, int start, int old_len, int new_len)
 		return ;
 	q = head;
 
-	printf(MAGENTA"preparing to update quotes with {old_len: %d, new_len: %d}\n"RESET, old_len, new_len);
+	// printf(MAGENTA"preparing to update quotes with {old_len: %d, new_len: %d}\n"RESET, old_len, new_len);
 
 	while (q)
 	{
 		if (start > q->start && start < q->end)
 		{
-			printf(RED"updated {%d, %d} to ", q->start, q->end);
+			// printf(RED"updated {%d, %d} to ", q->start, q->end);
 			q->end += new_len - old_len;
-			printf("{%d, %d}\n"RESET, q->start, q->end);
+			// printf("{%d, %d}\n"RESET, q->start, q->end);
 		}
 		else if (q->start > start)
 		{
-			printf(RED"updated {%d, %d} to ", q->start, q->end);
+			// printf(RED"updated {%d, %d} to ", q->start, q->end);
 			q->start += new_len - old_len;
 			q->end += new_len - old_len;
-			printf("{%d, %d}\n"RESET, q->start, q->end);
+			// printf("{%d, %d}\n"RESET, q->start, q->end);
 		}
 		q = q->next;
 	}
@@ -121,7 +121,7 @@ void	delete_quotes_in_range(t_quote **head, int start, int end)
 			else
 				q = *head;
 
-			printf(RED"deleted {%d, %d}\n"RESET, tmp->start, tmp->end);
+			// printf(RED"deleted {%d, %d}\n"RESET, tmp->start, tmp->end);
 			gc_free(db, tmp);
 
 		}
