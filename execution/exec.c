@@ -250,7 +250,7 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	char	*path;
 
 	if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
-		ft_exit(db, 127, 3, NULL);
+		ft_exit(db, 1, 3, NULL);
 	path = get_path(db, CMD->args);
 	env_arr = env_list_to_env_arr(db);
 	dup_pipes(db, pipes, index);

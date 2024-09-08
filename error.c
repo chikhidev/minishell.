@@ -12,5 +12,6 @@ int	error(t_db *db, char *specifier, char *msg)
 	fd_void(db);
 	gc_void(db);
 	db->error = true;
+	db->last_status = 2;
 	return (FAILURE);
 }
