@@ -69,12 +69,20 @@ int	concat_env_name(char **line, char **env_var_name, int *i, t_quote *q)
 	is_digit = false;
 	is_special_char = false;
 
-	while ((*line)[(*i)] && !is_quote(q, *i))
+	while ((*line)[(*i)])
 	{
+		if (q && is_quote(q, *i))
+		{
+			return (SUCCESS);
+		}
 		if (!ft_isalnum((*line)[(*i)]) && (*line)[(*i)] != '?' && (*line)[(*i)] != '_')
+		{
 			return (FAILURE);
+		}
 		if (is_special_char)
+		{
 			return FAILURE;
+		}
 		if (ft_isdigit((*line)[(*i)]))
 			is_digit = true;
 		if ((*line)[(*i)] == '?' || (*line)[(*i)] == '_')
@@ -82,7 +90,9 @@ int	concat_env_name(char **line, char **env_var_name, int *i, t_quote *q)
 		if (ft_isalpha((*line)[(*i)]))
 		{
 			if (is_digit)
+			{
 				return FAILURE;
+			}
 			is_alpha = true;
 		}
 

@@ -91,6 +91,11 @@ int	open_file(t_db *db, char *file, int type)
 	if (expand(db, &file, &quotes) == FAILURE)
 		return (FAILURE);
 	tmp = without_quotes(db, file, quotes);
+	if (ft_strlen(tmp) == 0)
+	{
+		printf("No such file or directory\n");
+		return FAILURE;
+	}
 
 	if (db->split)
 		tmp = ft_split(db, tmp, " \t\n\r\v\f")[0];
@@ -126,7 +131,7 @@ int	validate_io(char *arg, int size)
 
 int	open_heredoc(t_db *db, char *delim)
 {
-	int		pipe_fd[2];
+	int		*pipe_fd;
 	int		pid;
 	char	*line;
 	char	*tmp;
@@ -138,8 +143,8 @@ int	open_heredoc(t_db *db, char *delim)
 		return (FAILURE);
 	tmp = without_quotes(db, delim, q);
 	delim = tmp;
-	if (pipe(pipe_fd) == -1)
-		return (error(db, "pipe", NULL));
+	pipe_fd = gc_malloc(db, sizeof(int) * 2);
+	ft_pipe(db, pipe_fd);
 	pid = fork(); /* we fork to handle signals inside the child */
 	if (pid == -1)
 		return (error(db, "fork", NULL));
@@ -147,35 +152,36 @@ int	open_heredoc(t_db *db, char *delim)
 	{
 		// default_signals_behav(true);
 		handle_here_doc_signals();
-		close(pipe_fd[0]);
+		ft_close(db, &pipe_fd[0]);
 		while (1)
 		{
 			line = readline("> ");
 			if (!line)
 			{
 				printf("Warning: here-document delimited by end-of-file\n");
-				close(pipe_fd[1]);
+				ft_close(db, &pipe_fd[1]);
 				break ;
 			}
 			tmp = ft_strdup(db, line);
 			free(line);
 			if (ft_strcmp(delim, tmp) == 0)
 			{
-				close(pipe_fd[1]);
+				ft_close(db, &pipe_fd[1]);
 				break ;
 			}
-			// if (expand(db, &tmp, NULL, false) == FAILURE)
-			// {
-			//     close(pipe_fd[1]);
-			//     ec_void(db);
-			//     (error(db, NULL, "Malloc failed"), exit(1));
-			// }
+			if (expand(db, &tmp, NULL) == FAILURE)
+			{
+			    ft_close(db, &pipe_fd[1]);
+			    ec_void(db);
+			    exit(1);
+			}
+			// printf("tmp: %s\n", tmp);
 			write(pipe_fd[1], tmp, ft_strlen(tmp));
 			write(pipe_fd[1], "\n", 1);
 		}
 		if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
 		{
-			close(db->input_fd);
+			ft_close(db, &db->input_fd);
 		}
 		gc_void(db);
 		ec_void(db);
@@ -183,7 +189,7 @@ int	open_heredoc(t_db *db, char *delim)
 	}
 	/*-------------------------------Parent process------------------------------*/
 	// cancel SIGINT and SIGQUIT they sound be handled by the child
-	close(pipe_fd[1]);
+	ft_close(db, &pipe_fd[1]);
 	wait(&child_status);
 	catch_feedback(db, child_status);
 	if (db->last_status != 0)

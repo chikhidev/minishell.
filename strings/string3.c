@@ -203,6 +203,10 @@ bool	contains(char *str, char *sub)
 	int	j;
 
 	i = 0;
+	if (!str)
+		return (false);
+	if (!sub)
+		return (true);
 	while (str[i])
 	{
 		j = 0;

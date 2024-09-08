@@ -33,7 +33,7 @@ void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 		pwd_env->val = ft_strdup_ec(db, new_pwd);
 	else
 		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db, "PWD"),
-				getcwd(NULL, 0)));
+				ft_strdup_ec(db, new_pwd)));
 	if (old_pwd_env)
 		old_pwd_env->val = ft_strdup_ec(db, old_pwd_str);
 	else
@@ -43,7 +43,7 @@ void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 		pwd_exp->val = ft_strdup_ec(db, new_pwd);
 	else
 		push_exp_back(&db->exp_list, new_exp_node(db, ft_strdup_ec(db, "PWD"),
-				getcwd(NULL, 0)));
+				ft_strdup_ec(db, new_pwd)));
 	if (old_pwd_exp)
 		old_pwd_exp->val = ft_strdup_ec(db, old_pwd_str);
 	else
@@ -55,6 +55,7 @@ void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 int	change_dir(t_db *db, char *args[])
 {
 	char		*dest;
+	char		*buff;
 	char		*pwd_str;
 	char		*oldpwd_str;
 	t_exp_list	*home_exp;
@@ -65,9 +66,16 @@ int	change_dir(t_db *db, char *args[])
 	home_exp = get_exp_node(db->exp_list, "HOME");
 	if (count_array_len(args) == 1)
 	{
-		if (!home_exp)
-			return (dprintf(2, "cd : Home is not set"), 1);
-		dest = home_exp->val;
+		if (home_exp)
+			dest = home_exp->val;
+		else
+		{
+			buff = getcwd(NULL, 0);
+			if (!buff)
+				return (dprintf(2, "cd : Home is not set\n"), 1);
+			dest = ft_strdup_ec(db, buff);
+			free(buff);
+		}
 	}
 	else
 		dest = args[1];
