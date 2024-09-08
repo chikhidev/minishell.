@@ -25,7 +25,7 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 				return (SUCCESS);
 			cut.start_ignore = i - 1;
 			cut.end_ignore = i;
-			if (quotes && is_quote(*quotes, i))
+			if (quotes && is_quote_oppening(*quotes, i))
 			{
 				printf("1-found $ in positioin %d, line: [%s]\n", i, *line);
 				q = quote_at(*quotes, i);
@@ -59,10 +59,11 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 						*quotes) == FAILURE)
 					return (FAILURE);
 				printf(ORANGE"env_var_name->[%s]\n"RESET, env_var_name);
-				i = updated_line(db, line, env_var_name, &cut);
-				db->split *= (ft_strlen(env_var_name) > 0);
+
 				if (env_var_name)
 				{
+					i = updated_line(db, line, env_var_name, &cut);
+					db->split *= (ft_strlen(env_var_name) > 0);
 					value = get_env(db, env_var_name);
 					update_quotes(*quotes, cut.start_ignore,
 						ft_strlen(env_var_name) + 1, ft_strlen(value));
