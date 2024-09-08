@@ -149,4 +149,6 @@ int				updated_line(t_db *db, char **line, char *variable_name,
 int				update_index(t_db *db, char **line, char *value,
 					t_str_cut *cut);
 
+bool 			split_factor(char *value, char *line, int pos);
+
 #endif

@@ -51,13 +51,20 @@ char	**append_word(t_db *db, char **result, char *save)
 			&& (ft_strsearch(save, '=') + 1) != NULL && *(ft_strsearch(save,
 					'=') + 1) == '$');
 	expand(db, &save, &q);
+
+	printf("expanded: [%s]\n", save);
+
 	save = without_quotes(db, save, q);
+
+	printf("without quotes: [%s]\n", save);
 
 	if (!save)
 	{
 		add(db, &result, ft_strdup(db, ""));
 		return (result);
 	}
+
+	printf("split permission: %d\n", db->split);
 
 	if (db->split && !(result && result[0] && ft_strcmp(result[0],
 				"export") == 0) && !value_starts_with_dollar)
