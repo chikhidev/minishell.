@@ -55,9 +55,8 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 				printf("2-found $ in positioin %d, line: [%s]\n", i, *line);
 				db->split = !is_inside_quotes_list(*quotes, i);
 				cut.start_include = -1;
-				if (concat_env_name(line, &env_var_name, &i,
-						*quotes) == FAILURE)
-					return (FAILURE);
+				concat_env_name(line, &env_var_name, &i,
+						*quotes);
 				printf(ORANGE"env_var_name->[%s]\n"RESET, env_var_name);
 
 				if (env_var_name)

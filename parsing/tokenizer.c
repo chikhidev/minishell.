@@ -148,21 +148,21 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 		if (!is_open_whitespace_ && !is_open_io_
 			&& self.read_write_perm)
 		{
-			if (is_quote_ && self.read_write_perm)
-			{
-				if (saver(db, &self) == FAILURE)
-					return (NULL);
-				self.it.j = quote_at(*self.quotes, self.it.i)->end;
-				self.save = ft_substr(db, self.line, self.it.i, self.it.j
-						- self.it.i + 1);
-				self.result = append_word(db, self.result, self.save);
-				self.save = NULL;
-				self.it.i = self.it.j;
-				if (saver(db, &self) == FAILURE)
-						return (NULL);
-			} 
-			else
-				self.save = concat(db, self.save, self.line[self.it.i]);
+			// if (is_quote_ && self.read_write_perm)
+			// {
+			// 	if (saver(db, &self) == FAILURE)
+			// 		return (NULL);
+			// 	self.it.j = quote_at(*self.quotes, self.it.i)->end;
+			// 	self.save = ft_substr(db, self.line, self.it.i, self.it.j
+			// 			- self.it.i + 1);
+			// 	self.result = append_word(db, self.result, self.save);
+			// 	self.save = NULL;
+			// 	self.it.i = self.it.j;
+			// 	if (saver(db, &self) == FAILURE)
+			// 			return (NULL);
+			// }
+			// else
+			self.save = concat(db, self.save, self.line[self.it.i]);
 		}
 		else if (self.read_write_perm && saver(db, &self) == FAILURE)
 			return (NULL);

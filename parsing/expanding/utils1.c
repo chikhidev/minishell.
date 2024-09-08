@@ -40,26 +40,52 @@ char	*get_env(t_db *db, char *name)
 	return (ft_strdup(db, ""));
 }
 
-int	valid_char(char c, int index)
-{
-	(void)index;
-	if (isdigit(c) || ft_isalnum(c))
-		return (true);
-	if (c == '?' || c == '_')
-		return (true);
-	return (false);
-}
+// int	valid_char(char c, int index)
+// {
+// 	// (void)index;
+// 	if ((isdigit(c) && index > 1))
+// 		return (false);
+
+// 	if (ft_isalnum(c))
+// 		return (true);
+// 	if (c == '?' || c == '_')
+// 		return (true);
+// 	return (false);
+// }
 
 int	concat_env_name(char **line, char **env_var_name, int *i, t_quote *q)
 {
 	char	*tmp;
 	t_db	*db;
+	bool 	is_digit;
+	bool 	is_alpha;
+	bool 	is_special_char;
+
 
 	db = this();
-	// printf("last status: %d\n", db->last_status);
 	tmp = NULL;
-	while ((*line)[(*i)] && valid_char((*line)[*i], *i) && !is_quote(q, *i))
+
+	is_alpha = false;
+	is_digit = false;
+	is_special_char = false;
+
+	while ((*line)[(*i)] && !is_quote(q, *i))
 	{
+		if (!ft_isalnum((*line)[(*i)]) && (*line)[(*i)] != '?' && (*line)[(*i)] != '_')
+			return (FAILURE);
+		if (is_special_char)
+			return FAILURE;
+		if (ft_isdigit((*line)[(*i)]))
+			is_digit = true;
+		if ((*line)[(*i)] == '?' || (*line)[(*i)] == '_')
+			is_special_char = true;
+		if (ft_isalpha((*line)[(*i)]))
+		{
+			if (is_digit)
+				return FAILURE;
+			is_alpha = true;
+		}
+
 		tmp = concat(db, *env_var_name, (*line)[(*i)]);
 		*env_var_name = tmp;
 		(*i)++;
