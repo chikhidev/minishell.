@@ -115,13 +115,18 @@ int saver(t_db *db, t_tokenizer *self)
 			self->it.j++;
 		}
 		self->save = ft_substr(db, self->line, self->it.i, self->it.j - self->it.i);
-		if (db->curr_type == HEREDOC && open_heredoc(db, self->save) == FAILURE)
+		if (db->curr_type == HEREDOC)
 		{
-			db->exec_line = false;
-			return (FAILURE);
+			if (open_heredoc(db, self->save) == FAILURE)
+			{
+				db->exec_line = false;
+				return (FAILURE);
+			}
 		}
 		else if (open_file(db, self->save, db->curr_type) == FAILURE)
+		{
 			self->read_write_perm = false;
+		}
 		self->save = NULL;
 		self->it.i = self->it.j - 1;
 	}
