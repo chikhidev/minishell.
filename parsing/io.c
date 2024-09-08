@@ -169,12 +169,12 @@ int	open_heredoc(t_db *db, char *delim)
 				ft_close(db, &pipe_fd[1]);
 				break ;
 			}
-			if (expand(db, &tmp, NULL, false) == FAILURE)
-			{
-			    ft_close(db, &pipe_fd[1]);
-			    ec_void(db);
-			    (error(db, NULL, "Malloc failed"), exit(1));
-			}
+			// if (expand(db, &tmp, NULL, false) == FAILURE)
+			// {
+			//     ft_close(db, &pipe_fd[1]);
+			//     ec_void(db);
+			//     (error(db, NULL, "Malloc failed"), exit(1));
+			// }
 			write(pipe_fd[1], tmp, ft_strlen(tmp));
 			write(pipe_fd[1], "\n", 1);
 		}
