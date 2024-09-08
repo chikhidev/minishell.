@@ -230,6 +230,8 @@ typedef struct s_str_lst
 typedef struct s_db
 {
 	int					debug;
+	bool				ctrl_c;
+    /*tree head*/
 	/*tree head*/
 	void				*root_node;
 	/*momory management*/
@@ -325,6 +327,14 @@ char					**env_list_to_env_arr(t_db *db);
 void					catch_feedback(t_db *db, int process_res);
 
 /*signals*/
+void default_signals_behav(bool ignore_quit);
+void handle_parent_signals(void);
+void heredoc_signals_handling(void);
+void handle_here_doc_signals(void);
+void handle_sigint(int signum);
+void setup_child_signals(void);
+void setup_parent_signals(void);
+void restore_parent_signals(void);
 void					default_signals_behav(bool ignore_quit);
 void					handle_parent_signals(void);
 void					heredoc_signals_handling(void);
