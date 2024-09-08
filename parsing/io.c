@@ -48,12 +48,12 @@ int	check_ambigious(t_db *db, char *file)
 			printf("%s: ambiguous redirect\n", file);
 			return (true);
 		}
-		if (store && store->val && store->val[0] == '\0')
+		if (store->val && store->val[0] == '\0')
 		{
 			printf("%s: ambiguous redirect\n", file);
 			return (true);
 		}
-		if (store && contains_spaces_btwn(store->val))
+		if (contains_spaces_btwn(store->val))
 		{
 			printf("%s: ambiguous redirect\n", file);
 			return (true);
