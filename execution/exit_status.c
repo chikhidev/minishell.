@@ -69,9 +69,8 @@ void	*fd_add(t_db *db, pid_t new_fd)
 	if (!db->fd)
 	{
 		db->fd = gc_malloc(db, sizeof(t_int));
-		if (!db->fd)
-			return (NULL);
 		db->fd->n = new_fd;
+        dprintf(2, "added fd -> %d\n", new_fd);
 		db->fd->next = NULL;
 	}
 	else
@@ -80,9 +79,8 @@ void	*fd_add(t_db *db, pid_t new_fd)
 		while (ip->next)
 			ip = ip->next;
 		ip->next = gc_malloc(db, sizeof(t_int));
-		if (!ip->next)
-			return (NULL);
 		ip->next->n = new_fd;
+        dprintf(2, "added fd -> %d\n", new_fd);
 		ip->next->next = NULL;
 	}
 	return (NULL);
@@ -103,6 +101,7 @@ void	fd_free(t_db *db, pid_t fd_to_free)
 				prev->next = fd->next;
 			else
 				db->fd = fd->next;
+            dprintf(2, "gc freed fd -> %d\n", fd->n);
 			gc_free(db, fd);
 			return ;
 		}
@@ -121,6 +120,7 @@ void	fd_void(t_db *db)
 		if (db->fd->n > 2)
 			close(db->fd->n);
 		gc_free(db, db->fd);
+        dprintf(2, "voiding fd -> %d\n", db->fd->n);
 		db->fd = tmp;
 	}
 	db->fd = NULL;

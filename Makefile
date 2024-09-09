@@ -25,9 +25,12 @@ EXPANDING = parsing/expanding/index.c \
 PARSING_SRC += $(EXPANDING)	
 
 EXECUTION_SRC = 	execution/exec.c \
-					execution/path-checker.c \
 					execution/path.c \
-					execution/exit_status.c
+					execution/exit_status.c \
+					execution/helper.c \
+					execution/exec_io.c \
+					execution/exec_cmd.c \
+					execution/sys.c 
 
 STRING = 	strings/string.c \
 			strings/string2.c \

@@ -57,12 +57,8 @@ int	updated_line(t_db *db, char **line, char *var, t_str_cut *cut)
 
 bool split_factor(char *value, char *line, int pos)
 {
-	t_db *db;
-
 	(void)pos;
 	(void)line;
-	db = this();
-
 	// printf("before: [%s]\n", 
 	// 		ft_substr(db, line, 0, pos));
 

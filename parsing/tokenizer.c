@@ -62,7 +62,7 @@ char **append_word(t_db *db, char **result, char *save)
 
 	save = without_quotes(db, save, q);
 
-	empty_quotes *= (ft_strlen(save) == 0);
+	empty_quotes = empty_quotes && (ft_strlen(save) == 0);
 
 	if (empty_quotes)
 	{
