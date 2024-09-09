@@ -187,7 +187,7 @@ void handle_wildcard(t_db *db, char  ***result, char *pattern)
         }
     }
 	if (!matched)
-		add(db, result, ft_strdup(db, pattern));
+		add(db, result, whithout_quotes_free_db(db, ft_strdup(db, pattern)));
 }
 
 char **tokenize(t_db *db, t_quote **quotes, char *s)
@@ -220,7 +220,7 @@ char **tokenize(t_db *db, t_quote **quotes, char *s)
 			return (NULL);
 		self.it.i++;
 	}
-	if (!inside_single_quote(*quotes, self.it.i) && contains(self.save, "*"))
+	if (!is_inside_quotes_list(*quotes, self.it.i) && contains(self.save, "*"))
 	{
 		handle_wildcard(db, &self.result, self.save);
 		self.save = NULL;
