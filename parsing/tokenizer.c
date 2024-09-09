@@ -73,10 +73,6 @@ char **append_word(t_db *db, char **result, char *save)
 	if (ft_strlen(save) == 0)
 		return (result);
 
-	// printf("without quotes: [%s]\n", save);
-
-	printf("split permission: %d\n", db->split);
-
 	if (db->split && !cancel_split)
 	{
 		splitted = ft_split(db, save, " \t\n\r\v\f");

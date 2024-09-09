@@ -182,10 +182,10 @@ int	handle_export_args(t_db *db, char *args[])
 	bool		append;
 
 	status = 0;
-	append = false;
 	i = 1;
 	while (args[i])
 	{
+		append = false;
 		token = args[i];
 		val = NULL;
 		key = get_key_from_arg(db, token, &k_len, &append);

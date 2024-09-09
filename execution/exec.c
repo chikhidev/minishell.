@@ -305,14 +305,6 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 		return ;
 
 
-	for (int i = 0; CMD->args[i]; i++)
-	{
-		printf("arg[%d]-> [%s]\n", i, CMD->args[i]);
-	}
-
-	return ;
-
-
 	handle_underscore(db, node);
 	status = 0;
 	if (is_built_in(node))
