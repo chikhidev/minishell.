@@ -92,3 +92,18 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 ==993197==ABORTING
 sgouzi@c3r9p7:~/Desktop/minishell$ 
 
+
+
+
+>_$ export a
+-> a
+>_$ $a=$a
+>_$ 
+
+
+must be    =  but i get nothing
+
+seg fault in 
+env -i valgrind ./minishell 
+
+echo $_

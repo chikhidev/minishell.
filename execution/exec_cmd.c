@@ -65,7 +65,8 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 	if (!node || !CMD->args || !CMD->args[0])
 		return ;
 
-	handle_underscore(db, node);
+	if (index == -1)
+		handle_underscore(db, node);
 	status = 0;
 	if (is_built_in(node))
 		handle_builtin(db, node, pipes, index);

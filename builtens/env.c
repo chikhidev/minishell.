@@ -3,6 +3,14 @@
 #include "parsing.h"
 #include "string.h"
 
+void write_var(t_db *db, char *key, char *val)
+{
+	ft_write(db, STDOUT_FILENO, key, ft_strlen(key));
+	ft_write(db, STDOUT_FILENO, "=", 1);
+	ft_write(db, STDOUT_FILENO, val, ft_strlen(val));
+	ft_write(db, STDOUT_FILENO, "\n", 1);
+}
+
 int	env_(t_db *db, char *av[])
 {
 	char *_key;
@@ -11,7 +19,9 @@ int	env_(t_db *db, char *av[])
 
 	if (count_array_len(av) > 1)
 	{
-		dprintf(2, "env: '%s': No such file or directory\n", av[1]);
+		put_fd(2, "env: '");
+		put_fd(2, av[1]);
+		put_fd(2, "': No such file or directory\n");
 		return (127);
 	}
 	curr = db->env_list;
@@ -23,17 +33,9 @@ int	env_(t_db *db, char *av[])
 			_val = curr->val;
 		}
 		else
-		{
-			ft_write(db, STDOUT_FILENO, curr->key, ft_strlen(curr->key));
-			ft_write(db, STDOUT_FILENO, "=", 1);
-			ft_write(db, STDOUT_FILENO, curr->val, ft_strlen(curr->val));
-			ft_write(db, STDOUT_FILENO, "\n", 1);
-		}
+			write_var(db, curr->key, curr->val);
 		curr = curr->next;
 	}
-	ft_write(db, STDOUT_FILENO, _key, ft_strlen(_key));
-	ft_write(db, STDOUT_FILENO, "=", 1);
-	ft_write(db, STDOUT_FILENO, _val, ft_strlen(_val));
-	ft_write(db, STDOUT_FILENO, "\n", 1);
+	write_var(db, _key, _val);
 	return (0);
 }

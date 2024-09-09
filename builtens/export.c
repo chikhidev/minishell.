@@ -168,71 +168,104 @@ void	fill_key_val(t_db *db, char *arg, char **key, char **val)
 	*val = get_val_from_arg(db, arg, &v_len, k_len, append);
 }
 
+void handle_add_env_export(t_db *db, char *key, char *val)
+{
+	t_env_list	*env_node;
+
+	key = ft_strdup_ec(db, key);
+	val = ft_strdup_ec(db, val);
+	env_node = new_env_node(db, key, val);
+	push_env_back(&db->env_list, env_node);
+}
+
+void handle_add_exp_export(t_db *db, char *key, char *val)
+{
+	t_exp_list	*exp_node;
+
+	key = ft_strdup_ec(db, key);
+	val = ft_strdup_ec(db, val);
+	exp_node = new_exp_node(db, key, val);
+	push_exp_back(&db->exp_list, exp_node);
+}
+
+void put_exp_err_status(char *arg, int *status)
+{
+	put_fd(2, "export: `");
+	put_fd(2, arg);
+	put_fd(2, "': not a valid identifier\n");
+	*status = 1;
+}
+
+void assign_append_exp(char *val, char *token)
+{
+	t_db *db;
+	int k_len;
+	int v_len;
+	char *key;
+	bool append;
+	t_exp_list	*exp_node;
+	t_env_list	*env_node;
+
+	k_len = 0;
+	v_len = 0;
+	append = false;
+	db = this();
+	key = get_key_from_arg(db, token, &k_len, &append);
+	exp_node = get_exp_node(db->exp_list, key);
+	env_node = get_env_node(db->env_list, key);
+
+	val = get_val_from_arg(db, token, &v_len, k_len, append);
+	if (exp_node)
+		affect_exp_node_val(db, exp_node, append, val);
+	else
+		handle_add_exp_export(db, key, val);
+	if (env_node)
+		affect_env_node_val(db, env_node, append, val);
+	else
+		handle_add_env_export(db, key, val);
+}
+void add_exp(char *key, char *val)
+{
+	t_db *db;
+	t_exp_list	*exp_node;
+	t_env_list	*env_node;
+
+	db = this();
+	exp_node = get_exp_node(db->exp_list, key);
+	env_node = get_env_node(db->env_list, key);
+	if (!exp_node)
+	{
+		exp_node = new_exp_node(db, key, val);
+		push_exp_sort(&db->exp_list, exp_node);
+	}
+}
+
 int	handle_export_args(t_db *db, char *args[])
 {
 	int			i;
 	char		*key;
-	char		*token;
 	char		*val;
 	int			k_len;
-	int			v_len;
-	t_exp_list	*exp_node;
-	t_env_list	*env_node;
-	bool		status;
+	int			status;
 	bool		append;
 
 	status = 0;
-	i = 1;
-	while (args[i])
+	i = 0;
+	while (args[++i])
 	{
+		k_len = 0;
 		append = false;
-		token = args[i];
 		val = NULL;
-		key = get_key_from_arg(db, token, &k_len, &append);
-		exp_node = get_exp_node(db->exp_list, key);
-		env_node = get_env_node(db->env_list, key);
-		if ((!good_export_var(key) || k_len < 1) || (append && token[k_len
+		key = get_key_from_arg(db, args[i], &k_len, &append);
+		if ((!good_export_var(key) || k_len < 1) || (append && args[i][k_len
 				+ 1] != '='))
-		{
-			printf("export: `%s': not a valid identifier\n", args[i]);
-			status = 1;
-		}
-		else if (token[k_len] == '=' || token[k_len] == '+')
-		{
-			val = get_val_from_arg(db, token, &v_len, k_len, append);
-			if (exp_node)
-				affect_exp_node_val(db, exp_node, append, val);
-			else
-			{
-				key = ft_strdup_ec(db, key);
-				val = ft_strdup_ec(db, val);
-				exp_node = new_exp_node(db, key, val);
-				push_exp_sort(&db->exp_list, exp_node);
-			}
-			if (env_node)
-				affect_env_node_val(db, env_node, append, val);
-			else
-			{
-				key = ft_strdup_ec(db, key);
-				val = ft_strdup_ec(db, val);
-				env_node = new_env_node(db, key, val);
-				push_env_back(&db->env_list, env_node);
-			}
-		}
-		else if (token[k_len] == '\0' || token[k_len] == ' ')
-		{
-			if (!exp_node)
-			{
-				exp_node = new_exp_node(db, key, val);
-				push_exp_sort(&db->exp_list, exp_node);
-			}
-		}
+			put_exp_err_status(args[i], &status);
+		else if (args[i][k_len] == '=' || args[i][k_len] == '+')
+			assign_append_exp(val, args[i]);
+		else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
+			add_exp(key, val);
 		else
-		{
-			printf("export: `%s': not a valid identifier\n", args[i]);
-			status = 1;
-		}
-		i++;
+			put_exp_err_status(args[i], &status);
 	}
 	return (status);
 }

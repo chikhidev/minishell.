@@ -44,3 +44,11 @@ bool	is_open_io(char *line, int i, t_quote *quotes)
 				2) != INVALID) && !is_inside_quotes_list(quotes, i));
 }
 
+void	put_fd(int fd, char *s)
+{
+	while (*s)
+	{
+		write(fd, s, 1);
+		s++;
+	}
+}

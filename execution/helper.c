@@ -29,9 +29,11 @@ void	handle_underscore(t_db *db, void *node)
 	char		*last_arg;
 
 	_ = get_env_node(db->env_list, "_");
-	ec_free(db, _->val);
+	if (_)
+		ec_free(db, _->val);
 	last_arg = CMD->args[count_array_len(CMD->args) - 1];
-	_->val = ft_strdup_ec(db, last_arg);
+	if (_)
+		_->val = ft_strdup_ec(db, last_arg);
 }
 
 void	waiter(t_db *db)

@@ -117,11 +117,14 @@ void	handle_pwd(t_db *db)
 	t_exp_list	*exp;
 	t_exp_list	*pwd_exp;
 	t_exp_list	*old_pwd_exp;
+	t_exp_list	*underscore_exp;
+	t_env_list	*underscore_env;
 	t_env_list	*pwd_env;
 	bool		pwd_exist;
 	bool		old_pwd_exist;
-
+	bool		underscore_exist;
 	pwd_exist = false;
+	underscore_exist = false;
 	old_pwd_exist = false;
 	exp = db->exp_list;
 	while (exp)
@@ -130,6 +133,8 @@ void	handle_pwd(t_db *db)
 			pwd_exist = true;
 		if (ft_strcmp(exp->key, "OLDPWD") == 0)
 			old_pwd_exist = true;
+		if (ft_strcmp(exp->key, "_") == 0)
+			underscore_exist = true;
 		exp = exp->next;
 	}
 	if (!pwd_exist)
@@ -146,6 +151,14 @@ void	handle_pwd(t_db *db)
 		old_pwd_exp = new_exp_node(db, ft_strdup_ec(db, "OLDPWD"), NULL);
 		push_exp_sort(&db->exp_list, old_pwd_exp);
 	}
+	if (!underscore_exist)
+	{
+		underscore_exp = new_exp_node(db, ft_strdup_ec(db, "_"), ft_strdup_ec(db, "./minishell"));
+		push_exp_sort(&db->exp_list, underscore_exp);
+		underscore_env = new_env_node(db, ft_strdup_ec(db, "_"), ft_strdup_ec(db, "./minishell"));
+		push_env_back(&db->env_list, underscore_env);
+	}
+		
 }
 
 t_exp_list	*set_exp_lst(t_db *db, char *env[])
