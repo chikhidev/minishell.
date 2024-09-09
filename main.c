@@ -51,8 +51,6 @@ t_env_list	*set_default_env(t_db *db)
 	db->static_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	new = new_env_node(db, "PWD", getcwd(NULL, 0));
 	push_env_back(&db->env_list, new);
-	new = new_env_node(db, "OSH", getcwd(NULL, 0));
-	push_env_back(&db->env_list, new);
 	new = new_env_node(db, "SHLVL", "0");
 	push_env_back(&db->env_list, new);
 	new = new_env_node(db, "_", "/usr/bin/env");
@@ -66,7 +64,7 @@ t_exp_list	*set_default_exp(t_db *db)
 
 	new = new_exp_node(db, "PWD", getcwd(NULL, 0));
 	push_exp_back(&db->exp_list, new);
-	new = new_exp_node(db, "OSH", getcwd(NULL, 0));
+	new = new_exp_node(db, "OLDPWD", NULL);
 	push_exp_back(&db->exp_list, new);
 	new = new_exp_node(db, "SHLVL", "0");
 	push_exp_back(&db->exp_list, new);

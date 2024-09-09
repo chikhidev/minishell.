@@ -16,29 +16,16 @@ void	set_pwd_str_values(t_db *db, char **pwd_str, char **old_pwd_str)
 		*old_pwd_str = ft_strdup_ec(db, old_pwd_env->val);
 }
 
-void	set_pwd_env_values(t_db *db, char *old_pwd_str)
+void	set_pwd_exp_values(t_db *db, char *old_pwd_str)
 {
-	t_env_list	*pwd_env;
-	t_env_list	*old_pwd_env;
 	t_exp_list	*pwd_exp;
 	t_exp_list	*old_pwd_exp;
 	char		*new_pwd;
 
 	new_pwd = getcwd(NULL, 0);
-	pwd_env = get_env_node(db->env_list, ft_strdup_ec(db, "PWD"));
-	old_pwd_env = get_env_node(db->env_list, ft_strdup_ec(db, "OLDPWD"));
 	pwd_exp = get_exp_node(db->exp_list, ft_strdup_ec(db, "PWD"));
 	old_pwd_exp = get_exp_node(db->exp_list, ft_strdup_ec(db, "OLDPWD"));
-	if (pwd_env)
-		pwd_env->val = ft_strdup_ec(db, new_pwd);
-	else
-		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db, "PWD"),
-				ft_strdup_ec(db, new_pwd)));
-	if (old_pwd_env)
-		old_pwd_env->val = ft_strdup_ec(db, old_pwd_str);
-	else
-		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db,
-					"OLDPWD"), ft_strdup_ec(db, old_pwd_str)));
+
 	if (pwd_exp)
 		pwd_exp->val = ft_strdup_ec(db, new_pwd);
 	else
@@ -52,42 +39,77 @@ void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 	free(new_pwd);
 }
 
-int	change_dir(t_db *db, char *args[])
+void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 {
-	char		*dest;
-	char		*buff;
-	char		*pwd_str;
-	char		*oldpwd_str;
-	t_exp_list	*home_exp;
+	t_env_list	*pwd_env;
+	t_env_list	*old_pwd_env;
 
-	pwd_str = NULL;
-	oldpwd_str = NULL;
-	set_pwd_str_values(db, &pwd_str, &oldpwd_str);
+	char		*new_pwd;
+
+	new_pwd = getcwd(NULL, 0);
+	pwd_env = get_env_node(db->env_list, ft_strdup_ec(db, "PWD"));
+	old_pwd_env = get_env_node(db->env_list, ft_strdup_ec(db, "OLDPWD"));
+
+	if (pwd_env)
+		pwd_env->val = ft_strdup_ec(db, new_pwd);
+	else
+		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db, "PWD"),
+				ft_strdup_ec(db, new_pwd)));
+	if (old_pwd_env)
+		old_pwd_env->val = ft_strdup_ec(db, old_pwd_str);
+	else
+		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db,
+					"OLDPWD"), ft_strdup_ec(db, old_pwd_str)));
+	free(new_pwd);
+}
+
+int going_home(t_db *db, char **dest)
+{
+	t_exp_list	*home_exp;
+	// char		*buff;
+
 	home_exp = get_exp_node(db->exp_list, "HOME");
-	if (count_array_len(args) == 1)
+	if (home_exp)
 	{
-		if (home_exp)
-			dest = home_exp->val;
-		else
-		{
-			buff = getcwd(NULL, 0);
-			if (!buff)
-				return (dprintf(2, "cd : Home is not set\n"), 1);
-			dest = ft_strdup_ec(db, buff);
-			free(buff);
-		}
+		*dest = home_exp->val;
+		return (0);
 	}
 	else
-		dest = args[1];
-	if (chdir(dest) == -1)
-		return (dprintf(2, "cd: "), perror(dest), 1);
-	set_pwd_env_values(db, pwd_str);
+	{
+		// buff = getcwd(NULL, 0);
+		// if (!buff)
+			return (dprintf(2, "cd: HOME not set\n"), 1);
+		// *dest = ft_strdup_ec(db, buff);
+		// free(buff);
+	}
 	return (0);
 }
 
+
 int	cd_(t_db *db, char *args[])
 {
+	char		*dest;
+	char		*pwd_str;
+	char		*oldpwd_str;
+	int			status;
+
 	if (count_array_len(args) > 2)
 		return (printf("cd : too many arguments\n"), 1);
-	return (change_dir(db, args));
+
+	status = 0;
+	pwd_str = NULL;
+	oldpwd_str = NULL;
+	dest = NULL;
+	set_pwd_str_values(db, &pwd_str, &oldpwd_str);
+	if (count_array_len(args) == 1)
+		status = going_home(db, &dest);
+	else
+		dest = args[1];
+	if (status)
+		return (status);
+	if (chdir(dest) == -1)
+		return (dprintf(2, "cd: "), perror(dest), 1);
+	set_pwd_env_values(db, pwd_str);
+	set_pwd_exp_values(db, pwd_str);
+	return (0);
 }
