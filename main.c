@@ -247,9 +247,7 @@ int	main(int ac, char *av[], char *env[])
 		tmp = gc_malloc(db, ft_strlen(line) + 1);
 		ft_strlcpy(tmp, line, ft_strlen(line) + 1);
 		if (parser(db, line) == SUCCESS)
-		{
 			exec(db, db->root_node);
-		}
 		fd_void(db);
 		gc_void(db);
 		pid_void(db);

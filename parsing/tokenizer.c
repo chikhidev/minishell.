@@ -9,7 +9,7 @@ void skip_open_spaces(t_quote *quotes, char *line, int *i)
 
 void add(t_db *db, char ***result, char *save)
 {
-	int size;
+	size_t size;
 
 	// printf(UNDERLINE"saving->[%s]\n"RESET, save);
 
