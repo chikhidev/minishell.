@@ -177,13 +177,14 @@ void	*gc_realloc(t_db *db, void *ptr, size_t size)
 			new_ptr = malloc(size);
 			if (!new_ptr)
 			{
+				dprintf(2, "minishell2\n");
 				gc_void(db);
 				ec_void(db);
 				exit(FAIL);
 			}
 			ft_bzero(new_ptr, size);
-			ft_memcpy(new_ptr, gc->ptr, size);
-			free(gc->ptr);
+			ft_memcpy(new_ptr, ptr, size);
+			free(ptr);
 			gc->ptr = new_ptr;
 			return (new_ptr);
 		}

@@ -137,6 +137,7 @@ int saver(t_db *db, t_tokenizer *self)
 	self->save = NULL;
 	return (SUCCESS);
 }
+
 bool match(const char *string, const char *pattern) {
     while (*pattern != '\0' && *string != '\0')
     {
@@ -168,6 +169,7 @@ bool match(const char *string, const char *pattern) {
     // If we've reached the end of both strings, it's a match
     return (*pattern == '\0' && *string == '\0');
 }
+
 void handle_wildcard(t_db *db, char  ***result, char *pattern)
 {
     DIR *curr_dir;
@@ -202,6 +204,7 @@ char **tokenize(t_db *db, t_quote **quotes, char *s)
 	self.line = s;
 	self.result = (char **)gc_malloc(db, sizeof(char *));
 	self.read_write_perm = true;
+	self.save = NULL;
 	skip_open_spaces(*self.quotes, self.line, &self.it.i);
 	len = ft_strlen(self.line);
 
