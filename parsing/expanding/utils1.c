@@ -58,14 +58,12 @@ int	concat_env_name(char **line, char **env_var_name, int *i, t_quote *q)
 	char	*tmp;
 	t_db	*db;
 	bool 	is_digit;
-	bool 	is_alpha;
 	bool 	is_special_char;
 
 
 	db = this();
 	tmp = NULL;
 
-	is_alpha = false;
 	is_digit = false;
 	is_special_char = false;
 
@@ -93,7 +91,6 @@ int	concat_env_name(char **line, char **env_var_name, int *i, t_quote *q)
 			{
 				return FAILURE;
 			}
-			is_alpha = true;
 		}
 
 		tmp = concat(db, *env_var_name, (*line)[(*i)]);

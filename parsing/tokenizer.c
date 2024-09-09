@@ -62,7 +62,7 @@ char **append_word(t_db *db, char **result, char *save)
 
 	save = without_quotes(db, save, q);
 
-	empty_quotes *= (ft_strlen(save) == 0);
+	empty_quotes = empty_quotes && (ft_strlen(save) == 0);
 
 	if (empty_quotes)
 	{
@@ -141,16 +141,13 @@ bool match(const char *string, const char *pattern) {
     {
         if (*pattern == '*')
         {
-            // Skip consecutive '*'
             while (*pattern == '*')
                 pattern++;
-            // If '*' is the last character in the pattern, it's a match
             if (*pattern == '\0')
                 return (true);
-            // Try matching the rest of the pattern with every substring
             while (*string != '\0')
             {
-                if (match(pattern, string))
+                if (match(string, pattern))
                     return (true);
                 string++;
             }
@@ -161,10 +158,8 @@ bool match(const char *string, const char *pattern) {
         pattern++;
         string++;
     }
-    // Skip any remaining '*' in the pattern
     while (*pattern == '*')
         pattern++;
-    // If we've reached the end of both strings, it's a match
     return (*pattern == '\0' && *string == '\0');
 }
 
@@ -172,22 +167,27 @@ void handle_wildcard(t_db *db, char  ***result, char *pattern)
 {
     DIR *curr_dir;
     struct dirent *entry;
+	bool matched;
+
+	matched = false;
     curr_dir = opendir(".");
     if (curr_dir)
     {
         entry = readdir(curr_dir);
         while (entry)
         {
-
             if (!starts_with(entry->d_name, ".") &&
                 !starts_with(entry->d_name, "..") &&
                 match(entry->d_name, pattern))
 			{
+				matched = true;
                 add(db, result, ft_strdup(db, entry->d_name));
 			}
             entry = readdir(curr_dir);
         }
     }
+	if (!matched)
+		add(db, result, ft_strdup(db, pattern));
 }
 
 char **tokenize(t_db *db, t_quote **quotes, char *s)

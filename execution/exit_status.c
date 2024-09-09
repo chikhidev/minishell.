@@ -69,8 +69,6 @@ void	*fd_add(t_db *db, pid_t new_fd)
 	if (!db->fd)
 	{
 		db->fd = gc_malloc(db, sizeof(t_int));
-		if (!db->fd)
-			return (NULL);
 		db->fd->n = new_fd;
 		db->fd->next = NULL;
 	}
@@ -80,8 +78,6 @@ void	*fd_add(t_db *db, pid_t new_fd)
 		while (ip->next)
 			ip = ip->next;
 		ip->next = gc_malloc(db, sizeof(t_int));
-		if (!ip->next)
-			return (NULL);
 		ip->next->n = new_fd;
 		ip->next->next = NULL;
 	}

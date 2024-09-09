@@ -74,7 +74,7 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 						update_quotes(*quotes, cut.start_ignore,
 							ft_strlen(env_var_name) + 1, ft_strlen(value));
 
-					db->split *= split_factor(value, *line, cut.start_ignore);
+					db->split = db->split && split_factor(value, *line, cut.start_ignore);
 
 					env_var_name = NULL;
 
