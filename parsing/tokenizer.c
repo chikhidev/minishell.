@@ -33,7 +33,7 @@ char **append_word(t_db *db, char **result, char *save)
 	t_quote	*q;
 	char	**splitted;
 	int		i;
-	bool	value_starts_with_dollar;
+	bool	cancel_split;
 	bool 	empty_quotes;
 
 	if (ft_strlen(save) == 0)
@@ -50,10 +50,13 @@ char **append_word(t_db *db, char **result, char *save)
 	// 	printf(BLUE"quote {ascii: %d, start: %d, end: %d}\n"RESET, Q_->ascii, Q_->start, Q_->end);
 	// }
 
-	value_starts_with_dollar = (ft_strsearch(save, '=') != NULL && (ft_strsearch(save, '=') + 1) != NULL && *(ft_strsearch(save, '=') + 1) == '$');
-	expand(db, &save, &q);
+	cancel_split = (result && result[0] && ft_strcmp(result[0],
+				"export") == 0) && (ft_strsearch(save, '=') != NULL
+		&& (ft_strsearch(save, '=') + 1) != NULL
+		&& *(ft_strsearch(save, '=') + 1) == '$'
+		&& *(save) != '$');
 
-	// printf("expanded: [%s]\n", save);
+	expand(db, &save, &q);
 
 	empty_quotes = (q && q->start == 0 && q->end == ((int)ft_strlen(save) - 1));
 
@@ -72,10 +75,9 @@ char **append_word(t_db *db, char **result, char *save)
 
 	// printf("without quotes: [%s]\n", save);
 
-	// printf("split permission: %d\n", db->split);
+	printf("split permission: %d\n", db->split);
 
-	if (db->split && !(result && result[0] && ft_strcmp(result[0],
-				"export") == 0) && !value_starts_with_dollar)
+	if (db->split && !cancel_split)
 	{
 		splitted = ft_split(db, save, " \t\n\r\v\f");
 		i = 0;
