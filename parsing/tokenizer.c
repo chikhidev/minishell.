@@ -11,7 +11,7 @@ void add(t_db *db, char ***result, char *save)
 {
 	size_t size;
 
-	printf(UNDERLINE"saving->[%s]\n"RESET, save);
+	// printf(UNDERLINE"saving->[%s]\n"RESET, save);
 
 	if (!**result)
 	{
@@ -218,11 +218,24 @@ char **tokenize(t_db *db, t_quote **quotes, char *s)
 		{
 			self.save = concat(db, self.save, self.line[self.it.i]);
 		}
-		else if (self.read_write_perm && saver(db, &self) == FAILURE)
-			return (NULL);
+		else if (self.read_write_perm)
+		{
+			if (self.save && !is_inside_quotes_list(*quotes, self.it.i) && contains(self.save, "*"))
+			{
+				handle_wildcard(db, &self.result, self.save);
+				self.save = NULL;
+			}
+		 	else if (saver(db, &self) == FAILURE)
+				return (NULL);
+		}
 		self.it.i++;
 	}
-	if (self.save)
+	if (self.save && !is_inside_quotes_list(*quotes, self.it.i) && contains(self.save, "*"))
+	{
+		handle_wildcard(db, &self.result, self.save);
+		self.save = NULL;
+	}
+	else if (self.save)
 	{
 		if (saver(db, &self) == FAILURE)
 			return (NULL);
