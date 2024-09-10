@@ -185,13 +185,12 @@ void handle_wildcard(t_db *db, char  ***result, char *pattern)
 			}
             entry = readdir(curr_dir);
         }
+		closedir(curr_dir);
     }
 	if (!matched)
 		add(db, result, whithout_quotes_free_db(db, ft_strdup(db, pattern)));
 }
 
-
-// 070002004001030200008040
 char **tokenize(t_db *db, t_quote **quotes, char *s)
 {
 	t_tokenizer self;

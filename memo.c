@@ -1,5 +1,6 @@
 #include "includes/main.h"
 #include "includes/string.h"
+#include "string.h"
 
 void	*gc_malloc(t_db *db, size_t size)
 {
@@ -165,7 +166,25 @@ void	ec_void(t_db *db)
 	db->ec = NULL;
 }
 
-void	*gc_realloc(t_db *db, void *ptr, size_t size)
+char	*ft_strcpy(char *dest, char *src)
+{
+	char	*init_dest;
+
+	init_dest = dest;
+	while (*src != '\0')
+	{
+		*dest = *src;
+		dest++;
+		src++;
+	}
+	while (*dest != '\0')
+	{
+		*dest = '\0';
+	}
+	return (init_dest);
+}
+
+void	*gc_realloc(t_db *db, void *ptr, size_t new_size)
 {
 	t_gc	*gc;
 	void	*new_ptr;
@@ -175,16 +194,16 @@ void	*gc_realloc(t_db *db, void *ptr, size_t size)
 	{
 		if (gc->ptr == ptr)
 		{
-			new_ptr = malloc(size);
+			new_ptr = malloc(new_size);
 			if (!new_ptr)
 			{
-				put_fd(2, "minishell2\n");
 				gc_void(db);
+				fd_void(db);
 				ec_void(db);
 				exit(FAIL);
 			}
-			ft_bzero(new_ptr, size);
-			ft_memcpy(new_ptr, ptr, size);
+			ft_bzero(new_ptr, new_size);
+			ft_strcpy((char *)new_ptr, (char *)ptr);
 			free(ptr);
 			gc->ptr = new_ptr;
 			return (new_ptr);

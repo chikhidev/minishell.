@@ -145,8 +145,6 @@ int	open_heredoc(t_db *db, char *delim)
 	delim = tmp;
 	pipe_fd = gc_malloc(db, sizeof(int) * 2);
 	ft_pipe(db, pipe_fd);
-	dprintf(2, "PARENT opened pipe[0] -> %d\n", pipe_fd[0]);
-	dprintf(2, "PARENT opened pipe[1] -> %d\n", pipe_fd[1]);
 	pid = fork(); /* we fork to handle signals inside the child */
 	if (pid == -1)
 		return (error(db, "fork", NULL));
@@ -154,7 +152,6 @@ int	open_heredoc(t_db *db, char *delim)
 	{
 		// default_signals_behav(true);
 		handle_here_doc_signals();
-		dprintf(2, "closed pipe[0] %d\n", pipe_fd[0]);
 		ft_close(db, &pipe_fd[0]);
 		while (1)
 		{
@@ -162,7 +159,6 @@ int	open_heredoc(t_db *db, char *delim)
 			if (!line)
 			{
 				printf("Warning: here-document delimited by end-of-file\n");
-				dprintf(2, "CHILD  closed pipe[1] %d\n", pipe_fd[1]);
 				ft_close(db, &pipe_fd[1]);
 				break ;
 			}
@@ -170,13 +166,11 @@ int	open_heredoc(t_db *db, char *delim)
 			free(line);
 			if (ft_strcmp(delim, tmp) == 0)
 			{
-				dprintf(2, "CHILD  closed pipe[1] %d\n", pipe_fd[1]);
 				ft_close(db, &pipe_fd[1]);
 				break ;
 			}
 			if (expand(db, &tmp, NULL) == FAILURE)
 			{
-				dprintf(2, "CHILD  closed pipe[1] %d\n", pipe_fd[1]);
 			    ft_close(db, &pipe_fd[1]);
 			    ec_void(db);
 			    exit(1);
@@ -193,7 +187,6 @@ int	open_heredoc(t_db *db, char *delim)
 	}
 	/*-------------------------------Parent process------------------------------*/
 	// cancel SIGINT and SIGQUIT they sound be handled by the child
-	dprintf(2, "PARENT closed pipe[1] %d\n", pipe_fd[1]);
 	ft_close(db, &pipe_fd[1]);
 	wait(&child_status);
 	catch_feedback(db, child_status);
