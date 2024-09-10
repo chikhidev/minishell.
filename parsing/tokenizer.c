@@ -190,6 +190,8 @@ void handle_wildcard(t_db *db, char  ***result, char *pattern)
 		add(db, result, whithout_quotes_free_db(db, ft_strdup(db, pattern)));
 }
 
+
+// 070002004001030200008040
 char **tokenize(t_db *db, t_quote **quotes, char *s)
 {
 	t_tokenizer self;
@@ -220,12 +222,16 @@ char **tokenize(t_db *db, t_quote **quotes, char *s)
 			return (NULL);
 		self.it.i++;
 	}
-	if (!is_inside_quotes_list(*quotes, self.it.i) && contains(self.save, "*"))
+	if (self.save && !is_inside_quotes_list(*quotes, self.it.i) && contains(self.save, "*"))
 	{
 		handle_wildcard(db, &self.result, self.save);
 		self.save = NULL;
 	}
-	else
-		self.result = append_word(db, self.result, self.save);
+	else if (self.save)
+	{
+		if (saver(db, &self) == FAILURE)
+			return (NULL);
+	}
+		// self.result = append_word(db, self.result, self.save);
 	return (self.result);
 }

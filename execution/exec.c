@@ -52,6 +52,10 @@ void	exec(t_db *db, void *node)
 {
 	if (!node)
 		return ;
+	
+///	for (int i = 0; CMD->args[i]; i++)
+//		printf("arg[%d], %s", i, CMD->args[i]);
+
 	handle_parent_signals();
 	if (CMD->type == CMD_NODE)
 		handle_cmd_node(db, node, NULL, -1);
