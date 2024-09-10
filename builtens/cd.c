@@ -66,21 +66,23 @@ void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 int going_home(t_db *db, char **dest)
 {
 	t_exp_list	*home_exp;
-	// char		*buff;
+	char		*buff;
 
 	home_exp = get_exp_node(db->exp_list, "HOME");
 	if (home_exp)
 	{
 		*dest = home_exp->val;
+		if (*dest && !**dest)
+		{
+			buff = getcwd(NULL, 0);
+			*dest = ft_strdup_ec(db, buff);
+			free(buff);
+		}
 		return (0);
 	}
 	else
 	{
-		// buff = getcwd(NULL, 0);
-		// if (!buff)
-			return (dprintf(2, "cd: HOME not set\n"), 1);
-		// *dest = ft_strdup_ec(db, buff);
-		// free(buff);
+		return (put_fd(2, "cd: HOME not set\n"), 1);
 	}
 	return (0);
 }
@@ -101,14 +103,14 @@ int	cd_(t_db *db, char *args[])
 	oldpwd_str = NULL;
 	dest = NULL;
 	set_pwd_str_values(db, &pwd_str, &oldpwd_str);
-	if (count_array_len(args) == 1)
+	if (count_array_len(args) == 1 || is_str_empty(db, args[1]))
 		status = going_home(db, &dest);
 	else
 		dest = args[1];
 	if (status)
 		return (status);
 	if (chdir(dest) == -1)
-		return (dprintf(2, "cd: "), perror(dest), 1);
+		return (put_fd(2, "cd: "), perror(dest), 1);
 	set_pwd_env_values(db, pwd_str);
 	set_pwd_exp_values(db, pwd_str);
 	return (0);

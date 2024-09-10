@@ -6,8 +6,11 @@
 
 void	handle_sigint(int signum)
 {
+	t_db *db;
+
+	db = this();
 	(void)signum;
-	write(STDOUT_FILENO, "\n", 1);
+	ft_write(db, STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -33,7 +36,7 @@ int	handle_prompt(t_db *db, char **line)
 	*line = readline(tmp);
 	if (!*line)
 	{
-		dprintf(2, "exit\n");
+		put_fd(2, "exit\n");
 		return (FAILURE);
 	}
 	tmp = ft_strdup(db, *line);

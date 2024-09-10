@@ -46,9 +46,12 @@ bool	is_open_io(char *line, int i, t_quote *quotes)
 
 void	put_fd(int fd, char *s)
 {
+	t_db *db;
+
+	db = this();
 	while (*s)
 	{
-		write(fd, s, 1);
+		ft_write(db, fd, s, 1);
 		s++;
 	}
 }

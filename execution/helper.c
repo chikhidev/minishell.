@@ -7,8 +7,7 @@
 void	handle_is_dir(t_db *db, char *arg)
 {
 	DIR	*dir;
-
-	(void)db;
+	
 	if (ft_strcmp(arg, ".") == 0)
 		ft_exit(db, 2, 3, ft_strjoin(db, arg, ": command not found"));
 	if (ft_strcmp(arg, "..") == 0)

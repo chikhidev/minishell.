@@ -64,12 +64,14 @@ int exit_check(char *av[], int args_len, int err, unsigned char *exit_code)
 {
 	if (err)
 	{
-		dprintf(2, "exit: %s: numeric argument required\n", av[1]);
+		put_fd(2, "exit: ");
+		put_fd(2, av[1]);
+		put_fd(2, ": numeric argument required\n");
 		*exit_code = 2;
 	}
 	else if (args_len > 2)
 	{
-		dprintf(2, "exit: too many arguments\n");
+		put_fd(2, "exit: too many arguments\n");
 		return (1);
 	}
 	return (0);

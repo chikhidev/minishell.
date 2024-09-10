@@ -301,8 +301,10 @@ void					ft_exit(t_db *db, int status, short free_flag,
 void					ft_close(t_db *db, int *fd);
 void					ft_pipe(t_db *db, int *pipe_fd);
 void					ft_dup2(t_db *db, int old_fd, int new_fd);
-void					ft_write(t_db *db, int fd, char *msg, int len);
+int						ft_write(t_db *db, int fd, char *msg, int len);
 /*prototypes: string.c*/
+void	ft_dup2(t_db *db, int old_fd, int new_fd);
+int	ft_dup(t_db *db, int fd);
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);
 

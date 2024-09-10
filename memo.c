@@ -1,4 +1,5 @@
 #include "includes/main.h"
+#include "includes/string.h"
 
 void	*gc_malloc(t_db *db, size_t size)
 {
@@ -177,7 +178,7 @@ void	*gc_realloc(t_db *db, void *ptr, size_t size)
 			new_ptr = malloc(size);
 			if (!new_ptr)
 			{
-				dprintf(2, "minishell2\n");
+				put_fd(2, "minishell2\n");
 				gc_void(db);
 				ec_void(db);
 				exit(FAIL);

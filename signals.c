@@ -26,10 +26,13 @@ void	default_signals_behav(bool ignore_quit)
 
 void	parent_behav(int signal)
 {
+	t_db *db;
+
+	db = this();
 	if (signal == SIGINT)
-		write(2, "\n", 2);
+		ft_write(db, 2, "\n", 2);
 	if (signal == SIGQUIT)
-		write(2, "Quit\n", 5);
+		ft_write(db, 2, "Quit\n", 5);
 }
 
 void	handle_parent_signals(void)
@@ -45,7 +48,7 @@ void	heredoc_behave(int signal)
 	db = this();
 	if (signal == SIGINT)
 	{
-		write(2, "\n", 2);
+		ft_write(db, 2, "\n", 2);
 		gc_void(db);
 		ec_void(db);
 		exit(130);

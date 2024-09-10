@@ -52,12 +52,12 @@ int	echo_(t_db *db, char *args[])
 	i = get_start_idx(args, &new_line);
 	while (i < n_args)
 	{
-		printf("%s", args[i]);
+		ft_write(db, 1, args[i], ft_strlen(args[i]));
 		i++;
 		if (i != n_args)
-			printf(" ");
+			ft_write(db, 1, " ", 1);
 	}
 	if (new_line)
-		printf("\n");
+		ft_write(db, 1, "\n", 1);
 	return (0);
 }

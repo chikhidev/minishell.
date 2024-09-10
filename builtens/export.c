@@ -196,9 +196,8 @@ void put_exp_err_status(char *arg, int *status)
 	*status = 1;
 }
 
-void assign_append_exp(char *val, char *token)
+void assign_append_exp(t_db *db, char *val, char *token)
 {
-	t_db *db;
 	int k_len;
 	int v_len;
 	char *key;
@@ -209,7 +208,6 @@ void assign_append_exp(char *val, char *token)
 	k_len = 0;
 	v_len = 0;
 	append = false;
-	db = this();
 	key = get_key_from_arg(db, token, &k_len, &append);
 	exp_node = get_exp_node(db->exp_list, key);
 	env_node = get_env_node(db->env_list, key);
@@ -224,6 +222,7 @@ void assign_append_exp(char *val, char *token)
 	else
 		handle_add_env_export(db, key, val);
 }
+
 void add_exp(char *key, char *val)
 {
 	t_db *db;
@@ -235,6 +234,8 @@ void add_exp(char *key, char *val)
 	env_node = get_env_node(db->env_list, key);
 	if (!exp_node)
 	{
+		if (ft_strcmp(key, "PATH") == 0 && db->static_path)
+			val = db->static_path;
 		exp_node = new_exp_node(db, key, val);
 		push_exp_sort(&db->exp_list, exp_node);
 	}
@@ -261,7 +262,7 @@ int	handle_export_args(t_db *db, char *args[])
 				+ 1] != '='))
 			put_exp_err_status(args[i], &status);
 		else if (args[i][k_len] == '=' || args[i][k_len] == '+')
-			assign_append_exp(val, args[i]);
+			assign_append_exp(db, val, args[i]);
 		else if (args[i][k_len] == '\0' || args[i][k_len] == ' ')
 			add_exp(key, val);
 		else

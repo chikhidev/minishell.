@@ -2,11 +2,14 @@
 #include "exec.h"
 #include "main.h"
 #include "parsing.h"
+#include "string.h"
 
 void	ft_exit(t_db *db, int status, short free_flag, char *msg)
 {
 	if (msg)
-		dprintf(2, "%s\n", msg);
+		put_fd(2, msg);
+	if (msg)
+		put_fd(2, "\n");
 	if (free_flag > 2)
 		fd_void(db);
 	if (free_flag > 1)
@@ -16,13 +19,14 @@ void	ft_exit(t_db *db, int status, short free_flag, char *msg)
 	exit(status);
 }
 
-void	ft_write(t_db *db, int fd, char *msg, int len)
+int	ft_write(t_db *db, int fd, char *msg, int len)
 {
 	int	res;
 
 	res = write(fd, msg, len);
 	if (res == -1)
 		ft_exit(db, 1, 3, "write failed");
+	return (res);
 }
 
 void	ft_close(t_db *db, int *fd)

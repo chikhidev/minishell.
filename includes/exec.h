@@ -23,12 +23,7 @@ void	pid_free(t_db *db, pid_t ip_to_free);
 void	pid_void(t_db *db);
 void	handle_underscore(t_db *db, void *node);
 
-void	ft_exit(t_db *db, int status, short free_flag, char *msg);
-void	ft_write(t_db *db, int fd, char *msg, int len);
-void	ft_close(t_db *db, int *fd);
-void	ft_pipe(t_db *db, int *pipe_fd);
-void	ft_dup2(t_db *db, int old_fd, int new_fd);
-int	ft_dup(t_db *db, int fd);
+
 
 
 int	**prepare_pipes(t_db *db, int n_pipes);

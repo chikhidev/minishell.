@@ -14,6 +14,10 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 	char	*tmp;
 	int		updated_index;
 
+	value = NULL;
+	insert = NULL;
+	tmp = NULL;
+	right_section = NULL;
 	// echo " $FO  $HOME $ROOT "
 	left_section = ft_substr(db, *line, 0, cut->start_ignore);
 	updated_index = 0;

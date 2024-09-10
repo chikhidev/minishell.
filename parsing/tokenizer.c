@@ -222,10 +222,11 @@ char **tokenize(t_db *db, t_quote **quotes, char *s)
 	}
 	if (!is_inside_quotes_list(*quotes, self.it.i) && contains(self.save, "*"))
 	{
+		// printf("pattern -> %s\n", self.save);
 		handle_wildcard(db, &self.result, self.save);
-		self.save = NULL;
 	}
 	else
 		self.result = append_word(db, self.result, self.save);
+	self.save = NULL;
 	return (self.result);
 }
