@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:15:22 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/11 21:37:37 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/11 21:46:44 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,6 @@ static int	count_words(const char *str, char *c)
 	return (i);
 }
 
-static int	free_everything(char **array, int index)
-{
-	while (index > 0)
-		free(array[--index]);
-	free(array);
-	return (0);
-}
-
 static char	*extract_word(t_db *db, char const *s, char *c)
 {
 	int			len;
@@ -94,8 +86,6 @@ static int	fill_and_test(t_db *db, char const *s, char *c, char **result)
 		if (!is_separator(*s, c))
 		{
 			word = extract_word(db, s, c);
-			if (word == NULL)
-				return (free_everything(result, i));
 			result[i++] = word;
 			while (*s && !is_separator(*s, c))
 				s++;

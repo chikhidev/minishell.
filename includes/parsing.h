@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 21:16:32 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/11 21:56:27 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ int				count_between_op(t_db *db, char *line, int op,
 					t_tracker *tracker);
 
 /*string3*/
-int				count_line_args(char *line, t_quote *quotes, int len);
-int				append_split(char **splitted, char *string);
 char			*sub(t_db *db, char *line, int i, int j);
 int				all_whitespaces(char *line, int start, int end);
 int				get_tok(t_db *db, char *s, int *i, t_quote *quotes);

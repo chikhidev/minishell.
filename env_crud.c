@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exp_list.c                                         :+:      :+:    :+:   */
+/*   env_crud.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 22:38:41 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:50:48 by sgouzi           ###   ########.fr       */
+/*   Created: 2024/09/11 22:06:50 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 22:11:50 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,20 @@
 #include "parsing.h"
 #include "string.h"
 
-t_exp_list	*new_exp_node(t_db *db, char *key, char *val)
+t_env_list	*new_env_node(t_db *db, char *key, char *val)
 {
-	t_exp_list	*new;
+	t_env_list	*new;
 
-	new = ec_malloc(db, sizeof(t_exp_list));
+	new = ec_malloc(db, sizeof(t_env_list));
 	if (new == NULL)
 		return (NULL);
-	new->val = val;
-	new->key = key;
 	new->next = NULL;
+	new->key = key;
+	new->val = val;
 	return (new);
 }
 
-void	add_exp_front(t_exp_list **list, t_exp_list *new)
+void	add_env_front(t_env_list **list, t_env_list *new)
 {
 	if (list && new)
 	{
@@ -37,9 +37,27 @@ void	add_exp_front(t_exp_list **list, t_exp_list *new)
 	}
 }
 
-t_exp_list	*get_exp_node(t_exp_list *list, char *key)
+void	push_env_back(t_env_list **list, t_env_list *new)
 {
-	t_exp_list	*curr;
+	t_env_list	*last;
+
+	if (list)
+	{
+		if (*list == NULL)
+			add_env_front(list, new);
+		else
+		{
+			last = *list;
+			while (last && last->next)
+				last = last->next;
+			last->next = new;
+		}
+	}
+}
+
+t_env_list	*get_env_node(t_env_list *list, char *key)
+{
+	t_env_list	*curr;
 
 	curr = list;
 	while (curr)
@@ -51,10 +69,10 @@ t_exp_list	*get_exp_node(t_exp_list *list, char *key)
 	return (curr);
 }
 
-void	del_exp_node(t_exp_list **list, char *key)
+void	del_env_node(t_env_list **list, char *key)
 {
-	t_exp_list	*curr;
-	t_exp_list	*prev;
+	t_env_list	*curr;
+	t_env_list	*prev;
 
 	prev = *list;
 	if (prev)

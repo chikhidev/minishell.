@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 22:59:33 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "exec.h"
 #include "main.h"
@@ -6,7 +18,7 @@
 
 void	handle_sigint(int signum)
 {
-	t_db *db;
+	t_db	*db;
 
 	db = this();
 	(void)signum;
@@ -45,35 +57,6 @@ int	handle_prompt(t_db *db, char **line)
 	if (ft_strlen(*line) > 0)
 		add_history(*line);
 	return (SUCCESS); /*nothing*/
-}
-
-t_env_list	*set_default_env(t_db *db)
-{
-	t_env_list	*new;
-
-	db->static_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-	new = new_env_node(db, "PWD", getcwd(NULL, 0));
-	push_env_back(&db->env_list, new);
-	new = new_env_node(db, "SHLVL", "0");
-	push_env_back(&db->env_list, new);
-	new = new_env_node(db, "_", "/usr/bin/env");
-	push_env_back(&db->env_list, new);
-	return (db->env_list);
-}
-
-t_exp_list	*set_default_exp(t_db *db)
-{
-	t_exp_list	*new;
-
-	new = new_exp_node(db, "PWD", getcwd(NULL, 0));
-	push_exp_back(&db->exp_list, new);
-	new = new_exp_node(db, "OLDPWD", NULL);
-	push_exp_back(&db->exp_list, new);
-	new = new_exp_node(db, "SHLVL", "0");
-	push_exp_back(&db->exp_list, new);
-	new = new_exp_node(db, "_", "/usr/bin/exp");
-	push_exp_back(&db->exp_list, new);
-	return (db->exp_list);
 }
 
 void	handle_shell_level(t_db *db, char *key, char **val)
@@ -126,6 +109,7 @@ void	handle_pwd(t_db *db)
 	bool		pwd_exist;
 	bool		old_pwd_exist;
 	bool		underscore_exist;
+
 	pwd_exist = false;
 	underscore_exist = false;
 	old_pwd_exist = false;
@@ -156,40 +140,13 @@ void	handle_pwd(t_db *db)
 	}
 	if (!underscore_exist)
 	{
-		underscore_exp = new_exp_node(db, ft_strdup_ec(db, "_"), ft_strdup_ec(db, "./minishell"));
+		underscore_exp = new_exp_node(db, ft_strdup_ec(db, "_"),
+				ft_strdup_ec(db, "./minishell"));
 		push_exp_sort(&db->exp_list, underscore_exp);
-		underscore_env = new_env_node(db, ft_strdup_ec(db, "_"), ft_strdup_ec(db, "./minishell"));
+		underscore_env = new_env_node(db, ft_strdup_ec(db, "_"),
+				ft_strdup_ec(db, "./minishell"));
 		push_env_back(&db->env_list, underscore_env);
 	}
-		
-}
-
-t_exp_list	*set_exp_lst(t_db *db, char *env[])
-{
-	t_exp_list	*exp_list;
-	t_exp_list	*new_node;
-	int			i;
-	char		*key;
-	char		*val;
-
-	exp_list = NULL;
-	key = NULL;
-	val = NULL;
-	i = 0;
-	if (env == NULL || !env[0])
-		return (set_default_exp(db));
-	while (env && env[i])
-	{
-		fill_key_val(db, env[i], &key, &val);
-		handle_shell_level(db, key, &val);
-		new_node = new_exp_node(db, key, val);
-		new_node->next = NULL;
-		if (ft_strncmp(key, "_", ft_strlen(key)) == 0)
-			new_node->visible = false;
-		push_exp_sort(&exp_list, new_node);
-		i++;
-	}
-	return (exp_list);
 }
 
 void	init_db(t_db *db, int ac, char *av[], char *env[])
@@ -272,5 +229,5 @@ int	main(int ac, char *av[], char *env[])
 	close(0);
 	close(1);
 	close(2);
-	return (0);
+	return (db->last_status);
 }

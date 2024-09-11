@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   string4.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 21:48:13 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 22:11:28 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
 
@@ -55,8 +67,8 @@ bool	is_newline_at_the_end(char *line)
 
 char	*gc_copy(t_db *db, char *s)
 {
-	char *new;
-	int i;
+	char	*new;
+	int		i;
 
 	if (!s)
 		return (NULL);

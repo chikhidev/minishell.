@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   string.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 21:48:10 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 21:52:38 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
 
@@ -67,7 +79,7 @@ int	are_all(char *str, int (*f)(int))
 
 int	all_whitespaces(char *line, int start, int end)
 {
-	int i;
+	int	i;
 
 	i = start;
 	while (i < end)

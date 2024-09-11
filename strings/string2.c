@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   string2.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 21:48:11 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 22:13:20 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
 
@@ -53,10 +65,15 @@ int	count_between_op(t_db *db, char *line, int op, t_tracker *tracker)
 
 int	count_array_len(char **args)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (args[i])
 		i++;
 	return (i);
+}
+
+bool same_s(char *s1, char *s2)
+{
+	return (ft_strcmp(s1, s2) == 0);
 }

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:51:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 20:09:44 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/11 22:22:46 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void	set_pwd_exp_values(t_db *db, char *old_pwd_str)
 	if (pwd_exp)
 		pwd_exp->val = ft_strdup_ec(db, new_pwd);
 	else
-		push_exp_back(&db->exp_list, new_exp_node(db, ft_strdup_ec(db, "PWD"),
+		push_exp_sort(&db->exp_list, new_exp_node(db, ft_strdup_ec(db, "PWD"),
 				ft_strdup_ec(db, new_pwd)));
 	if (old_pwd_exp)
 		old_pwd_exp->val = ft_strdup_ec(db, old_pwd_str);
 	else
-		push_exp_back(&db->exp_list, new_exp_node(db, ft_strdup_ec(db,
+		push_exp_sort(&db->exp_list, new_exp_node(db, ft_strdup_ec(db,
 					"OLDPWD"), ft_strdup_ec(db, old_pwd_str)));
 	free(new_pwd);
 }

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:28:33 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 19:05:23 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/11 23:00:25 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	setup_exit(t_db *db, int *args_len, char *av[], int index)
 	{
 		if (index == -1)
 			write(2, "exit\n", 5);
-		ft_exit(db, 0, 3, NULL);
+		ft_exit(db, db->last_status, 3, NULL);
 	}
 }
 

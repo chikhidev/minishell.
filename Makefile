@@ -40,6 +40,7 @@ STRING = 	strings/string.c \
 			strings/string4.c \
 			strings/string5.c \
 			strings/string6.c \
+			strings/string7.c \
 
 BUILTENS =	builtens/echo.c \
 			builtens/export.c \
@@ -51,9 +52,11 @@ BUILTENS =	builtens/echo.c \
 			builtens/cd.c \
 			builtens/unset.c \
 			builtens/exit.c \
+			builtens/index.c \
 	    	env_list.c	\
-	    	exp_list.c	\
-			builtens/index.c
+	    	env_crud.c	\
+	    	exp_list.c \
+	    	exp_crud.c
 
 SRC =	main.c		\
 		memo.c		\
