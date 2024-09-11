@@ -34,9 +34,7 @@ char	*get_env(t_db *db, char *name)
 		return (ft_strdup(db, name + 1));
 	object = get_exp_node(db->exp_list, name);
 	if (object)
-	{
 		return (ft_strdup(db, object->val));
-	}
 	return (ft_strdup(db, ""));
 }
 

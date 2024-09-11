@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/main.h"
 #include "libft.h"
 #include <stdlib.h>
-#include "../includes/main.h"
 
-char	*ft_strdup(t_db	*db,	const char *s1)
+char	*ft_strdup(t_db *db, const char *s1)
 {
 	const char	*clone;
 	int			len;
@@ -22,7 +22,7 @@ char	*ft_strdup(t_db	*db,	const char *s1)
 	if (s1 == NULL)
 		return (NULL);
 	len = ft_strlen(s1);
-	clone = gc_malloc(db,	sizeof(char) * (len + 1));
+	clone = gc_malloc(db, sizeof(char) * (len + 1));
 	if (!clone)
 		return (NULL);
 	ft_memcpy((void *)clone, s1, len + 1);

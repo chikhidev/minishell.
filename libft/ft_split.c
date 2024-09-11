@@ -6,16 +6,16 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:15:22 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/08/13 18:36:46 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/11 21:37:37 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "../includes/main.h"
+#include "libft.h"
 
-static bool is_separator(char c, char *c2)
+static bool	is_separator(char c, char *c2)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (c2[i])
@@ -27,7 +27,6 @@ static bool is_separator(char c, char *c2)
 	return (false);
 }
 
-
 static int	count_words(const char *str, char *c)
 {
 	int				i;
@@ -37,18 +36,12 @@ static int	count_words(const char *str, char *c)
 	in_word = 0;
 	while (*str)
 	{
-		if (
-			!is_separator(*str, c)
-			// *str != c
-			&& in_word == 0)
+		if (!is_separator(*str, c) && in_word == 0)
 		{
 			in_word = 1;
 			i++;
 		}
-		else if (
-			is_separator(*str, c)
-			// *str == c
-		)
+		else if (is_separator(*str, c))
 			in_word = 0;
 		str++;
 	}
@@ -73,10 +66,7 @@ static char	*extract_word(t_db *db, char const *s, char *c)
 	len = 0;
 	starting = s;
 	i = 0;
-	while (*s &&
-		// *s != c
-		!is_separator(*s, c)
-		)
+	while (*s && !is_separator(*s, c))
 	{
 		len++;
 		s++;
@@ -124,7 +114,6 @@ char	**ft_split(t_db *db, char const *s, char *c)
 
 	if (s == NULL)
 		return (NULL);
-
 	word_count = count_words(s, c);
 	result = gc_malloc(db, (word_count + 1) * sizeof(char *));
 	if (result == NULL)

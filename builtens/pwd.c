@@ -1,13 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 19:52:15 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 19:55:15 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "main.h"
-#include <errno.h>
 
 int	pwd_(t_db *db)
 {
-	(void)db;
-	char *pwd;
-	t_exp_list *pwd_exp_node;
+	char		*pwd;
+	t_exp_list	*pwd_exp_node;
 
+	(void)db;
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
 	{

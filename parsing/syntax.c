@@ -32,7 +32,28 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 	(void)quotes;
 	while (line[*i] && !is_whitespace(line[*i]) && get_tok(db, line, i,
 			quotes) == WORD)
+    {
+        if (line[*i] == SGL_QUOTE)
+        {
+            // skip until single quote
+			(*i)++;
+			while (line[*i] && line[*i] != SGL_QUOTE)
+				(*i)++;
+			if (line[*i] == SGL_QUOTE)
+				(*i)++;
+        }
+		if (line[*i] == DBL_QUOTE)
+		{
+			// skip until double quote
+			(*i)++;
+			while (line[*i] && line[*i] != DBL_QUOTE)
+				(*i)++;
+			if (line[*i] == DBL_QUOTE)
+				(*i)++;
+		}
 		(*i)++;
+
+    }
 	if (get_tok(db, line, i, quotes) == WORD)
 		return (SUCCESS);
 	return (FAILURE);

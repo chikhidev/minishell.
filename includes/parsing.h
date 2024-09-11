@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 21:16:32 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSING_H
 # define PARSING_H
 
@@ -66,7 +78,7 @@ void			update_quotes(t_quote *head, int start, int old_len,
 					int new_len);
 void			delete_quotes_in_range(t_quote **head, int start, int end);
 t_quote			*quote_at(t_quote *head, int index);
-t_quote 		*quotes_of_range(t_quote *head, int pos);
+t_quote			*quotes_of_range(t_quote *head, int pos);
 
 /*parsing/paranths.c && paranths2.c*/
 int				is_operator_forward(char *s, int i);
@@ -121,7 +133,7 @@ void			skip_open_spaces(t_quote *quotes, char *line, int *i);
 bool			is_quote_oppening(t_quote *head, int i);
 
 char			**append_word(t_db *db, char **result, char *save);
-void			handle_wildcard(t_db *db, char ***result,  char *pattern);
+void			handle_wildcard(t_db *db, char ***result, char *pattern);
 
 t_file_entry	*new_ent_node(t_db *db, struct dirent *ent);
 void			add_ent_front(t_file_entry **list, t_file_entry *new);
@@ -149,6 +161,6 @@ int				updated_line(t_db *db, char **line, char *variable_name,
 int				update_index(t_db *db, char **line, char *value,
 					t_str_cut *cut);
 
-bool 			split_factor(char *value, char *line, int pos);
+bool			split_factor(char *value, char *line, int pos);
 
 #endif

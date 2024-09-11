@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 20:48:10 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "exec.h"
 #include "main.h"
@@ -8,7 +20,7 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	char	**env_arr;
 	char	*path;
 
-    default_signals_behav(false);
+	default_signals_behav(false);
 	if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
 		ft_exit(db, 1, 3, NULL);
 	path = get_path(db, CMD->args);
@@ -21,35 +33,37 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	ft_exit(db, 127, 3, ft_strjoin(db, path, ": failed"));
 }
 
-int handle_single_builtin(t_db *db, void *node, int index)
+int	handle_single_builtin(t_db *db, void *node, int index)
 {
-    int	in;
+	int	in;
 	int	out;
-    in = ft_dup(db, STDIN_FILENO);
-    out = ft_dup(db, STDOUT_FILENO);
-    dup_cmd_io(db, node);
-    db->last_status = run_builtin(db, node, index);
-    dup2(in, STDIN_FILENO);
-    dup2(out, STDOUT_FILENO);
-    return (db->last_status);
+
+	if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
+		return (db->last_status = 1, 1);
+	in = ft_dup(db, STDIN_FILENO);
+	out = ft_dup(db, STDOUT_FILENO);
+	dup_cmd_io(db, node);
+	db->last_status = run_builtin(db, node, index);
+	dup2(in, STDIN_FILENO);
+	dup2(out, STDOUT_FILENO);
+	return (db->last_status);
 }
 
 int	handle_builtin(t_db *db, void *node, int **pipes, int index)
 {
 	int	id;
 
-	if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
-		return (db->last_status = 1, 1);
 	if (index == -1)
-		return handle_single_builtin(db, node, index);
+		return (handle_single_builtin(db, node, index));
 	id = fork();
 	if (id == CHILD)
 	{
+		if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
+			exit(1);
 		dup_pipes(db, pipes, index);
 		dup_cmd_io(db, node);
 		close_all_pipes(db, pipes);
 		db->last_status = run_builtin(db, node, index);
-		db->last_status = db->last_status << 8;
 		ft_exit(db, db->last_status, 3, NULL);
 	}
 	else
@@ -62,6 +76,8 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 	int	id;
 	int	status;
 
+	if (!node || !CMD->args || !CMD->args[0])
+		return ;
 	if (index == -1)
 		handle_underscore(db, node);
 	status = 0;

@@ -18,11 +18,11 @@ int	ft_isdigit(int c)
 }
 
 /*
-int main(){
+int	main(void){
 	char c = '4';
 	char f_c = 'r';
 	printf("c: %d\n", ft_isdigit(c));
 	printf("f_c: %d\n", ft_isdigit(f_c));
-	return 0;
+	return (0);
 }
 */

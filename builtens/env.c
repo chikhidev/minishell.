@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 18:28:14 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 18:28:15 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "main.h"
 #include "parsing.h"
 #include "string.h"
 
-void write_var(t_db *db, char *key, char *val)
+void	write_var(t_db *db, char *key, char *val)
 {
 	ft_write(db, STDOUT_FILENO, key, ft_strlen(key));
 	ft_write(db, STDOUT_FILENO, "=", 1);
@@ -13,9 +25,9 @@ void write_var(t_db *db, char *key, char *val)
 
 int	env_(t_db *db, char *av[])
 {
-	char *_key;
-	char *_val;
-	t_env_list *curr;
+	char		*_key;
+	char		*_val;
+	t_env_list	*curr;
 
 	if (count_array_len(av) > 1)
 	{

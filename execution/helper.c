@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helper.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 20:48:14 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "exec.h"
 #include "main.h"
@@ -6,7 +18,7 @@
 void	handle_is_dir(t_db *db, char *arg)
 {
 	DIR	*dir;
-	
+
 	if (ft_strcmp(arg, ".") == 0)
 		ft_exit(db, 2, 3, ft_strjoin(db, arg, ": command not found"));
 	if (ft_strcmp(arg, "..") == 0)

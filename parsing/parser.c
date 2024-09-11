@@ -16,7 +16,10 @@ int	parser(t_db *db, char *line)
 		return (SUCCESS);
 	if (track_quotes(db, &quotes, line) == FAILURE)
 		return (FAILURE);
-	CATCH_ONFAILURE(syntax_checker(db, line, quotes), FAILURE)
-	CATCH_ONFAILURE(smart_split(db, line, &db->root_node, NULL), FAILURE)
-	return (SUCCESS);
+    if (syntax_checker(db, line, quotes) == FAILURE)
+        return (FAILURE);
+    if (smart_split(db, line, &db->root_node, NULL) == FAILURE)
+        return (FAILURE);
+    else
+        return (SUCCESS);
 }

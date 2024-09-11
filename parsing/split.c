@@ -49,35 +49,23 @@ int	process_op(t_db *db, char *line, t_holder *holder)
 	int		i;
 
 	current_node = holder->current_node;
-	CATCH_ONFAILURE(create_op_node(db, holder->op, holder->current_node),
-		FAILURE);
+    if (create_op_node(db, holder->op, holder->current_node) == FAILURE)
+        return (FAILURE);
 	CURR_OP->n_childs = count_between_op(db, line, holder->op, holder->tracker);
 	splitted = split_line(db, line, CURR_OP, holder->tracker);
-	CATCH_MALLOC(splitted);
 	CURR_OP->childs = gc_malloc(db, sizeof(void *) * CURR_OP->n_childs);
 	ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
 	i = 0;
 	while (i < CURR_OP->n_childs)
 	{
-		CATCH_ONFAILURE(smart_split(db, splitted[i], &CURR_OP->childs[i],
-				*current_node), FAILURE)
+        if (smart_split(db, splitted[i], &CURR_OP->childs[i],
+				*current_node) == FAILURE)
+            return (FAILURE);
 		i++;
 	}
 	return (SUCCESS);
 }
 
-/**
-
-	* ---------------------------------------------------------------------------------------------------
-
-	* -----------------------------------------------------------------------------------------------------------------
-
-	* -------------------------------------------------------------------------------------------------------------------------------
-
-	* -----------------------------------------------------------------------------------------------------------------
-
-	* ---------------------------------------------------------------------------------------------------
- */
 int	process_cmd(t_db *db, char *line, t_holder *holder)
 {
 	void	**current_node;
@@ -85,13 +73,15 @@ int	process_cmd(t_db *db, char *line, t_holder *holder)
 	t_quote	*quotes;
 
 	current_node = holder->current_node;
-	CATCH_ONFAILURE(create_cmd_node(db, current_node)
-		// create a command node -------<<<<<<<<
-					,
-					FAILURE);
 	quotes = NULL;
+    if (create_cmd_node(db, current_node) == FAILURE)
+    {
+        return (FAILURE);
+    }
 	if (track_quotes(db, &quotes, line) == FAILURE)
+    {
 		return (FAILURE);
+    }
 	splitted = tokenize(db, &quotes, line);
 	if (db->error || !db->exec_line)
 		return (error(db, NULL, NULL));
@@ -103,23 +93,9 @@ int	process_cmd(t_db *db, char *line, t_holder *holder)
 	return (SUCCESS);
 }
 
-/**
-
-	* ---------------------------------------------------------------------------------------------------
-
-	* -----------------------------------------------------------------------------------------------------------------
-
-	* -------------------------------------------------------------------------------------------------------------------------------
-
-	* -----------------------------------------------------------------------------------------------------------------
-
-	* ---------------------------------------------------------------------------------------------------
- */
-
 int	smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
 	t_holder holder;
-		// holder varibale so we make sure of that this data will be given to children if exists
 	if (db->error || !db->exec_line)
 		return (FAILURE);
 	/**

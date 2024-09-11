@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 20:48:11 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 20:48:12 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "exec.h"
 #include "main.h"
@@ -16,7 +28,7 @@ char	*get_path(t_db *db, char **args)
 	{
 		if (access(path, F_OK) + access(path, X_OK) != 0)
 		{
-            (perror(path), fd_void(db), ec_void(db));
+			(perror(path), fd_void(db), ec_void(db));
 			exit(error(db, NULL, NULL) + 127 - (access(path, X_OK) != 0));
 		}
 	}
@@ -52,7 +64,6 @@ void	exec(t_db *db, void *node)
 {
 	if (!node)
 		return ;
-
 	handle_parent_signals();
 	if (CMD->type == CMD_NODE)
 		handle_cmd_node(db, node, NULL, -1);

@@ -28,7 +28,6 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 			cut.end_ignore = i;
 			if (quotes && is_quote_oppening(*quotes, i))
 			{
-				printf("1-found $ in positioin %d, line: [%s]\n", i, *line);
 				q = quote_at(*quotes, i);
 				/* this is impossible case OFC but we abviously need to check who knows*/
 				if (!q)
@@ -37,8 +36,6 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 				cut.end_include = q->end;
 				cut.end_ignore = cut.end_include + 1;
 				update_index(db, line, NULL, &cut);
-
-
 				update_quotes(*quotes, cut.start_ignore,
 					cut.end_ignore - cut.start_ignore,
 					cut.end_ignore - cut.start_ignore - 1);
@@ -49,7 +46,6 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 				if (!q)
 					return error(db, NULL, "Something went wrong, was expecting a quote");
 				i = q->start;
-				printf(GREEN"i->%d, line-> [%s]\n"RESET, i, (*line));
 			}
 			else
 			{

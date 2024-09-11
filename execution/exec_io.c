@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_io.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 20:48:10 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 20:55:30 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "exec.h"
 #include "main.h"
@@ -20,14 +32,16 @@ int	**prepare_pipes(t_db *db, int n_pipes)
 	return (pipes);
 }
 
-int	dup_pipes(t_db *db, int **pipes, int index) // index -> 2
+int	dup_pipes(t_db *db, int **pipes, int index)
 {
+	int	n_pipes;
+
+	n_pipes = get_pipes_count(pipes);
 	if (index == -1)
 		return (SUCCESS);
-	int n_pipes = get_pipes_count(pipes);
 	if (index == 0)
 		ft_dup2(db, pipes[0][1], STDOUT_FILENO);
-	else if (index == n_pipes) // 2 == 2
+	else if (index == n_pipes)
 	{
 		ft_dup2(db, pipes[n_pipes - 1][0], STDIN_FILENO);
 	}

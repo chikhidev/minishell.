@@ -1,4 +1,5 @@
 #include "main.h"
+#include "string.h"
 
 int	add_quote(t_db *db, t_quote **head, int ascii, int start)
 {
@@ -34,6 +35,16 @@ t_quote	*last_quote(t_quote *head)
 	return (tmp);
 }
 
+void handle_quote_error(t_quote *last)
+{
+	put_fd(2, "Quotes are not closed expecting: ");
+	if (last->ascii == SNGLQUOTE)
+		put_fd(2, "'");
+	else
+		put_fd(2, "\"");
+	put_fd(2, "\n");
+}
+
 int	track_quotes(t_db *db, t_quote **head, char *line)
 {
 	int		i;
@@ -57,10 +68,7 @@ int	track_quotes(t_db *db, t_quote **head, char *line)
 	}
 	last = last_quote(*head);
 	if (last && last->end == -1)
-	{
-		printf("Quotes are not closed expecting %c\n", last->ascii);
-		return (error(db, NULL, NULL));
-	}
+		return (handle_quote_error(last), error(db, NULL, NULL));
 	return (SUCCESS);
 }
 
@@ -71,7 +79,6 @@ void	update_quotes(t_quote *head, int start, int old_len, int new_len)
 	if (!head)
 		return ;
 	q = head;
-
 	// printf(MAGENTA"preparing to update quotes with {old_len: %d, new_len: %d}\n"RESET, old_len, new_len);
 
 	while (q)

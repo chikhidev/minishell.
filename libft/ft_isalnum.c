@@ -18,13 +18,13 @@ int	ft_isalnum(int c)
 }
 
 /*
-int main(){
+int	main(void){
 	char c = '4';
 	char f_c = 'r';
 	printf("c: %d\n", ft_isalnum(c));
 	printf("f_c: %d\n", ft_isalnum(f_c));
 	printf("c2: %d\n", ft_isalnum('*'));
-	return 0;
-	return 0;
+	return (0);
+	return (0);
 }
 */

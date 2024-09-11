@@ -26,11 +26,13 @@ PARSING_SRC += $(EXPANDING)
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path.c \
-					execution/exit_status.c \
+					execution/pid.c \
+					execution/fd.c \
 					execution/helper.c \
 					execution/exec_io.c \
 					execution/exec_cmd.c \
-					execution/sys.c 
+					execution/sys.c \
+					execution/sys1.c 
 
 STRING = 	strings/string.c \
 			strings/string2.c \
@@ -41,6 +43,9 @@ STRING = 	strings/string.c \
 
 BUILTENS =	builtens/echo.c \
 			builtens/export.c \
+			builtens/export_1.c \
+			builtens/export_2.c \
+			builtens/export_3.c \
 			builtens/env.c \
 			builtens/pwd.c \
 			builtens/cd.c \

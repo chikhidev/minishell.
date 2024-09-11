@@ -17,7 +17,6 @@ char	*ft_strchr(const char *s, int c, int *i)
 	int	j;
 
 	j = *i;
-
 	while (s[j])
 	{
 		if (s[j] == (char)c)
@@ -35,8 +34,7 @@ char	*ft_strchr(const char *s, int c, int *i)
 	return (NULL);
 }
 
-
-char *ft_strsearch(const char *s, int c)
+char	*ft_strsearch(const char *s, int c)
 {
 	int i;
 

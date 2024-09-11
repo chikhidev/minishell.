@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 18:27:29 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 18:28:02 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
 #include "string.h"
@@ -44,9 +56,10 @@ int	get_start_idx(char **args, bool *new_line)
 
 int	echo_(t_db *db, char *args[])
 {
-	int i;
-	bool new_line;
-	int n_args;
+	int		i;
+	bool	new_line;
+	int		n_args;
+
 	(void)db;
 	n_args = count_array_len(args);
 	i = get_start_idx(args, &new_line);

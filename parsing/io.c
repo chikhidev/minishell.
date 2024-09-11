@@ -43,25 +43,20 @@ int	check_ambigious(t_db *db, char *file)
 	if (file[0] == '$' && file[1] != '\0')
 	{
 		store = get_exp_node(db->exp_list, file + 1);
-		if (!store)
+		if (!store || (store->val && store->val[0] == '\0'))
 		{
-			printf("%s: ambiguous redirect\n", file);
-			return (true);
-		}
-		if (store->val && store->val[0] == '\0')
-		{
-			printf("%s: ambiguous redirect\n", file);
+			(put_fd(2, file), put_fd(2, " :ambiguous redirect\n"));
 			return (true);
 		}
 		if (contains_spaces_btwn(store->val))
 		{
-			printf("%s: ambiguous redirect\n", file);
+			(put_fd(2, file), put_fd(2, " :ambiguous redirect\n"));
 			return (true);
 		}
 		if (count_array_len(
 				ft_split(db, store->val, " \t\n\r\v\f")) > 1)
 		{
-			printf("%s: ambiguous redirect\n", file);
+			(put_fd(2, file), put_fd(2, " :ambiguous redirect\n"));
 			return (true);
 		}
 	}
@@ -93,7 +88,7 @@ int	open_file(t_db *db, char *file, int type)
 	tmp = without_quotes(db, file, quotes);
 	if (ft_strlen(tmp) == 0)
 	{
-		printf("No such file or directory\n");
+		put_fd(2, "No such file or directory\n");
 		return FAILURE;
 	}
 
@@ -158,7 +153,7 @@ int	open_heredoc(t_db *db, char *delim)
 			line = readline("> ");
 			if (!line)
 			{
-				printf("Warning: here-document delimited by end-of-file\n");
+				put_fd(2, "Warning: here-document delimited by end-of-file\n");
 				ft_close(db, &pipe_fd[1]);
 				break ;
 			}

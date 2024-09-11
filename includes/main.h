@@ -1,21 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 21:10:55 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MAIN_H
 # define MAIN_H
 
 # include "../libft/libft.h"
+# include <ctype.h>
 # include <dirent.h>
-# include <limits.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-#include <ctype.h>
 # include <unistd.h>
 
-# define SIGNAL unsigned char
 # define SUCCESS 1
 # define FAILURE 0
 # define NOT_FOUND -1
@@ -30,29 +41,6 @@
 # define FAIL 150
 
 // triggers
-# define CATCH_MALLOC(x) \
-	if (!x)             \
-		return (error(db, NULL, "Malloc failed7"));
-# define CATCH(x, message) \
-	if (x == FAILURE)     \
-		return (error(db, NULL, message));
-# define CATCH_ONFAILURE(x, return_) \
-	if (x == FAILURE)               \
-		return (return_);
-# define CATCH_ONfalse(x, return_) \
-	if (x == false)               \
-		return (return_);
-# define CATCH_ONINVALID(x, return_) \
-	if (x == INVALID)               \
-		return (return_);
-# define CATCH_ONNOTFOUND(x, return_) \
-	if (x == NOT_FOUND)              \
-		return (return_);
-
-# define CATCH_ERROR \
-	if (db->error)  \
-		return (FAILURE);
-
 # define DOBLQUOTE 34
 # define SNGLQUOTE 39
 
@@ -101,13 +89,13 @@ typedef struct str_cut
 
 typedef struct s_op_node
 {
-	int type; // the common thing between the two nodes
-	int					op_presentation;
-	void				**childs;
-	int					n_childs;
+	int		type; // the common thing between the two nodes
+	int		op_presentation;
+	void	**childs;
+	int		n_childs;
 
-	int					input_fd;
-	int					output_fd;
+	int		input_fd;
+	int		output_fd;
 
 	// execution part ------ <<<<<<
 }						t_op_node;
@@ -120,8 +108,8 @@ typedef struct s_int
 
 typedef struct s_here_doc /*here doc saver*/
 {
-	t_op_node *ptr;
-	struct s_here_doc *next;
+	t_op_node			*ptr;
+	struct s_here_doc	*next;
 }						t_here_doc;
 
 typedef struct s_env_list
@@ -174,9 +162,9 @@ typedef struct s_file_entry
  */
 typedef struct s_cmd_node
 {
-	int type; // the common thing between the two nodes
-
-	// this is gonna be only in the child proccess just when it gonna e executed!!!
+	int					type; // the common thing between the two nodes
+	// this is gonna be only in the child proccess
+	// just when it gonna e executed!!!
 	char				**args;
 	int					input_fd;
 	int					output_fd;
@@ -233,7 +221,7 @@ typedef struct s_db
 {
 	int					debug;
 	bool				ctrl_c;
-    /*tree head*/
+	/*tree head*/
 	/*tree head*/
 	void				*root_node;
 	/*momory management*/
@@ -277,7 +265,8 @@ typedef struct s_db
 /*prototypes*/
 /**
 
-	* @details This function is used to initialize the db structure and call be called whenever needed to set or read the data
+	* @details This function is used to initialize the db structure
+			and call be called whenever needed to set or read the data
  */
 t_db					*this(void);
 
@@ -292,7 +281,8 @@ void					gc_free(t_db *db, void *ptr);
 void					ec_free(t_db *db, void *ptr);
 void					gc_void(t_db *db);
 void					ec_void(t_db *db);
-void					*gc_realloc(t_db *db, void *ptr, size_t size);
+void					*gc_realloc(t_db *db, void *ptr, size_t old_size,
+							size_t size);
 void					*fd_add(t_db *db, pid_t new_fd);
 void					fd_free(t_db *db, pid_t fd_to_free);
 void					fd_void(t_db *db);
@@ -304,8 +294,8 @@ void					ft_pipe(t_db *db, int *pipe_fd);
 void					ft_dup2(t_db *db, int old_fd, int new_fd);
 int						ft_write(t_db *db, int fd, char *msg, int len);
 /*prototypes: string.c*/
-void	ft_dup2(t_db *db, int old_fd, int new_fd);
-int	ft_dup(t_db *db, int fd);
+void					ft_dup2(t_db *db, int old_fd, int new_fd);
+int						ft_dup(t_db *db, int fd);
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);
 
@@ -332,14 +322,14 @@ char					**env_list_to_env_arr(t_db *db);
 void					catch_feedback(t_db *db, int process_res);
 
 /*signals*/
-void default_signals_behav(bool ignore_quit);
-void handle_parent_signals(void);
-void heredoc_signals_handling(void);
-void handle_here_doc_signals(void);
-void handle_sigint(int signum);
-void setup_child_signals(void);
-void setup_parent_signals(void);
-void restore_parent_signals(void);
+void					default_signals_behav(bool ignore_quit);
+void					handle_parent_signals(void);
+void					heredoc_signals_handling(void);
+void					handle_here_doc_signals(void);
+void					handle_sigint(int signum);
+void					setup_child_signals(void);
+void					setup_parent_signals(void);
+void					restore_parent_signals(void);
 void					default_signals_behav(bool ignore_quit);
 void					handle_parent_signals(void);
 void					heredoc_signals_handling(void);

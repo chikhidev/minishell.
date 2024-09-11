@@ -18,11 +18,11 @@ int	ft_isalpha(int c)
 }
 
 /*
-int main(){
+int	main(void){
 
 	char c = 'e';
 	printf("%d\n", ft_isalpha(c));
-	return 0;
+	return (0);
 }
 
 */

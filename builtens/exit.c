@@ -1,66 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/11 18:28:33 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/11 19:05:23 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "exec.h"
 #include "main.h"
 #include "string.h"
 
-static int	is_space(char c)
-{
-	return ((c <= 13 && c >= 9) || c == 32);
-}
-
-void skip_atoll(char *str, int *i, int *sign)
-{
-	while (is_space(str[(*i)]))
-		(*i)++;
-	if (str[(*i)] == '-' || str[(*i)] == '+')
-	{
-		if (str[(*i)] == '-')
-			(*sign) = -1;
-		(*i)++;
-	}
-}
-
-long long	ft_atoll(char *str, bool *error)
-{
-	long long	res;
-	int			sign;
-	int			i;
-
-	sign = 1;
-	i = 0;
-	res = 0;
-	*error = false;
-	skip_atoll(str, &i, &sign);
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		if (res * sign > (LLONG_MAX - (str[i] - '0')) / 10 || res
-			* sign < (LLONG_MIN + (str[i] - '0')) / 10)
-		{
-			*error = true;
-			return (0);
-		}
-		res = res * 10 + (str[i] - '0');
-		i++;
-	}
-	skip_spaces((char *)str, &i);
-	if (str[i] != '\0')
-		*error = true;
-	return (res * sign);
-}
-
-void setup_exit(t_db *db, int *args_len, char *av[], int index)
+void	setup_exit(t_db *db, int *args_len, char *av[], int index)
 {
 	(*args_len) = count_array_len(av);
-
 	if ((*args_len) == 1)
 	{
 		if (index == -1)
-			printf("exit\n");
+			write(2, "exit\n", 5);
 		ft_exit(db, 0, 3, NULL);
 	}
 }
 
-int exit_check(char *av[], int args_len, int err, unsigned char *exit_code)
+int	exit_check(char *av[], int args_len, int err, unsigned char *exit_code)
 {
 	if (err)
 	{
@@ -79,9 +45,9 @@ int exit_check(char *av[], int args_len, int err, unsigned char *exit_code)
 
 int	exit_(t_db *db, char *av[], int index)
 {
-	unsigned char exit_code;
-	int args_len;
-	bool err;
+	unsigned char	exit_code;
+	int				args_len;
+	bool			err;
 
 	err = false;
 	exit_code = 0;
