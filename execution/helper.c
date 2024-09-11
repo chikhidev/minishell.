@@ -3,7 +3,6 @@
 #include "main.h"
 #include "parsing.h"
 
-
 void	handle_is_dir(t_db *db, char *arg)
 {
 	DIR	*dir;

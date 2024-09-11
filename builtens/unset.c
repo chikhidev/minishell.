@@ -5,6 +5,7 @@
 int	unset_(t_db *db, char *args[])
 {
 	int i;
+	printf("0000000000000000\n");
 
 	i = 1;
 	while (args[i])

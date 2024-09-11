@@ -10,8 +10,6 @@ char	*get_path(t_db *db, char **args)
 	path = args[0];
 	if (ft_strcmp(path, ".") == 0 || ft_strcmp(path, "..") == 0)
 		return (ft_strdup(db, path));
-
-
 	if (is_str_empty(db, args[0]))
 		ft_exit(db, 127, 3, ft_strjoin(db, args[0], ": command not found"));
 	if (is_relative_path(path) || is_absolute_path(path))
@@ -54,9 +52,6 @@ void	exec(t_db *db, void *node)
 {
 	if (!node)
 		return ;
-	
-///	for (int i = 0; CMD->args[i]; i++)
-//		printf("arg[%d], %s", i, CMD->args[i]);
 
 	handle_parent_signals();
 	if (CMD->type == CMD_NODE)

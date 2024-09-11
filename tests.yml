@@ -11,3 +11,31 @@ seg fault in
 env -i valgrind ./minishell 
 
 echo $_
+
+
+
+
+
+
+./minishell :
+
+>_$ ls
+builtens    exp_list.c	Makefile   parsing	  strings     valgrind_setup.sh
+env_list.c  includes	memo.c	   readline.supp  tests.json
+error.c     libft	minishell  SECURITY.md	  tests.yml
+execution   main.c	out	   signals.c	  triggers.c
+>_$ ls | wc
+     21      21     203
+>_$ /bin/ls
+builtens    exp_list.c	Makefile   parsing	  strings     valgrind_setup.sh
+env_list.c  includes	memo.c	   readline.supp  tests.json
+error.c     libft	minishell  SECURITY.md	  tests.yml
+execution   main.c	out	   signals.c	  triggers.c
+>_$ unset PATH
+>_$ ls
+builtens    exp_list.c	Makefile   parsing	  strings     valgrind_setup.sh
+env_list.c  includes	memo.c	   readline.supp  tests.json
+error.c     libft	minishell  SECURITY.md	  tests.yml
+execution   main.c	out	   signals.c	  triggers.c
+
+fucking weird

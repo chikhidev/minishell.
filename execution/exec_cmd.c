@@ -62,9 +62,6 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 	int	id;
 	int	status;
 
-	if (!node || !CMD->args || !CMD->args[0])
-		return ;
-
 	if (index == -1)
 		handle_underscore(db, node);
 	status = 0;

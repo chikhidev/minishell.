@@ -1,6 +1,5 @@
 #include "includes/main.h"
 #include "includes/string.h"
-#include "string.h"
 
 void	*gc_malloc(t_db *db, size_t size)
 {

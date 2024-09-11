@@ -261,6 +261,7 @@ typedef struct s_db
 	int					stdout_dup;
 	int					pipe[2];
 	int					read_fd;
+	bool				is_path_unset;
 
 	// has the permission to run the line? by default yes.
 	bool				exec_line;
