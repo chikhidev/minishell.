@@ -227,11 +227,9 @@ void add_exp(char *key, char *val)
 {
 	t_db *db;
 	t_exp_list	*exp_node;
-	t_env_list	*env_node;
 
 	db = this();
 	exp_node = get_exp_node(db->exp_list, key);
-	env_node = get_env_node(db->env_list, key);
 	if (!exp_node)
 	{
 		if (ft_strcmp(key, "PATH") == 0 && db->static_path)
