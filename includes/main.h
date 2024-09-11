@@ -291,7 +291,7 @@ void					gc_free(t_db *db, void *ptr);
 void					ec_free(t_db *db, void *ptr);
 void					gc_void(t_db *db);
 void					ec_void(t_db *db);
-void					*gc_realloc(t_db *db, void *ptr, size_t size);
+void					*gc_realloc(t_db *db, void *ptr, size_t old_size, size_t size);
 void					*fd_add(t_db *db, pid_t new_fd);
 void					fd_free(t_db *db, pid_t fd_to_free);
 void					fd_void(t_db *db);

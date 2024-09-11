@@ -184,7 +184,7 @@ char	*ft_strcpy(char *dest, char *src)
 	return (init_dest);
 }
 
-void	*gc_realloc(t_db *db, void *ptr, size_t new_size)
+void	*gc_realloc(t_db *db, void *ptr, size_t old_size, size_t new_size)
 {
 	t_gc	*gc;
 	void	*new_ptr;
@@ -203,7 +203,7 @@ void	*gc_realloc(t_db *db, void *ptr, size_t new_size)
 				exit(FAIL);
 			}
 			ft_bzero(new_ptr, new_size);
-			ft_strcpy((char *)new_ptr, (char *)ptr);
+            ft_memcpy(new_ptr, ptr, old_size);
 			free(ptr);
 			gc->ptr = new_ptr;
 			return (new_ptr);

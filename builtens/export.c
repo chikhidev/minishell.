@@ -185,7 +185,7 @@ void handle_add_exp_export(t_db *db, char *key, char *val)
 	key = ft_strdup_ec(db, key);
 	val = ft_strdup_ec(db, val);
 	exp_node = new_exp_node(db, key, val);
-	push_exp_back(&db->exp_list, exp_node);
+	push_exp_sort(&db->exp_list, exp_node);
 }
 
 void put_exp_err_status(char *arg, int *status)

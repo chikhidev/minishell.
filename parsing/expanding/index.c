@@ -37,8 +37,6 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 				cut.end_include = q->end;
 				cut.end_ignore = cut.end_include + 1;
 				update_index(db, line, NULL, &cut);
-
-
 				update_quotes(*quotes, cut.start_ignore,
 					cut.end_ignore - cut.start_ignore,
 					cut.end_ignore - cut.start_ignore - 1);

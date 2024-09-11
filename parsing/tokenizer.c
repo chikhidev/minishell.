@@ -11,8 +11,6 @@ void add(t_db *db, char ***result, char *save)
 {
 	size_t size;
 
-	// printf(UNDERLINE"saving->[%s]\n"RESET, save);
-
 	if (!**result)
 	{
 		*result = (char **)gc_malloc(db, 2 * sizeof(char *));
@@ -23,7 +21,7 @@ void add(t_db *db, char ***result, char *save)
 	size = 0;
 	while ((*result)[size])
 		size++;
-	*result = (char **)gc_realloc(db, *result, (size + 2) * sizeof(char *));
+	*result = (char **)gc_realloc(db, *result, size * sizeof(char *), (size + 2) * sizeof(char *));
 	(*result)[size] = save;
 	(*result)[size + 1] = NULL;
 }
