@@ -9,6 +9,10 @@ int	get_tok(t_db *db, char *s, int *i, t_quote *quotes)
 		return (INVALID);
 	if (is_whitespace(s[*i]))
 		return (W_SPACE);
+    if (s[*i] == SNGLQUOTE || s[*i] == DBL_QUOTE)
+    {
+        
+    }
 	if (s[*i] == '|')
 		return (PIPE);
 	if (s[*i] == '<')

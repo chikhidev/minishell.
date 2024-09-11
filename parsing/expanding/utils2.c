@@ -31,9 +31,6 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 	right_section = ft_substr(db, *line, cut->end_ignore, ft_strlen(*line)
 			- cut->end_ignore);
 	*line = ft_strjoin(db, tmp, right_section);
-
-    printf("updated line %s\n"RESET, *line);
-
 	return (updated_index);
 }
 

@@ -32,7 +32,15 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 	(void)quotes;
 	while (line[*i] && !is_whitespace(line[*i]) && get_tok(db, line, i,
 			quotes) == WORD)
+    {
+        if (line[*i] == SGL_QUOTE)
+        {
+            printf
+        }
+        printf("skiping %c\n", line[*i]);
 		(*i)++;
+
+    }
 	if (get_tok(db, line, i, quotes) == WORD)
 		return (SUCCESS);
 	return (FAILURE);
@@ -117,6 +125,8 @@ int	syntax_checker(t_db *db, char *line, t_quote *quotes)
 		if ((curr == WORD || curr == INVALID))
 		{
 			skip_word(db, quotes, line, &i);
+            printf("skip  index %d\n", i);
+            printf("skip  index %c\n", line[i]);
 			found_word = true;
 			continue ;
 		}
