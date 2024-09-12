@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 20:48:10 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 09:01:51 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int	handle_builtin(t_db *db, void *node, int **pipes, int index)
 	if (index == -1)
 		return (handle_single_builtin(db, node, index));
 	id = fork();
+	if (id == -1)
+		ft_exit(db, 1, 3, "fork failed");
 	if (id == CHILD)
 	{
 		if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
@@ -86,6 +88,8 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 	else
 	{
 		id = fork();
+		if (id == -1)
+			ft_exit(db, 1, 3, "fork failed");
 		if (id == CHILD)
 			exec_cmd(db, node, pipes, index);
 		else

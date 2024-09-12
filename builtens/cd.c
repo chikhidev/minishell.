@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:51:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:22:46 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 10:24:31 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,8 @@ void	set_pwd_exp_values(t_db *db, char *old_pwd_str)
 	old_pwd_exp = get_exp_node(db->exp_list, ft_strdup_ec(db, "OLDPWD"));
 	if (pwd_exp)
 		pwd_exp->val = ft_strdup_ec(db, new_pwd);
-	else
-		push_exp_sort(&db->exp_list, new_exp_node(db, ft_strdup_ec(db, "PWD"),
-				ft_strdup_ec(db, new_pwd)));
 	if (old_pwd_exp)
 		old_pwd_exp->val = ft_strdup_ec(db, old_pwd_str);
-	else
-		push_exp_sort(&db->exp_list, new_exp_node(db, ft_strdup_ec(db,
-					"OLDPWD"), ft_strdup_ec(db, old_pwd_str)));
 	free(new_pwd);
 }
 
@@ -61,14 +55,8 @@ void	set_pwd_env_values(t_db *db, char *old_pwd_str)
 	old_pwd_env = get_env_node(db->env_list, ft_strdup_ec(db, "OLDPWD"));
 	if (pwd_env)
 		pwd_env->val = ft_strdup_ec(db, new_pwd);
-	else
-		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db, "PWD"),
-				ft_strdup_ec(db, new_pwd)));
 	if (old_pwd_env)
 		old_pwd_env->val = ft_strdup_ec(db, old_pwd_str);
-	else
-		push_env_back(&db->env_list, new_env_node(db, ft_strdup_ec(db,
-					"OLDPWD"), ft_strdup_ec(db, old_pwd_str)));
 	free(new_pwd);
 }
 

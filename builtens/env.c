@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:28:14 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 18:28:15 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 09:58:01 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void	write_var(t_db *db, char *key, char *val)
 {
 	ft_write(db, STDOUT_FILENO, key, ft_strlen(key));
 	ft_write(db, STDOUT_FILENO, "=", 1);
-	ft_write(db, STDOUT_FILENO, val, ft_strlen(val));
+	if (val)
+		ft_write(db, STDOUT_FILENO, val, ft_strlen(val));
 	ft_write(db, STDOUT_FILENO, "\n", 1);
 }
 
