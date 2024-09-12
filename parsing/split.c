@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 02:48:39 by abchikhi          #+#    #+#             */
+/*   Updated: 2024/09/12 02:48:40 by abchikhi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "main.h"
 #include "parsing.h"
@@ -9,7 +21,7 @@ void	skip_op(int *i, char *line)
 	return ;
 }
 
-char	**split_line(t_db *db, char *line, t_op_node *op, t_tracker *tracker)
+char	**split_line(t_db *db, char *line, t_op *op, t_tracker *tracker)
 {
 	int		i;
 	int		len;
@@ -44,23 +56,28 @@ char	**split_line(t_db *db, char *line, t_op_node *op, t_tracker *tracker)
 
 int	process_op(t_db *db, char *line, t_holder *holder)
 {
-	void	**current_node;
+	void	**curr;
 	char	**splitted;
 	int		i;
 
-	current_node = holder->current_node;
-    if (create_op_node(db, holder->op, holder->current_node) == FAILURE)
-        return (FAILURE);
-	CURR_OP->n_childs = count_between_op(db, line, holder->op, holder->tracker);
-	splitted = split_line(db, line, CURR_OP, holder->tracker);
-	CURR_OP->childs = gc_malloc(db, sizeof(void *) * CURR_OP->n_childs);
-	ft_bzero(CURR_OP->childs, sizeof(void *) * CURR_OP->n_childs);
-	i = 0;
-	while (i < CURR_OP->n_childs)
+	curr = holder->current_node;
+	if (create_op_node(db, holder->op, holder->current_node) == FAILURE)
 	{
-        if (smart_split(db, splitted[i], &CURR_OP->childs[i],
-				*current_node) == FAILURE)
-            return (FAILURE);
+		return (FAILURE);
+	}
+	((t_op *)*curr)->n_childs = count_between_op(db, line, holder->op,
+			holder->tracker);
+	splitted = split_line(db, line, ((t_op *)*curr), holder->tracker);
+	((t_op *)*curr)->childs = gc_malloc(db, sizeof(void *)
+			* ((t_op *)*curr)->n_childs);
+	ft_bzero(((t_op *)*curr)->childs, sizeof(void *)
+		* ((t_op *)*curr)->n_childs);
+	i = 0;
+	while (i < ((t_op *)*curr)->n_childs)
+	{
+		if (smart_split(db, splitted[i], &((t_op *)*curr)->childs[i],
+				*curr) == FAILURE)
+			return (FAILURE);
 		i++;
 	}
 	return (SUCCESS);
@@ -68,26 +85,26 @@ int	process_op(t_db *db, char *line, t_holder *holder)
 
 int	process_cmd(t_db *db, char *line, t_holder *holder)
 {
-	void	**current_node;
+	void	**curr;
 	char	**splitted;
 	t_quote	*quotes;
 
-	current_node = holder->current_node;
+	curr = holder->current_node;
 	quotes = NULL;
-    if (create_cmd_node(db, current_node) == FAILURE)
-    {
-        return (FAILURE);
-    }
-	if (track_quotes(db, &quotes, line) == FAILURE)
-    {
+	if (create_cmd_node(db, curr) == FAILURE)
+	{
 		return (FAILURE);
-    }
+	}
+	if (track_quotes(db, &quotes, line) == FAILURE)
+	{
+		return (FAILURE);
+	}
 	splitted = tokenize(db, &quotes, line);
 	if (db->error || !db->exec_line)
 		return (error(db, NULL, NULL));
-	CURR_CMD->args = splitted;
-	(CURR_CMD)->input_fd = db->input_fd;
-	(CURR_CMD)->output_fd = db->output_fd;
+	((t_cmd *)*curr)->args = splitted;
+	(((t_cmd *)*curr))->input_fd = db->input_fd;
+	(((t_cmd *)*curr))->output_fd = db->output_fd;
 	db->input_fd = STDIN_FILENO;
 	db->output_fd = STDOUT_FILENO;
 	return (SUCCESS);
@@ -95,17 +112,12 @@ int	process_cmd(t_db *db, char *line, t_holder *holder)
 
 int	smart_split(t_db *db, char *line, void **current_node, void *parent)
 {
-	t_holder holder;
+	t_holder	holder;
+
 	if (db->error || !db->exec_line)
 		return (FAILURE);
-	/**
-		* if the line is empty or all whitespaces we just return SUCCESS
-		*/
 	if (ft_strlen(line) == 0 || all_whitespaces(line, 0, ft_strlen(line)))
 		return (SUCCESS);
-	/**
-		* we allocate a tracker->quotes to keep track of the quotes
-		*/
 	ft_bzero(&holder, sizeof(holder));
 	holder.tracker = gc_malloc(db, sizeof(t_tracker));
 	holder.tracker->quotes = NULL;
@@ -113,25 +125,15 @@ int	smart_split(t_db *db, char *line, void **current_node, void *parent)
 	track_quotes(db, &holder.tracker->quotes, line);
 	holder.op = strongest_operator(line, holder.tracker->quotes);
 	holder.current_node = current_node;
-	/**
-		* this case means we have an operator
-		* take the most powerful operator and start splitting the line whenever that op is appeared
-		* and if the operator is inside scope we assign the 'is_scope' to true
-		*/
 	if (holder.op != NOT_FOUND)
 	{
 		if (process_op(db, line, &holder) == FAILURE)
 			return (FAILURE);
 	}
-	/**
-		*  in this case if we are left with no paranthesis and no operator this means that this must ne a COMMAND
-		*  so we use a TOKENIZER to identify each character and use for each a spicific action
-		*/
 	else
 	{
 		if (process_cmd(db, line, &holder) == FAILURE)
 			return (db->error != true);
-				// failure in case of error happened else just success
 	}
 	return (SUCCESS);
 }

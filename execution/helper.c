@@ -41,7 +41,7 @@ void	handle_underscore(t_db *db, void *node)
 	_ = get_env_node(db->env_list, "_");
 	if (_)
 		ec_free(db, _->val);
-	last_arg = CMD->args[count_array_len(CMD->args) - 1];
+	last_arg = ((t_cmd *)node)->args[count_array_len(((t_cmd *)node)->args) - 1];
 	if (_)
 		_->val = ft_strdup_ec(db, last_arg);
 }

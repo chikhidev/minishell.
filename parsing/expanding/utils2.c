@@ -1,4 +1,15 @@
-// #include "./index.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils2.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 02:48:07 by abchikhi          #+#    #+#             */
+/*   Updated: 2024/09/12 02:50:50 by abchikhi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
 
@@ -27,7 +38,7 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 				- cut->start_include + 1);
 		updated_index = cut->end_include - 2;
 	}
-    tmp = ft_strjoin(db, left_section, tmp);
+	tmp = ft_strjoin(db, left_section, tmp);
 	right_section = ft_substr(db, *line, cut->end_ignore, ft_strlen(*line)
 			- cut->end_ignore);
 	*line = ft_strjoin(db, tmp, right_section);
@@ -36,36 +47,16 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 
 int	updated_line(t_db *db, char **line, char *var, t_str_cut *cut)
 {
-
-	// printf(GREEN"----------------------\n");
-	// printf("line: [%s]\n", *line);
-	// printf("var: [%s]\n", var);
-	// printf("cut: [%d, %d, %d, %d]\n", cut->start_ignore, cut->end_ignore,
-	// 	cut->start_include, cut->end_include);
-	// printf("----------------------\n"RESET);
-
 	if (ft_strlen(var) == 0)
 		return (cut->end_ignore);
 	return (update_index(db, line, var, cut));
 }
 
-
-bool split_factor(char *value, char *line, int pos)
+bool	split_factor(char *value, char *line, int pos)
 {
 	(void)pos;
 	(void)line;
-	// printf("before: [%s]\n", 
-	// 		ft_substr(db, line, 0, pos));
-
 	if (ft_strlen(value) == 0)
 		return (false);
-
-	// if (ft_strlen(
-	// 	ft_substr(db, line, 0, pos)) > 0
-	// )
-	// {
-	// 	return (false);
-	// }
-
 	return (true);
 }

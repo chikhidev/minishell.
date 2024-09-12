@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   io.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 02:48:21 by abchikhi          #+#    #+#             */
+/*   Updated: 2024/09/12 02:48:22 by abchikhi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
 
@@ -9,7 +21,7 @@ int	ft_open(t_db *db, char *file, int flags, int type)
 		fd = open(file, flags);
 	else
 		fd = open(file, flags, type);
-    fd_add(db, fd);
+	fd_add(db, fd);
 	return (fd);
 }
 
@@ -53,8 +65,7 @@ int	check_ambigious(t_db *db, char *file)
 			(put_fd(2, file), put_fd(2, " :ambiguous redirect\n"));
 			return (true);
 		}
-		if (count_array_len(
-				ft_split(db, store->val, " \t\n\r\v\f")) > 1)
+		if (count_array_len(ft_split(db, store->val, " \t\n\r\v\f")) > 1)
 		{
 			(put_fd(2, file), put_fd(2, " :ambiguous redirect\n"));
 			return (true);
@@ -89,12 +100,10 @@ int	open_file(t_db *db, char *file, int type)
 	if (ft_strlen(tmp) == 0)
 	{
 		put_fd(2, "No such file or directory\n");
-		return FAILURE;
+		return (FAILURE);
 	}
-
 	if (db->split)
 		tmp = ft_split(db, tmp, " \t\n\r\v\f")[0];
-	
 	if (type == APPENDFILE)
 		fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == INPUTFILE)
@@ -143,7 +152,7 @@ int	open_heredoc(t_db *db, char *delim)
 	pid = fork(); /* we fork to handle signals inside the child */
 	if (pid == -1)
 		return (error(db, "fork", NULL));
-	if (IS_CHILD)
+	if (pid == CHILD)
 	{
 		// default_signals_behav(true);
 		handle_here_doc_signals();
@@ -166,9 +175,9 @@ int	open_heredoc(t_db *db, char *delim)
 			}
 			if (expand(db, &tmp, NULL) == FAILURE)
 			{
-			    ft_close(db, &pipe_fd[1]);
-			    ec_void(db);
-			    exit(1);
+				ft_close(db, &pipe_fd[1]);
+				ec_void(db);
+				exit(1);
 			}
 			// printf("tmp: %s\n", tmp);
 			ft_write(db, pipe_fd[1], tmp, ft_strlen(tmp));

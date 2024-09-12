@@ -71,7 +71,7 @@ int	close_all_pipes(t_db *db, int **pipes)
 	return (SUCCESS);
 }
 
-int	dup_cmd_io(t_db *db, t_cmd_node *command)
+int	dup_cmd_io(t_db *db, t_cmd *command)
 {
 	if (command->input_fd != INVALID && command->input_fd != STDIN_FILENO)
 	{

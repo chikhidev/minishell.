@@ -1,25 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 02:48:45 by abchikhi          #+#    #+#             */
+/*   Updated: 2024/09/12 02:48:49 by abchikhi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
-
-// int is_op_redir(char *line, int i)
-// {
-//     if (ft_strncmp(&line[i], ">>", 2) == 0
-//         || ft_strncmp(&line[i], "<<", 2) == 0)
-//     {
-//         printf("Syntax error near unexpected token `%c%c'\n", line[i], line[i
-	// + 1]);
-//         return (FAILURE);
-//     }
-
-//     if (ft_strncmp(&line[i], ">", 1) == 0
-//         || ft_strncmp(&line[i], "<", 1) == 0)
-//     {
-//         printf("Syntax error near unexpected token `%c'\n", line[i]);
-//         return (FAILURE);
-//     }
-
-//     return (SUCCESS);
-// }
 
 bool	is_redir(int op)
 {
@@ -32,16 +24,16 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 	(void)quotes;
 	while (line[*i] && !is_whitespace(line[*i]) && get_tok(db, line, i,
 			quotes) == WORD)
-    {
-        if (line[*i] == SGL_QUOTE)
-        {
-            // skip until single quote
+	{
+		if (line[*i] == SGL_QUOTE)
+		{
+			// skip until single quote
 			(*i)++;
 			while (line[*i] && line[*i] != SGL_QUOTE)
 				(*i)++;
 			if (line[*i] == SGL_QUOTE)
 				(*i)++;
-        }
+		}
 		if (line[*i] == DBL_QUOTE)
 		{
 			// skip until double quote
@@ -52,8 +44,7 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 				(*i)++;
 		}
 		(*i)++;
-
-    }
+	}
 	if (get_tok(db, line, i, quotes) == WORD)
 		return (SUCCESS);
 	return (FAILURE);

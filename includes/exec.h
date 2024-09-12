@@ -23,7 +23,7 @@ void	handle_pipe_op(t_db *db, void *node);
 void	handle_cmd_node(t_db *db, void *node, int **pipes, int index);
 // path.c
 
-int		run_builtin(t_db *db, t_cmd_node *node, int index);
+int		run_builtin(t_db *db, t_cmd *node, int index);
 char	*cmd_path(t_db *db, char *filename);
 
 // path-checker.c
@@ -37,7 +37,7 @@ void	handle_underscore(t_db *db, void *node);
 
 int		**prepare_pipes(t_db *db, int n_pipes);
 int		close_all_pipes(t_db *db, int **pipes);
-int		dup_cmd_io(t_db *db, t_cmd_node *command);
+int		dup_cmd_io(t_db *db, t_cmd *command);
 int		get_pipes_count(int **pipes);
 int		dup_pipes(t_db *db, int **pipes, int index);
 void	exec_cmd(t_db *db, void *node, int **pipes, int index);

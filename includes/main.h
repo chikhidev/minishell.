@@ -40,18 +40,11 @@
 # define CLOSED -2
 # define FAIL 150
 
+# define CHILD 0
+
 // triggers
 # define DOBLQUOTE 34
 # define SNGLQUOTE 39
-
-# define CURR_OP ((t_op_node *)*current_node)
-# define CURR_CMD ((t_cmd_node *)*current_node)
-# define OP ((t_op_node *)node)
-# define CMD ((t_cmd_node *)node)
-
-# define IS_CHILD (pid == 0)
-# define IS_PARENT (pid > 0)
-# define IS_ERROR (pid < 0)
 
 /**
  * @details This is the color codes for the shell
@@ -96,9 +89,7 @@ typedef struct s_op_node
 
 	int		input_fd;
 	int		output_fd;
-
-	// execution part ------ <<<<<<
-}						t_op_node;
+}						t_op;
 
 typedef struct s_int
 {
@@ -108,7 +99,7 @@ typedef struct s_int
 
 typedef struct s_here_doc /*here doc saver*/
 {
-	t_op_node			*ptr;
+	t_op				*ptr;
 	struct s_here_doc	*next;
 }						t_here_doc;
 
@@ -168,7 +159,7 @@ typedef struct s_cmd_node
 	int					input_fd;
 	int					output_fd;
 
-}						t_cmd_node;
+}						t_cmd;
 
 /**
  * @details The operator node will have the following structure:

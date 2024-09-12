@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 02:48:30 by abchikhi          #+#    #+#             */
+/*   Updated: 2024/09/12 02:48:31 by abchikhi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtens.h"
 #include "main.h"
 #include "parsing.h"
@@ -16,10 +28,10 @@ int	parser(t_db *db, char *line)
 		return (SUCCESS);
 	if (track_quotes(db, &quotes, line) == FAILURE)
 		return (FAILURE);
-    if (syntax_checker(db, line, quotes) == FAILURE)
-        return (FAILURE);
-    if (smart_split(db, line, &db->root_node, NULL) == FAILURE)
-        return (FAILURE);
-    else
-        return (SUCCESS);
+	if (syntax_checker(db, line, quotes) == FAILURE)
+		return (FAILURE);
+	if (smart_split(db, line, &db->root_node, NULL) == FAILURE)
+		return (FAILURE);
+	else
+		return (SUCCESS);
 }

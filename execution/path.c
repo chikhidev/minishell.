@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 20:48:14 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 06:00:51 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,11 @@ char	*cmd_path(t_db *db, char *filename)
 		else
 			path_var = path_node->val;
 		paths = ft_split(db, path_var, ":");
+		db->last_status = 127;
 		if (!paths)
+		{
 			return (NULL);
+		}
 		i = -1;
 		while (paths[++i])
 		{
@@ -51,6 +54,7 @@ char	*cmd_path(t_db *db, char *filename)
 				free_array(db, paths);
 				if (access(tmp, X_OK) != 0)
 				{
+					db->last_status = 126;
 					error(db, tmp, "Permission denied");
 					return (NULL);
 				}
@@ -62,9 +66,11 @@ char	*cmd_path(t_db *db, char *filename)
 	{
 		if (access(filename, X_OK) != 0)
 		{
+			db->last_status = 126;
 			error(db, filename, "Permission denied");
 			return (NULL);
 		}
+		db->last_status = 127;
 		return (filename);
 	}
 	return (NULL);

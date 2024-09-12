@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quoting.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 02:48:36 by abchikhi          #+#    #+#             */
+/*   Updated: 2024/09/12 05:20:28 by abchikhi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "string.h"
 
@@ -35,7 +47,7 @@ t_quote	*last_quote(t_quote *head)
 	return (tmp);
 }
 
-void handle_quote_error(t_quote *last)
+void	handle_quote_error(t_quote *last)
 {
 	put_fd(2, "Quotes are not closed expecting: ");
 	if (last->ascii == SNGLQUOTE)
@@ -79,22 +91,16 @@ void	update_quotes(t_quote *head, int start, int old_len, int new_len)
 	if (!head)
 		return ;
 	q = head;
-	// printf(MAGENTA"preparing to update quotes with {old_len: %d, new_len: %d}\n"RESET, old_len, new_len);
-
 	while (q)
 	{
 		if (start > q->start && start < q->end)
 		{
-			// printf(RED"updated {%d, %d} to ", q->start, q->end);
 			q->end += new_len - old_len;
-			// printf("{%d, %d}\n"RESET, q->start, q->end);
 		}
 		else if (q->start > start)
 		{
-			// printf(RED"updated {%d, %d} to ", q->start, q->end);
 			q->start += new_len - old_len;
 			q->end += new_len - old_len;
-			// printf("{%d, %d}\n"RESET, q->start, q->end);
 		}
 		q = q->next;
 	}
@@ -105,9 +111,9 @@ void	delete_quotes_in_range(t_quote **head, int start, int end)
 	t_quote	*q;
 	t_quote	*prev;
 	t_quote	*tmp;
+	t_db	*db;
 
-	t_db *db = this();
-
+	db = this();
 	if (!*head)
 		return ;
 	q = *head;
@@ -120,17 +126,12 @@ void	delete_quotes_in_range(t_quote **head, int start, int end)
 				prev->next = q->next;
 			else
 				*head = q->next;
-
 			tmp = q;
-
 			if (prev)
 				q = prev->next;
 			else
 				q = *head;
-
-			// printf(RED"deleted {%d, %d}\n"RESET, tmp->start, tmp->end);
 			gc_free(db, tmp);
-
 		}
 		else
 		{
@@ -142,7 +143,7 @@ void	delete_quotes_in_range(t_quote **head, int start, int end)
 
 t_quote	*quote_at(t_quote *head, int index)
 {
-	t_quote *q;
+	t_quote	*q;
 
 	if (!head)
 		return (NULL);
@@ -156,9 +157,9 @@ t_quote	*quote_at(t_quote *head, int index)
 	return (NULL);
 }
 
-t_quote *quotes_of_range(t_quote *head, int pos)
+t_quote	*quotes_of_range(t_quote *head, int pos)
 {
-	t_quote *q;
+	t_quote	*q;
 
 	if (!head)
 		return (NULL);

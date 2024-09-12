@@ -21,15 +21,15 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	char	*path;
 
 	default_signals_behav(false);
-	if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
+	if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
 		ft_exit(db, 1, 3, NULL);
-	path = get_path(db, CMD->args);
+	path = get_path(db, ((t_cmd *)node)->args);
 	env_arr = env_list_to_env_arr(db);
 	dup_pipes(db, pipes, index);
 	close_all_pipes(db, pipes);
 	dup_cmd_io(db, node);
-	handle_is_dir(db, CMD->args[0]);
-	execve(path, CMD->args, env_arr);
+	handle_is_dir(db, ((t_cmd *)node)->args[0]);
+	execve(path, ((t_cmd *)node)->args, env_arr);
 	ft_exit(db, 127, 3, ft_strjoin(db, path, ": failed"));
 }
 
@@ -38,7 +38,7 @@ int	handle_single_builtin(t_db *db, void *node, int index)
 	int	in;
 	int	out;
 
-	if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
+	if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
 		return (db->last_status = 1, 1);
 	in = ft_dup(db, STDIN_FILENO);
 	out = ft_dup(db, STDOUT_FILENO);
@@ -58,7 +58,7 @@ int	handle_builtin(t_db *db, void *node, int **pipes, int index)
 	id = fork();
 	if (id == CHILD)
 	{
-		if (CMD->input_fd == INVALID || CMD->output_fd == INVALID)
+		if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
 			exit(1);
 		dup_pipes(db, pipes, index);
 		dup_cmd_io(db, node);
@@ -76,7 +76,7 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 	int	id;
 	int	status;
 
-	if (!node || !CMD->args || !CMD->args[0])
+	if (!node || !((t_cmd *)node)->args || !((t_cmd *)node)->args[0])
 		return ;
 	if (index == -1)
 		handle_underscore(db, node);
