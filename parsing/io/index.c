@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   io.c                                               :+:      :+:    :+:   */
+/*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:21 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:22 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/12 07:07:11 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,29 +74,11 @@ int	check_ambigious(t_db *db, char *file)
 	return (false);
 }
 
-int	open_file(t_db *db, char *file, int type)
+int	open_file_p2(t_db *db, char *tmp, int type)
 {
-	t_quote	*quotes;
-	int		fd;
-	char	*tmp;
+	int	fd;
 
-	quotes = NULL;
-	if (!file || ft_strlen(file) == 0)
-		return (SUCCESS);
 	fd = INVALID;
-	if (check_ambigious(db, file) == true)
-	{
-		create_redirection(db, type, INVALID);
-		return (FAILURE);
-	}
-	// printf("file: %s|\n", file);
-	// tmp = whithout_quotes(db, file);
-	// printf("tmp: %s|\n", tmp);
-	if (track_quotes(db, &quotes, file) == FAILURE)
-		return (FAILURE);
-	if (expand(db, &file, &quotes) == FAILURE)
-		return (FAILURE);
-	tmp = without_quotes(db, file, quotes);
 	if (ft_strlen(tmp) == 0)
 	{
 		put_fd(2, "No such file or directory\n");
@@ -120,83 +102,25 @@ int	open_file(t_db *db, char *file, int type)
 	return (SUCCESS);
 }
 
-int	validate_io(char *arg, int size)
+int	open_file(t_db *db, char *file, int type)
 {
-	if (ft_strncmp(arg, ">>", 2) == 0 && size == 2)
-		return (APPENDFILE);
-	if (ft_strncmp(arg, "<<", 2) == 0 && size == 2)
-		return (HEREDOC);
-	if (ft_strncmp(arg, ">", 1) == 0 && size == 1)
-		return (OUTPUTFILE);
-	if (ft_strncmp(arg, "<", 1) == 0 && size == 1)
-		return (INPUTFILE);
-	return (INVALID);
-}
-
-int	open_heredoc(t_db *db, char *delim)
-{
-	int		*pipe_fd;
-	int		pid;
-	char	*line;
+	t_quote	*quotes;
 	char	*tmp;
-	int		child_status;
-	t_quote	*q;
 
-	q = NULL;
-	if (track_quotes(db, &q, delim) == FAILURE)
-		return (FAILURE);
-	tmp = without_quotes(db, delim, q);
-	delim = tmp;
-	pipe_fd = gc_malloc(db, sizeof(int) * 2);
-	ft_pipe(db, pipe_fd);
-	pid = fork(); /* we fork to handle signals inside the child */
-	if (pid == -1)
-		return (error(db, "fork", NULL));
-	if (pid == CHILD)
+	quotes = NULL;
+	if (!file || ft_strlen(file) == 0)
+		return (SUCCESS);
+	if (check_ambigious(db, file) == true)
 	{
-		// default_signals_behav(true);
-		handle_here_doc_signals();
-		ft_close(db, &pipe_fd[0]);
-		while (1)
-		{
-			line = readline("> ");
-			if (!line)
-			{
-				put_fd(2, "Warning: here-document delimited by end-of-file\n");
-				ft_close(db, &pipe_fd[1]);
-				break ;
-			}
-			tmp = ft_strdup(db, line);
-			free(line);
-			if (ft_strcmp(delim, tmp) == 0)
-			{
-				ft_close(db, &pipe_fd[1]);
-				break ;
-			}
-			if (expand(db, &tmp, NULL) == FAILURE)
-			{
-				ft_close(db, &pipe_fd[1]);
-				ec_void(db);
-				exit(1);
-			}
-			// printf("tmp: %s\n", tmp);
-			ft_write(db, pipe_fd[1], tmp, ft_strlen(tmp));
-			ft_write(db, pipe_fd[1], "\n", 1);
-		}
-		if (db->input_fd != STDIN_FILENO && db->input_fd != INVALID)
-		{
-			ft_close(db, &db->input_fd);
-		}
-		ft_exit(db, 0, 3, NULL); /* Exit normally */
-	}
-	/*-------------------------------Parent process------------------------------*/
-	// cancel SIGINT and SIGQUIT they sound be handled by the child
-	ft_close(db, &pipe_fd[1]);
-	wait(&child_status);
-	catch_feedback(db, child_status);
-	if (db->last_status != 0)
+		create_redirection(db, type, INVALID);
 		return (FAILURE);
-	db->input_fd = pipe_fd[0];
-	db->curr_type = HEREDOC;
+	}
+	if (track_quotes(db, &quotes, file) == FAILURE)
+		return (FAILURE);
+	if (expand(db, &file, &quotes) == FAILURE)
+		return (FAILURE);
+	tmp = without_quotes(db, file, quotes);
+	if (open_file_p2(db, tmp, type) == FAILURE)
+		return (FAILURE);
 	return (SUCCESS);
 }

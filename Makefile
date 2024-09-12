@@ -5,24 +5,29 @@ CARGS = -Wall -Wextra -Werror -I includes -g3 #-fsanitize=address
 LIBFT = libft/libft.a
 
 PARSING_SRC = 	parsing/parser.c	\
-				parsing/quoting.c	\
-				parsing/quoting_utils.c	\
 				parsing/split.c		\
 				parsing/op.c		\
 				parsing/op2.c	\
 				parsing/cmd.c \
-				parsing/io.c \
 				parsing/tokenizer.c \
 				parsing/wildcard.c \
 				parsing/str_list.c \
 				parsing/file_entry.c \
 				parsing/syntax.c \
 
+QUOTES = 	parsing/quotes/index.c \
+		 	parsing/quotes/utils.c
+
+IO = 		parsing/io/index.c \
+			parsing/io/utils.c
+
 EXPANDING = parsing/expanding/index.c \
 			parsing/expanding/utils1.c \
 			parsing/expanding/utils2.c \
 
 PARSING_SRC += $(EXPANDING)	
+PARSING_SRC += $(IO)
+PARSING_SRC += $(QUOTES)
 
 EXECUTION_SRC = 	execution/exec.c \
 					execution/path.c \

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   quoting_utils.c                                    :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:34 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:35 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/12 07:38:52 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,10 @@ bool	is_quote_oppening(t_quote *head, int i)
 
 bool	is_quote(t_quote *head, int i)
 {
-	t_quote *q;
+	t_quote	*q;
 
 	if (!head)
 		return (false);
-
 	q = head;
 	while (q)
 	{
