@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:36 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 07:28:15 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/12 08:35:11 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	update_quotes(t_quote *head, int start, int old_len, int new_len)
 
 void	handle_delete_quote(t_db *db, t_quote **head, t_quote *prev, t_quote *q)
 {
+	t_quote	*tmp;
+
 	if (prev)
 		prev->next = q->next;
 	else
@@ -53,7 +55,6 @@ void	delete_quotes_in_range(t_quote **head, int start, int end)
 {
 	t_quote	*q;
 	t_quote	*prev;
-	t_quote	*tmp;
 	t_db	*db;
 
 	db = this();

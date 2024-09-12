@@ -16,7 +16,8 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/syntax.c \
 
 QUOTES = 	parsing/quotes/index.c \
-		 	parsing/quotes/utils.c
+		 	parsing/quotes/utils.c \
+		 	parsing/quotes/utils2.c 
 
 IO = 		parsing/io/index.c \
 			parsing/io/utils.c

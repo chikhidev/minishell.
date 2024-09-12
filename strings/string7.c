@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string7.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:53:34 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 21:59:30 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 08:30:40 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,11 @@ long long	ft_atoll(char *str, bool *error)
 	if (str[i] != '\0')
 		*error = true;
 	return (res * sign);
+}
+
+void	skip_op(int *i, char *line)
+{
+	if (line[*i] == '|')
+		(*i)++;
+	return ;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 21:56:27 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 08:31:36 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,7 @@ char			*gc_copy(t_db *db, char *s);
 /*quoting*/
 void			skip_open_spaces(t_quote *quotes, char *line, int *i);
 bool			is_quote_oppening(t_quote *head, int i);
+void			skip_op(int *i, char *line);
 
 char			**append_word(t_db *db, char **result, char *save);
 void			handle_wildcard(t_db *db, char ***result, char *pattern);

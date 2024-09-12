@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:39 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:40 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/12 08:34:44 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,19 @@
 #include "main.h"
 #include "parsing.h"
 
-void	skip_op(int *i, char *line)
+void	init_vars_append(int *i, int *len, int *k, int flag)
 {
-	if (line[*i] == '|')
-		(*i)++;
-	return ;
+	if (!flag)
+	{
+		*i = -1;
+		*len = 0;
+		*k = 0;
+	}
+	else
+	{
+		(*k)++;
+		*len = 0;
+	}
 }
 
 char	**split_line(t_db *db, char *line, t_op *op, t_tracker *tracker)
@@ -28,11 +36,9 @@ char	**split_line(t_db *db, char *line, t_op *op, t_tracker *tracker)
 	int		k;
 	char	**splitted;
 
-	i = 0;
-	len = 0;
-	k = 0;
+	init_vars_append(&i, &len, &k, 0);
 	splitted = gc_malloc(db, sizeof(char *) * op->n_childs);
-	while (line[i])
+	while (line[++i])
 	{
 		if (is_op(line, &i) == op->op_presentation
 			&& !is_inside_quotes_list(tracker->quotes, i))
@@ -40,11 +46,9 @@ char	**split_line(t_db *db, char *line, t_op *op, t_tracker *tracker)
 			splitted[k] = gc_malloc(db, sizeof(char) * (len + 1));
 			ft_strlcpy(splitted[k], line + i - len, len + 1);
 			skip_op(&i, line);
-			k++;
-			len = 0;
+			init_vars_append(&i, &len, &k, 1);
 		}
 		len++;
-		i++;
 	}
 	if (len > 0 && k < op->n_childs)
 	{
