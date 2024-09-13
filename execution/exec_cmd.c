@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 12:07:58 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:11:30 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	char	**env_arr;
 	char	*path;
 
-	if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
+	if (((t_cmd *)node)->input_fd == INVALID)
+		ft_exit(db, 1, 3, NULL);
+	if (((t_cmd *)node)->output_fd == INVALID)
 		ft_exit(db, 1, 3, NULL);
 	path = get_path(db, ((t_cmd *)node)->args);
 	env_arr = env_list_to_env_arr(db);
@@ -38,7 +40,9 @@ int	handle_single_builtin(t_db *db, void *node, int index)
 	int	in;
 	int	out;
 
-	if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
+	if (((t_cmd *)node)->input_fd == INVALID)
+		return (db->last_status = 1, 1);
+	if (((t_cmd *)node)->output_fd == INVALID)
 		return (db->last_status = 1, 1);
 	in = ft_dup(db, STDIN_FILENO);
 	out = ft_dup(db, STDOUT_FILENO);
@@ -58,7 +62,9 @@ int	handle_builtin(t_db *db, void *node, int **pipes, int index)
 	id = fork();
 	if (id == CHILD)
 	{
-		if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
+		if (((t_cmd *)node)->input_fd == INVALID)
+			exit(1);
+		if (((t_cmd *)node)->output_fd == INVALID)
 			exit(1);
 		dup_pipes(db, pipes, index);
 		dup_cmd_io(db, node);
@@ -92,9 +98,7 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 		{
 			handle_parent_signals();
 			if (index == -1)
-			{
 				(waitpid(id, &status, 0), catch_feedback(db, status));
-			}
 			else
 				pid_add(db, id);
 		}

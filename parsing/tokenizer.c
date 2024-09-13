@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 07:47:25 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 17:04:27 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include "parsing.h"
+#include "string.h"
 
 void skip_open_spaces(t_quote *quotes, char *line, int *i)
 {

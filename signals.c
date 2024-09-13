@@ -1,19 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 16:58:57 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/13 17:07:15 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "main.h"
 #include "parsing.h"
-
-void	catch_feedback(t_db *db, int process_res)
-{
-	int	status;
-
-	status = WEXITSTATUS(process_res);
-	db->last_status = status;
-	if (status && db->last_status == FAIL)
-	{
-		gc_void(db);
-		ec_void(db);
-		exit(FAIL);
-	}
-}
 
 void	default_signals_behav(void)
 {
@@ -23,7 +21,7 @@ void	default_signals_behav(void)
 
 void	parent_behav(int signal)
 {
-	t_db *db;
+	t_db	*db;
 
 	db = this();
 	if (signal == SIGINT)
@@ -61,3 +59,7 @@ void	handle_here_doc_signals(void)
 	signal(SIGINT, heredoc_behave);
 	signal(SIGQUIT, SIG_IGN);
 }
+/*
+	//rdha l default igonariah 3ad handilha  
+	 wst child ila wslat sigint print new line 
+*/

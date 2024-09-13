@@ -1,5 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   memo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/13 02:24:31 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/13 16:55:42 by sgouzi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "includes/main.h"
 #include "includes/string.h"
+
+void	add_front_gc(t_db *db, void *ptr)
+{
+	db->gc = malloc(sizeof(t_gc));
+	if (!db->gc)
+		(free(ptr), ec_void(db), exit(FAIL));
+	db->gc->ptr = ptr;
+	db->gc->next = NULL;
+}
+
+void	add_front_ec(t_db *db, void *ptr)
+{
+	db->ec = malloc(sizeof(t_gc));
+	if (!db->ec)
+		(free(ptr), ec_void(db), exit(FAIL));
+	db->ec->ptr = ptr;
+	db->ec->next = NULL;
+}
 
 void	*gc_malloc(t_db *db, size_t size)
 {
@@ -8,24 +38,10 @@ void	*gc_malloc(t_db *db, size_t size)
 
 	ptr = malloc(size + 1);
 	if (!ptr)
-	{
-		gc_void(db);
-		ec_void(db);
-		exit(FAIL);
-	}
+		(gc_void(db), ec_void(db), exit(FAIL));
 	ft_bzero(ptr, size + 1);
 	if (!db->gc)
-	{
-		db->gc = malloc(sizeof(t_gc));
-		if (!db->gc)
-		{
-			free(ptr);
-			ec_void(db);
-			exit(FAIL);
-		}
-		db->gc->ptr = ptr;
-		db->gc->next = NULL;
-	}
+		add_front_gc(db, ptr);
 	else
 	{
 		gc = db->gc;
@@ -35,39 +51,12 @@ void	*gc_malloc(t_db *db, size_t size)
 		if (!gc->next)
 		{
 			gc->next = NULL;
-			free(ptr);
-			gc_void(db);
-			ec_void(db);
-			exit(FAIL);
+			(free(ptr), gc_void(db), ec_void(db), exit(FAIL));
 		}
 		gc->next->ptr = ptr;
 		gc->next->next = NULL;
 	}
 	return (ptr);
-}
-
-void	gc_free(t_db *db, void *ptr)
-{
-	t_gc	*gc;
-	t_gc	*prev;
-
-	gc = db->gc;
-	prev = NULL;
-	while (gc)
-	{
-		if (gc->ptr == ptr)
-		{
-			if (prev)
-				prev->next = gc->next;
-			else
-				db->gc = gc->next;
-			free(gc->ptr);
-			free(gc);
-			return ;
-		}
-		prev = gc;
-		gc = gc->next;
-	}
 }
 
 void	*ec_malloc(t_db *db, size_t size)
@@ -77,23 +66,9 @@ void	*ec_malloc(t_db *db, size_t size)
 
 	ptr = malloc(size);
 	if (!ptr)
-	{
-		gc_void(db);
-		ec_void(db);
-		exit(FAIL);
-	}
+		(gc_void(db), ec_void(db), exit(FAIL));
 	if (!db->ec)
-	{
-		db->ec = malloc(sizeof(t_gc));
-		if (!db->ec)
-		{
-			free(ptr);
-			gc_void(db);
-			exit(FAIL);
-		}
-		db->ec->ptr = ptr;
-		db->ec->next = NULL;
-	}
+		add_front_ec(db, ptr);
 	else
 	{
 		ec = db->ec;
@@ -111,103 +86,4 @@ void	*ec_malloc(t_db *db, size_t size)
 		ec->next->next = NULL;
 	}
 	return (ptr);
-}
-
-void	ec_free(t_db *db, void *ptr)
-{
-	t_gc	*ec;
-	t_gc	*prev;
-
-	ec = db->ec;
-	prev = NULL;
-	while (ec)
-	{
-		if (ec->ptr == ptr)
-		{
-			if (prev)
-				prev->next = ec->next;
-			else
-				db->ec = ec->next;
-			free(ec->ptr);
-			free(ec);
-			return ;
-		}
-		prev = ec;
-		ec = ec->next;
-	}
-}
-
-void	gc_void(t_db *db)
-{
-	t_gc	*gc;
-
-	while (db->gc)
-	{
-		gc = db->gc;
-		db->gc = db->gc->next;
-		free(gc->ptr);
-		free(gc);
-	}
-	db->gc = NULL;
-}
-
-void	ec_void(t_db *db)
-{
-	t_gc	*ec;
-
-	while (db->ec)
-	{
-		ec = db->ec;
-		db->ec = db->ec->next;
-		free(ec->ptr);
-		free(ec);
-	}
-	db->ec = NULL;
-}
-
-char	*ft_strcpy(char *dest, char *src)
-{
-	char	*init_dest;
-
-	init_dest = dest;
-	while (*src != '\0')
-	{
-		*dest = *src;
-		dest++;
-		src++;
-	}
-	while (*dest != '\0')
-	{
-		*dest = '\0';
-	}
-	return (init_dest);
-}
-
-void	*gc_realloc(t_db *db, void *ptr, size_t old_size, size_t new_size)
-{
-	t_gc	*gc;
-	void	*new_ptr;
-
-	gc = db->gc;
-	while (gc)
-	{
-		if (gc->ptr == ptr)
-		{
-			new_ptr = malloc(new_size);
-			if (!new_ptr)
-			{
-				gc_void(db);
-				fd_void(db);
-				ec_void(db);
-				exit(FAIL);
-			}
-			ft_bzero(new_ptr, new_size);
-            ft_memcpy(new_ptr, ptr, old_size);
-			free(ptr);
-			gc->ptr = new_ptr;
-			return (new_ptr);
-		}
-		gc = gc->next;
-	}
-	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:48:11 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:13:20 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 17:03:53 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	count_array_len(char **args)
 	return (i);
 }
 
-bool same_s(char *s1, char *s2)
+bool	same_s(char *s1, char *s2)
 {
 	return (ft_strcmp(s1, s2) == 0);
 }

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 20:48:14 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 17:09:07 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,14 @@ void	handle_is_dir(t_db *db, char *arg)
 void	handle_underscore(t_db *db, void *node)
 {
 	t_env_list	*_;
+	int			last_idx;
 	char		*last_arg;
 
 	_ = get_env_node(db->env_list, "_");
 	if (_)
 		ec_free(db, _->val);
-	last_arg = ((t_cmd *)node)->args[count_array_len(((t_cmd *)node)->args) - 1];
+	last_idx = count_array_len(((t_cmd *)node)->args) - 1;
+	last_arg = ((t_cmd *)node)->args[last_idx];
 	if (_)
 		_->val = ft_strdup_ec(db, last_arg);
 }
@@ -60,4 +62,18 @@ void	waiter(t_db *db)
 	}
 	catch_feedback(db, status);
 	pid_void(db);
+}
+
+void	catch_feedback(t_db *db, int process_res)
+{
+	int	status;
+
+	status = WEXITSTATUS(process_res);
+	db->last_status = status;
+	if (status && db->last_status == FAIL)
+	{
+		gc_void(db);
+		ec_void(db);
+		exit(FAIL);
+	}
 }

@@ -47,6 +47,7 @@ STRING = 	strings/string.c \
 			strings/string5.c \
 			strings/string6.c \
 			strings/string7.c \
+			strings/string8.c \
 
 BUILTENS =	builtens/echo.c \
 			builtens/export.c \
@@ -66,6 +67,7 @@ BUILTENS =	builtens/echo.c \
 
 SRC =	main.c		\
 		memo.c		\
+		memo1.c		\
 		error.c	\
 		signals.c
 

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:07:30 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:54:12 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 16:57:57 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,10 @@ char	**env_list_to_env_arr(t_db *db)
 t_env_list	*set_default_env(t_db *db)
 {
 	t_env_list	*new;
+	char		*p;
 
-	db->static_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+	p = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+	db->static_path = p;
 	new = new_env_node(db, "PWD", getcwd(NULL, 0));
 	push_env_back(&db->env_list, new);
 	new = new_env_node(db, "SHLVL", "0");

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:38:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:52:31 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 16:57:04 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ t_exp_list	*set_default_exp(t_db *db)
 	push_exp_back(&db->exp_list, new);
 	return (db->exp_list);
 }
-
 
 t_exp_list	*set_exp_lst(t_db *db, char *env[])
 {
