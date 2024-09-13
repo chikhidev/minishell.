@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 02:48:59 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:49:09 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ typedef struct s_db
 	int					stdout_dup;
 	int					pipe[2];
 	int					read_fd;
+
 	bool				is_path_unset;
 
 	// has the permission to run the line? by default yes.

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:39 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 08:34:44 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:00:53 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,10 +134,7 @@ int	smart_split(t_db *db, char *line, void **current_node, void *parent)
 		if (process_op(db, line, &holder) == FAILURE)
 			return (FAILURE);
 	}
-	else
-	{
-		if (process_cmd(db, line, &holder) == FAILURE)
+	else if (process_cmd(db, line, &holder) == FAILURE)
 			return (db->error != true);
-	}
 	return (SUCCESS);
 }
