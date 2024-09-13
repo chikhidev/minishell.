@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:56:31 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 01:52:20 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ typedef struct s_db
 	int					debug;
 	bool				ctrl_c;
 	/*tree head*/
-	/*tree head*/
 	void				*root_node;
 	/*momory management*/
 	t_gc				*gc;
@@ -229,6 +228,9 @@ typedef struct s_db
 
 	/*expand tells wither to expand or not*/
 	bool				split;
+
+	/* heredoc permission to expand */
+	int					expand_hrdc;
 
 	/*io*/
 	int					heredoc_counter;
@@ -289,21 +291,18 @@ int						ft_dup(t_db *db, int fd);
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);
 
-int						is_op3(char *line, int *i);
-
 bool					contains_spaces_btwn(char *s);
 
+t_env_list				*set_env_lst(t_db *db, char *env[]);
 t_env_list				*new_env_node(t_db *db, char *key, char *val);
 void					add_env_front(t_env_list **list, t_env_list *new);
 void					push_env_back(t_env_list **list, t_env_list *new);
-void					*push_sort(t_db *db, t_env_list **list, char *data);
 
 t_exp_list				*new_exp_node(t_db *db, char *key, char *val);
 void					add_exp_front(t_exp_list **list, t_exp_list *new);
 void					push_exp_sort(t_exp_list **list, t_exp_list *new);
 void					push_exp_back(t_exp_list **list, t_exp_list *new);
 t_exp_list				*get_exp_node(t_exp_list *list, char *key);
-// void					free_environment(t_db  *db);
 t_env_list				*get_env_node(t_env_list *list, char *key);
 void					del_env_node(t_env_list **list, char *key);
 void					del_exp_node(t_exp_list **list, char *key);
@@ -314,20 +313,24 @@ void					catch_feedback(t_db *db, int process_res);
 /*signals*/
 void					default_signals_behav(bool ignore_quit);
 void					handle_parent_signals(void);
-void					heredoc_signals_handling(void);
 void					handle_here_doc_signals(void);
-void					handle_sigint(int signum);
-void					setup_child_signals(void);
-void					setup_parent_signals(void);
-void					restore_parent_signals(void);
+void					handle_sigint_prompt(int signum);
 void					default_signals_behav(bool ignore_quit);
 void					handle_parent_signals(void);
-void					heredoc_signals_handling(void);
 void					handle_here_doc_signals(void);
 t_env_list				*set_default_env(t_db *db);
 t_exp_list				*set_default_exp(t_db *db);
 t_exp_list				*set_exp_lst(t_db *db, char *env[]);
 void					handle_shell_level(t_db *db, char *key, char **val);
+
+
+/* prompt */
+int						handle_prompt(t_db *db, char **line);
+
+/* harded */
+void					handle_shell_level(t_db *db, char *key, char **val);
+void					handle_pwd(t_db *db);
+
 /* FUNCTIONS */
 
 #endif

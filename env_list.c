@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_list.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:07:30 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:54:12 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/12 21:13:53 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,32 @@
 #include "main.h"
 #include "parsing.h"
 #include "string.h"
+
+t_env_list	*set_env_lst(t_db *db, char *env[])
+{
+	t_env_list	*env_list;
+	t_env_list	*new_node;
+	int			i;
+	char		*key;
+	char		*val;
+
+	env_list = NULL;
+	new_node = NULL;
+	i = 0;
+	key = NULL;
+	val = NULL;
+	if (env == NULL || !env[0])
+		return (set_default_env(db));
+	while (env && env[i])
+	{
+		fill_key_val(db, env[i], &key, &val);
+		handle_shell_level(db, key, &val);
+		new_node = new_env_node(db, key, val);
+		push_env_back(&env_list, new_node);
+		i++;
+	}
+	return (env_list);
+}
 
 char	**env_list_to_env_arr(t_db *db)
 {

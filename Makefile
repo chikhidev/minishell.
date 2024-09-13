@@ -66,9 +66,14 @@ BUILTENS =	builtens/echo.c \
 
 SRC =	main.c		\
 		memo.c		\
-		error.c	\
-		signals.c
+		error.c		\
+		prompt.c	\
+		harded.c	\
 
+SIGNALS = 	signals/index.c \
+			signals/utils.c \
+
+SRC += $(SIGNALS)
 SRC += $(PARSING_SRC)
 SRC += $(STRING)
 SRC += $(BUILTENS)
