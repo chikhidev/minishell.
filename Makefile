@@ -63,6 +63,7 @@ BUILTENS =	builtens/echo.c \
 	    	env_list.c	\
 	    	env_crud.c	\
 	    	exp_list.c \
+	    	env_setup.c \
 	    	exp_crud.c
 
 SRC =	main.c		\

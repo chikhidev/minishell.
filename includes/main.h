@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 10:29:20 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 22:11:01 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,6 +319,10 @@ void					handle_here_doc_signals(void);
 t_env_list				*set_default_env(t_db *db);
 t_exp_list				*set_default_exp(t_db *db);
 t_exp_list				*set_exp_lst(t_db *db, char *env[]);
+void					handle_pwd_oldpwd_no_exist(t_db *db, bool pwd_exist,
+							bool old_pwd_exist);
+void					handle_underscore_no_exist(t_db *db);
+void					handle_pwd(t_db *db);
 void					handle_shell_level(t_db *db, char *key, char **val);
 /* FUNCTIONS */
 
