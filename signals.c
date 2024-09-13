@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:58:57 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 21:52:13 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 23:05:07 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ void	heredoc_behave(int signal)
 	t_db	*db;
 
 	db = this();
+	db->last_status = 130;
 	if (signal == SIGINT)
 	{
 		ft_write(db, 2, "\n", 2);
+		fd_void(db);
 		gc_void(db);
 		ec_void(db);
 		exit(130);
