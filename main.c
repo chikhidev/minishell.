@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 22:27:12 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 22:37:35 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,57 +75,6 @@ t_env_list	*set_env_lst(t_db *db, char *env[])
 	}
 	return (env_list);
 }
-
-//void	handle_pwd(t_db *db)
-//{
-//	t_exp_list	*exp;
-//	t_exp_list	*pwd_exp;
-//	t_exp_list	*old_pwd_exp;
-//	t_exp_list	*underscore_exp;
-//	t_env_list	*underscore_env;
-//	t_env_list	*pwd_env;
-//	bool		pwd_exist;
-//	bool		old_pwd_exist;
-//	bool		underscore_exist;
-
-//	pwd_exist = false;
-//	underscore_exist = false;
-//	old_pwd_exist = false;
-//	exp = db->exp_list;
-//	while (exp)
-//	{
-//		if (ft_strcmp(exp->key, "PWD") == 0)
-//			pwd_exist = true;
-//		if (ft_strcmp(exp->key, "OLDPWD") == 0)
-//			old_pwd_exist = true;
-//		if (ft_strcmp(exp->key, "_") == 0)
-//			underscore_exist = true;
-//		exp = exp->next;
-//	}
-//	if (!pwd_exist)
-//	{
-//		pwd_exp = new_exp_node(db, ft_strdup_ec(db, "PWD"), ft_strdup_ec(db,
-//					getcwd(NULL, 0)));
-//		push_exp_sort(&db->exp_list, pwd_exp);
-//		pwd_env = new_env_node(db, ft_strdup_ec(db, "PWD"), ft_strdup_ec(db,
-//					getcwd(NULL, 0)));
-//		push_env_back(&db->env_list, pwd_env);
-//	}
-//	if (!old_pwd_exist)
-//	{
-//		old_pwd_exp = new_exp_node(db, ft_strdup_ec(db, "OLDPWD"), NULL);
-//		push_exp_sort(&db->exp_list, old_pwd_exp);
-//	}
-//	if (!underscore_exist)
-//	{
-//		underscore_exp = new_exp_node(db, ft_strdup_ec(db, "_"),
-//				ft_strdup_ec(db, "./minishell"));
-//		push_exp_sort(&db->exp_list, underscore_exp);
-//		underscore_env = new_env_node(db, ft_strdup_ec(db, "_"),
-//				ft_strdup_ec(db, "./minishell"));
-//		push_env_back(&db->env_list, underscore_env);
-//	}
-//}
 
 void	init_db(t_db *db, int ac, char *av[], char *env[])
 {
