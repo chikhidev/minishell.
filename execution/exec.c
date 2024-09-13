@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:11 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/12 05:59:15 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:41:22 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	exec(t_db *db, void *node)
 {
 	if (!node)
 		return ;
-	handle_parent_signals();
 	if (((t_cmd *)node)->type == CMD_NODE)
 		handle_cmd_node(db, node, NULL, -1);
 	else if (((t_op *)node)->op_presentation == PIPE)

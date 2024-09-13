@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 20:48:10 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 11:16:22 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	char	**env_arr;
 	char	*path;
 
-	default_signals_behav(false);
 	if (((t_cmd *)node)->input_fd == INVALID || ((t_cmd *)node)->output_fd == INVALID)
 		ft_exit(db, 1, 3, NULL);
 	path = get_path(db, ((t_cmd *)node)->args);
@@ -29,6 +28,7 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 	close_all_pipes(db, pipes);
 	dup_cmd_io(db, node);
 	handle_is_dir(db, ((t_cmd *)node)->args[0]);
+	default_signals_behav();
 	execve(path, ((t_cmd *)node)->args, env_arr);
 	ft_exit(db, 127, 3, ft_strjoin(db, path, ": failed"));
 }
@@ -90,8 +90,12 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 			exec_cmd(db, node, pipes, index);
 		else
 		{
+			handle_parent_signals();
 			if (index == -1)
+			{
 				(waitpid(id, &status, 0), catch_feedback(db, status));
+				printf("catched-> %d\n", db->last_status);
+			}
 			else
 				pid_add(db, id);
 		}
