@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:56:31 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 02:48:59 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,8 @@ typedef struct s_db
 
 	// has the permission to run the line? by default yes.
 	bool				exec_line;
+
+	int					expand_hrdc;
 
 	/*local envirement variables*/
 	t_env_list			*env_list;
