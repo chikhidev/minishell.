@@ -15,13 +15,10 @@ void	catch_feedback(t_db *db, int process_res)
 	}
 }
 
-void	default_signals_behav(bool ignore_quit)
+void	default_signals_behav(void)
 {
 	signal(SIGINT, SIG_DFL);
-	if (!ignore_quit)
-		signal(SIGQUIT, SIG_DFL);
-	else
-		signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 void	parent_behav(int signal)
@@ -30,9 +27,13 @@ void	parent_behav(int signal)
 
 	db = this();
 	if (signal == SIGINT)
+	{
 		ft_write(db, 2, "\n", 2);
+	}
 	if (signal == SIGQUIT)
+	{
 		ft_write(db, 2, "Quit\n", 5);
+	}
 }
 
 void	handle_parent_signals(void)

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/13 02:52:26 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:06:03 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	heredoc_child(char *delim, int *pipe_fd)
 	ft_exit(db, 0, 3, NULL);
 }
 
-void expand_herdoc(t_quote *q, char **delim)
+void	expand_herdoc(t_quote *q, char **delim)
 {
 	this()->expand_hrdc = ft_strlen(*delim);
 	*delim = without_quotes(this(), *delim, q);

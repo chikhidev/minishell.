@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 02:48:59 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 10:29:20 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,7 @@ typedef struct s_db
 	int					stdout_dup;
 	int					pipe[2];
 	int					read_fd;
+
 	bool				is_path_unset;
 
 	// has the permission to run the line? by default yes.
@@ -291,21 +292,17 @@ int						ft_dup(t_db *db, int fd);
 int						count(char *line, char c);
 char					*concat(t_db *db, char *s, char single_char);
 
-int						is_op3(char *line, int *i);
-
 bool					contains_spaces_btwn(char *s);
 
 t_env_list				*new_env_node(t_db *db, char *key, char *val);
 void					add_env_front(t_env_list **list, t_env_list *new);
 void					push_env_back(t_env_list **list, t_env_list *new);
-void					*push_sort(t_db *db, t_env_list **list, char *data);
 
 t_exp_list				*new_exp_node(t_db *db, char *key, char *val);
 void					add_exp_front(t_exp_list **list, t_exp_list *new);
 void					push_exp_sort(t_exp_list **list, t_exp_list *new);
 void					push_exp_back(t_exp_list **list, t_exp_list *new);
 t_exp_list				*get_exp_node(t_exp_list *list, char *key);
-// void					free_environment(t_db  *db);
 t_env_list				*get_env_node(t_env_list *list, char *key);
 void					del_env_node(t_env_list **list, char *key);
 void					del_exp_node(t_exp_list **list, char *key);
@@ -314,17 +311,10 @@ char					**env_list_to_env_arr(t_db *db);
 void					catch_feedback(t_db *db, int process_res);
 
 /*signals*/
-void					default_signals_behav(bool ignore_quit);
+void					default_signals_behav(void);
 void					handle_parent_signals(void);
-void					heredoc_signals_handling(void);
 void					handle_here_doc_signals(void);
 void					handle_sigint(int signum);
-void					setup_child_signals(void);
-void					setup_parent_signals(void);
-void					restore_parent_signals(void);
-void					default_signals_behav(bool ignore_quit);
-void					handle_parent_signals(void);
-void					heredoc_signals_handling(void);
 void					handle_here_doc_signals(void);
 t_env_list				*set_default_env(t_db *db);
 t_exp_list				*set_default_exp(t_db *db);
