@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:59:33 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 11:57:47 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	handle_sigint(int signum)
 	db = this();
 	(void)signum;
 	ft_write(db, STDOUT_FILENO, "\n", 1);
+	db->last_status = 130;
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -30,21 +31,11 @@ void	handle_sigint(int signum)
 
 int	handle_prompt(t_db *db, char **line)
 {
-	struct sigaction	sa;
 	char				*tmp;
 
-	(void)db;
-	sa.sa_flags = 0;
-	sa.sa_handler = handle_sigint;
-	sigemptyset(&sa.sa_mask);
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
-	tmp = NULL;
-	if (db->last_status == 0)
-		tmp = ft_strjoin(db, "\001" GREEN "\002>_\001" RESET "\002", "$ ");
-	else
-		tmp = ft_strjoin(db, "\001" RED "\002>_\001" RESET "\002", "$ ");
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+	tmp = ft_strjoin(db, "\001" ORANGE "\002>_\001" RESET "\002", "$ ");
 	*line = readline(tmp);
 	if (!*line)
 	{
