@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 11:16:22 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:07:58 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 			if (index == -1)
 			{
 				(waitpid(id, &status, 0), catch_feedback(db, status));
-				printf("catched-> %d\n", db->last_status);
 			}
 			else
 				pid_add(db, id);
