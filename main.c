@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 22:34:33 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 00:49:20 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,8 @@ int	main(int ac, char *av[], char *env[])
 	int					ret;
 	struct sigaction	sa;
 
+	if (ac > 2)
+		return (1);
 	db = this();
 	ft_bzero(&sa, sizeof(struct sigaction));
 	line = NULL;
