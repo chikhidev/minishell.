@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:58:57 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 21:47:33 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:46:38 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,7 @@ void	default_signals_behav(void)
 
 void	parent_behav(int signal)
 {
-	// t_db	*db;
-
-	// db = this();
 	(void)signal;
-	// if (signal == SIGINT)
-	// {
-	// 	ft_write(db, 2, "\n", 2);
-	// }
-	// if (signal == SIGQUIT)
-	// {
-	// 	ft_write(db, 2, "Quit\n", 5);
-	// }
 }
 
 void	handle_parent_signals(void)

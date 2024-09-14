@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:40:51 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:49:39 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	read_and_fill(t_db *db, char *line, int *pipe_fd, char *delim)
 	}
 	tmp = ft_strdup(db, line);
 	free(line);
-	if (ft_strcmp(delim, tmp) == 0)
+	if (ft_strcmp(delim, tmp) == 0 || (ft_strlen(delim) == 0 && ft_strlen(tmp) == 0))
 	{
 		ft_close(db, &pipe_fd[1]);
 		return (FAILURE);
