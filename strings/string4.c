@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string4.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:11:28 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*gc_copy(t_db *db, char *s)
 
 	if (!s)
 		return (NULL);
-	new = gc_malloc(db, ft_strlen(s) + 1);
+	new = gc_malloc(db, (int)len(s) + 1);
 	if (!new)
 		return (NULL);
 	i = 0;

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:21 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:14:09 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:57:55 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	open_file_p2(t_db *db, char *tmp, int type)
 	int	fd;
 
 	fd = INVALID;
-	if (ft_strlen(tmp) == 0)
+	if ((int)len(tmp) == 0)
 	{
 		put_fd(2, "No such file or directory\n");
 		return (FAILURE);
@@ -108,7 +108,7 @@ int	open_file(t_db *db, char *file, int type)
 	char	*tmp;
 
 	quotes = NULL;
-	if (!file || ft_strlen(file) == 0)
+	if (!file || (int)len(file) == 0)
 		return (SUCCESS);
 	if (check_ambigious(db, file) == true)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:48:10 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 21:52:38 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*concat(t_db *db, char *s, char single_char)
 		new[1] = '\0';
 		return (new);
 	}
-	new = gc_malloc(db, ft_strlen(s) + 2);
+	new = gc_malloc(db, (int)len(s) + 2);
 	if (!new)
 		return (NULL);
 	i = 0;

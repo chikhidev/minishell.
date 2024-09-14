@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:48:12 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 21:56:23 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*whithout_quotes_free_db(t_db *db, char *line)
 	int		size;
 
 	i = 1;
-	size = ft_strlen(line);
+	size = (int)len(line);
 	if (!((line[0] == SGL_QUOTE && line[size - 1] == SGL_QUOTE)
 			|| (line[0] == DBL_QUOTE && line[size - 1] == DBL_QUOTE)))
 		return (line);

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:07:30 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 07:04:36 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ char	**env_list_to_env_arr(t_db *db)
 	env_len = 0;
 	while (env_list)
 	{
-		env_arr[env_len] = ec_malloc(db, ft_strlen(env_list->key) + 1
-				+ ft_strlen(env_list->val) + 1);
+		env_arr[env_len] = ec_malloc(db, (int)len(env_list->key) + 1
+				+ (int)len(env_list->val) + 1);
 		temp = ft_strjoin(db, env_list->key, "=");
 		temp = ft_strjoin(db, temp, env_list->val);
 		env_arr[env_len++] = temp;

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 08:39:46 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	shell_routine(void)
 		return (SUCCESS);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	tmp = gc_malloc(this(), ft_strlen(line) + 1);
-	ft_strlcpy(tmp, line, ft_strlen(line) + 1);
+	tmp = gc_malloc(this(), (int)len(line) + 1);
+	ft_strlcpy(tmp, line, (int)len(line) + 1);
 	if (parser(this(), line) == SUCCESS)
 		exec(this(), this()->root_node);
 	fd_void(this());
