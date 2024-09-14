@@ -92,6 +92,10 @@ RESET = \033[0m
 
 all: $(NAME)
 build: all clean
+push:
+	git add .
+	git commit -m "changes"
+	git push
 
 OBJ = $(SRC:.c=.o)
 
