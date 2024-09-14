@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 17:09:07 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 23:14:30 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,16 @@ void	waiter(t_db *db)
 void	catch_feedback(t_db *db, int process_res)
 {
 	int	status;
+	int	reason;
 
 	status = WEXITSTATUS(process_res);
-	db->last_status = status;
+	reason = process_res & 0x7F;
+	if (reason == 2)
+		db->last_status = 130;
+	else if (reason == 3)
+		db->last_status = 131;
+	else
+		db->last_status = status;
 	if (status && db->last_status == FAIL)
 	{
 		gc_void(db);

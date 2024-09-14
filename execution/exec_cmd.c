@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 17:11:30 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 23:22:49 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ void	exec_cmd(t_db *db, void *node, int **pipes, int index)
 		ft_exit(db, 1, 3, NULL);
 	path = get_path(db, ((t_cmd *)node)->args);
 	env_arr = env_list_to_env_arr(db);
+	default_signals_behav();
 	dup_pipes(db, pipes, index);
 	close_all_pipes(db, pipes);
 	dup_cmd_io(db, node);
 	handle_is_dir(db, ((t_cmd *)node)->args[0]);
-	default_signals_behav();
 	execve(path, ((t_cmd *)node)->args, env_arr);
 	ft_exit(db, 127, 3, ft_strjoin(db, path, ": failed"));
 }

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 22:11:01 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/13 23:27:26 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,6 +324,12 @@ void					handle_pwd_oldpwd_no_exist(t_db *db, bool pwd_exist,
 void					handle_underscore_no_exist(t_db *db);
 void					handle_pwd(t_db *db);
 void					handle_shell_level(t_db *db, char *key, char **val);
+void					default_signals_behav(void);
+void					parent_behav(int signal);
+void					handle_parent_signals(void);
+void					heredoc_behave(int signal);
+void					handle_here_doc_signals(void);
+
 /* FUNCTIONS */
 
 #endif

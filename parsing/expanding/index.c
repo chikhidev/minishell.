@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:47:57 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 06:06:42 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 01:24:39 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,18 @@ int	normal(char **line, t_str_cut *cut, t_quote **quotes, int *i)
 	return (SUCCESS);
 }
 
-int	switch_(char **line, t_str_cut *cut, t_quote **quotes, int i)
+int	switch_(char **line, t_str_cut *cut, t_quote **quotes, int *i)
 {
-	if (quotes && is_quote_oppening(*quotes, i))
+	if (quotes && is_quote_oppening(*quotes, *i))
 	{
-		if (gettext(line, cut, quotes, &i) == FAILURE)
+		if (gettext(line, cut, quotes, i) == FAILURE)
 			return (FAILURE);
 	}
-	else if (normal(line, cut, quotes, &i) == FAILURE)
-		return (FAILURE);
+	else
+	{
+		if (normal(line, cut, quotes, i) == FAILURE)
+			return (FAILURE);
+	}
 	return (SUCCESS);
 }
 
@@ -101,7 +104,7 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 				return (SUCCESS);
 			cut.start_ignore = i - 1;
 			cut.end_ignore = i;
-			if (switch_(line, &cut, quotes, i) == FAILURE)
+			if (switch_(line, &cut, quotes, &i) == FAILURE)
 				return (FAILURE);
 			len = ft_strlen(*line);
 		}
