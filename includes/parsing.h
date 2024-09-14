@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/12 08:31:36 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 17:37:02 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,18 @@ typedef struct s_holder
 
 	t_tracker	*tracker;
 }				t_holder;
+
+typedef struct s_syntax
+{
+	int			curr;
+	int			i;
+	int			next_tok;
+	char		*msg;
+	t_quote		*quotes;
+	bool		found_word;
+	char		*hd_msg;
+	bool		cont;
+}				t_syntax;
 
 /*string.c*/
 void			skip_spaces(char *line, int *i);
@@ -161,5 +173,15 @@ int				update_index(t_db *db, char **line, char *value,
 					t_str_cut *cut);
 
 bool			split_factor(char *value, char *line, int pos);
+
+char			*get_token_error(t_db *db, int tok, int next_tok);
+void			init_sx(t_syntax *sx, t_quote *quotes);
+int				handle_pipe_syntax(t_syntax *sx, t_quote *quotes, char *line);
+int				handle_syntax(t_syntax *sx, t_quote *quotes, char *line);
+int				syntax_checker(t_db *db, char *line, t_quote *quotes);
+bool			is_redir(int op);
+int				skip_word(t_db *db, t_quote *quotes, char *line, int *i);
+int				get_next_tok(t_quote *quotes, char *line, int *i);
+char			*get_token_str(t_db *db, int tok);
 
 #endif

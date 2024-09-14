@@ -3,93 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/12 02:48:45 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 09:26:58 by abchikhi         ###   ########.fr       */
+/*   Created: 2024/09/14 17:35:07 by sgouzi            #+#    #+#             */
+/*   Updated: 2024/09/14 17:40:42 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include "parsing.h"
-
-bool	is_redir(int op)
-{
-	return (op == APPEND || op == INPUT || op == HEREDOC || op == REDIR);
-}
-
-int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
-{
-	while (line[*i] && !is_whitespace(line[*i]) && get_tok(db, line, i,
-			quotes) == WORD)
-	{
-		if (line[*i] == SGL_QUOTE)
-		{
-			(*i)++;
-			while (line[*i] && line[*i] != SGL_QUOTE)
-				(*i)++;
-			if (line[*i] == SGL_QUOTE)
-				(*i)++;
-		}
-		if (line[*i] == DBL_QUOTE)
-		{
-			(*i)++;
-			while (line[*i] && line[*i] != DBL_QUOTE)
-				(*i)++;
-			if (line[*i] == DBL_QUOTE)
-				(*i)++;
-		}
-		(*i)++;
-	}
-	if (get_tok(db, line, i, quotes) == WORD)
-		return (SUCCESS);
-	return (FAILURE);
-}
-
-int	get_next_tok(t_quote *quotes, char *line, int *i)
-{
-	if (line[*i])
-		++(*i);
-	skip_open_spaces(quotes, line, i);
-	if (!line[*i])
-		return (INVALID);
-	if (line[*i] == '|')
-		return (PIPE);
-	if (line[*i] == '>')
-	{
-		if (line[*i + 1] == '>')
-		{
-			*i += 1;
-			return (APPEND);
-		}
-		return (REDIR);
-	}
-	if (line[*i] == '<')
-	{
-		if (line[*i + 1] == '<')
-		{
-			*i += 1;
-			return (HEREDOC);
-		}
-		return (INPUT);
-	}
-	return (WORD);
-}
-
-char	*get_token_str(t_db *db, int tok)
-{
-	if (tok == PIPE)
-		return (ft_strdup(db, "|"));
-	if (tok == APPEND)
-		return (ft_strdup(db, ">>"));
-	if (tok == REDIR)
-		return (ft_strdup(db, ">"));
-	if (tok == INPUT)
-		return (ft_strdup(db, "<"));
-	if (tok == HEREDOC)
-		return (ft_strdup(db, "<<"));
-	return (NULL);
-}
 
 char	*get_token_error(t_db *db, int tok, int next_tok)
 {
@@ -102,65 +24,89 @@ char	*get_token_error(t_db *db, int tok, int next_tok)
 	return (ft_strdup(db, "newline"));
 }
 
+void	init_sx(t_syntax *sx, t_quote *quotes)
+{
+	sx->curr = INVALID;
+	sx->i = 0;
+	sx->found_word = false;
+	sx->cont = false;
+	sx->hd_msg = "maximum here-document count exceeded";
+	sx->quotes = quotes;
+	sx->next_tok = 0;
+	sx->msg = NULL;
+}
+
+int	handle_pipe_syntax(t_syntax *sx, t_quote *quotes, char *line)
+{
+	t_db	*db;
+
+	db = this();
+	sx->msg = ft_strjoin(db, "syntax error near unexpected token `",
+			get_token_error(db, sx->curr, sx->next_tok));
+	sx->msg = ft_strjoin(db, sx->msg, "'");
+	if (!sx->found_word)
+		return (error(db, "syntax", sx->msg));
+	if (sx->next_tok == INVALID)
+		return (error(db, "syntax", sx->msg));
+	if (sx->next_tok == PIPE)
+		return (error(db, "syntax", sx->msg));
+	skip_word(db, quotes, line, &sx->i);
+	sx->found_word = true;
+	sx->cont = true;
+	return (SUCCESS);
+}
+
+int	handle_syntax(t_syntax *sx, t_quote *quotes, char *line)
+{
+	t_db	*db;
+
+	db = this();
+	if (db->heredoc_counter > 16)
+		return (error(db, "heredoc", sx->hd_msg));
+	sx->next_tok = get_next_tok(quotes, line, &sx->i);
+	if (sx->curr == PIPE)
+	{
+		if (handle_pipe_syntax(sx, quotes, line) == FAILURE)
+			return (FAILURE);
+	}
+	else if (is_redir(sx->curr))
+	{
+		sx->msg = ft_strjoin(db, "syntax error near unexpected token `",
+				get_token_error(db, sx->curr, sx->next_tok));
+		sx->msg = ft_strjoin(db, sx->msg, "'");
+		if (sx->next_tok != WORD)
+			return (error(db, "syntax", sx->msg));
+		skip_word(db, quotes, line, &sx->i);
+		sx->found_word = true;
+		sx->cont = true;
+	}
+	return (SUCCESS);
+}
+
 int	syntax_checker(t_db *db, char *line, t_quote *quotes)
 {
-	int		curr;
-	int		i;
-	int		next_tok;
-	char	*msg;
-	bool	found_word;
+	t_syntax	sx;
 
-	i = 0;
-	curr = INVALID;
-	found_word = false;
-	skip_open_spaces(quotes, line, &i);
-	if (!line[i])
-		return (SUCCESS);
-	while (line[i])
+	init_sx(&sx, quotes);
+	skip_open_spaces(quotes, line, &sx.i);
+	while (line[sx.i])
 	{
-		curr = get_tok(db, line, &i, quotes);
-		if (curr == W_SPACE && line[i] && is_whitespace(line[i]) && ++i)
+		sx.cont = false;
+		sx.curr = get_tok(db, line, &sx.i, quotes);
+		if (sx.curr == W_SPACE && line[sx.i] && is_whitespace(line[sx.i])
+			&& ++sx.i)
 			continue ;
-		if ((curr == WORD || curr == INVALID))
+		if ((sx.curr == WORD || sx.curr == INVALID))
 		{
-			skip_word(db, quotes, line, &i);
-			found_word = true;
+			skip_word(db, quotes, line, &sx.i);
+			sx.found_word = true;
 			continue ;
 		}
-		else if (curr != WORD && curr != INVALID) // op
-		{
-			if (db->heredoc_counter > 16)
-				return (error(db, "heredoc",
-						"maximum here-document count exceeded"));
-			next_tok = get_next_tok(quotes, line, &i);
-			if (curr == PIPE)
-			{
-				msg = ft_strjoin(db, "syntax error near unexpected token `",
-						get_token_error(db, curr, next_tok));
-				msg = ft_strjoin(db, msg, "'");
-				if (!found_word)
-					return (error(db, "syntax", msg));
-				if (next_tok == INVALID)
-					return (error(db, "syntax", msg));
-				if (next_tok == PIPE)
-					return (error(db, "syntax", msg));
-				skip_word(db, quotes, line, &i);
-				found_word = true;
-				continue ;
-			}
-			if (is_redir(curr))
-			{
-				msg = ft_strjoin(db, "syntax error near unexpected token `",
-						get_token_error(db, curr, next_tok));
-				msg = ft_strjoin(db, msg, "'");
-				if (next_tok != WORD)
-					return (error(db, "syntax", msg));
-				skip_word(db, quotes, line, &i);
-				found_word = true;
-				continue ;
-			}
-		}
-		i++;
+		else if (sx.curr != WORD && sx.curr != INVALID)
+			if (handle_syntax(&sx, quotes, line) == FAILURE)
+				return (FAILURE);
+		if ((++sx.i) >= 0 && sx.cont)
+			continue ;
 	}
 	return (SUCCESS);
 }

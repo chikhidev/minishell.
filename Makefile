@@ -12,6 +12,7 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/str_list.c \
 				parsing/file_entry.c \
 				parsing/syntax.c \
+				parsing/syntax_helper.c \
 
 QUOTES = 	parsing/quotes/index.c \
 		 	parsing/quotes/utils.c \

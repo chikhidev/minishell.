@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_entry.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:16 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 07:43:36 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 17:43:51 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_file_entry	*new_ent_node(t_db *db, struct dirent *ent)
 	new->entry = ent;
 	return (new);
 }
+
 void	add_ent_front(t_file_entry **list, t_file_entry *new)
 {
 	if (list && new)
@@ -34,6 +35,7 @@ void	add_ent_front(t_file_entry **list, t_file_entry *new)
 		*list = new;
 	}
 }
+
 void	push_ent_back(t_file_entry **list, t_file_entry *new)
 {
 	t_file_entry	*last;
@@ -70,8 +72,8 @@ t_file_entry	*get_ent_node(t_file_entry *list, char *name,
 
 void	del_ent_node(t_file_entry **list, char *name, unsigned char type)
 {
-	t_file_entry *curr;
-	t_file_entry *prev;
+	t_file_entry	*curr;
+	t_file_entry	*prev;
 
 	prev = *list;
 	if (prev)
@@ -95,5 +97,4 @@ void	del_ent_node(t_file_entry **list, char *name, unsigned char type)
 			curr = curr->next;
 		}
 	}
-	return ;
 }
