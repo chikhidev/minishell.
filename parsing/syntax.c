@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:45 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:49 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 09:26:58 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,11 @@ bool	is_redir(int op)
 
 int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 {
-	(void)db;
-	(void)quotes;
 	while (line[*i] && !is_whitespace(line[*i]) && get_tok(db, line, i,
 			quotes) == WORD)
 	{
 		if (line[*i] == SGL_QUOTE)
 		{
-			// skip until single quote
 			(*i)++;
 			while (line[*i] && line[*i] != SGL_QUOTE)
 				(*i)++;
@@ -36,7 +33,6 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 		}
 		if (line[*i] == DBL_QUOTE)
 		{
-			// skip until double quote
 			(*i)++;
 			while (line[*i] && line[*i] != DBL_QUOTE)
 				(*i)++;
@@ -80,7 +76,6 @@ int	get_next_tok(t_quote *quotes, char *line, int *i)
 	return (WORD);
 }
 
-// get next token with strdup
 char	*get_token_str(t_db *db, int tok)
 {
 	if (tok == PIPE)

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:42 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:43 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 09:24:35 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_str_lst	*new_str_node(t_db *db, char *str)
 	new->str = str;
 	return (new);
 }
+
 void	add_str_front(t_str_lst **list, t_str_lst *new)
 {
 	if (list && new)
@@ -34,6 +35,7 @@ void	add_str_front(t_str_lst **list, t_str_lst *new)
 		*list = new;
 	}
 }
+
 void	push_str_back(t_str_lst **list, t_str_lst *new)
 {
 	t_str_lst	*last;
@@ -51,6 +53,7 @@ void	push_str_back(t_str_lst **list, t_str_lst *new)
 		}
 	}
 }
+
 t_str_lst	*get_str_node(t_str_lst *list, char *str)
 {
 	t_str_lst	*curr;
@@ -67,8 +70,8 @@ t_str_lst	*get_str_node(t_str_lst *list, char *str)
 
 void	del_str_node(t_str_lst **list, char *str)
 {
-	t_str_lst *curr;
-	t_str_lst *prev;
+	t_str_lst	*curr;
+	t_str_lst	*prev;
 
 	prev = *list;
 	if (prev)
