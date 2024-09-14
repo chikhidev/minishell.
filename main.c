@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 01:26:42 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 01:32:14 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	handle_prompt(t_db *db, char **line)
 	*line = tmp;
 	if (ft_strlen(*line) > 0)
 		add_history(*line);
-	return (SUCCESS); /*nothing*/
+	return (SUCCESS);
 }
 
 t_env_list	*set_env_lst(t_db *db, char *env[])

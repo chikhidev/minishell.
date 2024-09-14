@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:58:57 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 00:36:23 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 01:33:09 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,8 @@ void	parent_behav(int signal)
 
 void	handle_parent_signals(void)
 {
-
 	signal(SIGINT, parent_behav);
 	signal(SIGQUIT, parent_behav);
-
 }
 
 void	heredoc_behave(int signal)
@@ -63,7 +61,3 @@ void	handle_here_doc_signals(void)
 	signal(SIGINT, heredoc_behave);
 	signal(SIGQUIT, SIG_IGN);
 }
-/*
-	//rdha l default igonariah 3ad handilha  
-	 wst child ila wslat sigint print new line 
-*/

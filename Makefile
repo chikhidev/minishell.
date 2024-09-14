@@ -9,7 +9,6 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/op.c		\
 				parsing/op2.c	\
 				parsing/cmd.c \
-				parsing/tokenizer.c \
 				parsing/wildcard.c \
 				parsing/str_list.c \
 				parsing/file_entry.c \
@@ -19,6 +18,10 @@ QUOTES = 	parsing/quotes/index.c \
 		 	parsing/quotes/utils.c \
 		 	parsing/quotes/utils2.c 
 
+TOKENIZER = parsing/tokenizer/index.c	\
+			parsing/tokenizer/utils.c	\
+			parsing/tokenizer/utils2.c	\
+
 IO = 		parsing/io/index.c \
 			parsing/io/utils.c
 
@@ -27,6 +30,7 @@ EXPANDING = parsing/expanding/index.c \
 			parsing/expanding/utils2.c \
 
 PARSING_SRC += $(EXPANDING)	
+PARSING_SRC += $(TOKENIZER)	
 PARSING_SRC += $(IO)
 PARSING_SRC += $(QUOTES)
 
