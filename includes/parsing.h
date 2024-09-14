@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 17:37:02 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:30:38 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,11 @@
 # include <readline/readline.h>
 # include <signal.h>
 
-/**
- * @details Defining the priority of the operators
- */
-# define AND_OR_PRIORITY 1
-# define PIPE_PRIORITY 2
-# define REDIR_PRIORITY 3
-
-# define OPEN_PARANTH '('
-# define CLOSE_PARANTH ')'
-
-/**
- * @details Defining the representations of the operators:
- */
-# define OR 1
-# define AND 2
 # define PIPE 3
-
 # define REDIR 4
 # define APPEND 5
 # define INPUT 6
 # define HEREDOC 7
-
 # define W_SPACE 8
 # define WORD 9
 
@@ -47,8 +30,8 @@ typedef struct s_holder
 	int			op;
 	void		**current_node;
 	void		*parent;
-
 	t_tracker	*tracker;
+
 }				t_holder;
 
 typedef struct s_syntax
@@ -89,6 +72,7 @@ void			update_quotes(t_quote *head, int start, int old_len,
 void			delete_quotes_in_range(t_quote **head, int start, int end);
 t_quote			*quote_at(t_quote *head, int index);
 t_quote			*quotes_of_range(t_quote *head, int pos);
+bool			after_quote_ending(t_quote *head, int i);
 
 /*parsing/paranths.c && paranths2.c*/
 int				is_operator_forward(char *s, int i);
@@ -129,7 +113,6 @@ char			*get_environment_var(t_db *db, char *var, char *env[]);
 /*nodes.c*/
 int				validate_io(char *arg, int size);
 int				open_heredoc(t_db *db, char *delim);
-int				syntax_checker(t_db *db, char *line, t_quote *quotes);
 int				open_file(t_db *db, char *file, int type);
 int				count_array_len(char **args);
 bool			contains(char *str, char *sub);

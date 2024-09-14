@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:35:07 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 17:40:42 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:09:12 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,9 @@ int	syntax_checker(t_db *db, char *line, t_quote *quotes)
 		else if (sx.curr != WORD && sx.curr != INVALID)
 			if (handle_syntax(&sx, quotes, line) == FAILURE)
 				return (FAILURE);
-		if ((++sx.i) >= 0 && sx.cont)
+		if (sx.cont)
 			continue ;
+		++sx.i;
 	}
 	return (SUCCESS);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 15:58:46 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:40:51 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int	open_heredoc(t_db *db, char *delim)
 	t_quote	*q;
 
 	q = NULL;
+
+	printf("line-> [%s]\n", delim);
 	if (track_quotes(db, &q, delim) == FAILURE)
 		return (FAILURE);
 	expand_herdoc(q, &delim);
