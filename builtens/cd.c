@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:51:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:22:46 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 15:54:35 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,10 @@ int	cd_(t_db *db, char *args[])
 	oldpwd_str = NULL;
 	dest = NULL;
 	set_pwd_str_values(db, &pwd_str, &oldpwd_str);
-	if (count_array_len(args) == 1 || is_str_empty(db, args[1]))
+	if (count_array_len(args) == 1)
 		status = going_home(db, &dest);
+	else if (is_str_empty(db, args[1]))
+		return (0);
 	else
 		dest = args[1];
 	if (status)
