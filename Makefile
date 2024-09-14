@@ -74,7 +74,8 @@ SRC =	main.c		\
 		memo.c		\
 		memo1.c		\
 		error.c	\
-		signals.c
+		signals.c	\
+		prompt.c
 
 SRC += $(PARSING_SRC)
 SRC += $(STRING)

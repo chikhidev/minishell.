@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 02:09:29 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 07:04:07 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,6 +301,7 @@ char					*concat(t_db *db, char *s, char single_char);
 
 bool					contains_spaces_btwn(char *s);
 
+t_env_list				*set_env_lst(t_db *db, char *env[]);
 t_env_list				*new_env_node(t_db *db, char *key, char *val);
 void					add_env_front(t_env_list **list, t_env_list *new);
 void					push_env_back(t_env_list **list, t_env_list *new);
@@ -339,6 +340,8 @@ void					handle_here_doc_signals(void);
 
 void					skip_open_spaces(t_quote *quotes, char *line, int *i);
 void					add(t_db *db, char ***result, char *save);
+
+int						handle_prompt(t_db *db, char **line);
 /* FUNCTIONS */
 
 #endif

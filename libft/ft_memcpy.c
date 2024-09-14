@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 20:22:57 by abchikhi          #+#    #+#             */
-/*   Updated: 2023/10/31 20:43:06 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 06:58:07 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,3 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	}
 	return (dst);
 }
-
-// #include <stdio.h>
-// #include <string.h>
-// int main(){
-// 	printf("%s\n", ft_memcpy(0, 0, 0));
-// 	// printf("%s\n", memcpy(0, NULL, 9));
-// 	return (0);
-// }
