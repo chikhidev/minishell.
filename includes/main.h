@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 23:27:26 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:21:02 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,12 @@ typedef struct str_cut
 
 typedef struct s_op_node
 {
-	int		type; // the common thing between the two nodes
-	int		op_presentation;
-	void	**childs;
-	int		n_childs;
-
-	int		input_fd;
-	int		output_fd;
+	int					type;
+	int					op_presentation;
+	void				**childs;
+	int					n_childs;
+	int					input_fd;
+	int					output_fd;
 }						t_op;
 
 typedef struct s_int
@@ -152,9 +151,7 @@ typedef struct s_file_entry
  */
 typedef struct s_cmd_node
 {
-	int					type; // the common thing between the two nodes
-	// this is gonna be only in the child proccess
-	// just when it gonna e executed!!!
+	int					type;
 	char				**args;
 	int					input_fd;
 	int					output_fd;
@@ -203,6 +200,16 @@ typedef struct s_str_lst
 	char				*str;
 	struct s_str_lst	*next;
 }						t_str_lst;
+
+typedef struct s_tokenizer
+{
+	t_quote				**quotes;
+	char				*line;
+	char				*save;
+	char				**result;
+	bool				read_write_perm;
+	t_iterators			it;
+}						t_tokenizer;
 
 /**
  * @details The db structure is used to store all data needed
@@ -294,6 +301,7 @@ char					*concat(t_db *db, char *s, char single_char);
 
 bool					contains_spaces_btwn(char *s);
 
+t_env_list				*set_env_lst(t_db *db, char *env[]);
 t_env_list				*new_env_node(t_db *db, char *key, char *val);
 void					add_env_front(t_env_list **list, t_env_list *new);
 void					push_env_back(t_env_list **list, t_env_list *new);
@@ -330,6 +338,12 @@ void					handle_parent_signals(void);
 void					heredoc_behave(int signal);
 void					handle_here_doc_signals(void);
 
+void					skip_open_spaces(t_quote *quotes, char *line, int *i);
+void					add(t_db *db, char ***result, char *save);
+
+int						handle_prompt(t_db *db, char **line);
+
+void					free_array(t_db *db, char **array);
 /* FUNCTIONS */
 
 #endif

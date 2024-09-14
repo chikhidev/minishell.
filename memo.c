@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 02:24:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 16:55:42 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 09:20:42 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,17 @@ void	*ec_malloc(t_db *db, size_t size)
 		ec->next->next = NULL;
 	}
 	return (ptr);
+}
+
+void	free_array(t_db *db, char **array)
+{
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
+		gc_free(db, array[i]);
+		i++;
+	}
+	gc_free(db, array);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 14:35:29 by abchikhi          #+#    #+#             */
-/*   Updated: 2023/11/15 00:48:11 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 06:57:53 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,3 @@ void	*ft_memset(void *b, int c, size_t len)
 	}
 	return (b);
 }
-// #include <string.h>
-// int main(){
-// 	int arr[] = {0, 0, 0};
-// 	ft_memset(arr, 1, 0);
-// 	memset(arr, 1, 0);
-// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   string8.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 17:03:21 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 17:05:14 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 01:44:35 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,11 @@ bool	contains(char *str, char *sub)
 		i++;
 	}
 	return (false);
+}
+
+void	skip_open_spaces(t_quote *quotes, char *line, int *i)
+{
+	while (line[*i] && is_whitespace(line[*i]) && !is_inside_quotes_list(quotes,
+			*i))
+		(*i)++;
 }

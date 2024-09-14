@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 17:29:09 by abchikhi          #+#    #+#             */
-/*   Updated: 2023/11/15 00:29:49 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 07:00:14 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,3 @@ int	ft_atoi(const char *str)
 	}
 	return (res * sign);
 }
-
-// #include <string.h>
-// #include <stdio.h>
-
-// int main()
-// {
-// 	// printf("%d\n", ft_atoi(NULL));
-// 	printf("%d\n", atoi(NULL));
-// }

@@ -9,8 +9,6 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/op.c		\
 				parsing/op2.c	\
 				parsing/cmd.c \
-				parsing/tokenizer.c \
-				parsing/wildcard.c \
 				parsing/str_list.c \
 				parsing/file_entry.c \
 				parsing/syntax.c \
@@ -18,6 +16,10 @@ PARSING_SRC = 	parsing/parser.c	\
 QUOTES = 	parsing/quotes/index.c \
 		 	parsing/quotes/utils.c \
 		 	parsing/quotes/utils2.c 
+
+TOKENIZER = parsing/tokenizer/index.c	\
+			parsing/tokenizer/utils.c	\
+			parsing/tokenizer/utils2.c	\
 
 IO = 		parsing/io/index.c \
 			parsing/io/utils.c
@@ -27,6 +29,7 @@ EXPANDING = parsing/expanding/index.c \
 			parsing/expanding/utils2.c \
 
 PARSING_SRC += $(EXPANDING)	
+PARSING_SRC += $(TOKENIZER)	
 PARSING_SRC += $(IO)
 PARSING_SRC += $(QUOTES)
 
@@ -70,7 +73,8 @@ SRC =	main.c		\
 		memo.c		\
 		memo1.c		\
 		error.c	\
-		signals.c
+		signals.c	\
+		prompt.c
 
 SRC += $(PARSING_SRC)
 SRC += $(STRING)
@@ -87,11 +91,20 @@ RESET = \033[0m
 
 all: $(NAME)
 build: all clean
+push:
+	git add .
+	git commit -m "changes"
+	git push origin main
 
-$(NAME): $(SRC) $(LIBFT)
+OBJ = $(SRC:.c=.o)
+
+$(NAME): $(OBJ) $(LIBFT)
 	@echo "$(YELLOW)Compiling minishell 🛠️$(RESET)"
-	cc $(CARGS) $(SRC) $(LIBFT) -lreadline -o $(NAME)
+	cc $(CARGS) $(OBJ) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)Minishell compiled successfully 🚀$(RESET)"
+
+%.o: %.c
+	cc $(CARGS) -c $< -o $@
 
 $(LIBFT):
 	@echo "$(MAGENT)Compiling libft 🪡$(RESET)"
@@ -99,6 +112,7 @@ $(LIBFT):
 
 clean:
 	@echo "$(BLUE)Cleaning libft 🧹$(RESET)"
+	rm -f $(OBJ)
 	make -C libft clean
 
 fclean: clean
