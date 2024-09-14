@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:35:07 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 23:09:12 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 00:29:40 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	syntax_checker(t_db *db, char *line, t_quote *quotes)
 	skip_open_spaces(quotes, line, &sx.i);
 	while (line[sx.i])
 	{
-		sx.cont = false;
+		(sx.cont = false, sx.found_word = false);
 		sx.curr = get_tok(db, line, &sx.i, quotes);
 		if (sx.curr == W_SPACE && line[sx.i] && is_whitespace(line[sx.i])
 			&& ++sx.i)
