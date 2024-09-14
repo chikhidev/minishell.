@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/12 06:00:51 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 02:11:45 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,14 @@
 
 void	free_array(t_db *db, char **array)
 {
-	for (int i = 0; array[i]; i++)
+	int	i;
+
+	i = 0;
+	while (array[i])
+	{
 		gc_free(db, array[i]);
+		i++;
+	}
 	gc_free(db, array);
 }
 

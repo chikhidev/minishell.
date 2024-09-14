@@ -56,8 +56,9 @@ bool	contains(char *str, char *sub)
 	return (false);
 }
 
-void skip_open_spaces(t_quote *quotes, char *line, int *i)
+void	skip_open_spaces(t_quote *quotes, char *line, int *i)
 {
-	while (line[*i] && is_whitespace(line[*i]) && !is_inside_quotes_list(quotes, *i))
+	while (line[*i] && is_whitespace(line[*i]) && !is_inside_quotes_list(quotes,
+			*i))
 		(*i)++;
 }

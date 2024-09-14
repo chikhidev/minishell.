@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 02:02:05 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 02:09:29 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,10 @@ typedef struct str_cut
 
 typedef struct s_op_node
 {
-	int type; // the common thing between the two nodes
+	int					type;
 	int					op_presentation;
 	void				**childs;
 	int					n_childs;
-
 	int					input_fd;
 	int					output_fd;
 }						t_op;
@@ -99,8 +98,8 @@ typedef struct s_int
 
 typedef struct s_here_doc /*here doc saver*/
 {
-	t_op *ptr;
-	struct s_here_doc *next;
+	t_op				*ptr;
+	struct s_here_doc	*next;
 }						t_here_doc;
 
 typedef struct s_env_list
@@ -152,9 +151,7 @@ typedef struct s_file_entry
  */
 typedef struct s_cmd_node
 {
-	int type; // the common thing between the two nodes
-	// this is gonna be only in the child proccess
-	// just when it gonna e executed!!!
+	int					type;
 	char				**args;
 	int					input_fd;
 	int					output_fd;
