@@ -95,7 +95,7 @@ build: all clean
 push:
 	git add .
 	git commit -m "changes"
-	git push
+	git push origin main
 
 OBJ = $(SRC:.c=.o)
 

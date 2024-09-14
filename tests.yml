@@ -39,3 +39,16 @@ error.c     libft	minishell  SECURITY.md	  tests.yml
 execution   main.c	out	   signals.c	  triggers.c
 
 fucking weird
+
+
+
+
+
+
+
+
+
+
+>_$ ./ls | foo
+foo: command not found
+./ls: No such file or directory

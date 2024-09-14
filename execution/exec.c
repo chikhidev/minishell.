@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:11 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 22:56:39 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 08:54:05 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,20 @@
 #include "exec.h"
 #include "main.h"
 #include "parsing.h"
+
+void	check_permissions(t_db *db, char *path)
+{
+	if (access(path, F_OK) != 0)
+	{
+		(perror(path), fd_void(db), ec_void(db));
+		exit(error(db, NULL, NULL) + 127);
+	}
+	else if (access(path, X_OK) != 0)
+	{
+		(perror(path), fd_void(db), ec_void(db));
+		exit(error(db, NULL, NULL) + 126);
+	}
+}
 
 char	*get_path(t_db *db, char **args)
 {
@@ -26,16 +40,7 @@ char	*get_path(t_db *db, char **args)
 		ft_exit(db, 127, 3, ft_strjoin(db, args[0], ": command not found"));
 	if (is_relative_path(path) || is_absolute_path(path))
 	{
-		if (access(path, F_OK) != 0)
-		{
-			(perror(path), fd_void(db), ec_void(db));
-			exit(error(db, NULL, NULL) + 127);
-		}
-		else if (access(path, X_OK) != 0)
-		{
-			(perror(path), fd_void(db), ec_void(db));
-			exit(error(db, NULL, NULL) + 126);
-		}
+		check_permissions(db, path);
 	}
 	else
 	{
@@ -68,7 +73,7 @@ void	handle_pipe_op(t_db *db, void *node)
 void	exec(t_db *db, void *node)
 {
 	if (!node)
-		return	;
+		return ;
 	if (((t_cmd *)node)->type == CMD_NODE)
 		handle_cmd_node(db, node, NULL, -1);
 	else if (((t_op *)node)->op_presentation == PIPE)

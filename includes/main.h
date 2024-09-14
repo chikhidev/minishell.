@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 07:04:07 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 09:21:02 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,8 @@ void					skip_open_spaces(t_quote *quotes, char *line, int *i);
 void					add(t_db *db, char ***result, char *save);
 
 int						handle_prompt(t_db *db, char **line);
+
+void					free_array(t_db *db, char **array);
 /* FUNCTIONS */
 
 #endif
