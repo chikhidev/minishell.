@@ -92,10 +92,15 @@ RESET = \033[0m
 all: $(NAME)
 build: all clean
 
-$(NAME): $(SRC) $(LIBFT)
+OBJ = $(SRC:.c=.o)
+
+$(NAME): $(OBJ) $(LIBFT)
 	@echo "$(YELLOW)Compiling minishell 🛠️$(RESET)"
-	cc $(CARGS) $(SRC) $(LIBFT) -lreadline -o $(NAME)
+	cc $(CARGS) $(OBJ) $(LIBFT) -lreadline -o $(NAME)
 	@echo "$(GREEN)Minishell compiled successfully 🚀$(RESET)"
+
+%.o: %.c
+	cc $(CARGS) -c $< -o $@
 
 $(LIBFT):
 	@echo "$(MAGENT)Compiling libft 🪡$(RESET)"
@@ -103,6 +108,7 @@ $(LIBFT):
 
 clean:
 	@echo "$(BLUE)Cleaning libft 🧹$(RESET)"
+	rm -f $(OBJ)
 	make -C libft clean
 
 fclean: clean

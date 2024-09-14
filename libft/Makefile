@@ -19,6 +19,7 @@ $(OBJS): $(SRCS) $(HEADERFILE)
 $(OBJSB): $(SRCSB) $(HEADERFILE)
 	cc $(CFLAGS) -c $(SRCSB)
 	ar rcs $(NAME) $(OBJSB)
+
 clean:
 	rm -f $(OBJS) $(OBJSB)
 fclean: clean
