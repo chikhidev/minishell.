@@ -9,7 +9,6 @@ PARSING_SRC = 	parsing/parser.c	\
 				parsing/op.c		\
 				parsing/op2.c	\
 				parsing/cmd.c \
-				parsing/wildcard.c \
 				parsing/str_list.c \
 				parsing/file_entry.c \
 				parsing/syntax.c \
