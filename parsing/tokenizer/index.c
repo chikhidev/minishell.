@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 00:55:45 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:29:16 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	handle_file(t_tokenizer *self)
 			|| this()->curr_type == APPENDFILE);
 	skip_open_spaces(*self->quotes, self->line, &self->it.i);
 	self->it.j = self->it.i;
-	while (self->line[self->it.j] && !(is_whitespace(self->line[self->it.j]) && !is_inside_quotes_list(*self->quotes, self->it.j))
+	while (self->line[self->it.j]
+		&& !(is_whitespace(self->line[self->it.j]) && !is_inside_quotes_list(*self->quotes, self->it.j))
 		&& !(
 				!is_inside_quotes_list(*self->quotes, self->it.j)
 				&&((validate_io(&self->line[self->it.j], 1) != INVALID
@@ -64,20 +65,12 @@ int	token(t_tokenizer *self)
 {
 	bool	is_open_whitespace_;
 	bool	is_open_io_;
-	bool	is_quote_;
 
 	is_open_whitespace_ = is_open_whitespace(self->line, self->it.i,
 			*self->quotes);
 	is_open_io_ = is_open_io(self->line, self->it.i, *self->quotes);
-	is_quote_ = is_quote_oppening(*self->quotes, self->it.i);
-
 	if (!is_open_whitespace_ && !is_open_io_ && self->read_write_perm)
-	{
-		if (is_quote_ && (self->save && self->save[len(self->save) - 1] != '=')
-			&& saver(this(), self) == FAILURE)
-			return (FAILURE);
 		self->save = concat(this(), self->save, self->line[self->it.i]);
-	}
 	else if (self->read_write_perm)
 	{
 		if (self->save && !is_inside_quotes_list(*self->quotes, self->it.i)

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 04:02:49 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	read_and_fill(t_db *db, char *line, int *pipe_fd, char *delim)
 		ft_close(db, &pipe_fd[1]);
 		return (FAILURE);
 	}
-	if (db->expand_hrdc == 0 && expand(db, &tmp, NULL) == FAILURE)
+	if (db->expand_hrdc == 0 && expand(&tmp, NULL) == FAILURE)
 	{
 		ft_close(db, &pipe_fd[1]);
 		ec_void(db);

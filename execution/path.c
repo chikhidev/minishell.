@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 00:14:26 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:17:55 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,9 @@ int	paths_getter(t_exp_list *path_node, char ***paths)
 		path_var = this()->static_path;
 	else
 		path_var = path_node->val;
+	this()->q = NULL;
 	*paths = ft_split(this(), path_var, ":");
 	this()->last_status = 127;
-	if (!*paths)
-		return (FAILURE);
 	return (SUCCESS);
 }
 
@@ -36,7 +35,7 @@ char	*path_exists(char *filename, int i, t_exp_list *path_node)
 
 	if (paths_getter(path_node, &paths) == FAILURE)
 		return (NULL);
-	while (paths[++i])
+	while (paths[i])
 	{
 		path = ft_strjoin(this(), paths[i], "/");
 		tmp = ft_strjoin(this(), path, filename);
@@ -51,6 +50,7 @@ char	*path_exists(char *filename, int i, t_exp_list *path_node)
 			}
 			return (tmp);
 		}
+		i++;
 	}
 	free_array(this(), paths);
 	return (NULL);
@@ -66,7 +66,7 @@ char	*cmd_path(t_db *db, char *filename)
 	path_node = get_exp_node(db->exp_list, "PATH");
 	if (path_node || db->static_path)
 	{
-		path = path_exists(filename, -1, path_node);
+		path = path_exists(filename, 0, path_node);
 		if (path)
 			return (path);
 	}

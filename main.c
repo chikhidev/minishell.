@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 04:44:59 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	db_reset(t_db *db)
 	db->input_fd = STDIN_FILENO;
 	db->output_fd = STDOUT_FILENO;
 	db->fd = NULL;
-	db->split = false;
 	pid_void(db);
 }
 
