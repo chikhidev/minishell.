@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:35:07 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 17:40:42 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 01:37:28 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	handle_pipe_syntax(t_syntax *sx, t_quote *quotes, char *line)
 	sx->msg = ft_strjoin(db, sx->msg, "'");
 	if (!sx->found_word)
 		return (error(db, "syntax", sx->msg));
-	if (sx->next_tok == INVALID)
+	if (sx->next_tok != WORD)
 		return (error(db, "syntax", sx->msg));
 	if (sx->next_tok == PIPE)
 		return (error(db, "syntax", sx->msg));
@@ -96,17 +96,20 @@ int	syntax_checker(t_db *db, char *line, t_quote *quotes)
 		if (sx.curr == W_SPACE && line[sx.i] && is_whitespace(line[sx.i])
 			&& ++sx.i)
 			continue ;
-		if ((sx.curr == WORD || sx.curr == INVALID))
+		if (sx.curr == WORD)
 		{
-			skip_word(db, quotes, line, &sx.i);
+			sx.curr = skip_word(db, quotes, line, &sx.i);
+			if (sx.curr == INVALID)
+				return (SUCCESS);
 			sx.found_word = true;
-			continue ;
+			sx.cont = true;
 		}
-		else if (sx.curr != WORD && sx.curr != INVALID)
+		if (sx.curr != WORD && sx.curr != INVALID)
 			if (handle_syntax(&sx, quotes, line) == FAILURE)
 				return (FAILURE);
-		if ((++sx.i) >= 0 && sx.cont)
+		if (sx.cont)
 			continue ;
+		(++sx.i);
 	}
 	return (SUCCESS);
 }

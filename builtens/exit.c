@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:28:33 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 23:00:25 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 21:50:42 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ void	setup_exit(t_db *db, int *args_len, char *av[], int index)
 
 int	exit_check(char *av[], int args_len, int err, unsigned char *exit_code)
 {
-	if (err)
+	t_db	*db;
+
+	db = this();
+	if (err || is_str_empty(db, av[1]) || !are_all(av[1], isdigit))
 	{
 		put_fd(2, "exit: ");
 		put_fd(2, av[1]);

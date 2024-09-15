@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:35:59 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 17:41:56 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 01:37:09 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 			if (line[*i] == SGL_QUOTE)
 				(*i)++;
 		}
-		if (line[*i] == DBL_QUOTE)
+		else if (line[*i] == DBL_QUOTE)
 		{
 			(*i)++;
 			while (line[*i] && line[*i] != DBL_QUOTE)
@@ -39,11 +39,10 @@ int	skip_word(t_db *db, t_quote *quotes, char *line, int *i)
 			if (line[*i] == DBL_QUOTE)
 				(*i)++;
 		}
-		(*i)++;
+		else 
+			(*i)++;
 	}
-	if (get_tok(db, line, i, quotes) == WORD)
-		return (SUCCESS);
-	return (FAILURE);
+	return	(get_tok(db, line, i, quotes));
 }
 
 int	get_next_tok(t_quote *quotes, char *line, int *i)

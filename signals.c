@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:58:57 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 01:33:09 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 01:13:24 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,7 @@ void	parent_behav(int signal)
 		ft_write(db, 2, "\n", 2);
 	}
 	if (signal == SIGQUIT)
-	{
-		ft_write(db, 2, "Quit\n", 5);
-	}
+		ft_write(db, 2, "Quit", 5);
 }
 
 void	handle_parent_signals(void)
