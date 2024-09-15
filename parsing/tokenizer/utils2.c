@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 01:54:14 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 06:38:03 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:40:56 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,8 @@ char	**append_word(t_db *db, char **result, char *save)
 	t_quote	*q;
 	bool	cancel_split;
 
-	if ((int)len(save) == 0)
-	{
+	if (len(save) == 0)
 		return (result);
-	}
 	q = NULL;
 	if (track_quotes(db, &q, save) == FAILURE)
 		return (NULL);

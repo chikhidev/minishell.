@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 04:02:49 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:41:55 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ int	open_heredoc(t_db *db, char *delim)
 
 	q = NULL;
 
-	printf("line-> [%s]\n", delim);
 	if (track_quotes(db, &q, delim) == FAILURE)
 		return (FAILURE);
 	expand_herdoc(q, &delim);
