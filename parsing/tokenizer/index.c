@@ -20,15 +20,14 @@ int	handle_file(t_tokenizer *self)
 			|| this()->curr_type == APPENDFILE);
 	skip_open_spaces(*self->quotes, self->line, &self->it.i);
 	self->it.j = self->it.i;
-	while (self->line[self->it.j]
-		&& !(is_whitespace(self->line[self->it.j]) && !is_inside_quotes_list(*self->quotes, self->it.j))
-		&& !(
-				!is_inside_quotes_list(*self->quotes, self->it.j)
-				&&((validate_io(&self->line[self->it.j], 1) != INVALID
-				|| validate_io(&self->line[self->it.j], 2) != INVALID))
-			))
+	while (self->line[self->it.j] && !(is_whitespace(self->line[self->it.j])
+			&& !is_inside_quotes_list(*self->quotes, self->it.j))
+		&& !(!is_inside_quotes_list(*self->quotes, self->it.j)
+			&& ((validate_io(&self->line[self->it.j], 1) != INVALID
+					|| validate_io(&self->line[self->it.j], 2) != INVALID))))
 		self->it.j++;
-	self->save = ft_substr(this(), self->line, self->it.i, self->it.j - self->it.i);
+	self->save = ft_substr(this(), self->line, self->it.i, self->it.j
+			- self->it.i);
 	if (this()->curr_type == HEREDOC)
 	{
 		if (open_heredoc(this(), self->save) == FAILURE)

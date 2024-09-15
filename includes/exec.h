@@ -27,7 +27,7 @@ int		run_builtin(t_db *db, t_cmd *node, int index);
 char	*cmd_path(t_db *db, char *filename);
 
 // path-checker.c
-bool    is_path(char *path);
+bool	is_path(char *path);
 
 void	*pid_add(t_db *db, pid_t new_ip);
 void	pid_free(t_db *db, pid_t ip_to_free);

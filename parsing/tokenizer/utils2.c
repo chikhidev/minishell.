@@ -51,14 +51,9 @@ char	**append_word(t_db *db, char **result, char *save)
 	q = NULL;
 	if (track_quotes(db, &q, save) == FAILURE)
 		return (NULL);
-	cancel_split = (
-		result && result[0]
-		&& ft_strcmp(result[0], "export") == 0)
-		&& (
-			ft_strsearch(save, '=') != NULL
-			&& (ft_strsearch(save, '=') + 1) != NULL
-			&& *(ft_strsearch(save, '=') + 1) == '$'
-		);
+	cancel_split = (result && result[0] && ft_strcmp(result[0], "export") == 0)
+		&& (ft_strsearch(save, '=') != NULL && (ft_strsearch(save, '=')
+				+ 1) != NULL && *(ft_strsearch(save, '=') + 1) == '$');
 	expand(&save, &q);
 	if (len(save) == 0)
 		return (result);
