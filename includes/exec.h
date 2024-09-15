@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:13:27 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 21:16:13 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 00:13:17 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ int		run_builtin(t_db *db, t_cmd *node, int index);
 char	*cmd_path(t_db *db, char *filename);
 
 // path-checker.c
-bool	is_absolute_path(char *path);
-bool	is_relative_path(char *path);
+bool    is_path(char *path);
 
 void	*pid_add(t_db *db, pid_t new_ip);
 void	pid_free(t_db *db, pid_t ip_to_free);

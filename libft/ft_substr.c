@@ -3,33 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:26:29 by abchikhi          #+#    #+#             */
-/*   Updated: 2023/11/02 13:26:30 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 00:02:36 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/main.h"
 #include "libft.h"
 
-char	*ft_substr(t_db *db, char const *s, unsigned int start, size_t len)
+char	*ft_substr(t_db *db, char const *s, unsigned int start, size_t len_)
 {
 	char	*substring;
 	size_t	str_len;
 
 	if (!s)
 		return (NULL);
-	str_len = ft_strlen(s);
+	str_len = (int)len(s);
 	if (start > str_len || *s == '\0')
 		return (ft_strdup(db, ""));
-	if (len > str_len - start)
-		len = str_len - start;
-	substring = gc_malloc(db, sizeof(char) * (len + 1));
+	if (len_ > str_len - start)
+		len_ = str_len - start;
+	substring = gc_malloc(db, sizeof(char) * (len_ + 1));
 	if (!substring)
 		return (NULL);
-	ft_memcpy(substring, s + start, len);
-	substring[len] = '\0';
+	ft_memcpy(substring, s + start, len_);
+	substring[len_] = '\0';
 	return (substring);
 }
 

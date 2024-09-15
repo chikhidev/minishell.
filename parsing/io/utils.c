@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 15:58:46 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	read_and_fill(t_db *db, char *line, int *pipe_fd, char *delim)
 	}
 	tmp = ft_strdup(db, line);
 	free(line);
-	if (ft_strcmp(delim, tmp) == 0)
+	if (ft_strcmp(delim, tmp) == 0 || ((int)len(delim) == 0 && (int)len(tmp) == 0))
 	{
 		ft_close(db, &pipe_fd[1]);
 		return (FAILURE);
@@ -50,7 +50,7 @@ int	read_and_fill(t_db *db, char *line, int *pipe_fd, char *delim)
 		ec_void(db);
 		exit(1);
 	}
-	ft_write(db, pipe_fd[1], tmp, ft_strlen(tmp));
+	ft_write(db, pipe_fd[1], tmp, (int)len(tmp));
 	ft_write(db, pipe_fd[1], "\n", 1);
 	return (SUCCESS);
 }
@@ -76,9 +76,9 @@ void	heredoc_child(char *delim, int *pipe_fd)
 
 void	expand_herdoc(t_quote *q, char **delim)
 {
-	this()->expand_hrdc = ft_strlen(*delim);
+	this()->expand_hrdc = (int)len(*delim);
 	*delim = without_quotes(this(), *delim, q);
-	this()->expand_hrdc -= ft_strlen(*delim);
+	this()->expand_hrdc -= (int)len(*delim);
 }
 
 int	open_heredoc(t_db *db, char *delim)
@@ -89,6 +89,8 @@ int	open_heredoc(t_db *db, char *delim)
 	t_quote	*q;
 
 	q = NULL;
+
+	printf("line-> [%s]\n", delim);
 	if (track_quotes(db, &q, delim) == FAILURE)
 		return (FAILURE);
 	expand_herdoc(q, &delim);

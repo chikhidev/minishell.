@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:03 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 06:13:22 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ char	*get_environment_var(t_db *db, char *var, char *env[])
 	temp = ft_strjoin(db, var, "=");
 	while (env[i])
 	{
-		if (ft_strncmp(temp, env[i], ft_strlen(temp)) == 0)
-			return (env[i] + ft_strlen(var) + 1);
+		if (ft_strncmp(temp, env[i], (int)len(temp)) == 0)
+			return (env[i] + (int)len(var) + 1);
 		i++;
 	}
 	return (NULL);
@@ -35,9 +35,9 @@ char	*get_env(t_db *db, char *name)
 
 	if (!name)
 		return (NULL);
-	if (ft_strncmp(name, "?", ft_strlen(name)) == 0)
+	if (ft_strncmp(name, "?", (int)len(name)) == 0)
 		return (ft_itoa(db, db->last_status));
-	if (ft_strncmp(name, "_", ft_strlen(name)) == 0)
+	if (ft_strncmp(name, "_", (int)len(name)) == 0)
 		return (ft_strdup(db, get_env_node(db->env_list, "_")->val));
 	if (are_all(name, ft_isdigit))
 		return (ft_strdup(db, name + 1));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 17:30:33 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/11 21:30:10 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 00:04:40 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 
 int	ft_intlen(int n)
 {
-	int	len;
+	int	len_;
 
-	len = 0;
+	len_ = 0;
 	while (n)
 	{
 		n /= 10;
-		len++;
+		len_++;
 	}
-	return (len);
+	return (len_);
 }
 
 char	*allocate_buffer(t_db *db, long long *number, int *len, int *neg)

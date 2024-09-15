@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:47:57 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 01:24:39 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:17 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int	update_using_var(char **line, t_str_cut *cut, t_quote **quotes,
 	idx = updated_line(db, line, env_var_name, cut);
 	value = get_env(db, env_var_name);
 	if (quotes)
-		update_quotes(*quotes, cut->start_ignore, ft_strlen(env_var_name) + 1,
-			ft_strlen(value));
+		update_quotes(*quotes, cut->start_ignore, (int)len(env_var_name) + 1,
+			(int)len(value));
 	db->split = db->split && split_factor(value, *line, cut->start_ignore);
 	env_var_name = NULL;
 	if ((*line)[idx] == '$' && !(quotes && inside_single_quote(*quotes, idx)))
@@ -88,15 +88,15 @@ int	switch_(char **line, t_str_cut *cut, t_quote **quotes, int *i)
 
 int	expand(t_db *db, char **line, t_quote **quotes)
 {
-	int			i;
 	t_str_cut	cut;
-	int			len;
+	int			len_;
+	int			i;
 
 	db->split = false;
-	len = ft_strlen(*line);
+	len_ = (int)len(*line);
 	ft_bzero(&cut, sizeof(t_str_cut));
 	i = 0;
-	while (i < len)
+	while (i < len_)
 	{
 		if ((*line)[i] == '$' && !(quotes && inside_single_quote(*quotes, i)))
 		{
@@ -106,7 +106,7 @@ int	expand(t_db *db, char **line, t_quote **quotes)
 			cut.end_ignore = i;
 			if (switch_(line, &cut, quotes, &i) == FAILURE)
 				return (FAILURE);
-			len = ft_strlen(*line);
+			len_ = (int)len(*line);
 		}
 		i++;
 	}

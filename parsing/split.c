@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:39 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/13 17:08:11 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	smart_split(t_db *db, char *line, void **current_node, void *parent)
 
 	if (db->error || !db->exec_line)
 		return (FAILURE);
-	if (ft_strlen(line) == 0 || all_whitespaces(line, 0, ft_strlen(line)))
+	if ((int)len(line) == 0 || all_whitespaces(line, 0, (int)len(line)))
 		return (SUCCESS);
 	ft_bzero(&holder, sizeof(holder));
 	holder.tracker = gc_malloc(db, sizeof(t_tracker));

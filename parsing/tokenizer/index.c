@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 01:51:23 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:57:18 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,14 @@ int	handle_file(t_tokenizer *self)
 	skip_open_spaces(*self->quotes, self->line, &self->it.i);
 	self->it.j = self->it.i;
 	while (self->line[self->it.j] && !(is_whitespace(self->line[self->it.j])
-			&& !is_inside_quotes_list(*self->quotes, self->it.j))
-		&& !(validate_io(&self->line[self->it.j], 1) != INVALID
-			|| validate_io(&self->line[self->it.j], 2) != INVALID))
+		&& !is_inside_quotes_list(*self->quotes, self->it.j))
+		&& !(
+				!is_inside_quotes_list(*self->quotes, self->it.j)
+				&&((validate_io(&self->line[self->it.j], 1) != INVALID
+				|| validate_io(&self->line[self->it.j], 2) != INVALID))
+			))
 		self->it.j++;
-	self->save = ft_substr(this(), self->line, self->it.i, self->it.j
-			- self->it.i);
+	self->save = ft_substr(this(), self->line, self->it.i, self->it.j - self->it.i);
 	if (this()->curr_type == HEREDOC)
 	{
 		if (open_heredoc(this(), self->save) == FAILURE)
@@ -88,7 +90,7 @@ int	token(t_tokenizer *self)
 char	**tokenize(t_db *db, t_quote **quotes, char *s)
 {
 	t_tokenizer	self;
-	int			len;
+	int			len_;
 
 	ft_bzero(&self, sizeof(t_tokenizer));
 	self.quotes = quotes;
@@ -97,8 +99,8 @@ char	**tokenize(t_db *db, t_quote **quotes, char *s)
 	self.read_write_perm = true;
 	self.save = NULL;
 	skip_open_spaces(*self.quotes, self.line, &self.it.i);
-	len = ft_strlen(self.line);
-	while (self.it.i < len)
+	len_ = (int)len(self.line);
+	while (self.it.i < len_)
 	{
 		if (token(&self) == FAILURE)
 			return (NULL);

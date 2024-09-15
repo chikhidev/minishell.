@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:11 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 08:54:05 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 02:03:53 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*get_path(t_db *db, char **args)
 		return (ft_strdup(db, path));
 	if (is_str_empty(db, args[0]))
 		ft_exit(db, 127, 3, ft_strjoin(db, args[0], ": command not found"));
-	if (is_relative_path(path) || is_absolute_path(path))
+	if (is_path(args[0]))
 	{
 		check_permissions(db, path);
 	}
@@ -74,6 +74,7 @@ void	exec(t_db *db, void *node)
 {
 	if (!node)
 		return ;
+	printf("exec -> %d\n", ((t_cmd *)node)->type);
 	if (((t_cmd *)node)->type == CMD_NODE)
 		handle_cmd_node(db, node, NULL, -1);
 	else if (((t_op *)node)->op_presentation == PIPE)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:57:14 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 16:57:15 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int	error(t_db *db, char *specifier, char *msg)
 	{
 		if (!specifier)
 		{
-			ft_write(db, 2, msg, ft_strlen(msg));
+			ft_write(db, 2, msg, (int)len(msg));
 			ft_write(db, 2, "\n", 1);
 		}
 		else
 		{
-			ft_write(db, 2, specifier, ft_strlen(specifier));
+			ft_write(db, 2, specifier, (int)len(specifier));
 			ft_write(db, 2, ": ", 2);
-			ft_write(db, 2, msg, ft_strlen(msg));
+			ft_write(db, 2, msg, (int)len(msg));
 			ft_write(db, 2, "\n", 1);
 		}
 	}

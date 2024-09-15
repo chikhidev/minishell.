@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 09:22:41 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 00:14:26 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,25 +84,17 @@ char	*cmd_path(t_db *db, char *filename)
 	return (NULL);
 }
 
-bool	is_absolute_path(char *path)
+bool	is_path(char *path)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	skip_spaces(path, &i);
-	if (path[i] == '/')
-		return (true);
-	return (false);
-}
-
-bool	is_relative_path(char *path)
-{
-	int	i;
-
-	i = 0;
-	skip_spaces(path, &i);
-	if (path[i] && i < ((int)ft_strlen(path) - 1) && path[i] == '.'
-		&& path[i + 1] == '/')
-		return (true);
+	while (path[i])
+	{
+		if (path[i] == '/')
+			return (true);
+		i++;
+	}
 	return (false);
 }

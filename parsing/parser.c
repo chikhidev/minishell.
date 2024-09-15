@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:30 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:31 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	parser(t_db *db, char *line)
 
 	quotes = NULL;
 	i = 0;
-	if (ft_strlen(line) == 0)
+	if ((int)len(line) == 0)
 		return (SUCCESS);
 	skip_spaces(line, &i);
 	if (line[i] == '\0')
@@ -31,7 +31,8 @@ int	parser(t_db *db, char *line)
 	if (syntax_checker(db, line, quotes) == FAILURE)
 		return (FAILURE);
 	if (smart_split(db, line, &db->root_node, NULL) == FAILURE)
+	{
 		return (FAILURE);
-	else
-		return (SUCCESS);
+	}
+	return (SUCCESS);
 }

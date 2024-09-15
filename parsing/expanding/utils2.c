@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:07 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:50:50 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 	updated_index = 0;
 	if (var != NULL)
 	{
-		cut->end_ignore += ft_strlen(var);
+		cut->end_ignore += (int)len(var);
 		tmp = get_env(db, var);
 	}
 	else if (cut->start_include != -1)
@@ -39,7 +39,7 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 		updated_index = cut->end_include - 2;
 	}
 	tmp = ft_strjoin(db, left_section, tmp);
-	right_section = ft_substr(db, *line, cut->end_ignore, ft_strlen(*line)
+	right_section = ft_substr(db, *line, cut->end_ignore, (int)len(*line)
 			- cut->end_ignore);
 	*line = ft_strjoin(db, tmp, right_section);
 	return (updated_index);
@@ -47,7 +47,7 @@ int	update_index(t_db *db, char **line, char *var, t_str_cut *cut)
 
 int	updated_line(t_db *db, char **line, char *var, t_str_cut *cut)
 {
-	if (ft_strlen(var) == 0)
+	if ((int)len(var) == 0)
 		return (cut->end_ignore);
 	return (update_index(db, line, var, cut));
 }
@@ -56,7 +56,7 @@ bool	split_factor(char *value, char *line, int pos)
 {
 	(void)pos;
 	(void)line;
-	if (ft_strlen(value) == 0)
+	if ((int)len(value) == 0)
 		return (false);
 	return (true);
 }

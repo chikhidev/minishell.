@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 07:02:06 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 18:31:02 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 02:18:59 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	handle_prompt(t_db *db, char **line)
 	tmp = ft_strdup(db, *line);
 	free(*line);
 	*line = tmp;
-	if (ft_strlen(*line) > 0)
+	if ((int)len(*line) > 0)
 		add_history(*line);
 	return (SUCCESS);
 }

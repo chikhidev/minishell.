@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:28:14 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 18:28:15 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:59:10 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 
 void	write_var(t_db *db, char *key, char *val)
 {
-	ft_write(db, STDOUT_FILENO, key, ft_strlen(key));
+	ft_write(db, STDOUT_FILENO, key, (int)len(key));
 	ft_write(db, STDOUT_FILENO, "=", 1);
-	ft_write(db, STDOUT_FILENO, val, ft_strlen(val));
+	ft_write(db, STDOUT_FILENO, val, (int)len(val));
 	ft_write(db, STDOUT_FILENO, "\n", 1);
 }
 

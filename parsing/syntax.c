@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 17:35:07 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 01:37:28 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 01:53:26 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ int	handle_pipe_syntax(t_syntax *sx, t_quote *quotes, char *line)
 	sx->msg = ft_strjoin(db, sx->msg, "'");
 	if (!sx->found_word)
 		return (error(db, "syntax", sx->msg));
-	if (sx->next_tok != WORD)
-		return (error(db, "syntax", sx->msg));
 	if (sx->next_tok == PIPE)
+		return (error(db, "syntax", sx->msg));
+	if (sx->next_tok == INVALID)
 		return (error(db, "syntax", sx->msg));
 	skip_word(db, quotes, line, &sx->i);
 	sx->found_word = true;
@@ -109,7 +109,7 @@ int	syntax_checker(t_db *db, char *line, t_quote *quotes)
 				return (FAILURE);
 		if (sx.cont)
 			continue ;
-		(++sx.i);
+		++sx.i;
 	}
 	return (SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 01:54:14 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 02:04:23 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	**updated_result(char **result, char *save, bool empty_quotes,
 		add(this(), &result, ft_strdup(this(), ""));
 		return (result);
 	}
-	if (ft_strlen(save) == 0)
+	if ((int)len(save) == 0)
 		return (result);
 	if (this()->split && !cancel_split)
 	{
@@ -48,7 +48,7 @@ char	**append_word(t_db *db, char **result, char *save)
 	bool	cancel_split;
 	bool	empty_quotes;
 
-	if (ft_strlen(save) == 0)
+	if ((int)len(save) == 0)
 	{
 		return (result);
 	}
@@ -60,8 +60,8 @@ char	**append_word(t_db *db, char **result, char *save)
 				+ 1) != NULL && *(ft_strsearch(save, '=') + 1) == '$'
 			&& *(save) != '$');
 	expand(db, &save, &q);
-	empty_quotes = (q && q->start == 0 && q->end == ((int)ft_strlen(save) - 1));
+	empty_quotes = (q && q->start == 0 && q->end == ((int)(int)len(save) - 1));
 	save = without_quotes(db, save, q);
-	empty_quotes = empty_quotes && (ft_strlen(save) == 0);
+	empty_quotes = empty_quotes && ((int)len(save) == 0);
 	return (updated_result(result, save, empty_quotes, cancel_split));
 }

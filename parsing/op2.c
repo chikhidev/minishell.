@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:28 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 02:48:29 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/14 23:47:40 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,6 @@ int	is_op(char *line, int *i)
 	if (line[*i] == '|')
 		return (PIPE);
 	return (INVALID);
-}
-
-int	priority_of_op(int op)
-{
-	if (op == AND || op == OR)
-		return (AND_OR_PRIORITY);
-	else if (op == PIPE)
-		return (PIPE_PRIORITY);
-	return (NOT_FOUND);
 }
 
 int	create_op_node(t_db *db, int op, void **curr)

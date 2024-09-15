@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exp_crud.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:38:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/13 16:57:04 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	put_in_middle_exp(t_exp_list **list, t_exp_list *new)
 	curr = prev->next;
 	while (curr && curr->next)
 	{
-		if (ft_strncmp(new->key, curr->key, ft_strlen(curr->key)) < 0)
+		if (ft_strncmp(new->key, curr->key, (int)len(curr->key)) < 0)
 		{
 			prev->next = new;
 			new->next = curr;
@@ -45,7 +45,7 @@ void	push_exp_sort(t_exp_list **list, t_exp_list *new)
 		return ;
 	if (*list == NULL)
 		add_exp_front(list, new);
-	else if (ft_strncmp(new->key, (*list)->key, ft_strlen((*list)->key)) < 0)
+	else if (ft_strncmp(new->key, (*list)->key, (int)len((*list)->key)) < 0)
 		add_exp_front(list, new);
 	else
 		put_in_middle_exp(list, new);
@@ -62,7 +62,7 @@ void	push_exp_back(t_exp_list **list, t_exp_list *new)
 			add_exp_front(list, new);
 		}
 		else if (ft_strncmp(new->key, (*list)->key,
-				ft_strlen((*list)->key)) < 0)
+				(int)len((*list)->key)) < 0)
 			add_exp_front(list, new);
 		else
 		{

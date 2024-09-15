@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 18:27:29 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 18:28:02 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/14 23:59:10 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	echo_(t_db *db, char *args[])
 	i = get_start_idx(args, &new_line);
 	while (i < n_args)
 	{
-		ft_write(db, 1, args[i], ft_strlen(args[i]));
+		ft_write(db, 1, args[i], (int)len(args[i]));
 		i++;
 		if (i != n_args)
 			ft_write(db, 1, " ", 1);
