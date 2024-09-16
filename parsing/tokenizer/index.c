@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 06:29:16 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 08:17:22 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	handle_file(t_tokenizer *self)
 		self->it.j++;
 	self->save = ft_substr(this(), self->line, self->it.i, self->it.j
 			- self->it.i);
+
 	if (this()->curr_type == HEREDOC)
 	{
 		if (open_heredoc(this(), self->save) == FAILURE)
@@ -48,8 +49,15 @@ int	saver(t_db *db, t_tokenizer *self)
 	db->curr_type = validate_io(&self->line[self->it.i], 2);
 	if (db->curr_type == INVALID)
 		db->curr_type = validate_io(&self->line[self->it.i], 1);
-	if (db->curr_type != INVALID)
+	if (db->curr_type != INVALID) 
 	{
+		if (self->save)
+		{
+			self->result = append_word(db, self->result, self->save);
+			if (!self->result)
+				return (FAILURE);
+			self->save = NULL;
+		}
 		if (handle_file(self) == FAILURE)
 			return (FAILURE);
 	}
