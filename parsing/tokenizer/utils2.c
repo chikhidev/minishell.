@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 01:54:14 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/16 08:14:37 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 21:56:18 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ char	**append_word(t_db *db, char **result, char *save)
 		return (NULL);
 	cancel_split = (result && result[0] && ft_strcmp(result[0], "export") == 0)
 		&& (ft_strsearch(save, '=') != NULL && (ft_strsearch(save, '=')
-				+ 1) != NULL && *(ft_strsearch(save, '=') + 1) == '$');
+				+ 1) != NULL && *(ft_strsearch(save, '=') + 1) == '$' && (save
+				&& save[0] != '$'));
 	expand(&save, &q);
 	if (len(save) == 0)
 		return (result);
