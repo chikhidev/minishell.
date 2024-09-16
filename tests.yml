@@ -34,4 +34,4 @@ Direct leak of 30 byte(s) in 1 object(s) allocated from:
     #6 0x7f0e93d7fd8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
 
 SUMMARY: AddressSanitizer: 60 byte(s) leaked in 2 allocation(s).
->_$  
+>_$

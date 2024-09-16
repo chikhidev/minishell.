@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:21 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 04:17:20 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 08:16:45 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,28 +74,28 @@ int	check_ambigious(t_db *db, char *file)
 	return (false);
 }
 
-int	open_file_p2(t_db *db, char *tmp, int type)
+int	open_file_p2(t_db *db, char *file, int type)
 {
 	int	fd;
 
 	fd = INVALID;
-	if ((int)len(tmp) == 0)
+	if ((int)len(file) == 0)
 	{
 		put_fd(2, "No such file or directory\n");
 		return (FAILURE);
 	}
-	tmp = ft_split(db, tmp, " \t\n\r\v\f")[0];
+	file = ft_split(db, file, " \t\n\r\v\f")[0];
 	if (type == APPENDFILE)
-		fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		fd = ft_open(db, file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == INPUTFILE)
-		fd = ft_open(db, tmp, O_RDONLY, -1);
+		fd = ft_open(db, file, O_RDONLY, -1);
 	else if (type == OUTPUTFILE)
-		fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		fd = ft_open(db, file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (create_redirection(db, type, fd) == FAILURE)
 		return (FAILURE);
 	if (fd == INVALID)
 	{
-		perror(tmp);
+		perror(file);
 		return (FAILURE);
 	}
 	return (SUCCESS);
@@ -104,7 +104,6 @@ int	open_file_p2(t_db *db, char *tmp, int type)
 int	open_file(t_db *db, char *file, int type)
 {
 	t_quote	*quotes;
-	char	*tmp;
 
 	quotes = NULL;
 	if (!file || (int)len(file) == 0)
@@ -118,8 +117,8 @@ int	open_file(t_db *db, char *file, int type)
 		return (FAILURE);
 	if (expand(&file, &quotes) == FAILURE)
 		return (FAILURE);
-	tmp = without_quotes(db, file, quotes);
-	if (open_file_p2(db, tmp, type) == FAILURE)
+	db->q = quotes;
+	if (open_file_p2(db, file, type) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
