@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:03 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 22:02:07 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ bool	valid(char **line, int *i, bool *is_digit, bool *is_special_char)
 		return (false);
 	if (ft_isdigit((*line)[(*i)]))
 		*is_digit = true;
-	if ((*line)[(*i)] == '?' || (*line)[(*i)] == '_')
+	if ((*line)[(*i)] == '?')
 		*is_special_char = true;
 	if (ft_isalpha((*line)[(*i)]) && *is_digit)
 		return (false);
