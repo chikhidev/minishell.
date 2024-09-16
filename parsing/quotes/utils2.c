@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:27:14 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/12 07:42:29 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:46:12 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	track_quotes(t_db *db, t_quote **head, char *line)
 		{
 			last->end = i;
 		}
-		else if ((line[i] == SNGLQUOTE || line[i] == DOBLQUOTE) && last->end !=
-			-1)
+		else if ((line[i] == SNGLQUOTE || line[i] == DOBLQUOTE)
+			&& last->end != -1)
 			add_quote(db, head, line[i], i);
 		i++;
 	}

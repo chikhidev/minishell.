@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 23:59:10 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:08:59 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,15 @@ void	catch_feedback(t_db *db, int process_res)
 	status = WEXITSTATUS(process_res);
 	reason = process_res & 0x7F;
 	if (reason == 2)
+	{
 		db->last_status = 130;
+		write(1, "\n", 1);
+	}
 	else if (reason == 3)
+	{
 		db->last_status = 131;
+		write(1, "\n", 1);
+	}
 	else
 		db->last_status = status;
 	if (status && db->last_status == FAIL)

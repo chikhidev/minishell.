@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:48:14 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/11 22:00:41 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/16 15:26:58 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,18 @@ int	get_tok(t_db *db, char *s, int *i, t_quote *quotes)
 	if (is_whitespace(s[*i]))
 		return (W_SPACE);
 	if (s[*i] == '|')
-		return (PIPE);
+		return ((*i)++, PIPE);
 	if (s[*i] == '<')
 	{
-		if (s[*i + 1] == '<' && ((*i)++) >= 0)
-			return (db->heredoc_counter++, HEREDOC);
-		return (INPUT);
+		if (s[*i + 1] == '<')
+			return (((*i) += 2), db->heredoc_counter++, HEREDOC);
+		return ((*i)++, INPUT);
 	}
 	if (s[*i] == '>')
 	{
 		if (s[*i + 1] == '>')
-		{
-			(*i)++;
-			return (APPEND);
-		}
+			return (((*i) += 2), APPEND);
+		return ((*i)++, REDIR);
 		return (REDIR);
 	}
 	return (WORD);

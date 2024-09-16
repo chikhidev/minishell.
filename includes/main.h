@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 06:31:32 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 19:17:28 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,7 +336,8 @@ void					parent_behav(int signal);
 void					handle_parent_signals(void);
 void					heredoc_behave(int signal);
 void					handle_here_doc_signals(void);
-
+void					parent_handle_quit(int sig);
+void					parent_handle_int(int sig);
 void					skip_open_spaces(t_quote *quotes, char *line, int *i);
 void					add(t_db *db, char ***result, char *save);
 

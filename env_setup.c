@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_setup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 17:11:13 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 07:04:26 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 09:08:53 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,20 @@ void	handle_pwd_oldpwd_no_exist(t_db *db, bool pwd_exist, bool old_pwd_exist)
 	t_exp_list	*pwd_exp;
 	t_exp_list	*old_pwd_exp;
 	t_env_list	*pwd_env;
+	char		*pwd_exp_s;
+	char		*pwd_env_s;
 
 	if (!pwd_exist)
 	{
+		pwd_exp_s = getcwd(NULL, 0);
 		pwd_exp = new_exp_node(db, ft_strdup_ec(db, "PWD"), ft_strdup_ec(db,
-					getcwd(NULL, 0)));
+					pwd_exp_s));
 		push_exp_sort(&db->exp_list, pwd_exp);
+		pwd_env_s = getcwd(NULL, 0);
 		pwd_env = new_env_node(db, ft_strdup_ec(db, "PWD"), ft_strdup_ec(db,
-					getcwd(NULL, 0)));
+					pwd_env_s));
+		free(pwd_env_s);
+		free(pwd_exp_s);
 		push_env_back(&db->env_list, pwd_env);
 	}
 	if (!old_pwd_exist)

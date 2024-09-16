@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:09 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 02:04:56 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/16 20:14:50 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 {
 	int	id;
 	int	status;
+
 	if (!node || !((t_cmd *)node)->args || !((t_cmd *)node)->args[0])
 		return ;
 	if (index == -1)
@@ -92,12 +93,10 @@ void	handle_cmd_node(t_db *db, void *node, int **pipes, int index)
 	else
 	{
 		id = fork();
-		if (id == CHILD){
+		if (id == CHILD)
 			exec_cmd(db, node, pipes, index);
-		}
 		else
 		{
-			handle_parent_signals();
 			if (index == -1)
 				(waitpid(id, &status, 0), catch_feedback(db, status));
 			else

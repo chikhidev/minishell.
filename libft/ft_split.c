@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 13:15:22 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 06:25:53 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:48:03 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static bool	is_separator(char c, char *c2, int pos)
 	}
 	return (false);
 }
+
 static int	count_words(const char *str, char *c)
 {
 	int				j;
@@ -55,7 +56,7 @@ static int	count_words(const char *str, char *c)
 	return (i);
 }
 
-static char	*extract_word(t_db *db, char const *s, char *c, int	start)
+static char	*extract_word(t_db *db, char const *s, char *c, int start)
 {
 	int			len;
 	char		*word;
@@ -75,7 +76,7 @@ static char	*extract_word(t_db *db, char const *s, char *c, int	start)
 	while (i < len)
 	{
 		if (!is_quote(this()->q, start))
-		{	
+		{
 			word[i] = s[start];
 			i++;
 		}

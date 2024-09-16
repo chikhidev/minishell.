@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:58:57 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 01:40:16 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/16 20:12:54 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,6 @@ void	default_signals_behav(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
-}
-
-void	parent_behav(int signal)
-{
-	t_db	*db;
-
-	db = this();
-	if (signal == SIGINT)
-	{
-		ft_write(db, 2, "\n", 2);
-	}
-	if (signal == SIGQUIT)
-		ft_write(db, 2, "Quit", 5);
-}
-
-void	handle_parent_signals(void)
-{
-	signal(SIGINT, parent_behav);
-	signal(SIGQUIT, parent_behav);
 }
 
 void	heredoc_behave(int signal)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/16 08:20:36 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:46:48 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	saver(t_db *db, t_tokenizer *self)
 	db->curr_type = validate_io(&self->line[self->it.i], 2);
 	if (db->curr_type == INVALID)
 		db->curr_type = validate_io(&self->line[self->it.i], 1);
-	if (db->curr_type != INVALID) 
+	if (db->curr_type != INVALID)
 	{
 		if (self->save)
 		{

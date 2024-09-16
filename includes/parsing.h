@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 04:02:39 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:44:02 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,7 @@ typedef struct s_syntax
 {
 	int			curr;
 	int			i;
-	int			next_tok;
-	char		*msg;
-	t_quote		*quotes;
 	bool		found_word;
-	char		*hd_msg;
-	bool		cont;
 }				t_syntax;
 
 /*string.c*/
@@ -156,8 +151,13 @@ int				update_index(t_db *db, char **line, char *value,
 					t_str_cut *cut);
 
 bool			split_factor(char *value, char *line, int pos);
+bool			is_redir(int op);
+int				skip_word(t_db *db, t_quote *quotes, char *line, int *i);
+int				skip_white_spaces(t_quote *quotes, char *line, int *i);
+int				get_next_tok(t_quote *quotes, char *line, int *i);
+char			*get_token_str(t_db *db, int tok);
 
-char			*get_token_error(t_db *db, int tok, int next_tok);
+char			*get_token_error(t_db *db, int tok);
 void			init_sx(t_syntax *sx, t_quote *quotes);
 int				handle_pipe_syntax(t_syntax *sx, t_quote *quotes, char *line);
 int				handle_syntax(t_syntax *sx, t_quote *quotes, char *line);
@@ -166,5 +166,9 @@ bool			is_redir(int op);
 int				skip_word(t_db *db, t_quote *quotes, char *line, int *i);
 int				get_next_tok(t_quote *quotes, char *line, int *i);
 char			*get_token_str(t_db *db, int tok);
+char			*get_token_error(t_db *db, int tok);
+int				handle_pipe_sx(int i, bool *found_word, char *line, t_quote *q);
+int				h_redir(t_quote *quotes, int tok, int *i, char *line);
+int				syntax_checker(t_db *db, char *line, t_quote *quotes);
 
 #endif

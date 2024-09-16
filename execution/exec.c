@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 20:48:11 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 02:03:53 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/16 20:14:37 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void	exec(t_db *db, void *node)
 {
 	if (!node)
 		return ;
-	printf("exec -> %d\n", ((t_cmd *)node)->type);
 	if (((t_cmd *)node)->type == CMD_NODE)
 		handle_cmd_node(db, node, NULL, -1);
 	else if (((t_op *)node)->op_presentation == PIPE)

@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 07:02:06 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 02:18:59 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/16 19:11:15 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	handle_prompt(t_db *db, char **line)
 	signal(SIGQUIT, SIG_IGN);
 	tmp = ft_strjoin(db, "\001" MAGENTA "\002>_\001" RESET "\002", "$ ");
 	*line = readline(tmp);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 	if (!*line)
 	{
 		put_fd(2, "exit\n");

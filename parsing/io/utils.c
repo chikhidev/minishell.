@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/15 07:58:05 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 20:45:06 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ int	read_and_fill(t_db *db, char *line, int *pipe_fd, char *delim)
 	free(line);
 	if (ft_strcmp(delim, tmp) == 0 || ((int)len(delim) == 0
 			&& (int)len(tmp) == 0))
-	{
-		ft_close(db, &pipe_fd[1]);
-		return (FAILURE);
-	}
+		return (ft_close(db, &pipe_fd[1]), FAILURE);
 	if (db->expand_hrdc == 0 && expand(&tmp, NULL) == FAILURE)
 	{
 		ft_close(db, &pipe_fd[1]);
