@@ -6,7 +6,7 @@
 /*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 22:39:18 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/15 01:39:45 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 21:43:41 by sgouzi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	db_reset(t_db *db)
 	db->input_fd = STDIN_FILENO;
 	db->output_fd = STDOUT_FILENO;
 	db->fd = NULL;
-	db->split = false;
 	pid_void(db);
 }
 

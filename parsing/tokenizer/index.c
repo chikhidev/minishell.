@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:57:18 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 06:29:16 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,13 @@ int	handle_file(t_tokenizer *self)
 	skip_open_spaces(*self->quotes, self->line, &self->it.i);
 	self->it.j = self->it.i;
 	while (self->line[self->it.j] && !(is_whitespace(self->line[self->it.j])
-		&& !is_inside_quotes_list(*self->quotes, self->it.j))
-		&& !(
-				!is_inside_quotes_list(*self->quotes, self->it.j)
-				&&((validate_io(&self->line[self->it.j], 1) != INVALID
-				|| validate_io(&self->line[self->it.j], 2) != INVALID))
-			))
+			&& !is_inside_quotes_list(*self->quotes, self->it.j))
+		&& !(!is_inside_quotes_list(*self->quotes, self->it.j)
+			&& ((validate_io(&self->line[self->it.j], 1) != INVALID
+					|| validate_io(&self->line[self->it.j], 2) != INVALID))))
 		self->it.j++;
-	self->save = ft_substr(this(), self->line, self->it.i, self->it.j - self->it.i);
+	self->save = ft_substr(this(), self->line, self->it.i, self->it.j
+			- self->it.i);
 	if (this()->curr_type == HEREDOC)
 	{
 		if (open_heredoc(this(), self->save) == FAILURE)
@@ -70,9 +69,7 @@ int	token(t_tokenizer *self)
 			*self->quotes);
 	is_open_io_ = is_open_io(self->line, self->it.i, *self->quotes);
 	if (!is_open_whitespace_ && !is_open_io_ && self->read_write_perm)
-	{
 		self->save = concat(this(), self->save, self->line[self->it.i]);
-	}
 	else if (self->read_write_perm)
 	{
 		if (self->save && !is_inside_quotes_list(*self->quotes, self->it.i)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sgouzi <sgouzi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:01:39 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 17:40:00 by sgouzi           ###   ########.fr       */
+/*   Updated: 2024/09/15 06:31:32 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,13 +229,12 @@ typedef struct s_db
 	/*storing in tracked signals*/
 	int					last_status;
 
+	t_quote				*q;
+
 	/*error flag*/
 	bool				error;
 	/**process id(s) for childs*/
 	int					*pids;
-
-	/*expand tells wither to expand or not*/
-	bool				split;
 
 	/*io*/
 	int					heredoc_counter;

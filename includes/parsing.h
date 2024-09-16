@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:16:31 by sgouzi            #+#    #+#             */
-/*   Updated: 2024/09/14 23:55:55 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 04:02:39 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int				smart_split(t_db *db, char *line, void **current_node,
 					void *parent);
 
 /*parsing/expanding.c*/
-int				expand(t_db *db, char **line, t_quote **quotes);
+int				expand(char **line, t_quote **quotes);
 char			*get_env(t_db *db, char *name);
 int				valid_char(char c, int index);
 

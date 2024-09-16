@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 07:06:53 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:55:04 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 07:58:05 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,13 @@ int	read_and_fill(t_db *db, char *line, int *pipe_fd, char *delim)
 	}
 	tmp = ft_strdup(db, line);
 	free(line);
-	if (ft_strcmp(delim, tmp) == 0 || ((int)len(delim) == 0 && (int)len(tmp) == 0))
+	if (ft_strcmp(delim, tmp) == 0 || ((int)len(delim) == 0
+			&& (int)len(tmp) == 0))
 	{
 		ft_close(db, &pipe_fd[1]);
 		return (FAILURE);
 	}
-	if (db->expand_hrdc == 0 && expand(db, &tmp, NULL) == FAILURE)
+	if (db->expand_hrdc == 0 && expand(&tmp, NULL) == FAILURE)
 	{
 		ft_close(db, &pipe_fd[1]);
 		ec_void(db);
@@ -89,8 +90,6 @@ int	open_heredoc(t_db *db, char *delim)
 	t_quote	*q;
 
 	q = NULL;
-
-	printf("line-> [%s]\n", delim);
 	if (track_quotes(db, &q, delim) == FAILURE)
 		return (FAILURE);
 	expand_herdoc(q, &delim);

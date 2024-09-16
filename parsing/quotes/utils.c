@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:34 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:36:50 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 05:50:25 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ bool	is_inside_quotes_list(t_quote *head, int i)
 	t_quote	*tmp;
 
 	if (!head)
+	{
 		return (false);
+	}
 	tmp = head;
 	while (tmp)
 	{

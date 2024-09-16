@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:21 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/14 23:57:55 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/15 04:17:20 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,7 @@ int	open_file_p2(t_db *db, char *tmp, int type)
 		put_fd(2, "No such file or directory\n");
 		return (FAILURE);
 	}
-	if (db->split)
-		tmp = ft_split(db, tmp, " \t\n\r\v\f")[0];
+	tmp = ft_split(db, tmp, " \t\n\r\v\f")[0];
 	if (type == APPENDFILE)
 		fd = ft_open(db, tmp, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (type == INPUTFILE)
@@ -117,7 +116,7 @@ int	open_file(t_db *db, char *file, int type)
 	}
 	if (track_quotes(db, &quotes, file) == FAILURE)
 		return (FAILURE);
-	if (expand(db, &file, &quotes) == FAILURE)
+	if (expand(&file, &quotes) == FAILURE)
 		return (FAILURE);
 	tmp = without_quotes(db, file, quotes);
 	if (open_file_p2(db, tmp, type) == FAILURE)
