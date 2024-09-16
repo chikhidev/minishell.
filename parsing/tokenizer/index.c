@@ -6,7 +6,7 @@
 /*   By: abchikhi <abchikhi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 02:48:50 by abchikhi          #+#    #+#             */
-/*   Updated: 2024/09/16 08:17:22 by abchikhi         ###   ########.fr       */
+/*   Updated: 2024/09/16 08:20:36 by abchikhi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	handle_file(t_tokenizer *self)
 		self->it.j++;
 	self->save = ft_substr(this(), self->line, self->it.i, self->it.j
 			- self->it.i);
-
 	if (this()->curr_type == HEREDOC)
 	{
 		if (open_heredoc(this(), self->save) == FAILURE)
